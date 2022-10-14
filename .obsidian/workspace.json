@@ -25,13 +25,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Database/db.md",
+                "file": "Networking/dn.md",
                 "mode": "preview",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -81,7 +82,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "e275746b427b3a80",
@@ -141,21 +143,20 @@
               }
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 251.5
   },
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "1aa2e33c8fb940d5",
+  "active": "5877e06a80f5418c",
   "lastOpenFiles": [
     "Operating System/os.md",
-    "Networking/dn.md",
     "Database/db.md",
+    "Networking/dn.md",
     "Knowledge/git.md",
     "spreadzhao@163.com.md",
     "test.md",
