@@ -4,17 +4,29 @@
     "type": "split",
     "children": [
       {
-        "id": "8ea3905a6fe833e5",
+        "id": "a3dcbc0797d72801",
         "type": "tabs",
         "children": [
           {
-            "id": "b0b7c962dcf0c5f3",
+            "id": "45d99357c67fae46",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "Networking/dn.md",
                 "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "5877e06a80f5418c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Database/db.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -139,15 +151,17 @@
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "b0b7c962dcf0c5f3",
+  "active": "1aa2e33c8fb940d5",
   "lastOpenFiles": [
-    "homework/数据管理技术.md",
+    "Operating System/os.md",
     "Networking/dn.md",
     "Database/db.md",
-    "Operating System/os.md",
+    "Knowledge/git.md",
+    "spreadzhao@163.com.md",
+    "test.md",
     "Compile/cp.md",
+    "homework/数据管理技术.md",
     "Computer Structure/img/mosfet.png",
-    "Computer Structure/cs.md",
-    "Knowledge/git.md"
+    "Computer Structure/cs.md"
   ]
 }

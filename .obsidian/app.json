@@ -2,5 +2,7 @@
   "strictLineBreaks": true,
   "trashOption": "local",
   "newFileLocation": "root",
-  "attachmentFolderPath": "./resources"
+  "attachmentFolderPath": "./resources",
+  "autoPairMarkdown": false,
+  "livePreview": true
 }

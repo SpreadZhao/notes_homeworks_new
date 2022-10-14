@@ -161,7 +161,7 @@
   > ```
   >
   > * Question: 该程序会打印几次Kylin，几次My Favorite？
-  > * Ans: 1, 2(父进程不会走==0，只会打My Favorite，子进程即打Kylin，也打My Favorite)
+  > * Ans: 1, 2(父进程不会走\==0，只会打My Favorite，子进程即打Kylin，也打My Favorite)
   >
   > Another Question
   >
