@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "Networking/dn.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -133,7 +133,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 251.5
+    "width": 298.5
   },
   "ribbon": {
     "mostRecentAction": ""
@@ -142,13 +142,13 @@
   "lastOpenFiles": [
     "Operating System/os.md",
     "Networking/dn.md",
+    "homework/数据管理技术2.md",
     "Operating System/summary.md",
     "Database/db.md",
     "Knowledge/git.md",
     "spreadzhao@163.com.md",
     "test.md",
     "Compile/cp.md",
-    "homework/数据管理技术.md",
-    "Computer Structure/img/mosfet.png"
+    "homework/数据管理技术.md"
   ]
 }
