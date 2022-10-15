@@ -4,36 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "2c19885b2f53ab4b",
+        "id": "9a9d91e6f7273ff6",
         "type": "tabs",
         "children": [
           {
-            "id": "45d99357c67fae46",
+            "id": "ee1e338ed8a3e9be",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "projects/qemu/edu_device_interface.md",
                 "mode": "source",
                 "source": false
               }
             }
-          }
-        ]
-      },
-      {
-        "id": "e6ea3526741b63c6",
-        "type": "tabs",
-        "children": [
+          },
           {
-            "id": "1fd5eb60e00bda5b",
+            "id": "93af2b3af3e76c56",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "projects/qemu/edu_chr.md",
+                "mode": "preview",
+                "source": false
+              }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -99,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "projects/qemu/edu_chr.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "projects/qemu/edu_chr.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "projects/qemu/edu_chr.md"
               }
             }
           }
@@ -147,22 +146,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 298.5
+    "width": 298.5,
+    "collapsed": true
   },
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "45d99357c67fae46",
+  "active": "93af2b3af3e76c56",
   "lastOpenFiles": [
-    "Networking/dn.md",
-    "Database/db.md",
-    "Compile/cp.md",
+    "projects/qemu/edu_device_interface.md",
+    "projects/qemu/edu_chr.md",
+    "Untitled.md",
+    "projects/qemu/pci驱动接口.md",
+    "projects/qemu/edu设备接口.md",
+    "projects/qemu/resources/Pasted image 20220929110545.png",
     "Operating System/os.md",
-    "homework/数据管理技术2.md",
-    "Operating System/summary.md",
-    "Knowledge/git.md",
-    "spreadzhao@163.com.md",
-    "test.md",
-    "homework/数据管理技术.md"
+    "README.md",
+    "Networking/dn.md",
+    "Database/db.md"
   ]
 }
