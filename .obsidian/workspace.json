@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "a3dcbc0797d72801",
+        "id": "2c19885b2f53ab4b",
         "type": "tabs",
         "children": [
           {
@@ -14,9 +14,23 @@
               "type": "markdown",
               "state": {
                 "file": "Networking/dn.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               }
+            }
+          }
+        ]
+      },
+      {
+        "id": "e6ea3526741b63c6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1fd5eb60e00bda5b",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
             }
           }
         ]
@@ -85,7 +99,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Networking/dn.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Networking/dn.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +136,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Networking/dn.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -138,17 +148,17 @@
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "45d99357c67fae46",
+  "active": "1fd5eb60e00bda5b",
   "lastOpenFiles": [
-    "Operating System/os.md",
     "Networking/dn.md",
+    "Database/db.md",
+    "Compile/cp.md",
+    "Operating System/os.md",
     "homework/数据管理技术2.md",
     "Operating System/summary.md",
-    "Database/db.md",
     "Knowledge/git.md",
     "spreadzhao@163.com.md",
     "test.md",
-    "Compile/cp.md",
     "homework/数据管理技术.md"
   ]
 }

@@ -577,15 +577,22 @@ $$
 $$
 这样我们又得到了一个新的relation，表示$depositor \bowtie account$这个relation里面所有的tuple之间建立的关系。接下来，我们要从中筛选出符合题意的tuple，也就是那三个条件。
 $$
-\sigma_{D1.customer\_name=D2.customer\_name\ \and\ D1.account\_number \neq D2.account\_number\ \and\ D1.branch\_name\neq D2.branch\_name}\\
-(\rho_{D1}(depositor \bowtie account)\times\rho_{D2}(depositor \bowtie account))
+\begin{array}
+\\
+\sigma_{D1.customer\_name=D2.customer\_name\ \wedge\ D1.account\_number \neq D2.account\_number\ \wedge\ D1.branch\_name\neq D2.branch\_name}\\(\rho_{D1}(depositor \bowtie account)\times\rho_{D2}(depositor \bowtie account))
+\\
+\end{array}
 $$
 最后题目要求的是找出customer即可，所以要投影出名字。
 $$
+\begin{array}
+\\
 \pi_{D1.customer\_name}(\\
-\sigma_{D1.customer\_name=D2.customer\_name\ \and\ D1.account\_number \neq D2.account\_number\ \and\ D1.branch\_name\neq D2.branch\_name}\\
+\sigma_{D1.customer\_name=D2.customer\_name\ \wedge\ D1.account\_number \neq D2.account\_number\ \wedge\ D1.branch\_name\neq D2.branch\_name}\\
 (\rho_{D1}(depositor \bowtie account)\times\rho_{D2}(depositor \bowtie account))\\
 )
+\\
+\end{array}
 $$
 本题和Ex1很像，只不过最后的比较条件由一个变成了三个。另外，这道题用了两次"笛卡尔积+选择"，而Ex1只用了一次。**这两次一次是为了将两张表和成一张；另一次是在这张合成的表中进行自我比较**。
 
