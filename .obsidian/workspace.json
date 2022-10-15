@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "9a9d91e6f7273ff6",
+        "id": "293c1da0068204d2",
         "type": "tabs",
         "children": [
           {
-            "id": "ee1e338ed8a3e9be",
+            "id": "a86affbec2c89233",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/qemu/edu_device_interface.md",
+                "file": "homework/数据管理技术2.md",
                 "mode": "source",
                 "source": false
               }
             }
-          },
-          {
-            "id": "93af2b3af3e76c56",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects/qemu/edu_chr.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "projects/qemu/edu_chr.md",
+                "file": "homework/数据管理技术2.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "projects/qemu/edu_chr.md",
+                "file": "homework/数据管理技术2.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,11 +125,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/qemu/edu_chr.md"
+                "file": "homework/数据管理技术2.md"
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -152,17 +140,17 @@
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "93af2b3af3e76c56",
+  "active": "a86affbec2c89233",
   "lastOpenFiles": [
-    "projects/qemu/edu_device_interface.md",
-    "projects/qemu/edu_chr.md",
-    "Untitled.md",
-    "projects/qemu/pci驱动接口.md",
-    "projects/qemu/edu设备接口.md",
-    "projects/qemu/resources/Pasted image 20220929110545.png",
-    "Operating System/os.md",
-    "README.md",
-    "Networking/dn.md",
-    "Database/db.md"
+    "projects/虚拟歌姬/10-插画更换以及分享/imgs/3.gif",
+    "projects/虚拟歌姬/10-插画更换以及分享/imgs/2.gif",
+    "projects/虚拟歌姬/10-插画更换以及分享/imgs/1.gif",
+    "projects/虚拟歌姬/10-插画更换以及分享/10-插画更换以及分享.md",
+    "projects/虚拟歌姬/09-换装与互动/09-换装与互动.md",
+    "projects/虚拟歌姬/07-包裹道具使用/07-包裹道具使用.md",
+    "projects/虚拟歌姬/05-主页面布局/05-主页面布局.md",
+    "projects/虚拟歌姬/04-登录页面/04-登录页面.md",
+    "projects/虚拟歌姬/01-开发说明与环境搭建/01-开发说明与环境搭建.md",
+    "projects/虚拟歌姬/10-插画更换以及分享.md"
   ]
 }
