@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "293c1da0068204d2",
+        "id": "94ab7e5c574b3c68",
         "type": "tabs",
         "children": [
           {
-            "id": "a86affbec2c89233",
+            "id": "7022f81035658a6f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "homework/数据管理技术2.md",
-                "mode": "source",
+                "file": "Database/db.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "homework/数据管理技术2.md",
+                "file": "Database/db.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "homework/数据管理技术2.md",
+                "file": "Database/db.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "homework/数据管理技术2.md"
+                "file": "Database/db.md"
               }
             }
           }
@@ -140,17 +140,17 @@
   "ribbon": {
     "mostRecentAction": ""
   },
-  "active": "a86affbec2c89233",
+  "active": "7022f81035658a6f",
   "lastOpenFiles": [
-    "projects/虚拟歌姬/10-插画更换以及分享/imgs/3.gif",
-    "projects/虚拟歌姬/10-插画更换以及分享/imgs/2.gif",
-    "projects/虚拟歌姬/10-插画更换以及分享/imgs/1.gif",
-    "projects/虚拟歌姬/10-插画更换以及分享/10-插画更换以及分享.md",
-    "projects/虚拟歌姬/09-换装与互动/09-换装与互动.md",
-    "projects/虚拟歌姬/07-包裹道具使用/07-包裹道具使用.md",
-    "projects/虚拟歌姬/05-主页面布局/05-主页面布局.md",
-    "projects/虚拟歌姬/04-登录页面/04-登录页面.md",
-    "projects/虚拟歌姬/01-开发说明与环境搭建/01-开发说明与环境搭建.md",
-    "projects/虚拟歌姬/10-插画更换以及分享.md"
+    "homework/数据管理技术.md",
+    "Happy-SE-in-XDU-master/networking/exercise.md",
+    "Happy-SE-in-XDU-master/networking/exam-2021.md",
+    "Happy-SE-in-XDU-master/machine_learning/README.md",
+    "Happy-SE-in-XDU-master/database/instructor_manual.md",
+    "Happy-SE-in-XDU-master/Algorithm/supplement_all.md",
+    "Happy-SE-in-XDU-master/Algorithm/README.md",
+    "Happy-SE-in-XDU-master/Algorithm/homework_sum-up.pdf",
+    "Database/db.md",
+    "Happy-SE-in-XDU-master/计组II/solution-manual.md"
   ]
 }
