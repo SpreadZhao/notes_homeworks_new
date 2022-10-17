@@ -1356,55 +1356,53 @@ $$
 >
 > 首先我们从Terminal打头的入手
 >
-> * E -> TE'							FIRST(E) = {}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {}
-> * T -> FT'							FIRST(T) = {}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {}
-> * F -> (E) | id						FIRST(F) = {}
+> * E -> TE'-------------------FIRST(E) = {}
+> * E' -> +TE' | $\epsilon$ -------------FIRST(E') = {}
+> * T -> FT'-------------------FIRST(T) = {}
+> * T' -> \*FT' | $\epsilon$	--------------FIRST(T') = {}
+> * F -> (E) | id---------------FIRST(F) = {}
 >
 > 也就是E'，T'和F。它们分别以+，\*和(打头，同时F还有一个id，那么直接写进去
 >
-> * E -> TE'							FIRST(E) = {}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
-> * T -> FT'							FIRST(T) = {}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
-> * F -> (E) | id						FIRST(F) = {(, id}
+> * E -> TE'-------------------FIRST(E) = {}
+> * E' -> +TE' | $\epsilon$ -------------FIRST(E') = {+}
+> * T -> FT'-------------------FIRST(T) = {}
+> * T' -> \*FT' | $\epsilon$--------------FIRST(T') = {\*}
+> * F -> (E) | id---------------FIRST(F) = {(, id}
 >
 > 然后再来逐个给Nonterminal打头的套娃。首先是E，它以T开头，而T此时还没确定，所以先来T
 >
 > T以F开头，而F以(或者id开头，所以T肯定也是以(或者id开头
 >
-> * E -> TE'							FIRST(E) = {}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
-> * T -> FT'							FIRST(T) = {(, id}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
-> * F -> (E) | id						FIRST(F) = {(, id}
+> * E -> TE'-------------------FIRST(E) = {}
+> * E' -> +TE' | $\epsilon$ -------------FIRST(E') = {+}
+> * T -> FT'-------------------FIRST(T) = {(, id}
+> * T' -> \*FT' | $\epsilon$	--------------FIRST(T') = {\*}
+> * F -> (E) | id---------------FIRST(F) = {(, id}
 >
 > 那么既然E以T开头，E就也会以(或者id开头
 >
-> * E -> TE'							FIRST(E) = {(, id}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
-> * T -> FT'							FIRST(T) = {(, id}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
-> * F -> (E) | id						FIRST(F) = {(, id}
+> * E -> TE'-------------------FIRST(E) = {(, id}
+> * E' -> +TE' | $\epsilon$ -------------FIRST(E') = {+}
+> * T -> FT'-------------------FIRST(T) = {(, id}
+> * T' -> \*FT' | $\epsilon$--------------FIRST(T') = {\*}
+> * F -> (E) | id---------------FIRST(F) = {(, id}
 >
 > **千万别忘了空串。空串是可以在FIRST集中的！**
 >
-> * E -> TE'							FIRST(E) = {(, id}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}
-> * T -> FT'							FIRST(T) = {(, id}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}
-> * F -> (E) | id						FIRST(F) = {(, id}
+> * E -> TE'-------------------FIRST(E) = {(, id}
+> * E' -> +TE' | $\epsilon$-------------FIRST(E') = {+, $\epsilon$}
+> * T -> FT'-------------------FIRST(T) = {(, id}
+> * T' -> \*FT' | $\epsilon$--------------FIRST(T') = {\*, $\epsilon$}
+> * F -> (E) | id---------------FIRST(F) = {(, id}
+
+---
 
 > **==2. 计算FOLLOW集==**
 >
 > 既然FOLLOW集是紧跟着某一个Nonterminal后面出现的，那么肯定是根据后面那个东西的FIRST集来的。所以我们要先计算它们的FIRST集
->
-> * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {}
-> * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
-> * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {}
+> 
+> ![[Pasted image 20221017121121.png]]
 >
 > 首先从E开始，也就是FOLLOW(T)。T的后面是E'，那么T后面紧跟着出现的就是E'的FIRST集中的内容。**然而E'可以推导出空串，也就是T之后可以是$\epsilon$，则T的FOLLOW集中也应该有'\$'符号**。
 >
@@ -1412,11 +1410,7 @@ $$
 >
 > 对于这个最后的E'，它后面没东西。所以**能加在E后面的也能加在E'后面**，也就是把E的FOLLOW集里的全家在E'的FOLLOW集中。虽然就是一个\$
 >
-> * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$}
-> * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
-> * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {}
+> ![[Pasted image 20221017121229.png]]
 >
 > 然后是第二个产生式。因为这里T和E'和第一个位置一样，所以分析结果也一样。
 >
@@ -1426,11 +1420,7 @@ $$
 >
 > 对于T'，它后面首先啥也没有，所以肯定有$；**另外能加在T后面的也能加在T'后面，所以T'也应该有T的FOLLOW集**
 >
-> * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$}
-> * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
-> * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +}
+> ![[Pasted image 20221017121300.png]]
 >
 > 之后是第四条。因为第四条里F和T'和第三条一样，所以也不用来了。
 >
@@ -1440,25 +1430,19 @@ $$
 >
 > 第一句时，给出T的FOLLOW集中应该有E的FOLLOW集(**因为E'能推出空串**)。而这时E的FOLLOW集已经被更新了，所以要再改一下；另外，E'的FOLLOW集也要有E的FOLLOW集，所以也要跟着改。
 >
-> * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$, )}
-> * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $, )}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
-> * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +}
+> ![[Pasted image 20221017121320.png]]
 >
 > 第三句中，T'后面出现的应该包括T后面出现的所有；另外T'能变空串，所以F后面出现的也应该包括T后面出现的所有
 >
-> * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
-> * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$, )}
-> * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $, )}
-> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $, )}
-> * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +, )}
+> ![[Pasted image 20221017121513.png]]
 >
 > 然后第四句和第五句都分析不出啥，所以第二轮结束
 >
 > **算完了吗？可能还没有！因为FOLLOW集还是有更新，要算到"在某一轮中，一个FOLLOW集都没更新"这种情况出现时，才能算圆满完成！**
 >
 > 再来一轮，发现所有FOLLOW集都没更新，这才真算完了！
+
+---
 
 > **==3. 计算SELECT集==**
 >
@@ -1475,11 +1459,7 @@ $$
 >
 > 然后列出所有Nonterminal的FIRST集和FOLLOW集
 >
-> * FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
-> * FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$, )}
-> * FIRST(T) = {(, id}				FOLLOW(T) = {+, $, )}
-> * FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $, )}
-> * FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +, )}
+> ![[Pasted image 20221017121603.png]]
 >
 > 然后从第一条Production开始，运用这样的想法：**我在输入什么的时候，才会选到1号产生式呢？**很显然，在我当前输入的符号是以T的FIRST集中的元素开头的时候，我才会选择这个产生式来进行替换。所以**1号的可选集就是T的FIRST集**。
 > $$
