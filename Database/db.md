@@ -88,7 +88,7 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 * View level
 
-  比如一个学校里的食堂大妈也在这个数据库里。它为什么要看到这个老师的工资呢？视图层的作用就是隐藏不需要的数据和不想让它看到的数据。这样也简化了数据库的使用。同样的数据库经过不同的试图层，就会在不同的人面前呈现出不同的样子。
+  比如一个学校里的食堂大妈也在这个数据库里。它为什么要看到这个老师的工资呢？视图层的作用就是隐藏不需要的数据和不想让它看到的数据。这样也简化了数据库的使用。同样的数据库经过不同的视图层，就会在不同的人面前呈现出不同的样子。
 
 这三层的关系就是这样的。
 
@@ -190,7 +190,7 @@ $$
 
 现在那之前说的两张表来：
 
-![img](img/rm.png)|![img](img/dr.png)
+![[rm.png|300]]  ![[dr.png|300]]
 
 在右边的relation中，`dept_name`显然是primary key；而在左边的表中也出现了`dept_name`。如果这俩表是在同一个数据库系统中的，那么我们就说左边的这个`dept_name`是一个**foreign key**，它来自右边的表。这玩意儿有什么用呢？我们来想想：假设我们要插入一个老师，但是惊讶的发现它是电竞学院的，那对不起，肯定是插入失败，因为我们学校根本没有电竞学院。那么我们是怎么有底气说出这话的呢？靠的就是foreign key。我们`dept_name`的**取值**都是来自于其它relation中的primary key，是一定真实存在的。所以我们`dept_name`的值域已经被限制的死死的了，因此**我们只能插入学院是右边那张表里存在的东西**。这种方式也是给我们的值域增加了一种约束。因此我们有时候也把外键称为**foreign key constraint**。
 
@@ -226,7 +226,7 @@ $$
 
 ![img](img/select2.png)
 
-如果这个是relation r，那么问：$\sigma_{A=B\ \and \ D>5}(r)$是多少？
+如果这个是relation r，那么问：$\sigma_{A=B\ \wedge \ D>5}(r)$是多少？
 
 一看就能看明白，是让我们找：A=B并且D>5的tuple。那么也很容易写出结果：
 
@@ -298,7 +298,7 @@ $$
 
 那么这整个过程的结果表达式可以写成：
 $$
-\Pi_{course\_id}(\sigma_{semester="Fall"\ \and\ year=2017}(section))\cup\Pi_{course\_id}(\sigma_{semester="Spring"\ \and\ year=2018}(section))
+\Pi_{course\_id}(\sigma_{semester="Fall"\ \wedge\ year=2017}(section))\cup\Pi_{course\_id}(\sigma_{semester="Spring"\ \wedge\ year=2018}(section))
 $$
 最后的结果就是：
 
@@ -310,7 +310,7 @@ $$
 
 和上面几乎是一样的，所以这里不多说了。还是上面的例子，如果要计算：
 $$
-\Pi_{course\_id}(\sigma_{semester="Fall"\ \and\ year=2017}(section))\cap\Pi_{course\_id}(\sigma_{semester="Spring"\ \and\ year=2018}(section))
+\Pi_{course\_id}(\sigma_{semester="Fall"\ \wedge\ year=2017}(section))\cap\Pi_{course\_id}(\sigma_{semester="Spring"\ \wedge\ year=2018}(section))
 $$
 结果就是:
 
@@ -320,7 +320,7 @@ $$
 
 还是上面的例子，如果我们要找在Fall2017开设而不在Spring 2018开设的课，应该怎么写？使用的就是Set-difference运算符。
 $$
-\Pi_{course\_id}(\sigma_{semester="Fall"\ \and\ year=2017}(section))-\Pi_{course\_id}(\sigma_{semester="Spring"\ \and\ year=2018}(section))
+\Pi_{course\_id}(\sigma_{semester="Fall"\ \wedge\ year=2017}(section))-\Pi_{course\_id}(\sigma_{semester="Spring"\ \wedge\ year=2018}(section))
 $$
 其实结果一定是Fall 2017中的一部分。把在Spring 2018里也有份的那个刨掉就行了。
 
@@ -338,7 +338,7 @@ $$
 
 之前的操作符都多多少少有重复的问题。那么这个笛卡尔积这么可劲儿乘，肯定是有很大的隐患的。我们还是看之前老师和课的例子。
 
-![img](img/rm.png)
+![[rm.png|300]]  ![[teaches.png|300]]
 
 左边是instructor relation，右边是teaches relation。那么我们能写出一个超级长的笛卡尔积结果：
 
@@ -537,10 +537,10 @@ $$
 | --------- | ---------- | ---------- | --------- | ---------- | ---------- |
 | A-101     | Downtown   | 500        | A-101     | Downtown   | 500        |
 | A-101     | Downtown   | 500        | A-215     | Mianus     | 700        |
-| A-101     | Downtown   | **500**    | A-102     | Perryridge | **400**    |
-| A-215     | Mianus     | **700**    | A-101     | Downtown   | **500**    |
+| A-101     | Downtown   | **==500==**| A-102     | Perryridge | **==400==**|
+| A-215     | Mianus     | **==700==**| A-101     | Downtown   | **==500==**|
 | A-215     | Mianus     | 700        | A-215     | Mianus     | 700        |
-| A-215     | Mianus     | **700**    | A-102     | Perryridge | **400**    |
+| A-215     | Mianus     | **==700==**| A-102     | Perryridge | **==400==**|
 | A-102     | Perryridge | 400        | A-101     | Downtown   | 500        |
 | A-102     | Perryridge | 400        | A-215     | Mianus     | 700        |
 | A-102     | Perryridge | 400        | A-102     | Perryridge | 400        |
@@ -1394,7 +1394,7 @@ revoke select on branch from U1, U2, U3;
 
 * C lib，也就是c语言的库函数。
 * 嵌入式sql，缺点是一个牌子的数据库就只能用一种语言，换数据库麻烦。
-* ODBC(Open Database Connectivity)，相当于所有数据库的虚函数。java的ODBC就叫做JDBC。缺点是这虚函数只能提供基本操作，对于一些牌子的数据库的特色功能是用不了的，因为要考虑所有的数据库。而且多了一层性能也会下降。
+* ODBC(Open Database Connectivity)，相当于所有数据库的虚函数。java的ODBC就叫做JDBC。缺点是这虚函数只能提供基本操作，对于一些牌子的数据库的特色功能是用不了的，因为要考虑所有的数据库。而且多了一层性能也会下降。 ^469a7c
 * ORM(Object Relation Map)，将relation变成对象，这样开发容易很多。
 
 我们只讨论中间的两种
@@ -1609,7 +1609,7 @@ driver2 --> DB2
 driver3 --> DB3
 ```
 
-这样做会带来两个后果，在第5章的开头已经提到过了。但是这样做确实很大降低了开发的难度，甚至最底层的都可以不是数据库。比如DB3不是MySQL，不是Oracle，是一个xlsx表格，甚至是一个txt文本，一样也可以像访问数据库一样通过ODBC来访问这些文件。
+这样做会带来两个后果，在[[#^469a7c|第5章的开头]]已经提到过了。但是这样做确实很大降低了开发的难度，甚至最底层的都可以不是数据库。比如DB3不是MySQL，不是Oracle，是一个xlsx表格，甚至是一个txt文本，一样也可以像访问数据库一样通过ODBC来访问这些文件。
 
 ### 5.3 Functions and Procedures
 
@@ -1671,7 +1671,7 @@ from department
 where ins_count(dept_name) > 12
 ```
 
-这条语句是从`department`表中寻找，对于每一个`dept_name`都要逐个判断，只要这个学院里有的`instructor`大于12个，就被选中了，最后显示出这些学院的名字和预算。而如果我们不适用函数的话，那么函数那部分就要整体替换成上面那函数中一坨select语句，很明显这种写法让代码量大大降低，也更好理解和扩展。
+这条语句是从`department`表中寻找，对于每一个`dept_name`都要逐个判断，只要这个学院里有的`instructor`大于12个，就被选中了，最后显示出这些学院的名字和预算。而如果我们不使用函数的话，那么函数那部分就要整体替换成上面那函数中一坨select语句，很明显这种写法让代码量大大降低，也更好理解和扩展。
 
 ---
 

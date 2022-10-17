@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Knowledge/apache.md",
+                "file": "Compile/cp.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Knowledge/apache.md",
+                "file": "Compile/cp.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Knowledge/apache.md",
+                "file": "Compile/cp.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Knowledge/apache.md"
+                "file": "Compile/cp.md"
               }
             }
           }
@@ -134,23 +134,22 @@
       }
     ],
     "direction": "horizontal",
-    "width": 298.5,
-    "collapsed": true
+    "width": 298.5
   },
   "ribbon": {
     "mostRecentAction": ""
   },
   "active": "eb17da47e0bbb904",
   "lastOpenFiles": [
+    "Compile/resources/Pasted image 20221017112426 1.png",
+    "Compile/resources/Pasted image 20221017112429.png",
+    "Compile/cp.md",
     "Database/db.md",
+    "Networking/dn.md",
+    "Happy-SE-in-XDU-master/networking/exam-2021.md",
+    "Happy-SE-in-XDU-master/networking/exercise.md",
     "Knowledge/apache.md",
     "homework/数据管理技术.md",
-    "Happy-SE-in-XDU-master/networking/exercise.md",
-    "Happy-SE-in-XDU-master/networking/exam-2021.md",
-    "Happy-SE-in-XDU-master/machine_learning/README.md",
-    "Happy-SE-in-XDU-master/database/instructor_manual.md",
-    "Happy-SE-in-XDU-master/Algorithm/supplement_all.md",
-    "Happy-SE-in-XDU-master/Algorithm/README.md",
-    "Happy-SE-in-XDU-master/Algorithm/homework_sum-up.pdf"
+    "Happy-SE-in-XDU-master/machine_learning/README.md"
   ]
 }

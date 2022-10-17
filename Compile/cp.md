@@ -12,30 +12,30 @@
 
 字母表的运算
 
-* 乘积：$\Sigma$~1~$\Sigma$~2~ = {ab | a $\in$ $\Sigma$~1~, b $\in$ $\Sigma$~2~}
+* 乘积：$\Sigma_1\Sigma_2$ = {ab | a $\in$ $\Sigma$~1~, b $\in$ $\Sigma$~2~}
 
   比如：{0, 1} {a, b} = {0a, 0b, 1a, 1b}
 
 * n次幂：
 
-  * $\Sigma$^0^ = { $\epsilon$ }
-  * $\Sigma$^n^ = $\Sigma$^n-1^$\Sigma$, n $\geq$ 1
+  * $\Sigma^0$ = { $\epsilon$ }
+  * $\Sigma^n=\Sigma^{n-1}\Sigma$, n $\geq$ 1
 
   比如：
 
-  {0, 1}^3^ = {0, 1} {0, 1} {0, 1} = {000, 001, 010, 011, 100, 101, 110, 111}
+  $\{0, 1\}^3$ = {0, 1} {0, 1} {0, 1} = {000, 001, 010, 011, 100, 101, 110, 111}
 
   我们也能发现，几个字母表相乘，结果的每一项就是几个元素，比如这里三个相乘，结果中每一个元素比如000，001都是三个数
 
   **我们还能发现，字母表的n次幂，就是长度为n的符号串构成的集合。比如这里n = 3，那结果集合中每一个元素长度都是3。而0次幂就是长度为0的符号串，那就是空串，用$\epsilon$表示**
 
-* 正闭包：$\Sigma$^+^ = $\Sigma$ $\cup$ $\Sigma$^2^ $\cup$ $\Sigma$^3^ $\cup$ ...
+* 正闭包：$\Sigma^+$ = $\Sigma$ $\cup$ $\Sigma^2$ $\cup$ $\Sigma^3$ $\cup$ ...
 
-  比如{a, b, c, d}^+^ = {a, b, c, d, aa, ab, ac, ad, ba, bb, bc, bd, ... , aaa, aab, aac, aad, ...} 
+  比如$\{a, b, c, d\}^+$ = {a, b, c, d, aa, ab, ac, ad, ba, bb, bc, bd, ... , aaa, aab, aac, aad, ...} 
 
-* 克林闭包：$\Sigma$^*^ = $\Sigma$^+^ $\cup$ $\Sigma$^0^ = $\Sigma$^0^ $\cup$ $\Sigma$ $\cup$ $\Sigma$^2^ $\cup$ $\Sigma$^3^ $\cup$ ...
+* 克林闭包：$\Sigma^*$ = $\Sigma^+$ $\cup$ $\Sigma^0$ = $\Sigma^0$ $\cup$ $\Sigma$ $\cup$ $\Sigma^2$ $\cup$ $\Sigma^3$ $\cup$ ...
 
-  比如{a, b, c, d}^*^ = {$\epsilon$, a, b, c, d, aa, ab, ac, ad, ba, bb, bc, bd, ... , aaa, aab, aac, aad, ...} 
+  比如$\{a, b, c, d\}^*$ = {$\epsilon$, a, b, c, d, aa, ab, ac, ad, ba, bb, bc, bd, ... , aaa, aab, aac, aad, ...} 
 
   由此可见，克林闭包是任意符号串构成的集合，并且这个串的长度可以是0
   
@@ -61,9 +61,9 @@
 
 > 若s = ba，那么：
 >
-> s^2^ = baba, s^3^ = bababa, ...
+> $s^2$ = baba, $s^3$ = bababa, ...
 >
-> 特别地：s^0^ = $\epsilon$
+> 特别地：$s^0$ = $\epsilon$
 
 ## 2. 文法分析
 
@@ -71,7 +71,7 @@
 
 终结符：是文法所定义的语言的基本符号。有时也称为**Token**
 
-比如：V~T~ = {apple, boy, cat, little}是一个终结符集，其中的元素是终结符，在这里是**单词**
+比如：$V_T$ = {apple, boy, cat, little}是一个终结符集，其中的元素是终结符，在这里是**单词**
 
 理解终结的含义：单词在这里再继续推导没有意义，也就是字母它本身也不在里面，所以不用继续推导，达到终点
 
@@ -81,11 +81,11 @@
 
 非终结符：用来表示**语法成分**的符号，有时也称为**语法变量**
 
-比如：V~N~ = {<句子>, <名词短语>, <动词短语>, <名词>, ...}是一个非终结符集
+比如：$V_N$ = {<句子>, <名词短语>, <动词短语>, <名词>, ...}是一个非终结符集
 
-> *注意：对于同一个文法形式(文法形式是什么稍后再说)，终结符集和非终结符集是没有交集的，即：V~T~ $\cap$ V~N~ = $\Phi$*
+> *注意：对于同一个文法形式(文法形式是什么稍后再说)，终结符集和非终结符集是没有交集的，即：$V_T$ $\cap$ $V_N$ = $\Phi$*
 >
-> 另外，V~T~ $\cup$ V~N~ = <**文法符号集**>
+> 另外，$V_T$ $\cup$ $V_N$ = <**文法符号集**>
 
 非终结的意思就是能继续推导，也就是这个东西能够继续细分成更细的东西
 
@@ -105,20 +105,20 @@ P = {<句子> $\rightarrow$ <名词短语><动词短语>, <名词短语> $\right
 
 就是上面四项组成的集合：
 
-G = (V~T~, V~N~, P, S)
+G = ($V_T,V_N$, P, S)
 
-> 例：G = ( { **id**, **+**, *****, **(**, **)** }, {**E**}, **P**, **E** )
+> 例：G = ( { **id**, **+**, **\***, **(**, **)** }, {**E**}, **P**, **E** )
 >
 > 那么:
 >
-> * V~T~ = {id, +, *, (, )}
-> * V~N~ = {E}
+> * $V_T$ = {id, +, *, (, )}
+> * $V_N$ = {E}
 > * P = P
 > * S = E
 >
 > *注：其中E就是Expression表达式，非终结符只有表达式一种*
 >
-> 接下来讨论P到底是什么：因为V~N~只有E一个，所以，只需要定义E即可
+> 接下来讨论P到底是什么：因为$V_N$只有E一个，所以，只需要定义E即可
 >
 > P = {E -> E + E, E -> E *  E, E -> (E), E -> id}
 >
@@ -128,14 +128,14 @@ G = (V~T~, V~N~, P, S)
 >
 > E -> E + E | E * E | (E) | id
 >
-> 那么对于任意一个产生式P = {$\alpha$ -> $\beta$~1~, $\alpha$ -> $\beta$~2~, ... , $\alpha$ -> $\beta$~n~}，都可以简化为：
+> 那么对于任意一个产生式P = {$\alpha$ -> $\beta_1$, $\alpha$ -> $\beta_2$, ... , $\alpha$ -> $\beta_n$}，都可以简化为：
 >
-> P = $\alpha$ -> $\beta$~1~ | $\beta$~2~ | ... | $\beta$~n~
+> P = $\alpha$ -> $\beta_1|\beta_2|...|\beta_n$
 
 补充：
 
-* $\alpha$ $\in$ (V~T~ $\cup$ V~N~)^+^，并且$\alpha$中至少得有一个V~N~的元素，称为产生式的**头部**或者**左部**
-* $\beta$ $\in$ (V~T~ $\cup$ V~N~)^+^，称为产生式的**体**或者**右部**
+* $\alpha$ $\in$ $(V_T \cup V_N)^+$，并且$\alpha$中至少得有一个$V_N$的元素，称为产生式的**头部**或者**左部**
+* $\beta$ $\in$ $(V_T \cup V_N)^+$，称为产生式的**体**或者**右部**
 
 ### 2.6 Symbolic Convention
 
@@ -207,10 +207,10 @@ G = (V~T~, V~N~, P, S)
 
 补充：
 
-* 如果$\alpha$~0~ $\Rightarrow$ $\alpha$~1~ $\Rightarrow$ $\alpha$~2~ $\Rightarrow$ ... $\Rightarrow$ $\alpha$~n~，则称串$\alpha$~0~经过n步推导出$\alpha$~n~，可以简记为：$\alpha$~0~ $\Rightarrow$^n^ $\alpha$~n~
-* $\Rightarrow$^0^表示0步推导，也就是不推导
-* $\Rightarrow$^+^表示经过正数步推导(>0)
-* $\Rightarrow$^*^表示经过若干步推导($\geq$0)
+* 如果$\alpha_0 \Rightarrow \alpha_1 \Rightarrow \alpha_2 \Rightarrow ... \Rightarrow \alpha_n$，则称串$\alpha_0$经过n步推导出$\alpha_n$，可以简记为：$\alpha_0 \Rightarrow^n \alpha_n$
+* $\Rightarrow^0$表示0步推导，也就是不推导
+* $\Rightarrow^+$表示经过正数步推导(>0)
+* $\Rightarrow^*$表示经过若干步推导($\geq$0)
 
 #### 2.7.2 Sentential form & Sentence
 
@@ -250,14 +250,14 @@ G = (V~T~, V~N~, P, S)
 
 那么给出句型和句子的定义
 
-* 如果S经过若干步推导得到了$\alpha$**(S $\Rightarrow$^*^ $\alpha$)**，并且$\alpha$ $\in$ (V~T~ $\cup$ V~N~)^*^，则称$\alpha$是G的一个**句型**。句型中包含Terminal Symbol和Nonterminal Symbol，还可能是空串$\epsilon$
-* 如果S $\Rightarrow$^*^ $\omega$，并且$\omega$ $\in$ (V~T~ $\cup$ V~N~)^*^，则称$\omega$是G的一个句子。**句子**是不包含Nonterminal Symbol的句型
+* 如果S经过若干步推导得到了$\alpha$**(S $\Rightarrow^*$ $\alpha$)**，并且$\alpha$ $\in$ $(V_T \cup V_N)^*$，则称$\alpha$是G的一个**句型**。句型中包含Terminal Symbol和Nonterminal Symbol，还可能是空串$\epsilon$
+* 如果S $\Rightarrow^*$ $\omega$，并且$\omega$ $\in$ $(V_T \cup V_N)^*$，则称$\omega$是G的一个句子。**句子**是不包含Nonterminal Symbol的句型
 
 #### 2.7.3 Language
 
 由文法G的Start Symbol**推导出的所有<u>句子</u>**构成的集合称为文法**G生成的语言**，记为L(G)
 
-L(G) = {$\omega$ | S $\Rightarrow$^*^ $\omega$, $\omega$ $\in$ V~T~^*^} (*问题：这里V~T~是否加上星号存疑*)
+L(G) = {$\omega$ | S $\Rightarrow^*$ $\omega$, $\omega$ $\in$ ${V_T}^*$} (*问题：这里$V_T$是否加上星号存疑*)
 
 > 例：文法G的Production如下：
 >
@@ -276,17 +276,11 @@ L(G) = {$\omega$ | S $\Rightarrow$^*^ $\omega$, $\omega$ $\in$ V~T~^*^} (*问题
 
 **语言上的运算**
 
-| 运算                   | 定义和表示                                      |
-| ---------------------- | ----------------------------------------------- |
-| L和M的并(两种语言的并) | $L \cup M = \{s | s \in L || s \in M\}$         |
-| L和M的连接             | LM = { st \| s $\in$ L && t $\in$ M }           |
-| L的幂                  | L^0^ = {$\epsilon$}; L^n^ = L^n-1^L, n $\geq$ 1 |
-| L的Kleene闭包          | L^*^ = $\cup^\infty_{i=0}L^i$                   |
-| L的正闭包              | L^+^ = $\cup^\infty_{i=1}L^i$                   |
+![[Pasted image 20221017111600.png]]
 
-> 例：令L = {A, B, ..., Z, a, b, ..., z}，D = {0, 1, ..., 9}则L(L $\cup$ D)^*^表示的语言是？
+> 例：令L = {A, B, ..., Z, a, b, ..., z}，D = {0, 1, ..., 9}则$L(L \cup D)^*$表示的语言是？
 >
-> 语言也和串一样可以连接，**语言也是句子的集合**，因此**本题中默认A, B等都是句子**，D也是语言，0, ..., 9也都是句子。而L(L $\cup$ D)^*^表示一个字母开头，后面连接上L并上D的克林闭包，那么就是说是由字母和数字组成的一堆东西，然后还是字母开头，那表示的也是**标识符**
+> 语言也和串一样可以连接，**语言也是句子的集合**，因此**本题中默认A, B等都是句子**，D也是语言，0, ..., 9也都是句子。而$L(L \cup D)^*$表示一个字母开头，后面连接上L并上D的克林闭包，那么就是说是由字母和数字组成的一堆东西，然后还是字母开头，那表示的也是**标识符**
 
 ### 2.8 Grammatical Classification
 
@@ -300,7 +294,7 @@ Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\
 
 从这里能看出定义的过程和上下文$\alpha_1, \alpha_2$有关
 
-既然$\beta\neq\epsilon$，那么CSG中**不能**包含空产生式，也就是右部是空串。而之前说过，**左部至少要有一个Nonterminal**，那么左部的长度至少是1，那一个**长度是1或者以上的东西怎么可能由空串来定义呢**？显然右部的长度要$\geq$左部$\geq$1
+既然$\beta\neq\epsilon$，那么CSG中**不能**包含空产生式，也就是右部是空串。而之前说过，**左部至少要有一个Nonterminal**，那么左部的长度至少是1，那一个**长度是1或者以上的东西怎么可能由空串来定义呢**？显然右部的长度要 $\geq$ 左部 $\geq$ 1
 
 #### 2.8.3 Type-2 Grammar: Context-Free Grammar(CFG)
 
@@ -471,14 +465,14 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 * 如果是俩呢？假设r和s都是RE，表示的语言分别是L(r)和L(s)，那么
   * r|s是一个RE，$L(r|s)=L(r)\cup L(s)$
   * rs是一个RE，$L(rs)=L(r)L(s)$ **(注意：这里不是交集！是连接！！！)**
-  * r^*^是一个RE，L(r^*^) = (L(r))^*^
+  * $r^*$是一个RE，L($r^*$) = $(L(r))^*$
   * (r)是一个RE，L((r)) = L(r)
 
-> 运算的优先级：克林闭包(^*^) > 连接 > 或(|)，括号还是最牛b
+> 运算的优先级：克林闭包($^*$) > 连接 > 或(|)，括号还是最牛b
 
 > 例：
 >
-> 1. 令$\Sigma = \{a,b\}$，求L(a|b)，L((a|b)(a|b))，L(a^*^)，L((a|b)^*^)，L(a|a^*^b)
+> 1. 令$\Sigma = \{a,b\}$，求L(a|b)，L((a|b)(a|b))，$L(a^*)$，$L((a|b)^*)$，$L(a|a^*b)$
 >
 >    因为a和b都是字母，那a和b自然都是一个正则表达式，表示的语言分别是L(a) = {a}，L(b) = {b}
 >
@@ -498,31 +492,23 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 >
 > 2. 十进制整数的RE
 >
->    (1|...|9)(0|...|9)^*^|0
+>    (1|...|9)(0|...|9)$^*$|0
 >
 >    *这里最后的0是表示整个就是个0*
 >
 > 3. 八进制整数的RE(C语言)
 >
->    0(1|2|3|...|7)(0|1|2|...|7)^*^
+>    0(1|2|3|...|7)(0|1|2|...|7)$^*$
 >
 > 4. 十六进制整数的RE(C语言)
 >
->    0x(1|2|...|f)(0|1|...|f)^*^
+>    0x(1|2|...|f)(0|1|...|f)$^*$
 >
 >    *大写字母这里不写了先*
 
 **正则表达式的运算定律**
 
-| 定律                         | 描述 |
-| ---------------------------- | ---- |
-| $r|s=s|r$                    | 交换律 |
-| $r|(s|t)=(r|s)|t$            | 或结合律 |
-| $r(s|t)=rs|rt; (s|t)r=sr|tr$ | 分配律 |
-| $\epsilon r=r\epsilon=r$     | 乘1 |
-| $r^*=(r|\epsilon)^*$         	| 闭包中一定含$\epsilon$(没啥用) |
-| $r^{**}=r^*$ | 呃呃 |
-| $r(st)=(rs)t$ | 连接结合律 |
+![[Pasted image 20221017112429.png]]
 
 ### 3.2 Regular Definition
 
@@ -533,13 +519,13 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 
 那么这样起个名字，就很容易表示标识符了：
 
-identifier -> letter_(letter\_|digit)^*^
+identifier -> letter\_(letter\_|digit)$^*$
 
 > 例：
 >
 > * digit -> 0|1|2|...|9
 >
-> * digits -> digit digit^*^
+> * digits -> digit digit$^*$
 >
 > * optionalFraction(可选小数部分) -> .digits|$\epsilon$
 >
@@ -565,10 +551,7 @@ identifier -> letter_(letter\_|digit)^*^
 
 它的状态可以是：
 
-```mermaid
-graph LR;
-	start[0_start]--a-->state1[0]--b-->state2[0]--b-->state3[0]--a-->state4{0}--a-->state5[1]--b-->state6[2]--b-->state7[3]
-```
+![[Pasted image 20221017112732.png]]
 
 菱形之前的过程一直在自旋，之后遇到`abb`才向下走。用这种走法正好能**从初始状态达到终止状态**。那么能满足这样条件的一个串就叫做**能被该FA接收**的串
 
@@ -582,7 +565,7 @@ graph LR;
 
 * 首先，从0开始，检测到`<`，到达状态1
 * 然后，**发现状态1是一个终止状态，那么还继续匹配吗？这个串是不是就直接被接收了？**
-* 不会的，还会继续进行检测，`=`也匹配，到达状态2，这时候才是终止状态
+* 不会的，还会继续进行检测，= 也匹配，到达状态2，这时候才是终止状态
 
 也就是说，`<`和`<=`都是串`<=`的**前缀**，而这两个前缀都能匹配上这个FA的模式，那么我们**总是选择最长的这个前缀进行匹配**，这也叫做**Longest String Matching Principle**。在到达某个终止状态之后，只要输入带上还有符号，FA就会继续前进，以便寻找**尽可能长**的匹配
 
@@ -600,18 +583,13 @@ graph LR;
 
 * 然后我们画一张表格：
 
-  | 状态\输入   | a    | b    |
-  | ----------- | ---- | ---- |
-  | 0           | 1    | 0    |
-  | 1           | 1    | 2    |
-  | 2           | 1    | 3    |
-  | **3(终态)** | 1    | 0    |
+  ![[Pasted image 20221017112952.png]]
 
   这个表格表示：状态0经过输入a会变成状态1，经过输入b会变成状态0；状态1经过输入a会变成状态1，经过输入b会变成状态2.........
 
   我们能发现：**即使不给图，只根据这个表，我们也能把转换图画出来。**也就是说，这个表格和转换图是等价的，这个表(**转换表**)也描述了一个**函数**，参数是当前状态和输入，返回值是下一个状态。这个函数记为$\delta$
 
-* 这个DFA的开始状态是0，记为s~0~，s~0~$\in$S
+* 这个DFA的开始状态是0，记为$s_0$，$s_0$$\in$S
 
 * 这个DFA只有一个终止状态(接收状态)，记为F，F$\subseteq$S(能相等是因为有可能所有状态都是终止状态)
 
@@ -630,9 +608,9 @@ graph LR;
 | 状态\输入 | a      | b    |
 | --------- | ------ | ---- |
 | 0         | {0, 1} | {0}  |
-| 1         | $\O$   | {2}  |
-| 2         | $\O$   | {3}  |
-| **3**     | $\O$   | $\O$ |
+| 1         | $\Phi$   | {2}  |
+| 2         | $\Phi$   | {3}  |
+| **3**     | $\Phi$   | $\Phi$ |
 
 注意里面的大括号：因为这是NFA，不像DFA一样到达的状态就确定是一个。因此哪怕NFA到达的状态真就一个，也得加上大括号表示一个集合，只不过集合里就一种状态罢了
 
@@ -654,7 +632,7 @@ NFA在3.3中分析过一模一样的，我们来分析一下DFA，对于任意�
 
 那么，以`abb`结尾的串的正则表达式是什么？来构建一下：
 
-$\{a,b\}^*$是任意长度的ab串，也包括空串，那也就是说是(a|b)^*^，然后再拼上结尾abb，就是**(a|b)^*^abb**
+$\{a,b\}^*$是任意长度的ab串，也包括空串，那也就是说是(a|b)$^*$，然后再拼上结尾abb，就是$(a|b)^*abb$
 
 其实，**正则表达式和正则文法还有FA都是等价的，可以互相构建**：正则文法$\Leftrightarrow$正则表达式$\Leftrightarrow$FA
 
@@ -715,19 +693,19 @@ graph LR;
 
 ![img](img/anfa.png)
 
-3. 然后是俩表达式连到一起，对于r = r~1~r~2~，它对应的NFA是
+3. 然后是俩表达式连到一起，对于r = $r_1r_2$，它对应的NFA是
 
 ![img](img/rrnfa.png)
 
-4. 然后是两个表达式或运算，对于r = r~1~|r~2~，它对应的NFA是
+4. 然后是两个表达式或运算，对于r = $r_1|r_2$，它对应的NFA是
 
 ![img](img/rnfa.png)
 
-5. 最后是克林闭包，对于r = r~1~^*^，它的NFA是
+5. 最后是克林闭包，对于r =$r_1^*$，它的NFA是
 
 ![img](img/knfa.png)
 
-由这些基本规则，我们就可以由正则表达式来构建NFA了。比如：r = (a|b)^*^abb
+由这些基本规则，我们就可以由正则表达式来构建NFA了。比如：r = $(a|b)^*abb$
 
 一开始，给一个初始状态和终止状态，然后把表达式写上去：
 
@@ -755,10 +733,10 @@ graph LR;
 
 | 状态\输入 | a      | b      | c      |
 | --------- | ------ | ------ | ------ |
-| A         | {A, B} | $\O$   | $\O$   |
-| B         | $\O$   | {B, C} | $\O$   |
-| C         | $\O$   | $\O$   | {C, D} |
-| **D**     | $\O$   | $\O$   | $\O$   |
+| A         | {A, B} | $\Phi$   | $\Phi$   |
+| B         | $\Phi$   | {B, C} | $\Phi$   |
+| C         | $\Phi$   | $\Phi$   | {C, D} |
+| **D**     | $\Phi$   | $\Phi$   | $\Phi$   |
 
 构造DFA。首先是初始状态
 
@@ -768,11 +746,11 @@ graph LR;
 
 ![img](img/nd3.png)
 
-那接下来咋办呢？看A和B：A和B收到a时，会进入{A, B}或者$\O$，因为空集不算，那还是自己
+那接下来咋办呢？看A和B：A和B收到a时，会进入{A, B}或者$\Phi$，因为空集不算，那还是自己
 
 ![img](img/nd4.png)
 
-AB收到b时会进入$\O$和{B, C}，因此
+AB收到b时会进入$\Phi$和{B, C}，因此
 
 ![img](img/nd5.png)
 
@@ -784,7 +762,7 @@ AB收到b时会进入$\O$和{B, C}，因此
 
 ![img](img/nd7.png)
 
-检验，NFA和DFA能接收的串都是：aa^*^bb^*^cc^*^(这里是因为至少要有一个a或b或c，也可以写成a^+^b^+^c^+^)
+检验，NFA和DFA能接收的串都是：$aa^*bb^*cc^*$(这里是因为至少要有一个a或b或c，也可以写成$a^+b^+c^+$)
 
 接下来，再看一个例子，这个例子带空边
 
@@ -795,8 +773,8 @@ AB收到b时会进入$\O$和{B, C}，因此
 | 状态\输入 | 0         | 1      | 2    |
 | --------- | --------- | ------ | ---- |
 | A         | {A, B, C} | {B, C} | {C}  |
-| B         | $\O$      | {B, C} | {C}  |
-| **C**     | $\O$      | $\O$   | {C}  |
+| B         | $\Phi$      | {B, C} | {C}  |
+| **C**     | $\Phi$      | $\Phi$   | {C}  |
 
 比如A接收到0，可以接收完0不动，即状态A，也可以动一下变成B，或者动两下变成C；而A为啥能接收1呢？因为A可以先动一下变成B，这样就能接收1了。因为A变成B啥都不需要
 
@@ -820,7 +798,7 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/nd13.png)
 
-检验可以得到，他俩接收的串都是r = 0^*^1^*^2^*^
+检验可以得到，他俩接收的串都是$r = 0^*1^*2^*$
 
 ### 3.6 Word DFA
 
@@ -830,7 +808,7 @@ ABC接收2之后会进入C，C是终态
 
 * digit -> 0|1|2|...|9
 * letter_ -> A|B|...|Z|a|b|...|z|_
-* **identifier -> letter_(letter\_|digit)^***^
+* **identifier -> letter_(letter\_|digit)$^*$**
 
 那么构造NFA的话，首先就是要一个初始状态。这个状态要开始接收字符串，首先肯定是一个letter\_，然后即可以接收letter\_也可以接收digit，而且**不是必须的**，那么这个初始状态也是终止状态。然后这两种接收都会导致自旋，则
 
@@ -852,7 +830,7 @@ ABC接收2之后会进入C，C是终态
 
 * **number -> digits optionalFraction optionalExponent**
 
-构造DFA：也是要有一个初始状态，然后这个状态接收的首先是digits部分，也就是digit digit^*^。此时其实已经可以结束了，因为后面两个都是可选的部分，那么此时的状态图是
+构造DFA：也是要有一个初始状态，然后这个状态接收的首先是digits部分，也就是digit digit$^*$。此时其实已经可以结束了，因为后面两个都是可选的部分，那么此时的状态图是
 
 ![img](img/w2.png)
 
@@ -992,7 +970,7 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/ld5.png)
 
-此时最左边的Nonterminal是T'，自然要替换它了。它能替换成*FT'或者$\epsilon$，而现在是个加号。很显然，T'不可能以\*开头，那么我们只能将T'替换成$\epsilon$了
+此时最左边的Nonterminal是T'，自然要替换它了。它能替换成\*FT'或者$\epsilon$，而现在是个加号。很显然，T'不可能以\*开头，那么我们只能将T'替换成$\epsilon$了
 
 ![img](img/ld6.png)
 
@@ -1220,7 +1198,7 @@ FOLLOW(A) = \{a|S\Rightarrow^*\alpha Aa\beta,\ a\in V_T,\ \alpha,\beta\in(V_T\cu
 $$
 这个公式其实很好理解。首先S经过若干步推导，那得到的一定是个句型。然后右边就是左边一个$\alpha$，右边一个$\beta$，中间夹着的就是定义里的东西，其中$\alpha$和$\beta$都是文法中符合规定的任意一个串。
 
-那还有个问题，如果A后面没东西了咋整？难道Follow集里还有空串？前面强调过，**$\epsilon$既不是Terminal也不是Nonterminal**，所以很显然是不能加到这个集合里的。所以我们引入一个结束符**$**，也就是说，**如果句型中如果最右边那个东西是个Nonterminal，那它的Follow集就是{$}**
+那还有个问题，如果A后面没东西了咋整？难道Follow集里还有空串？前面强调过，**$\epsilon$既不是Terminal也不是Nonterminal**，所以很显然是不能加到这个集合里的。所以我们引入一个结束符**\$**，也就是说，**如果句型中如果最右边那个东西是个Nonterminal，那它的Follow集就是{\$}**
 
 由以上所说可以推出这个集合的用处了。就比如之前那个例子中的B，如果它后面出现的Terminal正好就在Follow(B)中，那很显然就应该选择这个候选式了。
 
@@ -1332,7 +1310,7 @@ $$
 
   这俩产生式的可选集不能相交，因为在不能推导出空串时前面也说了，可选集就是FIRST集。自然只需要保证
   $$
-  FIRST(\alpha)\cap FIRST(\beta)=\O
+  FIRST(\alpha)\cap FIRST(\beta)=\Phi
   $$
   FIRST集不相交，自然可选集也不相交
 
@@ -1346,8 +1324,8 @@ $$
   我们既然要让等号左边不相交，让等号右边不相交就行了！那么我们就需要保证
   $$
   \begin{align}
-  &FIRST(\beta)\cap FOLLOW(A)=\O\\
-  &FIRST(\beta)\cap FIRST(\alpha)=\O
+  &FIRST(\beta)\cap FOLLOW(A)=\Phi\\
+  &FIRST(\beta)\cap FIRST(\alpha)=\Phi
   \end{align}
   $$
   *问题：PPT中只给了第一条，这第二条不需要吗难道？*
@@ -1355,8 +1333,8 @@ $$
 * 如果反过来，也就是$\beta$能推出空串但是$\alpha$不能，只需要把这俩换一下就行了
   $$
   \begin{align}
-  &FIRST(\alpha)\cap FOLLOW(A)=\O\\
-  &FIRST(\alpha)\cap FIRST(\beta)=\O
+  &FIRST(\alpha)\cap FOLLOW(A)=\Phi\\
+  &FIRST(\alpha)\cap FIRST(\beta)=\Phi
   \end{align}
   $$
 
@@ -1369,7 +1347,7 @@ $$
 * E -> TE'
 * E' -> +TE' | $\epsilon$
 * T -> FT'
-* T' -> *FT' | $\epsilon$
+* T' -> \*FT' | $\epsilon$
 * F -> (E) | id
 
 计算E, E', T, T', F的FIRST集和FOLLOW集，并计算每个产生式的SELECT集
@@ -1381,15 +1359,15 @@ $$
 > * E -> TE'							FIRST(E) = {}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {}
 > * T -> FT'							FIRST(T) = {}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {}
 > * F -> (E) | id						FIRST(F) = {}
 >
-> 也就是E'，T'和F。它们分别以+，*和(打头，同时F还有一个id，那么直接写进去
+> 也就是E'，T'和F。它们分别以+，\*和(打头，同时F还有一个id，那么直接写进去
 >
 > * E -> TE'							FIRST(E) = {}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
 > * T -> FT'							FIRST(T) = {}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
 > * F -> (E) | id						FIRST(F) = {(, id}
 >
 > 然后再来逐个给Nonterminal打头的套娃。首先是E，它以T开头，而T此时还没确定，所以先来T
@@ -1399,7 +1377,7 @@ $$
 > * E -> TE'							FIRST(E) = {}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
 > * T -> FT'							FIRST(T) = {(, id}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
 > * F -> (E) | id						FIRST(F) = {(, id}
 >
 > 那么既然E以T开头，E就也会以(或者id开头
@@ -1407,7 +1385,7 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+}
 > * T -> FT'							FIRST(T) = {(, id}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*}
 > * F -> (E) | id						FIRST(F) = {(, id}
 >
 > **千万别忘了空串。空串是可以在FIRST集中的！**
@@ -1415,7 +1393,7 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}
 > * T -> FT'							FIRST(T) = {(, id}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}
 > * F -> (E) | id						FIRST(F) = {(, id}
 
 > **==2. 计算FOLLOW集==**
@@ -1425,24 +1403,24 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {}
 > * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
 > * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {}
 >
-> 首先从E开始，也就是FOLLOW(T)。T的后面是E'，那么T后面紧跟着出现的就是E'的FIRST集中的内容。**然而E'可以推导出空串，也就是T之后可以是$\epsilon$，则T的FOLLOW集中也应该有'$'符号**。
+> 首先从E开始，也就是FOLLOW(T)。T的后面是E'，那么T后面紧跟着出现的就是E'的FIRST集中的内容。**然而E'可以推导出空串，也就是T之后可以是$\epsilon$，则T的FOLLOW集中也应该有'\$'符号**。
 >
-> **另外，这个E作为开始符号，本身也是个句型，它的后面本身就啥也没有，所以也要加上$**
+> **另外，这个E作为开始符号，本身也是个句型，它的后面本身就啥也没有，所以也要加上\$**
 >
-> 对于这个最后的E'，它后面没东西。所以**能加在E后面的也能加在E'后面**，也就是把E的FOLLOW集里的全家在E'的FOLLOW集中。虽然就是一个$
+> 对于这个最后的E'，它后面没东西。所以**能加在E后面的也能加在E'后面**，也就是把E的FOLLOW集里的全家在E'的FOLLOW集中。虽然就是一个\$
 >
 > * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$}
 > * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {}
 > * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {}
 >
 > 然后是第二个产生式。因为这里T和E'和第一个位置一样，所以分析结果也一样。
 >
-> 然后是第三个。这里计算的显然就是FOLLOW(F)和FOLLOW(T')。F后面出现的就是T'的FIRST集，所以F的FOLLOW集里要加上\*；另外同理，因为T'能推出空串，所以也要加上$
+> 然后是第三个。这里计算的显然就是FOLLOW(F)和FOLLOW(T')。F后面出现的就是T'的FIRST集，所以F的FOLLOW集里要加上\*；另外同理，因为T'能推出空串，所以也要加上\$
 >
 > **漏了！因为T'能推出空串，所以这个产生式可以变成T -> F。代表能加在T后面的也能加在F后面。所以F的FOLLOW集应该有T的FOLLOW集里所有的东西，即+和$**
 >
@@ -1451,7 +1429,7 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$}
 > * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
 > * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +}
 >
 > 之后是第四条。因为第四条里F和T'和第三条一样，所以也不用来了。
@@ -1465,7 +1443,7 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$, )}
 > * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $, )}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $}
 > * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +}
 >
 > 第三句中，T'后面出现的应该包括T后面出现的所有；另外T'能变空串，所以F后面出现的也应该包括T后面出现的所有
@@ -1473,7 +1451,7 @@ $$
 > * E -> TE'							FIRST(E) = {(, id}				FOLLOW(E) = {$, )}
 > * E' -> +TE' | $\epsilon$ 			 	   FIRST(E') = {+, $\epsilon$}				FOLLOW(E') = {$, )}
 > * T -> FT'							FIRST(T) = {(, id}				FOLLOW(T) = {+, $, )}
-> * T' -> *FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $, )}
+> * T' -> \*FT' | $\epsilon$						FIRST(T') = {\*, $\epsilon$}				FOLLOW(T') = {+, $, )}
 > * F -> (E) | id						FIRST(F) = {(, id}				FOLLOW(F) = {\*, $, +, )}
 >
 > 然后第四句和第五句都分析不出啥，所以第二轮结束
@@ -1490,7 +1468,7 @@ $$
 > 2. E' -> +TE'
 > 3. E' -> $\epsilon$
 > 4. T -> FT'
-> 5. T' -> *FT'
+> 5. T' -> \*FT'
 > 6. T' -> $\epsilon$
 > 7. F -> (E)
 > 8. F -> id
@@ -1537,4 +1515,5 @@ $$
 > $$
 > **这道题有一种特殊情况没涉及到。比如说第四条：有F的FIRST集自当天经地义；但是如果F能推出空串的话，也就是F压根不存在，那么开头就变成了F之后的东西，也就是F的FOLLOW集中的东西也应该有。**
 
-总结：通过这道题，和之前的概念，我们也能发现，FOLLOW集是用在单个的Nonterminal上的，而FIRST集是用在串上的。因为Nonterminal本身也是一个串，所以自然都可以。而SELECT集是用在产生式上的，因此才会由小到大的计算。另外，FIRST集中要么是Terminal，要么是$\epsilon$；而FOLLOW集本身就是Terminal的集合，自然不能有$\epsilon$，而是用$代替；而SELECT集中因为表示的是输入符号，肯定要有意义，所以元素种类和FOLLOW集中的是一样的。
+总结：通过这道题，和之前的概念，我们也能发现，FOLLOW集是用在单个的Nonterminal上的，而FIRST集是用在串上的。因为Nonterminal本身也是一个串，所以自然都可以。而SELECT集是用在产生式上的，因此才会由小到大的计算。另外，FIRST集中要么是Terminal，要么是$\epsilon$；而FOLLOW集本身就是Terminal的集合，自然不能有$\epsilon$，而是用\$代替；而SELECT集中因为表示的是输入符号，肯定要有意义，所以元素种类和FOLLOW集中的是一样的。
+
