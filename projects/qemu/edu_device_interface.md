@@ -19,20 +19,20 @@ fprintf(stdout, "Inversion: %08X --> %08X\n", i, bar0[EDU_CARD_LIVENESS_ADDR]);
 接下来是一些和DMA相关的空间，和前面一起直接贴出英文原文：
 
 >MMIO area spec
-Only size == 4 accesses are allowed for addresses < 0x80. size == 4 or size == 8 for the rest.
-0x00 (RO) : identification (0xRRrr00edu)
-RR -- major version
-rr -- minor version	    
-0x04 (RW) : card liveness check It is a simple value inversion (~ C operator).
-0x08 (RW) : factorial computation The stored value is taken and factorial of it is put back here.This happens only after factorial bit in the status register (0x20 below) is cleared.
-0x20 (RW) : status register, bitwise OR 0x01 -- computing factorial (RO) 0x80 -- raise interrupt after finishing factorial computation
-0x24 (RO) : interrupt status register It contains values which raised the interrupt (see interrupt raise register below).
-0x60 (WO) : interrupt raise register Raise an interrupt. The value will be put to the interrupt status register (using bitwise OR).
-0x64 (WO) : interrupt acknowledge register Clear an interrupt. The value will be cleared from the interrupt status register. This needs to be done from the ISR to stop generating interrupts.
-0x80 (RW) : DMA source address Where to perform the DMA from.
-0x88 (RW) : DMA destination address Where to perform the DMA to.
-0x90 (RW) : DMA transfer count The size of the area to perform the DMA on.
-0x98 (RW) : DMA command register, bitwise OR 0x01 -- start transfer 0x02 -- direction (0: from RAM to EDU, 1: from EDU to RAM) 0x04 -- raise interrupt 0x100 after finishing the DMA
+>Only size == 4 accesses are allowed for addresses < 0x80. size == 4 or size == 8 for the rest.
+>0x00 (RO) : identification (0xRRrr00edu)
+>RR -- major version
+>rr -- minor version	    
+>0x04 (RW) : card liveness check It is a simple value inversion (~ C operator).
+>0x08 (RW) : factorial computation The stored value is taken and factorial of it is put back here.This happens only after factorial bit in the status register (0x20 below) is cleared.
+>0x20 (RW) : status register, bitwise OR 0x01 -- computing factorial (RO) 0x80 -- raise interrupt after finishing factorial computation
+>0x24 (RO) : interrupt status register It contains values which raised the interrupt (see interrupt raise register below).
+>0x60 (WO) : interrupt raise register Raise an interrupt. The value will be put to the interrupt status register (using bitwise OR).
+>0x64 (WO) : interrupt acknowledge register Clear an interrupt. The value will be cleared from the interrupt status register. This needs to be done from the ISR to stop generating interrupts.
+>0x80 (RW) : DMA source address Where to perform the DMA from.
+>0x88 (RW) : DMA destination address Where to perform the DMA to.
+>0x90 (RW) : DMA transfer count The size of the area to perform the DMA on.
+>0x98 (RW) : DMA command register, bitwise OR 0x01 -- start transfer 0x02 -- direction (0: from RAM to EDU, 1: from EDU to RAM) 0x04 -- raise interrupt 0x100 after finishing the DMA
 
 对于edu的驱动程序，我在Stack Overflow上找到了一个pci设备通用的驱动程序——`uio_pci_generic`。这是Linux自带的一个模块，它其实就是一个pci的设备驱动程序，代码如下：
 
