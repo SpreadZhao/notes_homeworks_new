@@ -1,8 +1,147 @@
 # 编译原理笔记
 
-## 1. 基本概念
+# 0. 题外话
 
-### 1.1 字母表
+程序中的变量存放在内存中，在计算的时候需要加载到寄存器中，就像[[cs#2.1 Overview|计组笔记中的这里]]提到的一样。所以对于计算机来说，比如`x = a + b;`这样的代码就必须经过翻译才能够被计算机认识，才知道去哪里寻找这个变量，怎么去计算。
+
+**程序设计语言在张立勇老师看来只有两种：**
+
+* 命令式(Imperative)，比如c，java这些都算是。**每一条语句都是一个命令**，告诉计算机去做事。
+* 函数式(Functional)，比如一些早期人工智能，不是用现在的深度网络实现的，当时是用的一种函数式的语言，**每一条语句都是对一个函数的调用**，去做一些数学的推导。
+
+## 0.1 语言之间的翻译
+
+不同的语言会有不同的编译模式。下图给出了比较完整的过程：
+
+![[Pasted image 20221018105859.png]]
+
+比如从L1 -> A1 -> M1，就是一个很常见的编译模式。首先从高级语言通过编译器变成一个接近机器语言的语言(比如汇编)。然后将这个汇编再进行一次[[linux#^ac781a|汇编操作]]，就能够形成机器语言(01串)。而不同的处理器对相同的操作(比如加法)有着不同的01串，所以重担就落在了编译器身上。
+
+而高级程序语言不经过汇编也能直接变成机器语言，比如L1 -> M1；高级语言之间也有可能互相转换，~~比如java和kotlin互转~~(图中的L1<->L2并不是在说这个，而是高级语言之间也有可能有层次的差距。比如SQL和c语言)；相对的，反编译和反汇编也是有可能发生的。另外不同的语言混合编译也会有交叉编译。
+
+## 0.2 编译器与解释器
+
+通常语言的翻译有这两种形态：
+
+1. 先翻译后执行	
+```mermaid
+	graph LR
+	源程序--编译器-->目标程序
+	输入数据--目标程序-->输出
+```
+2. 边翻译边执行
+```mermaid
+graph LR
+源程序-->解释器
+输入程序-->解释器
+解释器-->输出
+```
+
+所以如果有如下代码：
+
+```pascal
+read(x);              { scanf }
+write("x = ", x);     { printf }
+```
+
+那么按照上面的两种形态，就会分别是如下的结果：
+
+![[Pasted image 20221018112112.png]]
+
+另外，**java其实是编译和解释同时存在**。因为java的抽象层次很高，所以需要先编译一段，然后再将工作交给解释器。由此就能够减少解释器的负担。那么我们为什么要用解释器呢？那这就涉及它们的优缺点了：
+
+* 编译器的工作效率高，省时省空间；交互性与动态特性差，可移植性差。
+* 解释器的工作效率低，费时费空间；交互性和可移植性好。
+
+## 0.3 编译器的工作原理与基本组成
+
+### 0.3.1 通用程序设计语言的主要成分
+
+比如`int x;`这段代码，最主要的功能是告诉计算机**你去找个地方把x给放起来**。这就是一种**声明**性的语句；另外我在对x进行计算的时候，这部分代码就叫做**操作**性的语句。
+
+那么在这两个过程中编译器又做了什么呢？在声明性语句中，编译器就能生成相应的**环境**，也就是变量函数的存储空间，而对于操作性语句，编译器就会生成此环境中的**可执行代码序列**。
+
+### 0.3.2 编译器的工作
+
+直接上图：
+
+![[Drawing 2022-10-18 12.08.38.excalidraw]]
+
+为什么需要经历这么多步呢？一次搞定不香吗？主要的原因是，**我们在每一步其实都会对生成的中间产品去做优化**。很多垃圾代码和冗余代码都需要精简和优化。接下来简要说一下这些步骤都是在干什么
+
+* **词法分析**
+
+主要看你写的变量对不对啊，逗号分号用没用对啊之类的。详细的解释在[[#3. 词法分析|第三章]]。
+
+![[Pasted image 20221018125424.png]]
+
+* **语法分析**
+
+其实语法分析和文法分析是一回事，主要的工作是生成分析树[[#2.10 CFG Tree|CFG]]。
+
+![[Pasted image 20221018125433.png]]
+
+* **语义分析**
+
+就是上面所说的某个变量应该存放在哪个位置。也就是**检查语法正确的句子语义是否有问题**。比如把整形赋值给浮点型，那么**通知**隐式转换(通知的意思是不做，告诉CPU你去做)就是这部分做的事。
+
+![[Pasted image 20221018125314.png]]
+
+* **中间代码生成**
+
+语法和语义都正确的话，就可以真正开始逐个翻译了。这部分做的事情就是将分析树这种不能执行的结构翻译成计算机能够差不多认出来的可执行序列。之所以是差不多是因为这个语言还不能完全执行(比如汇编)。而代码优化也需要翻译成中间代码后才能优化。
+
+![[Pasted image 20221018125221.png]]
+
+这就差不多是一种中间代码。
+
+* **代码优化**
+
+上面的中间代码里，第一行的60我为什么还要通知CPU去隐式转换呢？直接改成60.0不就行了？另外最后两行为啥还要加完存到T3里然后把T3赋值给id1呢？直接加完把结果给id1不就完了？所以这部分主要做的是进一步进行优化，尽可能去掉不必要的操作。
+
+![[Pasted image 20221018125827.png]]
+
+* **目标代码生成**
+
+![[Pasted image 20221018130028.png]]
+
+* **符号表管理**
+
+在前面其实已经见过这个表了：
+
+![[Pasted image 20221018141548.png]]
+
+合理组织符号，便于各阶段查找，填写。也就是能够很方便地找到我写的变量存在内存的哪里。注意这里的地址通常是偏移量。
+
+* **出错处理**
+
+```c
+/* 静态语义错误 */
+int y = 2;
+const int x = 3;
+x = 8 / y;
+```
+
+```c
+/* 动态语义错误 */
+int x = 2;
+int y = 0;
+x = 8 / y;
+```
+
+### 0.3.3 编译器的结构
+
+![[Pasted image 20221018142751.png]]
+
+词法、语法、语义分析通常称为**前端**，因此前端的产物就是中间代码。而后序的工作就交给**后端**来完成。
+
+在开发场景中，通常会进行前端和后端的复用。比如arm平台和x86平台，它们都识别c语言，语法是相同的，那么它们就可以用同一套前端来生成相同的中间代码，只不过需要不同的后端来转移到不同的架构上；又比如只在x86上做不同的语言，那么就需要不同的前端来生成中间代码。但是最终只会翻译成x86架构的机器指令，所以可以使用同一个后端来做翻译和优化。
+
+![[Pasted image 20221018143127.png]]
+  
+# 1. 基本概念
+
+## 1.1 字母表
 
 **字母表**$\Sigma$是一个有穷符号集合。比如：
 
@@ -12,7 +151,7 @@
 
 字母表的运算
 
-* 乘积：$\Sigma_1\Sigma_2$ = {ab | a $\in$ $\Sigma$~1~, b $\in$ $\Sigma$~2~}
+* 乘积：$\Sigma_1\Sigma_2$ = {ab | a $\in$ $\Sigma_1$, b $\in$ $\Sigma_2$}
 
   比如：{0, 1} {a, b} = {0a, 0b, 1a, 1b}
 
@@ -43,7 +182,7 @@
   
   > 比如字母表$\Sigma$ = {a, b, c, d}，那么$\epsilon$, a, b, c, d, aa, ab, ac, ad, ba, bb, bc, bd等都是$\Sigma$的串，比如让串s = ab, 那么s的长度|s| = 2，**也就是串中符号的个数**。而**|$\epsilon$| = 0**
 
-### 1.2 串的运算
+## 1.2 串的运算
 
 **连接**
 
@@ -65,9 +204,9 @@
 >
 > 特别地：$s^0$ = $\epsilon$
 
-## 2. 文法分析
+# 2. 文法分析
 
-### 2.1 Terminal Symbol
+## 2.1 Terminal Symbol
 
 终结符：是文法所定义的语言的基本符号。有时也称为**Token**
 
@@ -77,7 +216,7 @@
 
 ***重点：$\epsilon$不是Nonterminal，也不是Terminal！！！***
 
-### 2.2 Nonterminal Symbol
+## 2.2 Nonterminal Symbol
 
 非终结符：用来表示**语法成分**的符号，有时也称为**语法变量**
 
@@ -89,7 +228,7 @@
 
 非终结的意思就是能继续推导，也就是这个东西能够继续细分成更细的东西
 
-### 2.3 Production
+## 2.3 Production
 
 产生式：描述了将**Terminal**和**Nonterminal**组合成**串**的**方法**，也就是用来**产生串的式子**。一般形式：$\alpha$ -> $\beta$ ($\alpha$定义为$\beta$)
 
@@ -97,11 +236,11 @@
 
 P = {<句子> $\rightarrow$ <名词短语><动词短语>, <名词短语> $\rightarrow$ <形容词><名词短语>, ...}
 
-### 2.4 Start Symbol
+## 2.4 Start Symbol
 
 开始符号：文法中最大的语法成分：比如上面的例子，最大的语法成分就是**S = <句子>**
 
-### 2.5 Grammar
+## 2.5 Grammar
 
 就是上面四项组成的集合：
 
@@ -137,7 +276,7 @@ G = ($V_T,V_N$, P, S)
 * $\alpha$ $\in$ $(V_T \cup V_N)^+$，并且$\alpha$中至少得有一个$V_N$的元素，称为产生式的**头部**或者**左部**
 * $\beta$ $\in$ $(V_T \cup V_N)^+$，称为产生式的**体**或者**右部**
 
-### 2.6 Symbolic Convention
+## 2.6 Symbolic Convention
 
 上面说了那么多Terminal和Nonterminal，怎么区分他们呢？
 
@@ -163,11 +302,11 @@ G = ($V_T,V_N$, P, S)
 * 小写希腊字母，比如$\alpha$, $\beta$, $\gamma$，表示**文法符号串**(包括空串)
 * **除非有特别说明，第一个产生式的左部就是开始符号**
 
-### 2.7 Language
+## 2.7 Language
 
 *给你一个句子：`little boy eats apple`，咋判断它符不符合语法？*
 
-#### 2.7.1 Derivation & Reduction
+### 2.7.1 Derivation & Reduction
 
 比如一个**文法**中的**Production**是这样的(这里就不写成集合了)：
 
@@ -212,7 +351,7 @@ G = ($V_T,V_N$, P, S)
 * $\Rightarrow^+$表示经过正数步推导(>0)
 * $\Rightarrow^*$表示经过若干步推导($\geq$0)
 
-#### 2.7.2 Sentential form & Sentence
+### 2.7.2 Sentential form & Sentence
 
 在上面的例子中：
 
@@ -253,7 +392,7 @@ G = ($V_T,V_N$, P, S)
 * 如果S经过若干步推导得到了$\alpha$**(S $\Rightarrow^*$ $\alpha$)**，并且$\alpha$ $\in$ $(V_T \cup V_N)^*$，则称$\alpha$是G的一个**句型**。句型中包含Terminal Symbol和Nonterminal Symbol，还可能是空串$\epsilon$
 * 如果S $\Rightarrow^*$ $\omega$，并且$\omega$ $\in$ $(V_T \cup V_N)^*$，则称$\omega$是G的一个句子。**句子**是不包含Nonterminal Symbol的句型
 
-#### 2.7.3 Language
+### 2.7.3 Language
 
 由文法G的Start Symbol**推导出的所有<u>句子</u>**构成的集合称为文法**G生成的语言**，记为L(G)
 
@@ -276,19 +415,19 @@ L(G) = {$\omega$ | S $\Rightarrow^*$ $\omega$, $\omega$ $\in$ ${V_T}^*$} (*问�
 
 **语言上的运算**
 
-![[Pasted image 20221017111600.png]]
+![[Pasted image 20221017111600.png]] ^bingde
 
 > 例：令L = {A, B, ..., Z, a, b, ..., z}，D = {0, 1, ..., 9}则$L(L \cup D)^*$表示的语言是？
 >
 > 语言也和串一样可以连接，**语言也是句子的集合**，因此**本题中默认A, B等都是句子**，D也是语言，0, ..., 9也都是句子。而$L(L \cup D)^*$表示一个字母开头，后面连接上L并上D的克林闭包，那么就是说是由字母和数字组成的一堆东西，然后还是字母开头，那表示的也是**标识符**
 
-### 2.8 Grammatical Classification
+## 2.8 Grammatical Classification
 
-#### 2.8.1 Type-0 Grammar: Unrestricted Grammar
+### 2.8.1 Type-0 Grammar: Unrestricted Grammar
 
 比如前面说的那些Production，只要左边(左部)**至少有一个**Nonterminal，那就是0型文法
 
-#### 2.8.2 Type-1 Grammar: Context-Sensitive Grammar(CSG)
+### 2.8.2 Type-1 Grammar: Context-Sensitive Grammar(CSG)
 
 Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\beta\neq\epsilon)$
 
@@ -296,7 +435,7 @@ Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\
 
 既然$\beta\neq\epsilon$，那么CSG中**不能**包含空产生式，也就是右部是空串。而之前说过，**左部至少要有一个Nonterminal**，那么左部的长度至少是1，那一个**长度是1或者以上的东西怎么可能由空串来定义呢**？显然右部的长度要 $\geq$ 左部 $\geq$ 1
 
-#### 2.8.3 Type-2 Grammar: Context-Free Grammar(CFG)
+### 2.8.3 Type-2 Grammar: Context-Free Grammar(CFG)
 
 现在定义：**A表示非终结符**
 
@@ -311,18 +450,18 @@ Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\
 
 左边全是Nonterminal，那就是一个2型文法。**由上下文无关语法生成的语言叫做上下文无关语言**
 
-#### 2.8.4 Type-3 Grammar: Regular Grammar(RG)
+### 2.8.4 Type-3 Grammar: Regular Grammar(RG)
 
 还是定义A为Nonterminal，现在B也是个Nonterminal，w是Terminal，RG分为两种：
 
-##### 2.8.4.1 Right Linear
+#### 2.8.4.1 Right Linear
 
 * $A \rightarrow wB$
 * $A \rightarrow w$
 
 也就是说，可以定义一步到位；也可以在右边挂个B，不停套娃
 
-##### 2.8.4.2 Left Linear
+#### 2.8.4.2 Left Linear
 
 * $A \rightarrow Bw$
 * $A \rightarrow w$
@@ -340,11 +479,11 @@ Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\
 >
 > 然后它生成的是什么语言呢？首先看T是啥：T要么是单纯的a ~ d, 0 ~ 5，要么是这些后面再套娃上T，所以T就是一个任意长度的字母和数字组成的串；然后再看S：S要么是单纯的abcd，要么是abcd打头，后面跟上个T，所以这个生成的还是**标识符**，只不过它只能由0 ~ 5和a ~ d构成
 
-### 2.9 Grammatical Relationships
+## 2.9 Grammatical Relationships
 
 **0型**包含**1型**包含**2型**包含**3型**
 
-### 2.10 CFG Tree
+## 2.10 CFG Tree
 
 首先CFG：就是一堆$A \rightarrow \beta$
 
@@ -377,7 +516,7 @@ $E \Rightarrow -E \Rightarrow -(E) \Rightarrow -(E + E) \Rightarrow -(id + E) \R
 
 这样就能发现，推导的过程中，**每次得到的句型，都是在构造分析树的同时树的边缘**
 
-#### 2.10.1 Phrase
+### 2.10.1 Phrase
 
 在以下的分析树中，有这么几个短语：
 
@@ -405,7 +544,7 @@ $E \Rightarrow -E \Rightarrow -(E) \Rightarrow -(E + E) \Rightarrow -(id + E) \R
 >
 > 但是文法中还有这些：高人，民生，活水。它们是产生式的右部，但却不是当前分析树的直接短语。因此我们能发现：**直接短语一定是产生式的右部，但是产生式的右部不一定是分析树的直接短语**。因为这个文法用不同的推导方式还能生成其他分析树，这些右部可能是其他分析树的直接短语
 
-#### 2.10.2 Ambiguous Grammar
+### 2.10.2 Ambiguous Grammar
 
 在写面向对象编程的时候，隐式转换通常会导致**二义性**(<u>可以这么整，也可以那么整，那咋整更好呢？我编译器也不知道，给你报个错吧！</u>)问题。这里来解释一下：
 
@@ -440,15 +579,15 @@ $E \Rightarrow -E \Rightarrow -(E) \Rightarrow -(E + E) \Rightarrow -(id + E) \R
 
 因为后面的else既可以和第一个if匹配，也可以和第二个if匹配，所以会产生二义性。而如果**规定else只能和最近的前一个if匹配**，就能够让第二种构造方法无效了。
 
-## 3. 词法分析
+# 3. 词法分析
 
-### 3.1 Regular Expression
+## 3.1 Regular Expression
 
 有如下一个句子：
 
 $L=\{a\}\{a,b\}^*(\{\epsilon\}\cup(\{.,\_\}\{a,b\}\{a,b\}^*))$
 
-注：这里要结合一下2.7.3中语言的并的运算
+注：这里要结合一下2.7.3中[[#^bingde|语言的并的运算]]
 
 这个L可以解释为：a开头，然后连上任意长度的由a、b组成的串(可以是空串，因为是克林闭包)；然后再连上一个并集：要么是$\epsilon$空串，要么是连接上这个：点或者下划线、a或者b、a和b组成的任意长度串
 
@@ -510,7 +649,7 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 
 ![[Pasted image 20221017112429.png]]
 
-### 3.2 Regular Definition
+## 3.2 Regular Definition
 
 给一些常用的正则表达式起个名字，比如：
 
@@ -537,7 +676,7 @@ identifier -> letter\_(letter\_|digit)$^*$
 >
 > *之所以是可选的，是因为最后的那个|$\epsilon$，最后这个number表达的就是所有整形或者浮点型的无符号整数*
 
-### 3.3 Finite Automata
+## 3.3 Finite Automata
 
 ![img](img/fa.png)
 
@@ -569,9 +708,9 @@ identifier -> letter\_(letter\_|digit)$^*$
 
 也就是说，`<`和`<=`都是串`<=`的**前缀**，而这两个前缀都能匹配上这个FA的模式，那么我们**总是选择最长的这个前缀进行匹配**，这也叫做**Longest String Matching Principle**。在到达某个终止状态之后，只要输入带上还有符号，FA就会继续前进，以便寻找**尽可能长**的匹配
 
-### 3.4 DFA & NFA
+## 3.4 DFA & NFA
 
-#### 3.4.1 Deterministic Finite Automata
+### 3.4.1 Deterministic Finite Automata
 
 看一个确定的有穷自动机：
 
@@ -595,7 +734,7 @@ identifier -> letter\_(letter\_|digit)$^*$
 
 由以上我们可以总结：**一个DFA记为M，可以表示成：$M=(S,\Sigma,\delta,s_0,F)$**
 
-#### 3.4.2 Nondeterministic Finite Automata
+### 3.4.2 Nondeterministic Finite Automata
 
 看一个NFA，其实和DFA就一点区别
 
@@ -614,7 +753,7 @@ identifier -> letter\_(letter\_|digit)$^*$
 
 注意里面的大括号：因为这是NFA，不像DFA一样到达的状态就确定是一个。因此哪怕NFA到达的状态真就一个，也得加上大括号表示一个集合，只不过集合里就一种状态罢了
 
-#### 3.4.3 Their Relation
+### 3.4.3 Their Relation
 
 对于这俩DFA和NFA：
 
@@ -636,7 +775,7 @@ $\{a,b\}^*$是任意长度的ab串，也包括空串，那也就是说是(a|b)$^
 
 其实，**正则表达式和正则文法还有FA都是等价的，可以互相构建**：正则文法$\Leftrightarrow$正则表达式$\Leftrightarrow$FA
 
-#### 3.4.4 Other Things
+### 3.4.4 Other Things
 
 **带有$\epsilon$边的NFA**
 
@@ -673,7 +812,7 @@ else return FALSE;			// 不是则不接收
 
 最后循环结束后，s会变成状态3。因为状态3是终态，返回TRUE
 
-### 3.5 RE -> FA
+## 3.5 RE -> FA
 
 由正则表达式直接构造DFA是比较难的，因此通常是：
 
@@ -683,7 +822,7 @@ graph LR;
 	RE-.->DFA
 ```
 
-#### 3.5.1 RE -> NFA
+### 3.5.1 RE -> NFA
 
 1. 还是从小到大来，单独对一个空串$\epsilon$，它的NFA是
 
@@ -723,7 +862,7 @@ graph LR;
 
 ![img](img/z4.png)
 
-#### 3.5.2 NFA -> DFA
+### 3.5.2 NFA -> DFA
 
 比如给一个NFA：
 
@@ -800,9 +939,9 @@ ABC接收2之后会进入C，C是终态
 
 检验可以得到，他俩接收的串都是$r = 0^*1^*2^*$
 
-### 3.6 Word DFA
+## 3.6 Word DFA
 
-#### 3.6.1 Identifier DFA
+### 3.6.1 Identifier DFA
 
 之前给过标识符的定义：
 
@@ -816,7 +955,7 @@ ABC接收2之后会进入C，C是终态
 
 因为这个NFA就是个DFA，所以也不用转成DFA了
 
-#### 3.6.2 Unsigned DFA
+### 3.6.2 Unsigned DFA
 
 然后是无符号数的定义：
 
@@ -880,9 +1019,9 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/w10.png)
 
-## 4. 语法分析
+# 4. 语法分析
 
-### 4.1 Top-Down Parsing
+## 4.1 Top-Down Parsing
 
 来看一个例子，也是之前表达式的例子
 
@@ -916,7 +1055,7 @@ ABC接收2之后会进入C，C是终态
 * 我们要替换的**Nonterminal是谁**？这里其实替换的全是E，只不过是哪一个E不确定
 * 我们要根据**什么规则**来进行替换？也就是这4个中的哪一个？
 
-#### 4.1.1 Left-most Derivation
+### 4.1.1 Left-most Derivation
 
 首先来回答上面的第一个问题。我们可以每次都选择**最左边**的来进行替换，只不过要是**Nonterminal**才行，否则也替换不了
 
@@ -926,7 +1065,7 @@ ABC接收2之后会进入C，C是终态
 
 同时，推导出来的这个句型就叫做该文法的**最左句型**(left-sentential form)。要注意是句型不是句子，也就是这个过程中每一步都是最左句型；并且一定是要由**Start Symbol**开始推导
 
-#### 4.1.2 Right-most Derivation
+### 4.1.2 Right-most Derivation
 
 同理可得
 
@@ -998,13 +1137,13 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/ld14.png)|![img](img/ld15.png)
 
-#### 4.1.3 Backtracking & Predictive Parsing
+### 4.1.3 Backtracking & Predictive Parsing
 
 比如Production是这样的：A -> abb | abc，那么如果此时的输入指针指向的恰好就是个a的话，到底是替换成abb还是abc？这俩都是a开头的。因此我们要逐个尝试一下。如果不能匹配了，那就说明我们这条路走的不对，要回去重来。这个过程就叫做**回溯**。
 
 显然，回溯会降低计算机的效率。因此我们要尽可能减少回溯(这里和KMP算法好像啊)，使用**预测分析**(Predictive Parsing)的方法。具体的做法就是，当前输入指针不是指向一个输入的符号吗，我们**再往前看看**，这样就能预测一下到底是哪一个Production更加合适，这样就能预测了。而往前看通常是看1个就够了
 
-### 4.2 Grammar Transformation
+## 4.2 Grammar Transformation
 
 刚才刚说过回溯的问题，而自顶向下的分析方法正好就会产生这种问题。我们先来看一个例子
 
@@ -1138,9 +1277,9 @@ ABC接收2之后会进入C，C是终态
 >
 > $A' \rightarrow cA'|adA'|\epsilon$
 
-### 4.3 LL(1) Grammar
+## 4.3 LL(1) Grammar
 
-#### 4.3.1 S_Grammar
+### 4.3.1 S_Grammar
 
 **S文法**就是简单的(Simple)、确定的(Specific)文法。它要求：
 
@@ -1190,7 +1329,7 @@ ABC接收2之后会进入C，C是终态
 
 另外，在匹配第二个字符时，也就是上面两个输入中的`d`。当前的Nonterminal是B，那么如果这个d不是d而是f的话，也就是说**和当前的Nonterminal的候选式都不匹配的时候**，这时本应该报错的，但是还有个空产生式，那么到底用不用呢？这取决于它后面的东西。**如果这个f能紧跟着B后面出现**，那么把B替换成$\epsilon$是没有问题的，否则就应该报错了
 
-#### 4.3.2 Follow Set
+### 4.3.2 Follow Set
 
 就像刚才说的，这个B后面只能紧跟着出现c和a。那么如果对于一个在**Sentential From**中出现的**Nonterminal**，它后面能紧跟着出现的这些**Terminal**可以形成一个集合，这个集合就叫做**Follow集**。
 $$
@@ -1216,7 +1355,7 @@ Follow集就是用在4号这种式子上面的。如果当前的Nonterminal是B�
 
 另外我们能发现，2号对应的是b开头；3好对应的是d开头；4号对应的是a或者c开头，**它们是不相交的**。
 
-#### 4.3.3 Selection Set
+### 4.3.3 Selection Set
 
 以上说的都是看当前的输入符号，去选择哪个Production。那么我们也可以反着来，就是说看**当前的某一个Production，它能适用于哪些输入符号呢**？这就是**可选集**的由来。
 
@@ -1228,7 +1367,7 @@ $$
 \end{align}
 $$
 
-#### 4.3.4 q_Grammar
+### 4.3.4 q_Grammar
 
 相对于S文法，q文法更加强大。上面的例子中就是一个q文法
 
@@ -1249,7 +1388,7 @@ $$
 
 那么我就要以Nonterminal打头该咋办？这样计算可选集的难度会大很多。因为打头的这个还要继续套娃替换，甚至会套娃很多次，所以我们要再了解一些其他的东西。
 
-#### 4.3.5  First Set
+### 4.3.5  First Set
 
 现在给定一个串$\alpha$，那很显然，它既可以以Terminal开头，也可以以Nonterminal开头，还可以是空串。
 
@@ -1297,7 +1436,7 @@ SELECT(A\rightarrow\alpha)=[FIRST(\alpha)-\{\epsilon\}]\cup FOLLOW(A)\ (\epsilon
 $$
 这里要减掉{$\epsilon$}的原因是，可选集的右边表示的是输入的符号，总不可能是空串吧！
 
-#### 4.3.6 Left-Right Left-most (1) Grammar
+### 4.3.6 Left-Right Left-most (1) Grammar
 
 先来回顾下，整个4.3都是为了干什么。4.1.3中我们提到了Backtracking和Predictive Parsing。预测分析就是用来避免掉回溯的。那么我们怎么做到预测分析呢？就是**让每个输入符号只能对应一个候选式**。那么怎么做到呢？正好可选集就表示了被选择的关系。那么我们只需要**让所有的可选集都不相交**，自然就不会有**"两个候选式被同一个输入符号选择"**的情况了。而像S文法和q文法中的第二条，也正是为了达到这样的效果。而我们的LL(1)文法也是为了这个。那么它和前两个有啥区别呢？前两个文法很鸡肋啊！比如S文法，它只能以Terminal开头，限制就已经很大了。根本不允许在开始就套娃；而q文法也只是在S的基础上加了一个空串。而LL(1)文法就不会有这样的限制，并且也能做到每个输入符号只对应一个候选式。
 
@@ -1340,7 +1479,7 @@ $$
 
 * 如果它俩都能推出空串，这种情况不存在。因为如果都能，它们的可选集里都有FOLLOW(A)，那本身就已经相交了
 
-#### 4.3.7 Calculation
+### 4.3.7 Calculation
 
 文法中有如下产生式：
 
