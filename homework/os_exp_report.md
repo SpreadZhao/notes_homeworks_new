@@ -1216,9 +1216,9 @@ try_module_get和module_put的小缺陷
   ```
 
   其中，c表示字符型设备文件，60就是`register_chrdev`里面起的设备号，0是次设备，没啥用
-
+ ^3c8c50
 * 然后插入模块，执行`sudo insmod hahadev.ko`，在这个过程中，就会调用`init`函数，也就会调用其中的`register_chrdev`来注册我们的设备文件，这样，就可以在外部通过绑定好的通用调用来操作设备文件了
-
+ ^994669
 * 执行`./hahatest`来测试，会看到如下结果：
 
   ```c
