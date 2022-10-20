@@ -1,6 +1,6 @@
 # 数据库笔记
 
-## 1. Introduction
+# 1. Introduction
 
 Database-management system(DBMS): a collection of interrelated data and a set of programs to access the data.
 
@@ -12,7 +12,7 @@ Database: a collection of data, contains information relevant to an enterprise.
 * 非常多
 * 经常被很多用户或者进程同时访问
 
-### 1.1 File-processing System
+## 1.1 File-processing System
 
 以前用的老数据库通常都是一个文件，叫file-processing system。这样的方式有很多缺点：
 
@@ -48,9 +48,9 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 > 我们看到，在DBMS的帮助下，应用程序能更好地使用数据库，同时还保证了数据库的安全性。这里**不同的应用通过DBMS后，看到的DB就是不一样的**。
 
-### 1.2 Data
+## 1.2 Data
 
-#### 1.2.1 Data Model
+### 1.2.1 Data Model
 
 数据库里很重要的一个概念。说的就是这数据到底怎么去表述它，怎么去处理它们之间的关系，怎么解决consistency constraints的问题。这里有4种主流的模型：
 
@@ -61,11 +61,11 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 这些模型之后都会详细讨论。
 
-#### 1.2.2 Relational Data Model
+### 1.2.2 Relational Data Model
 
 ![img](img/rdm.png)
 
-#### 1.2.3 Data Abstraction
+### 1.2.3 Data Abstraction
 
 为了普通用户使用，需要多次封装来让数据库看起来变得简单一些。
 
@@ -94,7 +94,7 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 ![img](img/tl.png)
 
-#### 1.2.4 DBMS Architecture
+### 1.2.4 DBMS Architecture
 
 DBMS在内部做的事情其实是很复杂的，尽管我们看起来很简单。比如下面有三张表：
 
@@ -114,16 +114,16 @@ DBMS在内部做的事情其实是很复杂的，尽管我们看起来很简单�
 
 ![img](img/le.png)
 
-#### 1.2.5 Instances and Schemas
+### 1.2.5 Instances and Schemas
 
 这俩的关系有点像实例和类型之间的关系。比如在C++里定义了一个Animal类，实例化出一个dog对象，那么dog就是Instance，而Animal就是Schema。
 
 * Instance: the collection of information stored in the database **at a particular moment**.
 * Database schema: the **overall** design of the database.
 
-### 1.3 Database Language
+## 1.3 Database Language
 
-#### 1.3.1 DDL
+### 1.3.1 DDL
 
 Data-definition language(DDL): 定义数据库的schema。比如：
 
@@ -138,13 +138,13 @@ create table department
 
 这里面还有很多其他的功能，比如把`dept_name`定义成**主键**等等。
 
-#### 1.3.2 DML
+### 1.3.2 DML
 
 Data-manipulation language(DML): 数据操作语言，就是对数据库进行**增删改查**的语言。
 
 这部分更多是上机练习。
 
-### 1.4 Database Design
+## 1.4 Database Design
 
 先来看一个例子。
 
@@ -152,9 +152,9 @@ Data-manipulation language(DML): 数据操作语言，就是对数据库进行**
 
 这个数据库有什么问题吗？我们来想想：如果我们想把物理学改成应用物理，那么我们就要搜索整个表，把所有能找到的物理学都改成应用物理，否则就会出现不一致的问题。这种问题叫做**更新异常**；另外，这个表里现在只有一个音乐学院的老师。如果这个老师被调离了，我们当然要从数据库中删除它。而造成的问题就是：这个表里所有关于音乐学院的信息都丢失了。这种问题叫做**删除异常**；如果我们在删除了这个音乐老师之后，又来了一个新音乐老师，这时候插入也会产生**插入异常**。这些情况，都是由与我们的**数据冗余**导致的，也就是**一样的信息我们在表中存储了多份**，或者说**我们把本应该存在多张表里的东西都堆在了一起**。解决这个问题的办法也很显而易见，就是将这个表拆成多张表。具体怎么拆之后再说。
 
-## 2. Relational Model
+# 2. Relational Model
 
-### 2.1 Concepts
+## 2.1 Concepts
 
 Relation表示关系，关系的模型其实就是一个表格。比如下面的这个
 
@@ -168,9 +168,9 @@ Relation表示关系，关系的模型其实就是一个表格。比如下面的
 
 如果要是来了一个新老师，还没确定他是什么学院的，也不确定工资是多少，只知道ID和姓名，那么这个时候我们怎么赋值呢？我们允许属性有一个特殊的值叫做**null**。
 
-### 2.2 Relational Algebra
+## 2.2 Relational Algebra
 
-#### 2.1.1 Relation Schema and Instance
+### 2.1.1 Relation Schema and Instance
 
 现在有一个学院的关系，叫做department relation。
 
@@ -180,7 +180,7 @@ Relation表示关系，关系的模型其实就是一个表格。比如下面的
 $$
 department(dept\_name,\ building,\ budget)
 $$
-这个schema就叫做**Relation Schema，记作R**。我们能发现，**R其实就是所有的属性构成的集合而已**。那么，我们就让属性中的一部分叫做**键(Key)，记作K**。也就是说$K \subseteq R$。
+这个schema就叫做**Relation Schema，记作R**。我们能发现，**R其实就是所有的属性构成的集合而已**。那么，我们就让属性中的一部分叫做**键(Key)，记作K**。也就是说$K \subseteq R$。 ^3ee2b2
 
 上面例子中的`dept_name`，我们能发现，在这个relation中，只要`dept_name`确定了，我们就能确定唯一的一行。像这样的Key，我们叫它**superkey**。又或者上面老师的例子中，`ID`就可以是一个superkey，而{`ID`, `name`}也可以是一个superkey。但是`name`自己就不是一个superkey了，因为老师可能有重名。这里要注意的是，**Key是一个集合而不是单独的属性**，只不过我们日常生活中Key总是单元素的集合罢了。
 
@@ -204,9 +204,9 @@ $$
 >
 > 下划线表示primary key。比如takes(选课) relation中，学生的ID，课程的id，上课节数的id，学期和年份共同作为选课的主键。
 
-#### 2.1.2 Relational-algebra Operations
+### 2.1.2 Relational-algebra Operations
 
-##### 2.1.2.1 Select
+#### 2.1.2.1 Select
 
 表达式看着很玄乎，其实简单的不得了。我们还是拿instructor relation来举例子。
 
@@ -232,7 +232,7 @@ $$
 
 ![img](img/select3.png)
 
-##### 2.1.2.2 Project
+#### 2.1.2.2 Project
 
 这里Project译为“投影”。和select相反，它不是横着筛选，而是竖着筛选。还是instructor的例子，如果我们不要`dept_name`，只要剩下三个属性，那么就能得到这样一个relation：
 
@@ -254,7 +254,7 @@ $$
 
 ![img](img/project4.png)
 
-##### 2.1.2.3 Union
+#### 2.1.2.3 Union
 
 前面两个操作都是对单个的relation，接下来就是对多个relation了。首先是“并”，也就是两个relation并起来形成一个新的relation。
 
@@ -306,7 +306,7 @@ $$
 
 **这里依然要注意，CS-101和CS-319出现了2次，所以要去重**。
 
-##### 2.1.2.4 Intersection
+#### 2.1.2.4 Intersection
 
 和上面几乎是一样的，所以这里不多说了。还是上面的例子，如果要计算：
 $$
@@ -316,7 +316,7 @@ $$
 
 ![img](img/in.png)
 
-##### 2.1.2.5 Set-difference
+#### 2.1.2.5 Set-difference
 
 还是上面的例子，如果我们要找在Fall2017开设而不在Spring 2018开设的课，应该怎么写？使用的就是Set-difference运算符。
 $$
@@ -326,7 +326,7 @@ $$
 
 ![img](img/sd1.png)
 
-##### 2.1.2.6 Cartesian-product
+#### 2.1.2.6 Cartesian-product
 
 笛卡尔积还是稍微复杂一点的。我们看一个例子。
 
@@ -352,7 +352,7 @@ $$
 $$
 ![img](img/dk4.png)
 
-##### 2.1.2.7 Rename
+#### 2.1.2.7 Rename
 
 比如关系r：
 
@@ -366,7 +366,7 @@ $$
 
 ![img](img/rename2.png)
 
-##### 2.1.2.8 Join
+#### 2.1.2.8 Join
 
 在之前笛卡尔积的例子中，我们看到了对于两个表之间建立关系，然后再从中进行选择的操作。包括下面的Exercise也有这样的操作。其实这样的操作经常会见到，所以我们不妨直接给他重新命名，叫做**join**。非常形象，就是把两张表合成一张表。比如还是笛卡尔积的老师的例子中，我们得到的结果是：
 $$
@@ -443,7 +443,7 @@ $$
 
 ![img](img/join2.png)
 
-##### 2.1.2.9 Division
+#### 2.1.2.9 Division
 
 我们先来看一个复杂的例子。
 
@@ -518,9 +518,9 @@ $$
 
 ![img](img/div6.png)
 
-#### 2.1.3 Exercise
+### 2.1.3 Exercise
 
-##### 2.1.3.1 Ex1
+#### 2.1.3.1 Ex1
 
 现在我们有一个银行的relation：
 
@@ -555,7 +555,7 @@ $$
 \Pi_{balance}(account)-\Pi_{A1.balance}(\sigma_{A1.balance<A2.balance}(\rho_{A1}(account) \times \rho_{A2}(account)))
 $$
 
-##### 2.1.3.2 Ex2
+#### 2.1.3.2 Ex2
 
 现在有两个relation:
 
@@ -598,11 +598,11 @@ $$
 
 ***剩下的练习题见录播第二集和第三集***
 
-##  3. SQL
+#  3. SQL
 
 为什么**关系型数据库**那么牛逼？一个是第二章的Relational Algebra，另一个就是SQL。SQL全称**Structured Query Language**，就是结构化查询语言。
 
-### 3.1 DDL
+## 3.1 DDL
 
 ```sql
 create table instructor(
@@ -653,7 +653,7 @@ alter table instructor add sex char(2);
 alter table instructor drop salary
 ```
 
-### 3.2 DML
+## 3.2 DML
 
 ```sql
 insert...
@@ -1014,7 +1014,7 @@ mysql> select distinct course_id
 
 ```
 
-### 3.3 MySQL
+## 3.3 MySQL
 
 展示所有数据库
 
@@ -1237,9 +1237,9 @@ drop table [if exists] instructor;
 >
 > 
 
-## 4. Intermediate SQL
+# 4. Intermediate SQL
 
-### 4.1 View
+## 4.1 View
 
 封装数据，**view是没有物理存储的，只是告诉你有这么一个东西**。
 
@@ -1319,7 +1319,7 @@ insert into history_instructors values(25566, 'Brown', 'Biology', 100000)
 
 但是这种物化也会带来问题：比如一个物理学院的老师被调走了，那么很显然要从instructor表里删掉他。但是**他还在视图中存在，这就会导致这种数据的不一致性**。而为了保证一致性，**自动更新视图的工作就交给DBMS**了。
 
-### 4.2 Transaction
+## 4.2 Transaction
 
 一个失败全失败；全成功才成功。比如拿转账来举例子：
 
@@ -1331,7 +1331,7 @@ insert Record;
 
 一个转账操作通常包含这三条信息：给发方减钱，给收方加钱，记录一条转账记录。那么作为事务来讲，在三条语句都成功之后，就要执行一条`commit`语句来表示我的操作都成功了；而如果其中任何一条失败了，我们要执行一条`rollback`语句来**回到我执行这三条语句之前**的状态。
 
-### 4.3  Integrity Constraints
+## 4.3  Integrity Constraints
 
 比如最小值，非空之类的都算完整性约束。
 
@@ -1340,7 +1340,7 @@ insert Record;
 check(semester in ('Spring', 'Summer', 'Fall', 'Winter'));
 ```
 
-### 4.4 SQL Data Types and Schemas
+## 4.4 SQL Data Types and Schemas
 
 **索引**
 
@@ -1371,7 +1371,7 @@ create table department(
 * blob: binary large object，比如视频对象，一个高清无码4k视频肯定要变成二进制文件存到数据库中，这时候就要对数据库的容量有要求。
 * clob: character large object，比如一个几百万字的小说对象要整个放到一个数据库格子中，那也是对容量的考验。
 
-### 4.4 Authorization
+## 4.5 Authorization
 
 ```sql
 grant <privilege list> on <relation name or view name> to <user list>;
@@ -1386,7 +1386,7 @@ grant select on instructor to U1, U2, U3;
 revoke select on branch from U1, U2, U3;
 ```
 
-## 5. Advanced SQL
+# 5. Advanced SQL
 
 高级语言如何和数据库来交互？我们自然地能想到，如果想要让应用程序和数据库来进行交互，那么肯定要靠DBMS来实现。首先程序将控制信息和数据发送给DBMS，然后把真正的增删改查交给DBMS来实现。**但是如今的数据库通常会有一个数据库客户端，它作为一个小进程就包含在我们的APP里**，而它负责的就是联系DBMS。因此问题就简化成了：我们如何让APP和数据库的客户端进行通信。
 
@@ -1399,7 +1399,7 @@ revoke select on branch from U1, U2, U3;
 
 我们只讨论中间的两种
 
-### 5.1 Embedded SQL
+## 5.1 Embedded SQL
 
 比如在c语言中嵌入SQL：
 
@@ -1415,7 +1415,7 @@ EXEC SQL <select * from ...>;
 
 我们要了解的一点是，**c语言的编译器是识别不了SQL语句的**。所以为了解决这种问题，厂商提供了一种叫做**预编译器(pre compiler)**的东西。它能将SQL语句变成纯c语句，这样编译器就能够顺利编译执行了。
 
-#### 5.1.1 SQLCA
+### 5.1.1 SQLCA
 
 也就是SQL Communication Area，目前可以理解为用来判断数据库语句执行情况的一个库。它的使用首先需要包含进这个库：
 
@@ -1430,7 +1430,7 @@ if(sqlca.sqlcode >= 0) printf("Creation Successful\n");
 else printf("Creation failed\n");
 ```
 
-#### 5.1.2 Host Language Variables
+### 5.1.2 Host Language Variables
 
 比如我想给一个学生增加余额，但是增加的这个数是在c语言中的一个变量，那么这个时候就用到**宿主变量**了。这种变量可以在c中访问，也可以在sql中访问。其实几乎所有嵌入式语言都会有宿主变量(参考嵌入式汇编)。
 
@@ -1450,7 +1450,7 @@ EXEC SQL END DECLARE SECTION;
 
 在使用宿主变量时可能会出现一个问题：我拿到SQL中的一个值作为输出(比如某某人的工资)，将这个值作为宿主变量，这样就能拿到这个值在c中进行操作了。但是万一这个值是个空值咋办？**SQL中的空和编程语言中的空是完全不一样的**，SQL中表示的是不知道、没有值，而编程语言中通常是空指针、0之类的。因此我们需要一个机制来解决这个问题，这个机制就是接下来要讨论的**指示变量**。
 
-#### 5.1.3 Indicator Variables
+### 5.1.3 Indicator Variables
 
 当SQL中的变量出现了上述问题时，我们要在它的后面紧跟一个指示变量。其中的值表示了这个宿主变量的状态：
 
@@ -1507,7 +1507,7 @@ EXEC SQL select ssn, name, age
 
 这句话的意思就是从student表中寻找`ssn`是`:ssn`的tuple，并将结果赋值给into句子中的三个变量，**其中age是有可能为空的**。而这里又会出现另一个问题：在本例中，我们select语句的结果只能是一个tuple，因为我们就准备了那么些变量。如果出现多个tuple，肯定就会报错。而有些时候，我们就是要选出多个tuple，那么我们该怎么讲这些tuple赋值到into中的这些变量里呢？这个时候，**游标**就该排上用场了。
 
-#### 5.1.4 Cursors
+### 5.1.4 Cursors
 
 当SQL返回了多个tuple时，我们能想象到，这其实就是一个大的表格，每一行对应一个tuple，每一列对应一个属性。而这整个表格其实就是一段连续的内存空间。**我们的游标就是指向这段空间的首地址**：
 
@@ -1515,7 +1515,7 @@ EXEC SQL select ssn, name, age
 
 而游标的思路就是：我利用当前游标指向的空间，取出来的就是当前的tuple，去赋值给into中的宿主变量去做一些c语言之类的逻辑处理。当处理完之后，游标会自动指向第二个tuple。这样循环下去直到末尾，整个的结构就处理完了。需要注意的是，**游标的名字在一个数据库中要是唯一的**，因为多个程序可能会建立在同一个数据库上，它们会使用相同的游标。
 
-#### 5.1.5 Example
+### 5.1.5 Example
 
 接下来通过一个完整的例子来完善一下5.1.x中的内容。
 
@@ -1594,7 +1594,7 @@ int main(){
 }
 ```
 
-### 5.2 ODBC
+## 5.2 ODBC
 
 使用了ODBC之后，数据库和APP的交互就变成了这样：
 
@@ -1611,7 +1611,7 @@ driver3 --> DB3
 
 这样做会带来两个后果，在[[#^469a7c|第5章的开头]]已经提到过了。但是这样做确实很大降低了开发的难度，甚至最底层的都可以不是数据库。比如DB3不是MySQL，不是Oracle，是一个xlsx表格，甚至是一个txt文本，一样也可以像访问数据库一样通过ODBC来访问这些文件。
 
-### 5.3 Functions and Procedures
+## 5.3 Functions and Procedures
 
 比如我们要做在ATM中取钱的服务，就需要对服务器数据库进行这样的判定：首先看用户密码是否输入正确，再看他要取的钱是否小于等于他的存款。只有都满足，才能进行取钱的操作。而这两次判定我们通常有两种解决方式。一种是将所有的判定放到高级程序语言中，比如在c中判断密码是否正确，正确怎么样，不正确怎么样。但是这样做有一个缺点，就是当整个业务逻辑需要修改的时候，需要改的地方太多了。所以我们需要另一种方式，也就是将所有的过程性语句放到数据库中，而这样做的好处就是只需要修改数据库，那么和它关联的所有程序的逻辑也就都修改了。但是我们之前学的SQL中从来没有if else这样的判断，所以我们在本节所介绍的**函数**和**过程**以及下一节介绍的**触发器**就是这样的东西。
 
@@ -1703,7 +1703,7 @@ create function verboseCompare(n int, m int)
 
 另外还有`case`，`loop`，`while`，`repeat`语句，这些举一反三即可。
 
-### 5.4 Trigger
+## 5.4 Trigger
 
 触发器的使用通常并不是为了实现什么功能，而是为了实现完整性约束。比如我对数据库执行一个操作，但是这个操作必须要在特定的时间内才能做。这个时候就需要用触发器来判断时间是否合理。
 
@@ -1746,4 +1746,30 @@ delimiter ;
 还有一些情况中，我们只想对部分行记录使用触发器，那么就要在`for each row`中加入二次判定：
 
 ![img](img/ter.png)
+
+# 6. Entity-Relationship Model
+
+在[[#1.2.1 Data Model|1.2.1]]中我们提到了4种主流的模型，而第一种Relation Model我们在前面的章节中其实一直都在提及。而接下来我们就开始介绍第二种模型：ER。而这种模型最常见的应用就是去**设计数据库**。
+
+**需求分析**
+
+整个数据库的设计其实和软件工程的设计非常相似。首先都是要对需求进行分析。而数据库的需求一定就是数据了，我们要分析分析这个数据到底是什么结构，改怎么去规划它们。
+
+---
+
+**Schema和功能设计**
+
+然后，就来到了设计数据库的Schema阶段。我们在[[#^3ee2b2|这里的描述]]中就能知道Schema到底是个什么东西。接下来我们就要把需求的数据封装成一个个的Schema。比如我们要设计一个电商平台，所以给每一个商品就要有个Goods Schema，其中有商品id，商品名，库存等等；另外，Schema的设计还包括我要对这些数据进行什么操作。比如我经常会找库存最少的商品提醒商家去补货，那么这个时候就需要有一个能找出最小值的Function。
+
+---
+
+**逻辑设计**
+
+当我们把数据都设计好了之后，就会发现其中的关联关系。而这个模型此时已经是一个Relation Model。在它的基础上，我们还要继续进行**逻辑设计**。对于每一个Schema，它在这个阶段就要被完全确定，不能再改了。
+
+---
+
+**物理设计**
+
+逻辑设计之后，就是**物理设计**。首先，确定选用哪个产品，是MySQL，还是Oracle还是其他的；另外，还要决定最终物理存储的介质是什么。是磁盘还是ssd还是内存还是云，甚至是分布式的文件系统(比如[[数据管理技术|Hadoop]])等等。
 
