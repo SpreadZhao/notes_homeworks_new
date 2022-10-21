@@ -225,4 +225,5 @@ bindingLogin.loginBtn.setOnClickListener {
 }// end bindingLogin.loginBtn.setOnClickListener
 ```
 
-由于我们并不需要将username和password在屏幕上显示出来，所以根本不需要livedata的observe方法。所以在赋值完之后，直接使用就好。**还有一点，字符串为空并不是` == null`**。这里的空可不是c语言里的空指针，它是有实际内存的，只不过值为空。
+由于我们并不需要将username和password在屏幕上显示出来，所以根本不需要livedata的observe方法。所以在赋值完之后，直接使用就好。**还有一点，字符串为空并不是`== null`**。这里的空可不是c语言里的空指针，它是有实际内存的，只不过值为空。
+
