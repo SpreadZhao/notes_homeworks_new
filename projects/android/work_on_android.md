@@ -239,7 +239,7 @@ bindingLogin.loginBtn.setOnClickListener {
 data class LoginResult(val username: String, val passwd: String, val message: String, val success: Boolean)
 ```
 
-确实，这里考虑到了返回的状态，也就是`success`成员。但是在传递Goods的时候当时并没有考虑到这一点，所以我们最后更改了那部分代码。这里`success`就是用来确定我的登陆是否成功，是密码错误还是账号不存在。
+确实，这里考虑到了返回的状态，也就是`success`成员。但是在传递Goods的时候当时并没有考虑到这一点，所以我们最后更改了那部分代码。这里`success`就是用来确定我的登陆是否成功，是密码错误还是账号不存在。 ^e4fa82
 
 然后，就是登陆的Retrofit协议接口了：
 
@@ -447,3 +447,20 @@ loginViewMode.loginResult.observe(this){
 * 由LoginActivity去处理登陆的操作，而不是由网络层
 
 另外补充一点，我们并没有使用`switchMap()`函数，是因为这个LiveData对象并不是来自外部，是我们ViewModel本身的，只不过是对它的`value`字段进行赋值而已。**更加详细的描述在郭神的《第一行代码》中的13.4.2节**。
+
+---
+
+之前也[[#^e4fa82|提到过]]，我更改了Goods的请求对象，原本我们返回的对象是`Call<List<Goods>>`，但是我们没有考虑过查询失败的情况。因此我们重新确定了数据模型，在上面进一步封装。下面给出数据模型的代码和网络接口的代码即可，剩下的修改就不多赘述了：
+
+```kotlin
+data class GoodsResponse(val success: Boolean, val goods: List<Goods>)
+
+data class Goods(val goods_id: Int, val goods_name: String, val goods_category: String, val goods_storage: Int, val goods_price: Int)
+```
+
+```kotlin
+@GET("searchgoods")  
+fun getGoods(@Query("cmd") cmd: String): Call<GoodsResponse>
+```
+
+在修改之后，执行的时候不管怎么执行都是报错，而我很确定已经把所有的`List<Goods>`都改成了`GoodsResponse`。后来鉴定为编译器抽风，只需要Rebuild一下就好了。
