@@ -714,7 +714,29 @@ override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
 `openDrawer()`有很多种重载函数，可以自己到源码中看一看。好了，今天的所有进展就到这里了。
 
+# 2022-10-23
 
+一个挺吓人的小问题，我修改了MainActivity的名字，然后觉得不妥又改回来了。但是在运行的时候报了一大堆错。好在下面这个网址和我的情况一样，看起来并不是改名字的问题，而是我引入了下面的依赖而引用了androidx库而导致的冲突：
 
+```groovy
+implementation 'androidx.recyclerview:recyclerview:1.0.0'
+```
 
+所以根据这个网站：
+
+[编译报错Duplicate class android.support.v4.app.INotificationSideChannel found in modules classes - 北海南竹 - 博客园 (cnblogs.com)](https://www.cnblogs.com/beihainanzhu/p/16117713.html)
+
+在`gradle.properties`里添加这个选项就好了：
+
+```properties
+android.enableJetifier=true
+```
+
+另外这段代码的解释在下面这个网站：
+
+[(29条消息) [Android][踩坑]gradle中配置android.useAndroidX与android.enableJetifier使应用对support库的依赖自动转换为androidx的依赖_Ryan ZHENG的博客-CSDN博客_enablejetifier](https://blog.csdn.net/u014175785/article/details/115295136)
+
+![[Pasted image 20221023140339.png]]
+
+---
 
