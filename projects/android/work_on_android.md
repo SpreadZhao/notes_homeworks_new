@@ -464,3 +464,257 @@ fun getGoods(@Query("cmd") cmd: String): Call<GoodsResponse>
 ```
 
 在修改之后，执行的时候不管怎么执行都是报错，而我很确定已经把所有的`List<Goods>`都改成了`GoodsResponse`。后来鉴定为编译器抽风，只需要Rebuild一下就好了。
+
+---
+
+接下来，是对于MainActivity的Material Design设计。首先是主题的更换，在`res/values/themes.xml`文件和`res/values-night/themes.xml`文件中，将style的parent更改成`Theme.MaterialComponents[.Light].NoActionBar`，这样就能够将主题更换成Material Design了，如果不更换的话，会出现崩溃的现象。另外，我们既然改成了`NoActionBar`，就需要我们自己去实现ActionBar了。在`activity_main.xml`中，就是如下的代码： ^1111b7
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<androidx.drawerlayout.widget.DrawerLayout  
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto"  
+    android:id="@+id/drawer_layout"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    >  
+  
+<!--  
+    CoordinatorLayout是加强版的FrameLayout，它专为MaterialDesign设计，  
+    能够监听其中控件的变化。-->  
+  
+    <androidx.coordinatorlayout.widget.CoordinatorLayout  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent">  
+  
+        <androidx.appcompat.widget.Toolbar            
+	        android:id="@+id/toolbar"  
+            android:layout_width="match_parent"  
+            android:layout_height="?attr/actionBarSize"  
+            android:background="@color/purple_200"  
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"  
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  
+            />  
+  
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>  
+  
+    <com.google.android.material.navigation.NavigationView  
+        android:id="@+id/nav_view"  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        android:layout_gravity="start"  
+        app:menu="@menu/nav_menu"  
+        app:headerLayout="@layout/nav_header"  
+        />  
+        
+</androidx.drawerlayout.widget.DrawerLayout>
+```
+
+我们将`ToolBar`包裹在了`CoordinatorLayout`中，这两个都是Material Design的组件。另外下面还有一个Navigation View，这也是我们的侧滑菜单的主要组件。
+
+需要强调的有两点。一是我们最外层的组件：DrawerLayout，它能实现窗口想抽屉一样拉开。在所有的子组件中都会有一个`android:layout_gravity`属性，这个就是决定当前组件从哪个地方拉出来的选项。`start`表示根据语言判断。而这个DrawerLayout和Navigation View组合起来使用就能够实现侧滑菜单；第二点就是Navigation View中的`app:menu`属性和`app:headerLayout`属性。每一个Navigation View都由一个标题和一个菜单组成。而这两个文件就是我们接下来要介绍的。
+
+首先是`nav_menu`，它在`res/menu/nav_menu.xml`。menu文件夹里所有的视图都是菜单。toolbar就是上面工具栏专用的菜单；nav_menu就是Navigation View专用的菜单。
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<menu xmlns:android="http://schemas.android.com/apk/res/android">  
+<!--  
+    group表示这些项被困成一个组  
+    checkableBehavior="single"表示同时只能选中一个  
+-->  
+    <group android:checkableBehavior="single">  
+        <item            
+	        android:id="@+id/nav_mybag"  
+            android:title="My Bag"  
+            />  
+  
+        <item            
+	        android:id="@+id/nav_order"  
+            android:title="My Order"  
+            />  
+  
+        <item            
+	        android:id="@+id/nav_contact"  
+            android:title="Contact Customer Service"  
+            />  
+  
+        <item            
+	        android:id="@+id/nav_logout"  
+            android:title="Logout"  
+            />
+              
+    </group>
+    
+</menu>
+```
+
+这样的话，侧滑菜单的选项就是这样的：
+
+![[Pasted image 20221023122020.png]]
+
+然后就是headerLayout了，它位于`res/layout/nav_header.xml`：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="match_parent"  
+    android:padding="10dp"  
+    android:background="@color/material_dynamic_primary40"  
+    android:layout_height="200dp">  
+  
+    <de.hdodenhof.circleimageview.CircleImageView  
+        android:id="@+id/user_icon"  
+        android:layout_width="70dp"  
+        android:layout_height="70dp"  
+        android:src="@drawable/nav_user"  
+        android:layout_centerInParent="true"  
+        />  
+  
+    <TextView        
+	    android:id="@+id/app_name"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:layout_alignParentBottom="true"  
+        android:text="Spread Shop"  
+        android:textColor="@color/black"  
+        android:textSize="14sp"  
+        />  
+  
+    <TextView        
+	    android:id="@+id/user_name"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:layout_above="@id/app_name"  
+        android:textColor="@color/material_dynamic_neutral60"  
+        android:text="user name: null"  
+        />  
+  
+</RelativeLayout>
+```
+
+需要注意的是，这里的`de.hdodenhof.circleimageview.CircleImageView`是我们引入的第三方库，专门用来把图片切成圆形。不妨就在这里列出项目所有的依赖吧：
+
+```groovy
+dependencies {  
+  
+    implementation 'androidx.core:core-ktx:1.7.0'  
+    implementation 'androidx.appcompat:appcompat:1.5.1'  
+    implementation 'com.google.android.material:material:1.5.0'  
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'  
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'  
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'  
+    implementation 'com.google.android.material:material:1.1.0'  
+    implementation 'de.hdodenhof:circleimageview:3.0.1'  
+    testImplementation 'junit:junit:4.13.2'  
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'  
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'  
+}
+```
+
+接下来还有一点，就是我们主界面的[[#^1111b7|toolbar]]的菜单。既然是菜单文件，肯定是位于`res/menu`文件夹下了，我们就叫它`toolbar.xml`吧：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<menu xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto">  
+  
+<!--  
+    menu文件夹里的所有试图都是菜单  
+        toolbar就是上面工具栏专用的菜单  
+        而nav_menu就是Navigation View专用的菜单  
+-->  
+  
+<!--  
+    always: 永远显示再Toolbar中，空间不够不显示  
+    ifRoom: 屏幕够就显示，不够显示再菜单中  
+    never: 永远显示在菜单  
+-->  
+    <item  
+        android:id="@+id/backup"  
+        android:icon="@drawable/ic_backup"  
+        android:title="Backup"  
+        app:showAsAction="always"  
+        />  
+  
+    <item        
+	    android:id="@+id/delete"  
+        android:icon="@drawable/ic_delete"  
+        android:title="Delete"  
+        app:showAsAction="ifRoom"  
+        />  
+  
+    <item        
+	    android:id="@+id/settings"  
+        android:icon="@drawable/ic_settings"  
+        android:title="Settings"  
+        app:showAsAction="never"  
+        />  
+</menu>
+```
+
+非常好理解，就不用过多赘述了。有了所有的前端代码，接下来就是在MainActivity中将它们显示出来并注册点击事件。我们还是先从Navigation View开始，在MainActivity中需要想给按钮注册监听器一样给NavView里的菜单子项注册监听事件：
+
+```kotlin
+bindingMain.navView.setNavigationItemSelectedListener {  
+    when(it.itemId){  
+        R.id.nav_mybag -> Log.d("SpreadShopTest", "You clicked mybag")  
+        R.id.nav_order -> Log.d("SpreadShopTest", "You clicked myorder")  
+        R.id.nav_contact -> Log.d("SpreadShopTest", "You clicked Contact")  
+        R.id.nav_logout -> Log.d("SpreadShopTest", "You clicked logout")  
+    }  
+    bindingMain.drawerLayout.closeDrawers()  
+    true  
+}
+```
+
+不管点击了任何按钮，最终都要调用`closeDrawers()`方法关闭所有的侧滑菜单。
+
+好了，Navigation已经做完了！但是更重要的是接下来的Toolbar。因为只有有了Toolbar我们的程序才看起来会完整一些。首先，由于我们在[[#^1111b7|前面]]已经删掉了原本的ActionBar，所以我们需要设置新的ActionBar为我们自己定义的Toolbar：
+
+```kotlin
+setSupportActionBar(bindingMain.toolbar)
+```
+
+接下来，是展示左上角的侧滑菜单按钮。首先需要调用`getSupportActionBar`方法来得到这个ActionBar的实例(其实就是Toolbar)，然后将home图标显示出来并设置上我们自己的icon：
+
+```kotlin
+/*
+supportActionBar?.let{  
+	it.setDisplayHomeAsUpEnabled(true)  
+	it.setHomeAsUpIndicator(R.drawable.ic_menu)  
+} 
+**/
+
+//let和apply都可以  
+supportActionBar?.apply {  
+	setDisplayHomeAsUpEnabled(true)  
+	setHomeAsUpIndicator(R.drawable.ic_menu)  
+}
+```
+
+然后，我们还要做两件事：给Toolbar的menu菜单的子项注册监听事件；将Toolbar的menu菜单显示出来。这两件事要分别重写两个函数，代码不多，直接展示了：
+
+```kotlin
+override fun onOptionsItemSelected(item: MenuItem): Boolean {  
+    when(item.itemId){  
+        android.R.id.home -> bindingMain.drawerLayout.openDrawer(GravityCompat.START)  
+        R.id.backup -> Log.d("SpreadShopTest", "you clicked backup")  
+        R.id.delete -> Log.d("SpreadShopTest", "you clicked delete")  
+        R.id.settings -> Log.d("SpreadShopTest", "you clicked settings")  
+    }  
+    return true  
+}  
+  
+override fun onCreateOptionsMenu(menu: Menu?): Boolean {  
+    menuInflater.inflate(R.menu.toolbar, menu)  
+    return true  
+}
+```
+
+`openDrawer()`有很多种重载函数，可以自己到源码中看一看。好了，今天的所有进展就到这里了。
+
+
+
+
+
