@@ -510,6 +510,8 @@ fun getGoods(@Query("cmd") cmd: String): Call<GoodsResponse>
 </androidx.drawerlayout.widget.DrawerLayout>
 ```
 
+^de0cf0
+
 我们将`ToolBar`包裹在了`CoordinatorLayout`中，这两个都是Material Design的组件。另外下面还有一个Navigation View，这也是我们的侧滑菜单的主要组件。
 
 需要强调的有两点。一是我们最外层的组件：DrawerLayout，它能实现窗口想抽屉一样拉开。在所有的子组件中都会有一个`android:layout_gravity`属性，这个就是决定当前组件从哪个地方拉出来的选项。`start`表示根据语言判断。而这个DrawerLayout和Navigation View组合起来使用就能够实现侧滑菜单；第二点就是Navigation View中的`app:menu`属性和`app:headerLayout`属性。每一个Navigation View都由一个标题和一个菜单组成。而这两个文件就是我们接下来要介绍的。
@@ -611,6 +613,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'  
 }
 ```
+
+^8aea9b
 
 接下来还有一点，就是我们主界面的[[#^1111b7|toolbar]]的菜单。既然是菜单文件，肯定是位于`res/menu`文件夹下了，我们就叫它`toolbar.xml`吧：
 
@@ -739,4 +743,346 @@ android.enableJetifier=true
 ![[Pasted image 20221023140339.png]]
 
 ---
+
+今天我们将MainActivity进行了大改，在DrawerLayout的基础上添加了很多东西，从`activity_main.xml`开始看，对比[[#^de0cf0|之前的]]CoordinatorLayout，添加了很多东西：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<androidx.drawerlayout.widget.DrawerLayout  
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto"  
+    android:id="@+id/drawer_layout"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    >  
+  
+<!--  
+    CoordinatorLayout是加强版的FrameLayout，它专为MaterialDesign设计，  
+    能够监听其中控件的变化。-->  
+  
+    <androidx.coordinatorlayout.widget.CoordinatorLayout  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent">  
+  
+<!--  
+    AppBarLayout可以让RecyclerView不遮挡Toolbar，  
+    使用app:layout_behavior来指定  
+-->  
+        <com.google.android.material.appbar.AppBarLayout  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content">  
+  
+            <androidx.appcompat.widget.Toolbar                
+	            android:id="@+id/toolbar"  
+                android:layout_width="match_parent"  
+                android:layout_height="?attr/actionBarSize"  
+                android:background="@color/purple_200"  
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"  
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  
+                />  
+  
+        </com.google.android.material.appbar.AppBarLayout>  
+    
+        <androidx.recyclerview.widget.RecyclerView            
+	        android:id="@+id/category_recycler"  
+            android:layout_width="match_parent"  
+            android:layout_height="200dp"  
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"  
+            />  
+<!--  
+    想让谁实现下拉刷新功能，就把谁放到SwipeRefresh里，  
+    记得添加依赖  
+    recyclerview里面的layout_behavior搬到外面  
+-->  
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout  
+            android:id="@+id/swipe_refresh"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:layout_marginTop="250dp"  
+            app:layout_anchor="@id/category_recycler"  
+            app:layout_anchorGravity="bottom"  
+  
+            >  
+  
+            <androidx.recyclerview.widget.RecyclerView                
+	            android:id="@+id/goods_recycler"  
+                android:layout_width="match_parent"  
+                android:layout_height="wrap_content"  
+                />  
+  
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>   
+               
+  
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>  
+  
+    <com.google.android.material.navigation.NavigationView  
+        android:id="@+id/nav_view"  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        android:layout_gravity="start"  
+        app:menu="@menu/nav_menu"  
+        app:headerLayout="@layout/nav_header"  
+        />  
+</androidx.drawerlayout.widget.DrawerLayout>
+```
+
+多出来的东西全都在CoordinatorLayout中，分别是AppBarLayout、RecyclerView和SwipeRefreshLayout，并且SwipeRefreshLayout中又嵌入了一个RecyclerView。需要注意的是SwipeRefreshLayout中的`android:layout_marginTop="250dp"`属性，它在上方流出了一个空白，这样它才不会遮挡上面的`category_recycler`。**肯定有更好的解决方法，但是我目前没有找到**。
+
+最重要的其实是这两个RecyclerView的东西，我们先从Category开始说起。这是为了加载返回的所有商品的属性的列表，也就是商城里常见的”商品分类“。这个RecyclerView中的项是`category_item.xml`：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent">  
+  
+    <LinearLayout        
+	    android:orientation="vertical"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        >  
+  
+        <LinearLayout            
+	        android:orientation="horizontal"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            >  
+  
+            <ImageView                
+	            android:id="@+id/category_image"  
+                android:layout_width="300dp"  
+                android:layout_height="100dp"  
+                android:scaleType="fitCenter"  
+                />  
+  
+            <TextView                
+	            android:id="@+id/category_name"  
+                android:layout_width="wrap_content"  
+                android:layout_height="wrap_content"  
+                android:layout_gravity="center"  
+                android:text="test"  
+                android:textColor="@color/black"  
+                android:textSize="16sp"  
+                />  
+  
+        </LinearLayout>  
+  
+    </LinearLayout>  
+</com.google.android.material.card.MaterialCardView>
+```
+
+非常简单，没什么好说的。唯一的特点是图片的`android:scaleType="fitCenter"`这个属性，它是让图片从中间开始进行合适的缩放。
+
+接下来自然是创建对应的Adapter来加载它了。创建`ui/goods/CategoryAdapter`类：
+
+```kotlin
+class CategoryAdapter(val context: Context, val categoryList: List<Category>): RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {  
+
+    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){  
+        val categoryName: TextView = view.findViewById(R.id.category_name)  
+        val categoryImage: ImageView = view.findViewById(R.id.category_image)  
+    }  
+  
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {  
+        val view = LayoutInflater.from(context).inflate(R.layout.category_item, parent, false)  
+        return ViewHolder(view)  
+    }  
+  
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {  
+        val category = categoryList[position]  
+        holder.categoryName.text = category.category  
+        Log.d("SpreadShopTest", "category name: ${category.category}")  
+        val id: Int  
+        when(category.category){  
+            "手机" -> {  
+                Log.d("SpreadShopTest", "category id: 手机")  
+                id = R.drawable.ic_phone  
+            }  
+            "衣服" -> {  
+                Log.d("SpreadShopTest", "category id: 衣服")  
+                id = R.drawable.ic_cloth  
+            }  
+            "裤子" -> {  
+                Log.d("SpreadShopTest", "category id: 裤子")  
+                id = R.drawable.ic_trousers  
+            }  
+            else -> {  
+                Log.d("SpreadShopTest", "category id: else")  
+                id = R.drawable.test_maotai  
+            }  
+        }  
+  
+  
+        Log.d("SpreadShopTest", "val id: $id")  
+  
+        Glide.with(context).load(id).into(holder.categoryImage)  
+    }  
+  
+    override fun getItemCount() = categoryList.size  
+}
+```
+
+这里我们使用了Glide插件去加载图片，因此我再给一遍当前项目中的所有依赖：
+
+```groovy
+dependencies {  
+    implementation 'androidx.core:core-ktx:1.7.0'  
+    implementation 'androidx.appcompat:appcompat:1.5.1'  
+    implementation 'com.google.android.material:material:1.5.0'  
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'  
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'  
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'  
+    implementation 'com.google.android.material:material:1.1.0'  
+    implementation 'de.hdodenhof:circleimageview:3.0.1'  
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'  
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'  
+    implementation 'com.github.bumptech.glide:glide:4.9.0'  
+    testImplementation 'junit:junit:4.13.2'  
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'  
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'  
+}
+```
+
+[[#^8aea9b|这是之前的依赖]]。
+
+然后就是在MainActivity的categoryLiveData中去观察变量，并在相应处理中设置Adapter，这样就能在界面上显示拿到的结果了：
+
+```kotlin
+mainViewModel.categoryLiveData.observe(this){  
+    it.enqueue(object: Callback<CategoryResponse>{  
+        override fun onResponse(  
+            call: Call<CategoryResponse>,  
+            response: Response<CategoryResponse>  
+        ) {  
+            val categoryResponse = response.body()  
+            if(categoryResponse != null){  
+                if(categoryResponse.success){  
+                    Log.d("SpreadShopTest", "category success")  
+                    val list = categoryResponse.categories  
+  
+                    // category recycler  
+                    val layoutManager = GridLayoutManager(this@MainActivity, 1)  
+                    bindingMain.categoryRecycler.layoutManager = layoutManager  
+                    val adapter = CategoryAdapter(this@MainActivity, list)  
+                    bindingMain.categoryRecycler.adapter = adapter  
+  
+                    for(category in list){  
+                        Log.d("SpreadShopTest", "category: $category")  
+                    }  
+                }else{  
+                    Log.d("SpreadShopTest", "Category fail")  
+                }  
+            }else{  
+                Log.d("SpreadShopTest", "category is null")  
+            }  
+        }  
+  
+        override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {  
+            t.printStackTrace()  
+            Log.d("SpreadShopTest", "category on failure")  
+        }  
+    })  
+}// end mainViewModel.categoryLiveData.observe
+```
+
+对于商品的处理和Category其实一模一样，**唯一的区别是显示上的一些细节**。所以我还是按照xml -> Adapter -> MainActivity的顺序直接给出相应代码：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent">  
+  
+<!--  
+    一张Material卡片，之后这一张张卡片都会添加到  
+    recyclerView当中  
+  
+    centerCrop: 让图片保持原有比例填充满ImageView，  
+    并将超出屏幕的部分裁剪掉-->  
+    <LinearLayout  
+        android:orientation="vertical"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        >  
+  
+        <ImageView            
+	        android:id="@+id/goods_image"  
+            android:layout_width="match_parent"  
+            android:layout_height="100dp"  
+            android:scaleType="centerCrop"  
+            />  
+  
+        <TextView            
+	        android:id="@+id/goods_name"  
+            android:layout_width="wrap_content"  
+            android:layout_height="wrap_content"  
+            android:layout_gravity="center_horizontal"  
+            android:layout_margin="5dp"  
+            android:text="test"  
+            android:textSize="16sp"  
+            />  
+  
+    </LinearLayout>  
+</com.google.android.material.card.MaterialCardView>
+```
+
+```kotlin
+class GoodsAdapter(val context: Context, val goodsList: List<Goods>): RecyclerView.Adapter<GoodsAdapter.ViewHolder>(){  
+
+    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){  
+        val goodsImage: ImageView = view.findViewById(R.id.goods_image)  
+        val goodsName: TextView = view.findViewById(R.id.goods_name)  
+    }  
+  
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {  
+        val view = LayoutInflater.from(context).inflate(R.layout.goods_item, parent, false)  
+        return ViewHolder(view)  
+    }  
+  
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {  
+        val goods = goodsList[position]  
+        holder.goodsName.text = goods.goods_name
+        // 所有商品暂时都是茅台的图片  
+        Glide.with(context).load(R.drawable.test_maotai).into(holder.goodsImage)  
+    }  
+  
+    override fun getItemCount() = goodsList.size  
+}
+```
+
+```kotlin
+mainViewModel.goodsLiveData.observe(this){  
+    it.enqueue(object : Callback<GoodsResponse>{  
+        override fun onResponse(call: Call<GoodsResponse>, response: Response<GoodsResponse>) {  
+            val goodsResponse = response.body()  
+            if(goodsResponse != null){  
+                Log.d("SpreadShopTest", "goodsResponse is not null")  
+                if(goodsResponse.success){  
+                    Log.d("SpreadShopTest", "goodsResponse success!")  
+                    val list = goodsResponse.goods  
+  
+                    // goods recycler  
+                    val layoutManager = GridLayoutManager(this@MainActivity, 2)  
+                    bindingMain.goodsRecycler.layoutManager = layoutManager  
+                    val adapter = GoodsAdapter(this@MainActivity, list)  
+                    bindingMain.goodsRecycler.adapter = adapter  
+  
+                    for(goods in list){  
+                        Log.d("SpreadShopTest", "goods: ${goods.goods_name}")  
+                    }  
+                }else{  
+                    Log.d("SpreadShopTest", "goodsResponse fail!")  
+                }  
+            }else{  
+                Log.d("SpreadShopTest", "goodsResponse is null")  
+            }  
+        }  
+  
+        override fun onFailure(call: Call<GoodsResponse>, t: Throwable) {  
+            t.printStackTrace()  
+            Log.d("SpreadShopTest", "goodsResponse on failure")  
+        }  
+    })  
+}// end mainViewModel.goodsLiveData.observe
+```
 
