@@ -1088,6 +1088,309 @@ mainViewModel.goodsLiveData.observe(this){
 
 # 2022-10-25
 
-这次主要是做了一个下拉刷新的操作，并且已经测试成功。需要注意的是，本次的更新改动比较大，将原来的Retrofit处理响应的操作整个更换了。
+这次主要是做了下拉刷新的逻辑端操作，并且已经测试成功。需要注意的是，本次的更新改动比较大，将原来的Retrofit处理响应的操作整个更换了。
 
-之前我们的思路是：如果接到Retrofit的响应数据，就在响应操作中设置RecyclerView的adapter之类的。但是，这种思路是**完全错误的！**首先，我们并不知道
+之前我们的思路是：如果接到Retrofit的响应数据，就在响应操作中设置RecyclerView的adapter之类的。但是，这种思路是**完全错误的！**首先，我们每发一次请求，都会调一次这个函数，那么这个函数每次都会新建一个adapter，而RecyclerView通常都是一个adapter用到底；其次，我们将adapter在这里设置成局部变量，在外部又如何能够通知数据发生了改变？
+
+因此，我们首先需要将Adapter移到响应处理的外面，也就是直接包含在Activity的onCreate方法里：
+
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {  
+
+... ...
+
+        // 打开MainActivity之后立刻发起请求获取所有的种类  
+        mainViewModel.getAllCategory(Command.GET_ALL_CATEGORY)  
+        // 打开之后获取一次推荐商品  
+        mainViewModel.getGoods(Command.GET_RECOMMAND)  
+  
+        // 设置goodsRecycler的adapter  
+        // 由于ArrayList的构造函数，所以goodsList不为空  
+        val goodsLayoutManager = GridLayoutManager(this, 2)  
+        bindingMain.goodsRecycler.layoutManager = goodsLayoutManager  
+        val goodsAdapter = GoodsAdapter(this, mainViewModel.goodsList)  
+        bindingMain.goodsRecycler.adapter = goodsAdapter  
+
+... ...
+
+    }// end onCreate
+```
+
+可以看到，我们在Activity创建的时候，就将goodsRecycler的LayoutManager和Adapter设置好。需要注意的是adapter中的第二个参数：`mainViewModel.goodsList`。这个是在MainViewModel中定义的一个`ArrayList`，专门用来存放最终获取到的结果。那么可想而知，在相应处理函数中我们就需要更新这个ArrayList了：
+
+```kotlin
+mainViewModel.goodsLiveData.observe(this){  
+	it.enqueue(object : Callback<GoodsResponse>{  
+		override fun onResponse(call: Call<GoodsResponse>, response: Response<GoodsResponse>) {  
+			val goodsResponse = response.body()  
+			if(goodsResponse != null){  
+				Log.d("SpreadShopTest", "goodsResponse is not null")  
+				if(goodsResponse.success){  
+					Log.d("SpreadShopTest", "goodsResponse success!")  
+					
+					val list = goodsResponse.goods  
+
+					mainViewModel.goodsList.clear()  
+					mainViewModel.goodsList.addAll(list)  
+					mainViewModel.isGotLiveData.value = true  
+				}else{  
+					Log.d("SpreadShopTest", "goodsResponse fail!")  
+				}  
+			}else{  
+				Log.d("SpreadShopTest", "goodsResponse is null")  
+			}  
+		}  
+
+		override fun onFailure(call: Call<GoodsResponse>, t: Throwable) {  
+			t.printStackTrace()  
+			mainViewModel.goodsList.clear()  
+			mainViewModel.isGotLiveData.value = false  
+			Log.d("SpreadShopTest", "goodsResponse on failure")  
+		}  
+	})  
+}// end mainViewModel.goodsLiveData.observe
+```
+
+可以看到，如果我们成功得到了返回的`Callback<List<Goods>>`，我们就执行如下代码：
+
+```kotlin
+val list = goodsResponse.goods  
+mainViewModel.goodsList.clear()  
+mainViewModel.goodsList.addAll(list)  
+mainViewModel.isGotLiveData.value = true  
+```
+
+首先将MainViewModel的goodsList清空，然后将我们得到的新数据全部放进去，最后设置其中的标志位为true；而如果我们没有拿回响应数据，就是这样的处理：
+
+```kotlin
+t.printStackTrace()  
+mainViewModel.goodsList.clear()  
+mainViewModel.isGotLiveData.value = false  
+Log.d("SpreadShopTest", "goodsResponse on failure")  
+```
+
+只是清空列表，然后将标志位设置为false。**这两个标志位的设置非常重要，它会触发接下来的一个操作**：
+
+```kotlin
+mainViewModel.isGotLiveData.observe(this){  
+
+	if(it == true){  
+		Log.d("SpreadShopTest", "got live data!")  
+	}else{  
+		Log.d("SpredShopTest", "didn't got live data")  
+		Toast.makeText(this@MainActivity, "refresh failed", 
+			 Toast.LENGTH_SHORT).show()  
+	}  
+	
+	runOnUiThread {  
+		goodsAdapter.notifyDataSetChanged()  
+		bindingMain.swipeRefresh.isRefreshing = false  
+	}  
+}
+```
+
+一旦标志位设置，我们就起一个新线程，告知adapter数据发生了改变，并取消刷新的进度条。通过这样设置，就能实现即使刷新失败也不会让那个圈圈一直转了。另外，刷新布局的监听器只需要做这样一件事：
+
+```kotlin
+bindingMain.swipeRefresh.setOnRefreshListener {  
+    mainViewModel.getGoods(Command.GET_RECOMMAND)  
+}
+```
+
+这样我们只要下拉一刷新，就会发起请求，就会调用enqueue函数，就会将标志位设置成一个新的值，就会触发标志livedata的observe，就会通知adapter数据发生了改变。经过这环环相扣的操作，从后端到前端都实现了数据更新操作。最后补充一下MainViewModel更新完的代码：
+
+```kotlin
+class MainViewModel: ViewModel() {  
+
+    val goodsList = ArrayList<Goods>()  
+  
+    val isGotLiveData = MutableLiveData<Boolean>()  
+  
+    val goodsLiveData: LiveData<Call<GoodsResponse>>  
+        get() = _goodsLiveData  
+    private val _goodsLiveData = MutableLiveData<Call<GoodsResponse>>()  
+  
+    val categoryLiveData: LiveData<Call<CategoryResponse>>  
+        get() = _categoryLiveData  
+    private val _categoryLiveData = MutableLiveData<Call<CategoryResponse>>()  
+  
+    fun getGoods(cmd: String) {  
+        _goodsLiveData.value = Repository.getGoods(cmd)  
+    }  
+  
+    fun getAllCategory(cmd: String){  
+        _categoryLiveData.value = Repository.getAllCategory(cmd)  
+    }  
+}
+```
+
+以及整个MainActivity的流程代码：
+
+```kotlin
+class MainActivity : AppCompatActivity() {  
+  
+    private lateinit var bindingMain: ActivityMainBinding  
+    private lateinit var bindingNavHeader: NavHeaderBinding  
+  
+    override fun onCreate(savedInstanceState: Bundle?) {  
+        super.onCreate(savedInstanceState)  
+        bindingMain = ActivityMainBinding.inflate(layoutInflater)  
+        bindingNavHeader = NavHeaderBinding.inflate(layoutInflater)  
+        setContentView(bindingMain.root)  
+  
+        setSupportActionBar(bindingMain.toolbar)  
+
+        //let和apply都可以  
+        supportActionBar?.apply {  
+            setDisplayHomeAsUpEnabled(true)  
+            setHomeAsUpIndicator(R.drawable.ic_menu)  
+        }  
+  
+        val username = intent.getStringExtra("username")  
+        Log.d("SpreadShopTest", "Log in username: $username")  
+        
+        if(bindingMain.navView.headerCount > 0){  
+            val header = bindingMain.navView.getHeaderView(0)  
+            val uname = header.findViewById<TextView>(R.id.user_name)  
+            uname.text = "user name: $username"  
+        }  
+  
+  
+  
+        val mainViewModel = ViewModelProvider(this)
+					        .get(MainViewModel::class.java)  
+  
+        // 打开MainActivity之后立刻发起请求获取所有的种类  
+        mainViewModel.getAllCategory(Command.GET_ALL_CATEGORY)  
+  
+        // 打开之后获取一次推荐商品  
+        mainViewModel.getGoods(Command.GET_RECOMMAND)  
+  
+        // 设置goodsRecycler的adapter  
+        // 由于ArrayList的构造函数，所以goodsList不为空  
+        val goodsLayoutManager = GridLayoutManager(this, 2)  
+        bindingMain.goodsRecycler.layoutManager = goodsLayoutManager  
+        val goodsAdapter = GoodsAdapter(this, mainViewModel.goodsList)  
+        bindingMain.goodsRecycler.adapter = goodsAdapter    
+  
+        mainViewModel.goodsLiveData.observe(this){  
+            it.enqueue(object : Callback<GoodsResponse>{  
+                override fun onResponse(call: Call<GoodsResponse>, response: Response<GoodsResponse>) {  
+                    val goodsResponse = response.body()  
+                    if(goodsResponse != null){  
+                        Log.d("SpreadShopTest", "goodsResponse is not null")  
+                        if(goodsResponse.success){  
+                            Log.d("SpreadShopTest", "goodsResponse success!")  
+                            val list = goodsResponse.goods  
+  
+                            mainViewModel.goodsList.clear()  
+                            mainViewModel.goodsList.addAll(list)  
+                            mainViewModel.isGotLiveData.value = true  
+
+                        }else{  
+                            Log.d("SpreadShopTest", "goodsResponse fail!")  
+                        }  
+                    }else{  
+                        Log.d("SpreadShopTest", "goodsResponse is null")  
+                    }  
+                }  
+  
+                override fun onFailure(call: Call<GoodsResponse>, t: Throwable) {  
+                    t.printStackTrace()  
+                    mainViewModel.goodsList.clear()  
+                    mainViewModel.isGotLiveData.value = false  
+                    Log.d("SpreadShopTest", "goodsResponse on failure")  
+                }  
+            })  
+        }// end mainViewModel.goodsLiveData.observe  
+  
+        mainViewModel.categoryLiveData.observe(this){  
+            it.enqueue(object: Callback<CategoryResponse>{  
+                override fun onResponse(  
+                    call: Call<CategoryResponse>,  
+                    response: Response<CategoryResponse>  
+                ) {  
+                    val categoryResponse = response.body()  
+                    if(categoryResponse != null){  
+                        if(categoryResponse.success){  
+                            Log.d("SpreadShopTest", "category success")  
+                            val list = categoryResponse.categories  
+  
+                            // category recycler  
+                            val categoryLayoutManager = 
+		                            GridLayoutManager(this@MainActivity, 1)  
+		                    
+                            bindingMain.categoryRecycler.layoutManager = 
+				                            categoryLayoutManager 
+
+
+                            val adapter = 
+		                            CategoryAdapter(this@MainActivity, list)  
+		                        
+                            bindingMain.categoryRecycler.adapter = adapter  
+
+                        }else{  
+                            Log.d("SpreadShopTest", "Category fail")  
+                        }  
+                    }else{  
+                        Log.d("SpreadShopTest", "category is null")  
+                    }  
+                }  
+  
+                override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {  
+                    t.printStackTrace()  
+                    Log.d("SpreadShopTest", "category on failure")  
+                }  
+            })  
+        }// end mainViewModel.categoryLiveData.observe  
+  
+  
+        mainViewModel.isGotLiveData.observe(this){  
+            if(it == true){  
+                Log.d("SpreadShopTest", "got live data!")  
+            }else{  
+                Log.d("SpredShopTest", "didn't got live data")  
+                Toast.makeText(this@MainActivity, "refresh failed", Toast.LENGTH_SHORT).show()  
+            }  
+  
+            runOnUiThread {  
+                goodsAdapter.notifyDataSetChanged()  
+                bindingMain.swipeRefresh.isRefreshing = false  
+            }  
+        }  
+        bindingMain.navView.setNavigationItemSelectedListener {  
+            when(it.itemId){  
+                R.id.nav_mybag -> Log.d("SpreadShopTest", "You clicked mybag")  
+                R.id.nav_order -> Log.d("SpreadShopTest", "You clicked myorder")  
+                R.id.nav_contact -> Log.d("SpreadShopTest", "You clicked Contact")  
+                R.id.nav_logout -> Log.d("SpreadShopTest", "You clicked logout")  
+            }  
+            bindingMain.drawerLayout.closeDrawers()  
+            true  
+        }  
+  
+        bindingMain.swipeRefresh.setOnRefreshListener {  
+            mainViewModel.getGoods(Command.GET_RECOMMAND)  
+        }  
+  
+    }// end onCreate  
+  
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {  
+        when(item.itemId){  
+            android.R.id.home -> bindingMain.drawerLayout.openDrawer(GravityCompat.START)  
+            R.id.backup -> Log.d("SpreadShopTest", "you clicked backup")  
+            R.id.delete -> Log.d("SpreadShopTest", "you clicked delete")  
+            R.id.settings -> Log.d("SpreadShopTest", "you clicked settings")  
+        }  
+        return true  
+    }  
+  
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {  
+        menuInflater.inflate(R.menu.toolbar, menu)  
+        return true  
+    }  
+  
+}
+```
+
+**注：此时Category的操作流程还没改，最后要改成和goods一样的模式。**
