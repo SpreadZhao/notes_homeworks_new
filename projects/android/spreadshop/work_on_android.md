@@ -985,7 +985,7 @@ mainViewModel.categoryLiveData.observe(this){
 }// end mainViewModel.categoryLiveData.observe
 ```
 
-对于商品的处理和Category其实一模一样，**唯一的区别是显示上的一些细节**。所以我还是按照xml -> Adapter -> MainActivity的顺序直接给出相应代码：
+对于商品的处理和Category其实一模一样，**唯一的区别是显示上的一些细节**。所以我还是按照`xml -> Adapter -> MainActivity`的顺序直接给出相应代码：
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>  
@@ -1086,3 +1086,8 @@ mainViewModel.goodsLiveData.observe(this){
 }// end mainViewModel.goodsLiveData.observe
 ```
 
+# 2022-10-25
+
+这次主要是做了一个下拉刷新的操作，并且已经测试成功。需要注意的是，本次的更新改动比较大，将原来的Retrofit处理响应的操作整个更换了。
+
+之前我们的思路是：如果接到Retrofit的响应数据，就在响应操作中设置RecyclerView的adapter之类的。但是，这种思路是**完全错误的！**首先，我们并不知道
