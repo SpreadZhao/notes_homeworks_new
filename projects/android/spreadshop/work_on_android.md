@@ -1394,3 +1394,681 @@ class MainActivity : AppCompatActivity() {
 ```
 
 **注：此时Category的操作流程还没改，最后要改成和goods一样的模式。**
+
+# 2022-10-26
+
+今天我感觉并没有费多少功夫，但是今天对我项目的改变是最大的！
+
+![[Pasted image 20221026211618.png|200]]
+
+先来嘚瑟一下\~\~，我们按着昨天的思路来，将下拉刷新处理完毕之后，首先我们要做的是更改这个MaterialCardView，因为它之前实在是太丑了。在这里我就直接展示所有和商品信息相关的xml代码了：
+
+首先是`activity_main.xml`中的SwipeRefreshLayout：
+
+```xml
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout  
+    android:id="@+id/swipe_refresh"  
+    android:layout_width="match_parent"  
+    android:layout_height="wrap_content"  
+    android:layout_marginTop="110dp"  
+    app:layout_anchor="@id/category_recycler"  
+    app:layout_anchorGravity="bottom"  
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"  
+    >  
+  
+    <androidx.recyclerview.widget.RecyclerView        
+	    android:id="@+id/goods_recycler"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        />  
+  
+  
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+```
+
+可以看到，我们只是把对上面的留白改成了110dp。接下来是这个RecyclerView中展示的卡片项目：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto"  
+    android:layout_width="match_parent"  
+    android:layout_height="wrap_content"  
+    app:rippleColor="@color/material_dynamic_neutral90"  
+    android:layout_margin="5dp"  
+    >  
+  
+<!--  
+    app:strokeColor="@color/material_dynamic_neutral70"    app:strokeWidth="5dp"    app:cardElevation="8dp"    app:cardCornerRadius="8dp"-->  
+  
+<!--  
+    一张Material卡片，之后这一张张卡片都会添加到  
+    recyclerView当中  
+  
+    centerCrop: 让图片保持原有比例填充满ImageView，  
+    并将超出屏幕的部分裁剪掉-->  
+    <LinearLayout  
+        android:orientation="vertical"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        >  
+  
+        <ImageView            
+	        android:id="@+id/goods_image"  
+            android:layout_width="match_parent"  
+            android:layout_height="100dp"  
+            android:scaleType="centerCrop"  
+            />  
+  
+        <TextView            
+	        android:id="@+id/goods_name"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content"  
+            android:layout_gravity="center_horizontal"  
+            android:layout_margin="5dp"  
+            android:text="test"  
+            android:textSize="16sp"  
+            android:gravity="center"  
+            android:background="@color/material_dynamic_neutral70"  
+            android:textColor="@color/black"  
+            />  
+  
+    </LinearLayout>  
+</com.google.android.material.card.MaterialCardView>
+```
+
+最重要的是CardView中的layout_height属性，我之前就是写的match_parent，结果一张卡片直接和屏幕一样高。接下来，是展示类别的RecyclerView：
+
+```xml
+<androidx.recyclerview.widget.RecyclerView  
+    android:id="@+id/category_recycler"  
+    android:layout_width="match_parent"  
+    android:layout_height="50dp"  
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"  
+    />
+```
+
+这个的高度只有50dp，所以才能像这样短小精悍：
+
+![[Pasted image 20221026212959.png]]
+
+然后就是其中展示的类别卡片了：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto"  
+    android:layout_width="wrap_content"  
+    android:layout_height="match_parent"  
+    app:rippleColor="@color/material_dynamic_neutral90"  
+    >  
+  
+  
+        <LinearLayout            
+	        android:orientation="horizontal"  
+            android:layout_width="match_parent"  
+            android:layout_height="match_parent"  
+            >  
+  
+            <ImageView                
+	            android:id="@+id/category_image"  
+                android:layout_width="wrap_content"  
+                android:layout_height="match_parent"  
+                android:layout_gravity="center_vertical"  
+                android:scaleType="fitCenter"  
+                android:background="@color/material_dynamic_neutral90"  
+                />  
+  
+            <TextView                
+	            android:id="@+id/category_name"  
+                android:layout_width="0dp"  
+                android:layout_height="match_parent"  
+                android:layout_weight="1"  
+                android:layout_gravity="center"  
+                android:text="test"  
+                android:gravity="center"  
+                android:textColor="@color/black"  
+                android:textSize="16sp"  
+                android:background="@color/material_dynamic_neutral70"  
+                />  
+  
+        </LinearLayout>  
+  
+</com.google.android.material.card.MaterialCardView>
+```
+
+这里的精髓还是在最外层布局：width是wrap，所以横向上只会包住图片和文字的宽度；而height是match，而它的parent正好就是上面的RecyclerView，而它的高度是50dp，所以卡片的高度也是50dp。另外这里TextView的这两个参数：`layout_width`和`layout_weight`表示它会在宽度上占掉所有图片剩下来的空间。
+
+另外，你还能看到，我在标题栏加了一个搜索栏，这用的是官方提供的SearchView。它被当成菜单项加到了Toolbar当中：
+
+```xml
+<com.google.android.material.appbar.AppBarLayout  
+    android:layout_width="match_parent"  
+    android:layout_height="wrap_content">  
+  
+    <androidx.appcompat.widget.Toolbar        
+	    android:id="@+id/toolbar"  
+        android:layout_width="match_parent"  
+        android:layout_height="?attr/actionBarSize"  
+        android:background="@color/material_dynamic_neutral60"  
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"  
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"  
+        app:layout_scrollFlags="scroll|enterAlways|snap"  
+        />  
+  
+</com.google.android.material.appbar.AppBarLayout>
+```
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<menu xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto">  
+  
+<!--  
+    menu文件夹里的所有试图都是菜单  
+        toolbar就是上面工具栏专用的菜单  
+        而nav_menu就是Navigation View专用的菜单  
+-->  
+  
+<!--  
+    always: 永远显示再Toolbar中，空间不够不显示  
+    ifRoom: 屏幕够就显示，不够显示再菜单中  
+    never: 永远显示在菜单  
+-->  
+  
+    <item  
+        android:id="@+id/search_edit"  
+        android:icon="@drawable/ic_search"  
+        app:actionViewClass="android.widget.SearchView"  
+        app:showAsAction="always|collapseActionView"  
+        android:title="search_edit"  
+        />  
+</menu>
+```
+
+`app:actionViewClass`就是制定当前的item到底是什么类型的。接下来，我就将按照如下顺序来展示我所有的前端代码的逻辑部分：
+
+* GoodsAdapter实现
+* CategoryAdapter实现
+* SearchView实现
+
+首先是GoodsAdapter，主要的操作就是，当我点击了每一项，都要打开商品详情的Activity：
+
+```kotlin
+class GoodsAdapter(val context: Context, val goodsList: List<Goods>): RecyclerView.Adapter<GoodsAdapter.ViewHolder>(){  
+  
+    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){  
+        val goodsImage: ImageView = view.findViewById(R.id.goods_image)  
+        val goodsName: TextView = view.findViewById(R.id.goods_name)  
+    }  
+  
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {  
+        val view = LayoutInflater.from(context).inflate(R.layout.goods_item, parent, false)  
+        val holder = ViewHolder(view)  
+        holder.itemView.setOnClickListener {  
+            val mainActivity = context as MainActivity  
+            val position = holder.adapterPosition  
+            val goods = goodsList[position]  
+            val intent = Intent(context, GoodsActivity::class.java).apply {  
+                putExtra("goods_name", goods.goods_name)  
+                putExtra("goods_storage", goods.goods_storage)  
+                putExtra("goods_price", goods.goods_price)  
+                putExtra("goods_category", goods.goods_category)  
+                putExtra("goods_id", goods.goods_id)  
+                putExtra("username", mainActivity.mainViewModel.username)  
+            }  
+            context.startActivity(intent)  
+        }  
+        return holder  
+//        return ViewHolder(view)  
+    }  
+  
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {  
+        val goods = goodsList[position]  
+        holder.goodsName.text = goods.goods_name  
+        val id = "ic_goods_${goods.goods_id}"  
+        Glide.with(context).load(Command.getImageByReflect(id)).into(holder.goodsImage)  
+    }  
+  
+    override fun getItemCount() = goodsList.size  
+}
+```
+
+intent的部分特别简单，就不多说了。重要的是这个Glide的改变。我们之前只加载一个图片，而现在我们对于不同的商品能展示不同的图片了。这里我们定义了一个`getImageByReflect`函数，这个函数就是通过反射去获取真正的图片id：
+
+```kotlin
+fun getImageByReflect(imageName: String): Int{  
+    var field: Class<*>  
+    var res = 0  
+    try {  
+        field = Class.forName("com.example.spreadshop.R\$drawable")  
+        res = field.getField(imageName).getInt(field)  
+  
+    }catch (e: java.lang.Exception){  
+        e.printStackTrace()  
+        Log.d("SpreadShopTest", "getImageByReflect exception!")  
+    }  
+  
+    return res  
+}
+```
+
+我们都知道，在`drawable`下创建了文件`ic_test.png`，那么对应的就会在`R.drawable`下新建一个Int类型的变量叫做`ic_test`。我们这个函数的目的就是通过前者去寻找后者。其中需要注意的是这个内部类的写法：`com.example.spreadshop.R\$drawable`在java中，我们只需要这么写：`com.example.spreadshop.R$drawable`，**但是kotlin增加了字符串嵌套变量的操作，所以要转义一下**。经过这么一个转换，我们就能按照`goods_id`去加载手机中已经存好的照片(这样其实是不对的，但是也没办法，我们还不知道怎么在MySQL中存图片)。
+
+接下来是CategoryAdapter：
+
+```kotlin
+class CategoryAdapter(val context: Context, val categoryList: List<Category>): RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {  
+    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){  
+        val categoryName: TextView = view.findViewById(R.id.category_name)  
+        val categoryImage: ImageView = view.findViewById(R.id.category_image)  
+    }  
+  
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {  
+        val view = LayoutInflater.from(context).inflate(R.layout.category_item, parent, false)  
+        val holder = ViewHolder(view)  
+        holder.itemView.setOnClickListener {  
+            val position = holder.adapterPosition  
+            val category = categoryList[position]  
+            val mainActivity = context as MainActivity  
+            mainActivity.mainViewModel.getGoods(Command.getCategoryGoods(category.category))  
+        }  
+        return holder  
+//        return ViewHolder(view)  
+    }  
+  
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {  
+        val category = categoryList[position]  
+        holder.categoryName.text = category.category  
+        Log.d("SpreadShopTest", "category name: ${category.category}")  
+        val id: Int  
+        when(category.category){  
+            "手机" -> {  
+                Log.d("SpreadShopTest", "category id: 手机")  
+                id = R.drawable.ic_phone  
+            }  
+            "衣服" -> {  
+                Log.d("SpreadShopTest", "category id: 衣服")  
+                id = R.drawable.ic_cloth  
+            }  
+            "裤子" -> {  
+                Log.d("SpreadShopTest", "category id: 裤子")  
+                id = R.drawable.ic_trousers  
+            }  
+            else -> {  
+                Log.d("SpreadShopTest", "category id: else")  
+                id = R.drawable.test_maotai  
+            }  
+        }  
+  
+  
+        Log.d("SpreadShopTest", "val id: $id")  
+  
+        Glide.with(context).load(id).into(holder.categoryImage)  
+    }  
+  
+    override fun getItemCount() = categoryList.size  
+}
+```
+
+这里的变化就是，我们要对每一项设置监听器：当点击这个类别时，就发起按着这个类别去找商品的请求。而返回类型是GoodsResponse，那么自然就会刷新下面的GoodsRecyclerView了。
+
+另外，我们不是将这个RecyclerView改成了横着的吗？只需要这么一句话：
+
+```kotlin
+val categoryLayoutManager = GridLayoutManager(this, 1)  
+categoryLayoutManager.orientation = LinearLayoutManager.HORIZONTAL  
+bindingMain.categoryRecycler.layoutManager = categoryLayoutManager  
+val categoryAdapter = CategoryAdapter(this, mainViewModel.categoryList)  
+bindingMain.categoryRecycler.adapter = categoryAdapter
+```
+
+就是第二行中的这句话，将方向变成了水平的。
+
+然后是这个SearchView的逻辑代码。由于我们将它放在了Toolbar中作为菜单的一项，那么它的出生自然要在`onCreateOptionsMenu`方法中了：
+
+```kotlin
+override fun onCreateOptionsMenu(menu: Menu?): Boolean {  
+	menuInflater.inflate(R.menu.toolbar, menu)  
+
+	val searchItem = menu?.findItem(R.id.search_edit)  
+	//searchEdit = findViewById(R.id.search_edit)  
+	//searchEdit = MenuItemCompat.getActionView(searchItem) as SearchView 
+	searchEdit = searchItem?.actionView as SearchView  
+
+	searchEdit.isSubmitButtonEnabled = true  
+	searchEdit.imeOptions = EditorInfo.IME_ACTION_SEARCH  
+
+	searchEdit.setOnQueryTextListener(object : SearchView.OnQueryTextListener{  
+		override fun onQueryTextSubmit(query: String?): Boolean {  
+			if(query != null){  
+				mainViewModel.getGoods(Command.getSearchGoods(query))  
+			}else{  
+				Log.d("SpreadShopTest", "SearchView: query is null")  
+			}  
+			inputMethodManager.hideSoftInputFromWindow(searchEdit.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)  
+			return true  
+		}  
+
+
+		override fun onQueryTextChange(newText: String?): Boolean {  
+			if(newText == ""){  
+				mainViewModel.getGoods(Command.GET_RECOMMAND)  
+			}  
+			return true  
+		}  
+	})  
+	return true  
+}
+```
+
+我们可以通过这两行代码从menu中获取到SearchView的实例：
+
+```kotlin
+val searchItem = menu?.findItem(R.id.search_edit)  
+searchEdit = searchItem?.actionView as SearchView 
+```
+
+我注释掉的是java中已经过时的写法。接下来是对这个SearchView的参数进行一些设置。这里我就引入一些网站了：
+
+[Android的SearchView详解 (wjhsh.net)](http://wjhsh.net/yueshangzuo-p-8685810.html)
+
+[详细解读Android中的搜索框（三）—— SearchView - developer_Kale - 博客园 (cnblogs.com)](https://www.cnblogs.com/tianzhijiexian/p/4226675.html)
+
+然后我们进行两个比较重要的设置：点击提交按钮发生的事，以及清空输入框发生的事。这里的代码很好看懂，唯一要注意的是在点击提交按钮后，要使用`hideSoftInputFromWindow`关闭输入法，这样能增加用户体验。
+
+---
+
+补充一点在NavigationView更新用户名的代码。如果直接使用binding去获取这个TextView并设置值是无效的，经过搜索找到了这种实现很像java的代码：
+
+```kotlin
+mainViewModel.username = intent.getStringExtra("username").toString()  
+if(bindingMain.navView.headerCount > 0){  
+	val header = bindingMain.navView.getHeaderView(0)  
+	val uname = header.findViewById<TextView>(R.id.user_name)  
+	uname.text = "user name: ${mainViewModel.username}"  
+}
+```
+
+目前还并不清楚这么写起效果和不这么写没效果的原因，有待研究。
+
+---
+
+接下来是商品的详情页。这部分其实和《第一行代码》的12.7是一个模子，所以不重要的部分就一步带过了。首先是前端代码：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>  
+<androidx.coordinatorlayout.widget.CoordinatorLayout  
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:app="http://schemas.android.com/apk/res-auto"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    android:fitsSystemWindows="true"  
+    >  
+  
+    <com.google.android.material.appbar.AppBarLayout        
+	    android:id="@+id/app_bar"  
+        android:layout_width="match_parent"  
+        android:layout_height="250dp"  
+        android:fitsSystemWindows="true"  
+        >  
+  
+        <com.google.android.material.appbar.CollapsingToolbarLayout            
+	        android:id="@+id/collapsing_toolbar"  
+            android:layout_width="match_parent"  
+            android:layout_height="match_parent"  
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"  
+            app:contentScrim="@color/teal_200"  
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">  
+  
+            <ImageView                
+	            android:id="@+id/goods_image_detail"  
+                android:layout_width="match_parent"  
+                android:layout_height="match_parent"  
+                android:scaleType="centerCrop"  
+                app:layout_collapseMode="parallax"  
+                />  
+  
+            <androidx.appcompat.widget.Toolbar                
+	            android:id="@+id/toolbar_detail"  
+                android:layout_width="match_parent"  
+                android:layout_height="?attr/actionBarSize"  
+                app:layout_collapseMode="pin"  
+                />  
+        </com.google.android.material.appbar.CollapsingToolbarLayout>    
+    </com.google.android.material.appbar.AppBarLayout>  
+    
+    <androidx.core.widget.NestedScrollView        
+	    android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">  
+  
+        <LinearLayout            
+	        android:orientation="vertical"  
+            android:layout_width="match_parent"  
+            android:layout_height="wrap_content">  
+  
+            <com.google.android.material.card.MaterialCardView                
+	            android:layout_width="match_parent"  
+                android:layout_height="wrap_content"  
+                android:layout_marginBottom="15dp"  
+                android:layout_marginLeft="15dp"  
+                android:layout_marginRight="15dp"  
+                android:layout_marginTop="35dp"  
+                app:cardCornerRadius="4dp"  
+                >  
+  
+                <TextView                    
+	                android:id="@+id/goods_text_detail"  
+                    android:layout_width="wrap_content"  
+                    android:layout_height="wrap_content"  
+                    android:layout_margin="10dp"  
+                    />  
+            </com.google.android.material.card.MaterialCardView>        
+	    </LinearLayout>  
+  
+    </androidx.core.widget.NestedScrollView>  
+    <com.google.android.material.floatingactionbutton.FloatingActionButton        
+	    android:id="@+id/buy_btn"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:layout_margin="16dp"  
+        android:src="@drawable/ic_backup"  
+        app:layout_anchor="@id/app_bar"  
+        app:layout_anchorGravity="bottom|end"  
+        android:contentDescription="buy goods"  
+        />  
+  
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+```
+
+然后是GoodsActivity和GoodsViewModel。没错，这里的逻辑又是比较复杂的，我们从Activity一步一步说起。
+
+首先是展示Home键，这个键默认就是个返回的箭头，所以不用动：
+
+```kotlin
+setSupportActionBar(bindingGoods.toolbarDetail)  
+supportActionBar?.setDisplayHomeAsUpEnabled(true)
+```
+
+然后是一些ViewModel的设置：
+
+```kotlin
+goodsViewModel = ViewModelProvider(this).get(GoodsViewModel::class.java)  
+  
+goodsViewModel.setGoodsName(intent.getStringExtra("goods_name") ?: "null")  
+goodsViewModel.setGoodsCategory(intent.getStringExtra("goods_category") ?: "null")  
+goodsViewModel.setGoodsPrice(intent.getIntExtra("goods_price", 9999))  
+goodsViewModel.setGoodsStorage(intent.getIntExtra("goods_storage", -1))  
+goodsViewModel.setGoodsId(intent.getIntExtra("goods_id", -1))  
+goodsViewModel.username = intent.getStringExtra("username") ?: ""  
+goodsViewModel.isSetFullyLiveData.value = true
+```
+
+都是我们从intent拿到的数据，放到了当前Activity的ViewModel层。当所有的LiveData都设置完成后，将`isSetFullyLiveData`置为true。没错，这和我们前面的代码很相似。也就是`isGotGoodsLiveData`和`isGotCategoryLiveData`这样的逻辑(本文章中原来叫`isGotLiveData`，后来改了名字)。那么一旦设置了这个值，就该调用这个方法了：
+
+```kotlin
+goodsViewModel.isSetFullyLiveData.observe(this){  
+    if(it == true){  
+        bindingGoods.collapsingToolbar.title = goodsViewModel.goodsNameLiveData.value  
+        val imgId = "ic_goods_${goodsViewModel.goodsIdLiveData.value}"  
+        Glide.with(this).load(Command.getImageByReflect(imgId)).into(bindingGoods.goodsImageDetail)  
+        bindingGoods.goodsTextDetail.text = generateGoodsDetail()  
+    }else{  
+        Log.d("SpreadShopTest", "isSetFullyLiveData: false")  
+    }  
+}
+```
+
+这样我们就能将标题，图片，详细信息等乱七八糟的信息都加载上了。这里用到的`generateGoodsDetail`函数是这样的：
+
+```kotlin
+private fun generateGoodsDetail(): String{  
+    val res = StringBuilder()  
+    res.appendLine("goods_name: ${goodsViewModel.goodsNameLiveData.value}")  
+    res.appendLine("goods_category: ${goodsViewModel.goodsCategoryLiveData.value}")  
+    res.appendLine("goods_price: ${goodsViewModel.goodsPriceLiveData.value}")  
+    res.appendLine("goods_storage: ${goodsViewModel.goodsStorageLiveData.value}")  
+    val sb = goodsViewModel.goodsNameLiveData.value?.repeat(500)  
+    res.append(sb)  
+    return res.toString()  
+}
+```
+
+非常简单，就不多赘述了。
+
+---
+
+接下来是购买功能，我打算用这个FloatButton去当购买按键，当点击之后，弹出一个窗口询问你购买的数量。而这时我恰好找到了一个非常好用的第三方库——XPopup：
+
+[XPopup: 🔥XPopup2.0版本重磅来袭，2倍以上性能提升，带来可观的动画性能优化和交互细节的提升！！！功能强大，交互优雅，动画丝滑的通用弹窗！可以替代Dialog，PopupWindow，PopupMenu，BottomSheet，DrawerLayout，Spinner等组件，自带十几种效果良好的动画， 支持完全的UI和动画自定义！(Powerful and Beautiful Popup，can absolutely replace Dialog，PopupWindow，PopupMenu，BottomSheet，DrawerLayout，Spinner. With built-in animators , very easy to custom popup view.) (gitee.com)](https://gitee.com/lxj_gitee/XPopup)
+
+安装的时候遇到一个小问题，就是gradle7.0之后所有的仓库引入都放到了settings.properties中了：
+
+```groovy
+dependencyResolutionManagement {  
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)  
+    repositories {  
+        google()  
+        mavenCentral()  
+        maven {url 'https://jitpack.io'}  // XPopup的依赖
+    }}
+```
+
+这玩意儿非常好用，所以我直接给所有的代码了，一看就能看懂：
+
+```kotlin
+bindingGoods.buyBtn.setOnClickListener {  
+
+	XPopup.Builder(this@GoodsActivity).asInputConfirm("Buying ${goodsViewModel.goodsNameLiveData.value}", "Please enter the purchase quantity: ", "1", object: OnInputConfirmListener{  
+		override fun onConfirm(text: String?) {  
+			if(goodsViewModel.isSetFullyLiveData.value == true && text != null && text != "" && text.isDigitsOnly()){  
+				goodsViewModel.requestOrder(goodsViewModel.username, goodsViewModel.goodsIdLiveData.value!!, text.toInt())  
+			}else if(text == ""){  
+				goodsViewModel.requestOrder(goodsViewModel.username, goodsViewModel.goodsIdLiveData.value!!, 1)  
+				Log.d("SpreadShopTest", "Only Buy One!")  
+			}else{  
+				Log.d("SpreadShopTest", "XPopInput return Nothing, buy fail")  
+				return  
+			}  
+		}  
+	}).show()  
+}
+```
+
+这里还很贴心的给用户设置了一个默认值1，表示不输入默认购买一件，并且XPopup正好还支持提示，所以在提示里打上"1"就好了。
+
+```kotlin
+goodsViewModel.orderLiveData.observe(this){  
+    it.enqueue(object : Callback<OrderResponse>{  
+        override fun onResponse(  
+            call: Call<OrderResponse>,  
+            response: Response<OrderResponse>  
+        ) {  
+            val orderResponse = response.body()  
+            if(orderResponse != null){  
+                val order = orderResponse.order  
+                if(orderResponse.success){  
+                    XPopup.Builder(this@GoodsActivity).asConfirm("Order Info", order.message) {  
+                val mainActivity = SpreadShopApplication.context as MainActivity  
+                    mainActivity.mainViewModel.getGoods(Command.GET_RECOMMAND)  
+                        this@GoodsActivity.finish()  
+                    }.show()  
+                }else{  
+                    Log.d("SpreadShopTest", "orderResponse.success is fail, msg: ${order.message}")  
+                    XPopup.Builder(this@GoodsActivity).asConfirm("Failed!!!", order.message  
+                    ) {  
+                        Toast.makeText(  
+                            this@GoodsActivity,  
+                            "buy failed over",  
+                            Toast.LENGTH_SHORT  
+                        ).show()  
+                    }.show()  
+                }  
+            }else{  
+                Log.d("SpreadShopTest", "orderResponse is null")  
+            }  
+        }  
+  
+        override fun onFailure(call: Call<OrderResponse>, t: Throwable) {  
+            t.printStackTrace()  
+            Log.d("SpreadShopTest", "orderResponse on failure")  
+        }  
+    })  
+}
+```
+
+这里唯一需要注意的是这句话：
+
+```kotlin
+val mainActivity = SpreadShopApplication.context as MainActivity  
+mainActivity.mainViewModel.getGoods(Command.GET_RECOMMAND)  
+this@GoodsActivity.finish() 
+```
+
+当购买成功，用户点击确定后，我们首先再发起一次获取推荐请求，然后关闭当前Activity。这样购买完自动会回到商城页面，并且数据也是最新的。而这个获取到mainActivity的实例在《第一行代码》中的14.1有讲。***但是我还是不太清楚，为啥这里获得的context就恰好是MainActivity呢？***
+
+最后给一下GoodsViewModel的代码：
+
+```kotlin
+class GoodsViewModel: ViewModel() {  
+    val goodsNameLiveData = MutableLiveData<String>()  
+    val goodsStorageLiveData = MutableLiveData<Int>()  
+    val goodsPriceLiveData = MutableLiveData<Int>()  
+    val goodsCategoryLiveData = MutableLiveData<String>()  
+    val goodsIdLiveData = MutableLiveData<Int>()  
+  
+    var username = ""  
+  
+    val orderLiveData: LiveData<Call<OrderResponse>>  
+        get() = _orderLiveData  
+    private val _orderLiveData = MutableLiveData<Call<OrderResponse>>()  
+  
+    val isSetFullyLiveData = MutableLiveData<Boolean>()  
+  
+    fun setGoodsName(n: String){  
+        goodsNameLiveData.value = n  
+    }  
+  
+    fun setGoodsStorage(s: Int){  
+        goodsStorageLiveData.value = s  
+    }  
+  
+    fun setGoodsPrice(p: Int){  
+        goodsPriceLiveData.value = p  
+    }  
+  
+    fun setGoodsCategory(c: String){  
+        goodsCategoryLiveData.value = c  
+    }  
+  
+    fun setGoodsId(i: Int){  
+        goodsIdLiveData.value = i  
+    }  
+  
+    fun requestOrder(username: String, goods_id: Int, number: Int){  
+        _orderLiveData.value = Repository.requestOrder(username, goods_id, number)  
+    }  
+  
+}
+```
