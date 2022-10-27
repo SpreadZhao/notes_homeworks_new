@@ -2026,7 +2026,7 @@ mainActivity.mainViewModel.getGoods(Command.GET_RECOMMAND)
 this@GoodsActivity.finish() 
 ```
 
-当购买成功，用户点击确定后，我们首先再发起一次获取推荐请求，然后关闭当前Activity。这样购买完自动会回到商城页面，并且数据也是最新的。而这个获取到mainActivity的实例在《第一行代码》中的14.1有讲。***但是我还是不太清楚，为啥这里获得的context就恰好是MainActivity呢？***
+当购买成功，用户点击确定后，我们首先再发起一次获取推荐请求，然后关闭当前Activity。这样购买完自动会回到商城页面，并且数据也是最新的。而这个获取到mainActivity的实例在《第一行代码》中的14.1有讲。***但是我还是不太清楚，为啥这里获得的context就恰好是MainActivity呢？*** ^e4d3d1
 
 最后给一下GoodsViewModel的代码：
 
@@ -2072,3 +2072,38 @@ class GoodsViewModel: ViewModel() {
   
 }
 ```
+
+# 2022-10-27
+
+结项了！！！最后的操作，只不过是在已经有的技术基础上加了亿点功能而已。所以这里我给出了整个项目的MVVM架构的图：
+
+![[Drawing 2022-10-27 21.28.04.excalidraw|1000]]
+
+**实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。**
+
+---
+
+另外遇到一个小插曲，就是实现记住密码功能的时候。一开始我是按照《第一行代码》中天气预报程序里保存搜索过的城市那样做的。其中使用了一个获取全局Context的方式，也就是[[#^e4d3d1|之前]]做购买成功自动返回MainActivity并发起网络请求功能时用到的技术。但是这个技术在这里居然行不通，只要一调用程序就会崩溃。之所以我这么做会这样，而书中却不会，最根本的原因就是：**书中的context是在Fragment中获取的，而我是在Activity中获取的。**在Fragment中获取时，Activity已经创建好了，所以这样的代码是没问题的：
+
+```kotlin
+override fun onCreate() {  
+    super.onCreate()  
+    context = applicationContext  
+}
+```
+
+但是我现在做的操作是：在Activity的`onCreate`方法中去调用`applicationContext`方法，显然是不可能完成的，也就导致了context没有被初始化。所以，在Activity中想要将自己这个context传递出去，**还是老老实实把`this`当参数传出去吧**：
+
+```kotlin
+if(loginViewMode.isUserInfoSaved(this)){  
+    val uinfo = loginViewMode.getSavedUserInfo(this)  
+    // 给输入框设置值要用setText不能用语法糖  
+    bindingLogin.accountEdit.setText(uinfo.username)  
+    bindingLogin.passwordEdit.setText(uinfo.password)  
+    bindingLogin.rememberPwd.isChecked = true  
+}
+```
+
+---
+
+***如果没有意外的话，SpreadShop这个项目就到此为止了，我的日记也会在此截止了，但是我对Kotlin和Android的探索会一直持续下去！！！***
