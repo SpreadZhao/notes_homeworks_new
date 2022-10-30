@@ -83,6 +83,8 @@ where file.name = "README"
 emm，加标签只是为了区分你改了什么地方。不想改不加也行。对于一些疑难杂症却又很琐碎的小问题，就非常需要加上日期tag。这里我推荐直接用模板[[templates/date_title_with_tag|date_title_with_tag]]
 ```
 
+对于仓库内部细节的更新，我会以日记的形式更新在这下面。
+
 ---
 
 # 2022-10-17

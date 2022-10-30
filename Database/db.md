@@ -44,7 +44,7 @@ Database: a collection of data, contains information relevant to an enterprise.
 
   如果你是银行用户，你能随便查别人的余额吗？显然不能。但是**我也在这个数据库里**，我也要存钱取钱啊，如果不让我看别人的信息，**只给我看他们想让我看的**，这种文件格式也很难办到。
 
-![img](img/dbms.png)
+![[dbms.png|300]]
 
 > 我们看到，在DBMS的帮助下，应用程序能更好地使用数据库，同时还保证了数据库的安全性。这里**不同的应用通过DBMS后，看到的DB就是不一样的**。
 
@@ -63,7 +63,7 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 ### 1.2.2 Relational Data Model
 
-![img](img/rdm.png)
+![[rdm.png|400]]
 
 ### 1.2.3 Data Abstraction
 
@@ -210,7 +210,7 @@ $$
 
 表达式看着很玄乎，其实简单的不得了。我们还是拿instructor relation来举例子。
 
-![img](img/rm.png)
+![[rm.png|300]]
 
 我们如果想选出所有物理学院的老师，我们很容易写出结果：
 
@@ -236,7 +236,7 @@ $$
 
 这里Project译为“投影”。和select相反，它不是横着筛选，而是竖着筛选。还是instructor的例子，如果我们不要`dept_name`，只要剩下三个属性，那么就能得到这样一个relation：
 
-![img](img/project.png)
+![[project.png|300]]
 
 那么我们也能写出这个结果：
 $$
