@@ -273,7 +273,7 @@
   >
   >* 与此同时，发现这个孩子被1号进程接管
   >
-  >  ![img](img/adopted.png)
+  >  ![img](img/adopted.png) ^467bf0
 
 ##### 1.8.2.1 Process Termination Implementation
 
