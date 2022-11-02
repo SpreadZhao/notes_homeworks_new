@@ -199,6 +199,8 @@ if(returnMsg instanceof File) {
 
 ## 2.1 Duplicate Works
 
+## 2.1 重复工作
+
 有了这个小爱同学的例子，我们已经对socket编程有了一个最最基本的认识。那么接下来就开始用java来手撸一个服务器罢！
 
 首先是最基础的类：`HttpServer`，这个类做的事就和小爱同学中的`Server`是一样的——**去监听一个端口，并等待客户登入**。
