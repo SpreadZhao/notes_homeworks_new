@@ -103,7 +103,7 @@ SSD老擦除，把预留的Cache写挂了，就废了，比如500GB的可能写�
 
 Cache虽然不大，但功耗还是最高的
 
-### 1.7 主存储器
+## 1.7 主存储器
 
 Random Access Memory - RAM, Read-Only Memory - ROM
 
