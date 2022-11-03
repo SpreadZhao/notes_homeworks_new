@@ -1879,3 +1879,20 @@ $$
 
 ![[Pasted image 20221103130939.png]]
 
+### 6.3.2 Aggregation
+
+比如我们要对一个项目做总体的评估：
+
+![[Pasted image 20221103163817.png|500]]
+
+那么在我做评估的时候，其实是对instructor，student，project这三张表作为一个整体做评估。因此我们不妨直接将这三个表抽象成一个对象：
+
+![[Pasted image 20221103163952.png|500]]
+
+这样做的好处就是，我们不需要再经过三张表去查，只需要看最后的eval_for，就能知道**某一个学生在一个特定的老师的指导下参加了一个特定的项目**。而这个eval_for中既能反应proj_guide这个关系Schema的所有信息，也能看到它联系的三个Entity Schema的信息，所以这条个proj_guide在此时就变成了冗余数据，我们完全可以删掉它。
+
+$$
+eval\_for(s\_ID,\ project\_id,\ i\_ID,\ evaluation\_id)
+$$
+
+*剩下的一些知识，在《Database System Concepts》中的280页开始。*
