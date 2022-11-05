@@ -2258,7 +2258,7 @@ How do we implement file?
 
 * MBR(Master Boot Record)用于启动电脑，MBR的末尾包括了Partion table，标记了每个分区的启示和末尾的地址，只有一个，对于多个操作系统，MBR可以指出要启动的是哪一个系统
 * Boot Block里边放一些能把操作系统加载到内存里的东西
-* Super Block里放一些文件系统的关键参数，比如前面说的Physical Block，那一个块有多大呢？Inode的区域(就是后面那块)的起始地址在哪？或者这是啥文件系统呢？是ext3，ext4，还是ntfs之类的？
+* Super Block里放一些文件系统的关键参数，比如前面说的Physical Block，那一个块有多大呢？Inode的区域(就是后面那块)的起始地址在哪？或者这是啥文件系统呢？是ext3，ext4，还是ntfs之类的？在我的[[5. ext_fs#5. EXT文件系统结构|数据管理技术课程调研报告]]中有补充。
 * Free space management，MM里讲过 ，是bitmap或者是link list
 
 #### 7.4.5 Log-Structed File System
