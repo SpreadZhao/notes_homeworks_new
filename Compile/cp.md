@@ -1037,6 +1037,16 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/w10.png)
 
+## 3.7 习题
+
+![[Pasted image 20221105221228.png]]
+
+![[Pasted image 20221105221252.png]]
+
+![[Pasted image 20221105221316.png]]
+
+![[Pasted image 20221105221328.png]]
+
 # 4. 语法分析
 
 ## 4.1 Top-Down Parsing
