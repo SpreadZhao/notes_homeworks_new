@@ -1,3 +1,10 @@
+---
+author: "Spread Zhao"
+title: db
+category: inter_class
+description: 数据库系统课堂笔记，刘伟老师
+---
+
 # 数据库笔记
 
 # 1. Introduction

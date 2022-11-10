@@ -1,3 +1,10 @@
+---
+author: "Spread Zhao"
+title: cs
+category: inter_class
+description: 计算机组成与结构课堂笔记，蒋志平老师
+---
+
 # 计组笔记
 
 # 1. 存储系统

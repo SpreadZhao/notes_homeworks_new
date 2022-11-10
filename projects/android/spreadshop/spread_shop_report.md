@@ -1,6 +1,81 @@
-# 0. 项目架构
+# 0. Overview
 
-![[Drawing 2022-10-19 16.58.37.excalidraw]]
+## 0.0 团队成员介绍
+
+Role | Member
+-- | --
+项目总设计 | 赵传博
+数据库设计 | 赵传博、曾凡浩、程浩然
+数据库搭建| 曾凡浩
+CS架构设计 | 赵传博
+服务端开发 | 曾凡浩
+客户端开发 | 赵传博
+报告撰写| 程浩然
+报告审查| 赵传博
+
+## 0.1 项目介绍-Spread Shop
+
+By Spread Zhao: 
+
+本项目是一个CS架构。服务端由Springboot + MySQL编写，给用户提供访问数据库的功能。正如项目的名字——Spread Shop，**它是一个模拟的电商平台**，数据库就是我们模拟的商店结构；而服务端我选择了比较擅长的安卓开发，使用MVVM架构来实现。这个项目中，我们模拟了**注册、登陆、记住密码、浏览商品、浏览种类、搜索商品、查看商品详情、购买商品、查看订单**功能。后序还可以不断进行扩充。
+
+客户端的源代码我已经上传到了我的gitee仓库中：
+
+[SpreadShop](https://gitee.com/spreadzhao/spread-shop)
+
+而服务端开发我本人后序也打算写一个使用socket的，更原始的http服务器。这是为了锻炼我的网络编程能力。这部分正在施工中，开发进度可以到这个笔记中追寻：
+
+[Article/java_socket_http_server.md · SpreadZhao/notes_homeworks - 码云 - 开源中国 (gitee.com)](https://gitee.com/spreadzhao/notes_homeworks/blob/master/Article/java_socket_http_server.md)
+
+## 0.2 整体架构
+
+![[Drawing 2022-10-19 16.58.37.excalidraw|700]]
+
+## 0.3 用例图
+
+#TODO 
+
+## 0.4 数据库Schema
+
+**账户表**
+
+![[account_table.jpg]]
+
+---
+
+**种类表**
+
+![[category_table.jpg]]
+
+---
+
+**商品表**
+
+![[goods_table.jpg]]
+
+---
+
+**订单表**
+
+![[order_table.jpg]]
+
+## 0.5 ER图
+
+![[spreadshop_er.jpg]]
+
+## 0.6 模块图
+
+**客户端**
+
+![[Drawing 2022-10-27 21.28.04.excalidraw|700]]
+
+---
+
+**服务端**
+
+![[Drawing 2022-11-10 19.33.21.excalidraw]]
+
+> *注：各模块的说明在下面已经展示的非常详细了，所以这里只给出模块图。*
 
 # 1. 用户端与服务端的连接
 
@@ -8,7 +83,7 @@
 
 ![[Drawing 2022-11-10 12.12.12.excalidraw]]
 
-可以看到，我们最一开始是打算直接将jdbc嵌入到安卓设备中，并让它访问电脑上的MySQL。这种做法能极大简化原来的架构，但是最终还是失败了。1.1介绍的就是我们失败的经历；而1.2开始就是我们最终完成整个项目的架构。
+可以看到，我们一开始打算直接将jdbc嵌入到安卓设备中，并让它访问电脑上的MySQL。这种做法能极大简化原来的架构，但是最终还是失败了。1.1介绍的就是我们失败的经历；而1.2开始就是我们最终完成整个项目的架构。
 
 ## 1.1 尝试用官方连接件连接
 
@@ -614,7 +689,7 @@ public class BaseDao {
 
 首先我们在类中定义了一些私有的静态变量，让它们只能在当前类被访问。而它们的值单独存放在*database.properties*配置文件中，这样做的好处是便于我们后期做代码维护时快速检索并修改这些变量的值
 
-```
+```properties
 driver=com.mysql.cj.jdbc.Driver
 url=jdbc:mysql://localhost:3306/store
 user=root
@@ -1472,7 +1547,11 @@ public Balance balance(@RequestParam("username") String username){
 
 这是整个用户端的MVVM架构。实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。
 
-最顶层的*Activity*是用户能看到的东西——打开程序会进入*LoginActivity*；登录成功后就会通过*Intent*打开*MainActivity*，*MainActivity*就是用来搜索各种商品和种类的；每点击一个商品都会打开*GoodsActivity*，也就是商品的详情页；另外在侧滑菜单点击My Order按钮还能打开*OrderActivity*，这里能看到用户所有的订单信息
+最顶层的*Activity*是用户能看到的东西——打开程序会进入*LoginActivity*；登录成功后就会通过*Intent*打开*MainActivity*，*MainActivity*就是用来搜索各种商品和种类的；每点击一个商品都会打开*GoodsActivity*，也就是商品的详情页；另外在侧滑菜单点击My Order按钮还能打开*OrderActivity*，这里能看到用户所有的订单信息。
+
+下面是整个客户端的代码结构：
+
+![[Pasted image 20221110221703.png|300]]
 
 ## 3.1 登录界面
 
@@ -1628,60 +1707,6 @@ public Balance balance(@RequestParam("username") String username){
 
 ![[Pasted image 20221109211445.png]]
 
-这里解释一下BindingView的写法，下面是参考的文章：
-
-[(29条消息) kotlin-android-extensions插件也被废弃了？扶我起来_guolin的博客-CSDN博客_kotlin-android-extensions废弃](https://blog.csdn.net/guolin_blog/article/details/113089706)
-
-关于Retrofit中Service的快速创建。如果不快速创建的话，正常写法是：
-
-```kotlin
-val retrofit = Retrofit.Builder()
-	.baseUrl("http://10.0.2.2/")
-	.addConverterFactory(GsonConverterFactory.create())
-	.build()
-val appService = retrofit.create(AppService::class.java)
-```
-
-考虑到如果每用到一次和`10.0.2.2`的连接就要写一堆这些，十分繁琐。所以我们需要简化一下，在逻辑层的网络包，也就是`.logic.model`下新建`ServiceCreator`**单例类**：
-
-```kotlin
-object ServiceCreator {
-
-	private const val BASE_URL = "http://10.0.2.2/"
-	
-	private val retrofit = Retrofit.Builder()
-		.baseUrl(BASE_URL)
-		.addConverterFactory(GsonConverterFactory.create())
-		.build()
-
-	//这里fun后面的<T>表示泛型声明，表明参数中有泛型
-	fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
-}
-```
-
-这样当我们新建Service时就只需要这样写：
-
-```kotlin
-val appService = ServiceCreator.create(AppService::class.java)
-```
-
-如果还是觉得麻烦，还可以再加一个函数：
-
-```kotlin
-inline fun <reified T> create(): T = create(T::class.java)
-```
-
-这样新建Service时只需要这样写：
-
-```kotlin
-val appService = ServiceCreator.create<AppService>()
-```
-
-这里使用了Kotlin泛型实化。比如，如果定义一个函数：`fun getGenericType() = T::class.java`这里会产生语法错误。例如，假设我们创建了一个`List<String>`集合，虽然在编译时期只能向集合中添加字符串类型的元素，但是在运行时期JVM并不能知道它本来只打算包含哪种类型的元素，只能识别出来它是个List。所有基于JVM的语言，它们的泛型功能都是通过类型擦除机制来实现的，其中当然也包括了Kotlin。这种机制使得我们不可能使用`a is T`或者`T::class.java`这样的语法，因为T的实际类型在运行的时候已经被擦除了。因此，在编译时的泛型无法被具体实化成某个具体的类
-
-但是，如果这样写：`inline fun <reified T> getGenericType() = T::class.java`  
-加上`inline`和`reified`，就可以在编译时通过了
-
 封装一次还是不够的，因为[[#^3e4b51|前面]]说过，我们的数据不仅是由网络传来的，还有本地传来的数据。我们需要统一封装到*Repository*中，让它作为数据的唯一来源，方便处理所有的数据。
 
 数据经仓库往上传，就来到了*ViewModel*层，这里用来存储所有用来显示在屏幕的数据。我们这里着重看一下*LoginViewModel*中LoginResult的写法：
@@ -1758,7 +1783,7 @@ loginViewMode.isSetFullyLiveData.observe(this){
 }
 ```
 
-顺带提一下LiveData的特点，哪怕它原来的值就是`true`，我们再对它赋`true`，也会执行这里的方法，调用*loginViewMode*的saveUserInfo，层层调用将用户名密码存入本地数据库
+顺带提一下LiveData的特点：哪怕它原来的值就是`true`，我们再对它赋`true`，也会执行这里的方法，调用*loginViewMode*的saveUserInfo，层层调用将用户名密码存入本地数据库
 
 接下来通过intent从*LoginActivity*跳转到*MainActivity*，与此同时我们往intent中传了一个用户名，这样我们在*MainActivity*里就能拿到用户名了 ^367d2d
 

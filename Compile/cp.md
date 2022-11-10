@@ -1,3 +1,10 @@
+---
+author: "Spread Zhao"
+title: cp
+category: inter_class
+description: 编译原理课堂笔记，来自张立勇老师和哈工大公开课
+---
+
 # 编译原理笔记
 
 # 0. 题外话

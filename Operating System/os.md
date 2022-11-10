@@ -1,3 +1,10 @@
+---
+author: "Spread Zhao"
+title: os
+category: inter_class
+description: 操作系统课堂笔记，李航老师
+---
+
 # 操作系统笔记
 
 ## 1. Process
