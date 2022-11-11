@@ -31,11 +31,7 @@ By Spread Zhao:
 
 ![[Drawing 2022-10-19 16.58.37.excalidraw|700]]
 
-## 0.3 用例图
-
-#TODO 
-
-## 0.4 数据库Schema
+## 0.3 数据库Schema
 
 **账户表**
 
@@ -59,11 +55,11 @@ By Spread Zhao:
 
 ![[order_table.jpg]]
 
-## 0.5 ER图
+## 0.4 ER图
 
 ![[spreadshop_er.jpg]]
 
-## 0.6 模块图
+## 0.5 模块图
 
 **客户端**
 
