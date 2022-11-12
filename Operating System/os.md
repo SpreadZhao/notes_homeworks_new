@@ -146,7 +146,7 @@ description: 操作系统课堂笔记，李航老师
   >
   > **注意：子进程从fork返回处开始执行**
   >
-  > *问题：子进程的PID是0是不是因为从返回处开始执行，导致没有初始化呢？*（普通中断/缺页中断）
+  > #question 子进程的PID是0是不是因为从返回处开始执行，导致没有初始化呢？（普通中断/缺页中断）
   >
   > Another example 
   >
@@ -372,20 +372,18 @@ Result
 
 ![img](img/tinus.png)
 
-     >优点
-     >
-     >* 可在不支持Thread的OS上实现
-     >
-     >* 线程切换快，不用陷入内核
-     >
-     >  *问题：线程切换不需要靠系统调用来实现吗？如果要靠系统调用的话，不是还需要陷入到内核空间中吗？*
-     >
-     >* 允许每个Thread有自己的Scheduling Algorithm
-     >
-     >* 有较好的可扩展性
-     >
-     >问题：如何实现阻塞系统调用
-     >
+**优点**
+
+* 可在不支持Thread的OS上实现
+* 线程切换快，不用陷入内核
+
+#question 线程切换不需要靠系统调用来实现吗？如果要靠系统调用的话，不是还需要陷入到内核空间中吗？
+
+* 允许每个Thread有自己的Scheduling Algorithm
+* 有较好的可扩展性
+
+问题：如何实现阻塞系统调用
+
 ![img](img/howsyscall.png)
   
   2. In Kernel Space
@@ -606,7 +604,7 @@ Result
     | Pthread_mutex_trylock | Acquire a lock or **fail**  |
     | Pthread_mutex_unlock  | Release a lock              |
 
-    *问题：linuxStudy/mutex.c为什么两个in？*
+    #question linuxStudy/mutex.c为什么两个in？
 
     Example
 
@@ -1025,7 +1023,7 @@ Separate the scheduling mechanism from the scheduling policy
 | Cost               | Big          | Small                           |
 | Other              | /            | 可实现应用特定Scheduler，效果好 |
 
-*问题：为啥实现在Kernel Space进行线程调度的开销大呢？不是应该取决于我这个线程放在用户空间还是内核空间吗？如果线程本来就是放在内核空间的，那么在内核空间调度内核空间的线程花费应该是更少的吧*
+#question 为啥实现在Kernel Space进行线程调度的开销大呢？不是应该取决于我这个线程放在用户空间还是内核空间吗？如果线程本来就是放在内核空间的，那么在内核空间调度内核空间的线程花费应该是更少的吧
 
 ## 5. Classical IPC Problems
 
@@ -1508,7 +1506,7 @@ Solution：加内存！
   >
   > E = [1 / (p + 1)] * (0 + 1 + ... + p) = p/2
   >
-  > *问题：为什么se/p不判一下s/p的余数是否为0*
+  > #question 为什么se/p不判一下s/p的余数是否为0
 
   之后，将Overhead两边对p求导，求出p(optimise) = 根号下2se
 
@@ -1705,7 +1703,7 @@ CISC与RISC的区别
 
   如果一个Page中的程序在等I/O传来数据(比如buf[]在等数)，但Data还没来，程序被交换了，变成了别人的形状，这时候就要产生Page Fault把原来的程序写回来，很耗时。同时Data也肯恩被后来者覆盖，因此需要Lock一下Page，不让换出去
 
-  > *问题：Lock之后会有啥问题？*
+  > #question Lock之后会有啥问题？
   >
   > 恶意Lock，把所有的Virtual Page都锁上，即它映射的所有Page Frame都锁上了，别人的地方就小了
 
@@ -1815,7 +1813,7 @@ Most important: exe and archive
 >
 > archive: 库，档案
 >
-> *问题：为什么有的程序就几行，却把整个库都链上了？*
+> #question 为什么有的程序就几行，却把整个库都链上了？
 
 展示：普通文件和目录文件
 
@@ -1828,7 +1826,7 @@ Most important: exe and archive
 > * 'd' 代表目录文件
 > * '-' 代表普通文件
 >
-> 问题：这里显示的目录文件为啥是文件夹？
+> #question 这里显示的目录文件为啥是文件夹？
 
 Device file下的block device file和character device file
 
@@ -2034,7 +2032,7 @@ Directory operating interface
 | Opendir  | Link    |
 | Closedir | Unlink  |
 
-Question问题：
+#question 
 
 * 为啥读一个文件还要open一下，直接read不行吗？
 
@@ -2336,7 +2334,7 @@ How do we implement file?
   >
   > File limit是拥有的文件的上限：Inode是有上限的，如果一个用户不断创建小文件，拥有超级多，那就把Inode消耗光了
   >
-  > *问题：那个表里是Open file table里的QuotaPointer，那么是每一个用户对应一张Quota table，还是每一个文件都有一张Quota table呢？我感觉是每个用户一张，然后不同的Open file table中正在打开的文件，每个里面的Quota pointer，只要User是那个User，那pointer指向的就是同一张Quota table*
+  > #question 那个表里是Open file table里的QuotaPointer，那么是每一个用户对应一张Quota table，还是每一个文件都有一张Quota table呢？我感觉是每个用户一张，然后不同的Open file table中正在打开的文件，每个里面的Quota pointer，只要User是那个User，那pointer指向的就是同一张Quota table
 
 #### 7.5.2 File System Reliability
 
@@ -2521,7 +2519,7 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 > 当今的CPU，采用的一般是Hybrid结构，早期的外设很慢，和CPU啥的是挂在不同的Address Bus上，所以用两种不同的指令访问不同的地址空间，也就是Separate类型，这样会比较快。后来外设(比如显存)越来越快，甚至和MM不相上下，所以和MM一块编址更加方便。而为了向前兼容，使用Hybrid
 
-*问题：那这个图里的IO空间的地址是实地址还是虚地址？如果是虚地址，那比如我写一个程序要控制IO，那在这个程序的进程执行的时候，要创建一个虚地址空间，如果采用的是统一编址，那是不是会有某种特定的算法来讲这个内存的虚地址和IO的虚地址区分开呢？*
+#question 那这个图里的IO空间的地址是实地址还是虚地址？如果是虚地址，那比如我写一个程序要控制IO，那在这个程序的进程执行的时候，要创建一个虚地址空间，如果采用的是统一编址，那是不是会有某种特定的算法来讲这个内存的虚地址和IO的虚地址区分开呢？
 
 **Bus connection**
 
@@ -2949,7 +2947,7 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
   > Each resource is either currently assigned to exactly one process or is available.
   >
-  > *问题：这句话是不是说了和没说一样，改成：有人正在访问关键区是不是更好呢？*
+  > #question 这句话是不是说了和没说一样，改成：有人正在访问关键区是不是更好呢？
 
 * Hold and wait condition
 
