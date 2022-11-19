@@ -148,6 +148,8 @@ x = 8 / y;
 
 ## 0.3 练习题
 
+#homework preview
+
 ![[Pasted image 20221018154150.png]]
 
 ![[Pasted image 20221018154208.png]]
@@ -1133,6 +1135,8 @@ ABC接收2之后会进入C，C是终态
 
 ### 3.7.1 正则表达式
 
+#homework regular expression
+
 ![[Pasted image 20221105221228.png]]
 
 ![[Pasted image 20221105221252.png]]
@@ -1142,6 +1146,8 @@ ABC接收2之后会进入C，C是终态
 ![[Pasted image 20221105221328.png]]
 
 ### 3.7.2 自动机
+
+#homework automata
 
 ![[Pasted image 20221106132715.png]]
 
