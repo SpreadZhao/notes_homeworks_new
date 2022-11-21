@@ -528,3 +528,76 @@ state bit | meaning
 
 ![[Drawing 2022-11-19 20.54.34.excalidraw|700]]
 
+## 1.4 Even Faster
+
+我们如何才能让计算机变的更快呢？接下来是一些策略。
+
+**Superscalar**
+
+这个就和我们之前的那个[[Pasted image 20221115171354.png|空间并行]]很相似(我感觉就是一个东西)。也就是CPU内部有多个流水线同时在做一件事，比如取值有3个人在同时取3个指令的地址；译码有3个人在同时译3个指令的码等等：
+
+![[Computer Structure/resources/Pasted image 20221121160253.png]]
+
+这种做法就是在纯纯地堆硬件，因为你得真有3个人才能这么干。
+
+---
+
+**Super Pipeline**
+
+还是取值译码执行写回，那这4步中的每一步其实都可以拆成更细的stage，那么就不是4级，可能是40级甚至400级的流水线，这样效率也能提高。
+
+![[Computer Structure/resources/Pasted image 20221121160711.png]]
+
+---
+
+**Superpipelined Superscalar**
+
+就是前两种加起来，又有多个人，又拆：
+
+![[Computer Structure/resources/Pasted image 20221121161413.png]]
+
+对于这三种类型的流水线，我们可以给一个表格总结一下它们的性能：
+
+Pipeline | Stage Time | Number of instructions in parallel | Time Between Emit | ILP
+-- | -- | -- | -- | --
+Standard | 1 | 1 | 1 | 1
+m Superscalar | 1 | m | 1 | m
+n Super Pipeline | $\frac{1}{n}$ | 1 | $\frac{1}{n}$ | n
+m,n Superpipelined Superscalar | $\frac{1}{n}$ | m | $\frac{1}{n}$ | m \* n
+
+下面就以取值译码执行写回这个例子来说明这个表格。正常的流水线，这4步中的每一步都是一个stage。那么每个stage的时间就是1；由于没有任何并行，就像这样：
+
+![[Computer Structure/resources/Pasted image 20221121190519.png]]
+
+因此在同一时刻实际上并行(空间并行)的任务只有一个。而在这种情况下，也是每隔1个时间就会发出一条指令，也就是`取址`-`等待1`-`下一个指令的取址`-`等待1`-...，这种情况对译码，执行，写回也同样适用；那么最终描述这个流水线性能的ILP(Instruction Level Parrallelism)就是1，相当于：**我用了执行完1套取址译码执行写回的时间真的就只执行了1套取址译码执行写回**。
+
+当轮到m度的超标量流水线的时候，就可以开始并行了。因为它可以让多个人干一件事，也就是空间并行，所以如果有m个人的话，同一时刻并行的任务就是m个。这样虽然也是每隔1个时间发射(emit)一条指令，但是实际的执行情况是`指令1和指令2的取址`-`等待1`-`指令3和指令4的取址`-...。因此ILP为m，表示**我用了执行完1套取址译码执行写回的时间执行了m套取址译码执行写回，因为我有m个人同时干活**。
+
+之后是超流水流水线，因为它拆了一下，所以原来的4个stage被拆成了n个小stage。那么和普通流水线唯一的区别是，stage持续时间从1变成了$\frac{1}{n}$。这样只需要$\frac{1}{n}$个时间就能完成1套取址译码执行写回，那么显然ILP应该等于n。
+
+最后一行就是它俩加起来，那么就是**在完成1套取址译码执行写回的时间完成了m \* n 套这些操作**。
+
+---
+
+我们想一想，这些流水线谁最快？乍一想，肯定是Superpipelined Superscalar，因为它集成了这两者的优点。但实际情况却是这样：
+
+![[Computer Structure/resources/Pasted image 20221121192315.png]]
+
+最重要的原因就是：**Super Pipeline本身就是一个辣鸡设计**。它的思想就是将大stage拆成小的stage。但是其中的问题就是，**很多任务(最常见最常见的任务)在拆分完之后很多操作是不能交错执行的，甚至好多任务是不能拆的**。这样就导致了虽然看似搞的很细，实际上中间有大量的空洞，效率和速度反而降低了。
+
+## 1.5 Out-of-Order Execution(OoOE)
+
+CPU在执行某一条指令时，如果依赖于之前计算出的结果，就会发生等待。必须等结果出来之后才能继续执行。这在之前也已经提过许多次了。
+
+![[Computer Structure/resources/Pasted image 20221121193918.png]]
+
+比如本图中，第二条指令需要依赖R3这个结果，所以必须要在第一条指令算完之后才能执行。但是第一条执行的时间足足有4个stage，所以要等3个stage才行。另外，由于第三条指令企图修改R1，所以不能先执行它，否则第二条的结果可能会产生错误，所以第三条指令也要等。
+
+**那么，我们能不能在等的这段时间里做点什么？**
+
+乱序执行的概念比较像操作系统中[[Operating System/os#4.3.3 SJF Example(Preemptive)|进程的抢占]]，但是还不是一回事。比如第二条指令在等待的过程中，我先执行第三条指令，**但是不写回**：
+
+![[Computer Structure/resources/Pasted image 20221121194742.png]]
+
+这种做法就是乱序执行了。
+
