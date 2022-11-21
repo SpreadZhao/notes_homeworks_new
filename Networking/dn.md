@@ -803,7 +803,7 @@ $$
 
 例：使用NRZ-I传输10 Mbps的数据，问平均信号速率和最小带宽是多少?
 
-还是带到$S=c \times N \times \frac{1}{r}$中，c取$\frac{1}{2}$，r取1，能算出来平均信号速率是$\frac{N}{2}$，也就是$\frac{10^7}{2}\ baud = 5\ Mbaud$，而最小的带宽其实就是平均信号速率(见前文)，所以B~min~ = S = 5 MHz。
+还是带到$S=c \times N \times \frac{1}{r}$中，c取$\frac{1}{2}$，r取1，能算出来平均信号速率是$\frac{N}{2}$，也就是$\frac{10^7}{2}\ baud = 5\ Mbaud$，而最小的带宽其实就是平均信号速率(见前文)，所以$B_{min} = S = 5\ MHz$。
 
 #question 书上给的是500 kbaud和500 kHz，我强烈怀疑书上错了？
 
