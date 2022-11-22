@@ -239,7 +239,7 @@ x = 8 / y;
 
 ![[Pasted image 20221106114410.png]]
 
-# 2. 文法分析
+# 2. 语义分析
 
 ## 2.1 Terminal Symbol
 
@@ -384,7 +384,7 @@ G = ($V_T,V_N$, P, S)
 * 如果$\alpha_0 \Rightarrow \alpha_1 \Rightarrow \alpha_2 \Rightarrow ... \Rightarrow \alpha_n$，则称串$\alpha_0$经过n步推导出$\alpha_n$，可以简记为：$\alpha_0 \Rightarrow^n \alpha_n$
 * $\Rightarrow^0$表示0步推导，也就是不推导
 * $\Rightarrow^+$表示经过正数步推导(>0)
-* $\Rightarrow^*$表示经过若干步推导($\geq$0)
+* $\Rightarrow^*$表示经过若干步推导( $\geq$ 0)
 
 ### 2.7.2 Sentential form & Sentence
 
@@ -516,7 +516,9 @@ Production的一般形式：$\alpha_1A\alpha_2\rightarrow\alpha_1\beta\alpha_2(\
 
 ## 2.9 Grammatical Relationships
 
-**0型**包含**1型**包含**2型**包含**3型**
+**0型**包含**1型**包含**2型**包含**3型**：
+
+![[Excalidraw/Drawing 2022-11-22 15.19.24.excalidraw]]
 
 ## 2.10 CFG Tree
 
@@ -1131,9 +1133,37 @@ ABC接收2之后会进入C，C是终态
 
 ![img](img/w10.png)
 
-## 3.7 习题
+## 3.7 Minimum DFA
 
-### 3.7.1 正则表达式
+有了DFA，我们还要看一看它到底是不是最简的。下面是一个最小化DFA的例子：
+
+![[Compile/resources/Pasted image 20221122143046.png]]
+
+首先写出所有的状态集合，因为终态和非终态肯定是不一样的，所以它们可以先分开：
+
+$$
+\{ABCD,\ E\}
+$$
+
+接下来就看，**所有在一块的到底能不能拆开**。那么也就是尽可能去把ABCD拆开。此时，ABCD其实是一个整体，所以我们要把它们同等看待。因为ABC经过b之后都会到达这个整体，而D经过b之后会到达E，所以显然D和ABC是有区别的，应该拆开：
+
+$$
+\{ABC,\ D,\ E\}
+$$
+
+接下来就拆ABC这个整体。因为AC经过b都会到这个整体；而B经过b之后会到D，所以B也应该拆开：
+
+$$
+\{AC,\ B,\ D,\ E\}
+$$
+
+A和C经过a都会到B，经过b都会到自己这个整体，所以没法再拆了。那么最终自动机重画出来是这样的：
+
+![[Excalidraw/Drawing 2022-11-22 14.37.10.excalidraw]]
+
+## 3.8 习题
+
+### 3.8.1 正则表达式
 
 #homework regular expression
 
@@ -1145,7 +1175,7 @@ ABC接收2之后会进入C，C是终态
 
 ![[Pasted image 20221105221328.png]]
 
-### 3.7.2 自动机
+### 3.8.2 自动机
 
 #homework automata
 
@@ -1161,7 +1191,23 @@ ABC接收2之后会进入C，C是终态
 
 ![[Pasted image 20221106132858.png]]
 
+### 3.8.3 RE -> FA
+
+![[Compile/resources/Pasted image 20221122141129.png]]
+
+![[Compile/resources/Pasted image 20221122141148.png]]
+
+![[Compile/resources/Pasted image 20221122141200.png]]
+
 # 4. 语法分析
+
+> **语法分析的内容其实需要语义分析的知识点，尽管语法分析是在语义分析之前发生的。所以最好先看完[[#2. 语义分析|语义分析]]的内容再回到这里。**
+
+语法分析器扫描的实际上就是词法分析结束后的结果：
+
+![[Compile/resources/Pasted image 20221122152451.png]]
+
+那么词法分析器分析出来的每一个Token，它是什么以及它的种类是什么就会被传送到语法分析器中做进一步分析。比如，传过来一个`int`，它的类别是关键字；一个`a`，类别是标识符；一个分号，类别是停止符号。那么语法分析器就对这三个东西进行分析，分析出一个句子：`int a;`，并赋予它含义。
 
 ## 4.1 Top-Down Parsing
 
@@ -1269,15 +1315,15 @@ ABC接收2之后会进入C，C是终态
 
 然后自然是把F替换成id了，并且后移一位输入指针
 
-![img](img/ld10.png)|![img](img/ld11.png)
+![[Compile/img/ld10.png|200]] ![[Compile/img/ld11.png]]
 
 替换T'，因为这里是星号，所以替换成*FT'并后移输入指针
 
-![img](img/ld12.png)|![img](img/ld13.png)
+![[Compile/img/ld12.png|200]] ![[Compile/img/ld13.png]]
 
 然后F替换成id往下走，因为已经完了，输入指针指向的是空串，所以只要能换成$\epsilon$就换了。最终
 
-![img](img/ld14.png)|![img](img/ld15.png)
+![[Compile/img/ld14.png|200]] ![[Compile/img/ld15.png]]
 
 ### 4.1.3 Backtracking & Predictive Parsing
 
@@ -1778,3 +1824,24 @@ $$
 
 总结：通过这道题，和之前的概念，我们也能发现，FOLLOW集是用在单个的Nonterminal上的，而FIRST集是用在串上的。因为Nonterminal本身也是一个串，所以自然都可以。而SELECT集是用在产生式上的，因此才会由小到大的计算。另外，FIRST集中要么是Terminal，要么是$\epsilon$；而FOLLOW集本身就是Terminal的集合，自然不能有$\epsilon$，而是用\$代替；而SELECT集中因为表示的是输入符号，肯定要有意义，所以元素种类和FOLLOW集中的是一样的。
 
+## 4.x 习题
+
+#homework CFG & Derive & Tree
+
+![[Compile/resources/Pasted image 20221122182733.png]]
+
+![[Compile/resources/Pasted image 20221122182827.png|200]]
+
+![[Compile/resources/Pasted image 20221122182843.png|300]]
+
+![[Compile/resources/Pasted image 20221122182909.png|300]]
+
+![[Compile/resources/Pasted image 20221122182921.png|300]]
+
+![[Compile/resources/Pasted image 20221122182937.png]]
+
+![[Compile/resources/Pasted image 20221122183145.png]]
+
+![[Compile/resources/Pasted image 20221122183202.png]]
+
+![[Compile/resources/Pasted image 20221122183211.png]]
