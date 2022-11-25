@@ -714,7 +714,45 @@ CPU在执行某一条指令时，如果依赖于之前计算出的结果，就�
 
 ![[Computer Structure/resources/Pasted image 20221125135713.png]]
 
-然后是第九个时刻。这时第三条和第四条指令终于可以开始Read Oper了。那么我可不可以发射最后一条指令了呢？
+然后是第九个时刻。这时第三条和第四条指令终于可以开始Read Oper了。那么我可不可以发射最后一条指令了呢？发射这条指令，其实就是对它做Issue。那么我们就要知道Issue到底是什么。通过前面的介绍已经不难看出，**Issue其实就是填Functional unit status这张表**(这其实就是译码的过程)。因此我们要看最后一条指令能不能填表？不能！为什么？因为表里现在就有东西啊：
+
+![[Computer Structure/resources/Pasted image 20221125162249.png]]
+
+所以我们不能发射最后一条指令。因此最终这个时钟内的操作就只有两个Read Oper：
+
+![[Computer Structure/resources/Pasted image 20221125162351.png]]
+
+这里还有个问题：**记分牌是顺序发射，乱序执行，乱序完成**。那么我理应给所有已经发射了的指令都往后执行一步。也就是，这个DIVD指令也应该进行Read Oper了。但是，由于DIVD指令依靠F0(前面在表格里已经展示过了)，所以这条指令在MULTD指令写回之前还不能取操作数。
+
+执行完成后，其他的结果都不会改变，但是需要注意一件事情：
+
+![[Computer Structure/resources/Pasted image 20221125163342.png]]
+
+这里的10和2，表示在接下来的Execution阶段分别需要10个时钟和2个时钟。
+
+接下来是第10个周期，这时做的就是第三、第四条指令的Execution。由于需要时间很长，所以没有执行完，不能写在Instruction status里；Functional unit中Time会发生改变，递减1，并且两个源地址寄存器的就绪状态也都变成了No：
+
+![[Computer Structure/resources/Pasted image 20221125163617.png]]
+
+第11个周期结束时，SUBD指令执行完毕，而MULTD指令还需要8个时钟。此时可以在SUBD的Execution里写上11了：
+
+![[Computer Structure/resources/Pasted image 20221125163744.png]]
+
+第12个周期，SUBD指令开始做写回。因此清楚Add这一行，并且结果集中的Add也被删掉。
+
+![[Computer Structure/resources/Pasted image 20221125164248.png]]
+
+MULTD指令没有执行完；DIVD指令没有F0还是没法Read Oper；另外ADDD指令还是不能写到表格里。因为这个时候虽然Add这行是空的，但是以防写回的时候出错，还是暂时不动，等下个时钟。
+
+接下来是13周期。MULTD没执行完，DIVD还没等到F0；因此只是发射一下ADDD：
+
+![[Computer Structure/resources/Pasted image 20221125165012.png]]
+
+
+
+
+
+
 
 
 
