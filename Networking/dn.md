@@ -2013,7 +2013,7 @@ IEEE公司的802团队制定了802标准，以便不同的设备之间能用相�
 
 * Preamble: 在物理层加的，严格上讲并不是frame的一部分。这里是56bit的0和1，用来同步时钟。另外我们在操作系统中也提过[[os#^c31505|类似的概念]]。
 * Start Frame Delimiter(SFD): 标识着frame的开始。同时也预示着这是最后的同步时钟的机会。最后两位`11`标识下一个区域是destination address。因为这种协议的Frame是一个变长的Frame。SFD也是在物理层加的。
-* Destination Address(DA): 接收方的链路层地址。可以是一对一，也可以是像MAC一样的“这个地址是我所在的组的”，还可以是一个广播地址。一旦我认可，那我就从Frame里把数据拆出来交给上层。
+* Destination Address(DA): 接收方的链路层地址。可以是一对一，也可以是像MAC一样的“这个地址是我所在的组的”，还可以是一个[[#^bf222a|广播地址]]。一旦我认可，那我就从Frame里把数据拆出来交给上层。
 * Source Address(SA): 发送方的链路层地址。
 * Type: 这里是上层打的包，比如IP，ARP或者OSPF。
 * CRC: CRC-32纠错码。
@@ -2199,7 +2199,7 @@ Address | Port
 
 **==路由器的每一个端口都即是广播域，也是冲突域。==**
 
-#poe **重要考点：**
+#poe 广播域和冲突域
 
 如果有n个端口的话，那么下面这些设备的广播域和冲突域如下：
 
@@ -2318,7 +2318,7 @@ IP地址被拆成了两半：前一半是网络段，后一半是主机段。网
 
 即使这样还不行！我们在玩电脑的时候或多或少都见过**子网掩码**这个东西，接下来就说一下它到底是干嘛的。
 
-比如说我有一个B类地址：`145.13.0.0`，它的前两个字节是网络段，也就是`145.13`，当有数据来的时候，就先到达这个大总管路由器。但是这个时候，如果这个路由器直接连上所有的设备，那可毁了！B类地址中每个网络能连接$2^{16}=65536$个计算机。这么多计算机如果不分个类的话，实在是太乱了。因此我们才有了**子网**的概念。子网其实就是把IP地址的主机段再切一刀，变成子网段和主机段。而B类地址中第三个字节就是子网段，最后一个字节是主机段。因此我可以先确定这个消息的子网是哪个，然后再去详细到每一个设备。
+比如说我有一个B类地址：`145.13.0.0`，它的前两个字节是网络段，也就是`145.13`，当有数据来的时候，就先到达这个大总管路由器。但是这个时候，如果这个路由器直接连上所有的设备，那可毁了！B类地址中每个网络能连接$2^{16}=65536$个计算机。这么多计算机如果不分个类的话，实在是太乱了。因此我们才有了**子网**的概念。子网其实就是把IP地址的主机段再切一刀，变成子网段和主机段。而B类地址中第三个字节就是子网段，最后一个字节是主机段。因此我可以先确定这个消息的子网是哪个，然后再去详细到每一个设备。 ^ad42ee
 
 ![[Pasted image 20221029152305.png]]
 
@@ -2468,4 +2468,101 @@ IP层传的是数据报，但是这只是逻辑上的，实际传递还是需要
 好了，关于Fragment的知识都介绍完了，下面给出一个详细的例子：
 
 ![[Pasted image 20221110160810.png]]
+
+## 19. Address Mapping, Error Reporting and Multicast
+
+本章主要是讲一些在网络层用到的其他协议，其中很多协议在别的层里也有。
+
+### 19.1 Address Resolution Protocol
+
+在网络层传东西的时候，通常是这样：source知道第一个router的IP地址，然后第一个router知道第二个router的IP地址(**靠的是forwarding table**)……最后一个router知道destination的IP地址。这样一层层传下去就能够传递datagram。但是问题是：真正的传递并不是在网络层，网络层中的传递只是逻辑上的传递。真正传还是要打包传到数据链路层才行。那这个时候链路层拿到一个IP地址，它也不知道要传给谁。因此我们需要一种机制，**将IP地址映射成链路层的MAC地址再打包传给链路层**，ARP就是其中的一种协议：
+
+![[Networking/resources/Pasted image 20221127114030.png]]
+
+ARP如何工作的呢？假设一个LAN中又N1，N2，N3，N4这几个主机(或者系统或者路由器)，当N1想要知道N2的IP地址对应的MAC地址是多少时，就先发送一个广播的包(因为在知道链路层地址之前它也不知道N2在哪里)，这个包里面包括下面的信息：
+
+* 发送方N1的MAC地址和IP地址
+* 接收方N2的IP地址
+
+发送的过程如下：
+
+![[Networking/resources/Pasted image 20221127114441.png]]
+
+显然，只有N2认可这个ARP请求包，然后把自己的MAC地址一填，返回给N1。返回的时候就不再是广播的了，而是unicast单播：
+
+![[Networking/resources/Pasted image 20221127114535.png]]
+
+下面是书上一个介绍ARP作用的介绍，我觉得还是挺有意义的：
+
+> A question that is often asked is this: If system A can broadcast a frame to find the link- layer address of system B, why can’t system A send the datagram for system B using a broadcast frame? In other words, instead of sending one broadcast frame (ARP request), one unicast frame (ARP response), and another unicast frame (for sending the datagram), system A can encapsulate the datagram and send it to the network. System B receives it and keep it; other systems discard it.
+> 
+> To answer the question, we need to think about the efficiency. It is probable that system A has more than one datagram to send to system B in a short period of time. For example, if system B is supposed to receive a long e-mail or a long file, the data do not fit in one datagram.
+> 
+> Let us assume that there are 20 systems connected to the network (link): system A, system B, and 18 other systems. We also assume that system A has 10 datagrams to send to system B in one second.
+> 
+> a. Without using ARP, system A needs to send 10 broadcast frames. Each of the 18 other systems need to receive the frames, decapsulate the frames, remove the datagram and pass it to their network-layer to find out the datagrams do not belong to them.This means processing and discarding 180 broadcast
+> frames.
+> 
+> b. Using ARP, system A needs to send only one broadcast frame. Each of the 18 other systems need to receive the frames, decapsulate the frames, remove the ARP message and pass the message to their ARP protocol to find that the frame must be discarded. This means processing and discarding only 18 (instead of 180) broadcast frames. After system B responds with its own data-link address, system A can store the link-layer address in its cache memory. The rest of the nine frames are only unicast. Since processing broadcast frames is expensive (time consuming), the first method is preferable.
+
+接下来看看ARP的包裹长什么样子：
+
+![[Networking/resources/Pasted image 20221127115435.png]]
+
+* Hardware Type：链路层的协议，Ethernet等等
+* Protocol Type：网络层的协议，IPv4或者IPv6
+* Hardware length：发送方和接收方链路层地址的长度(因为协议一样，所以接收方和发送方相等，下面同理)
+* Protocol length：发送方和接收方的网络层地址的长度
+* Operation：是Request还是Reply
+* 再下面就是四个地址了。注意在发送方发送的时候，接收方的链路层地址为空，等着接收方填。
+
+有了这个包，我们将他作为**Data**，添加到[[Networking/img/8f.png|链路层的Frame]]中，就可以发送了。注意在请求的时候，因为是广播地址，所以Destination address字段是全1。 ^bf222a
+
+#poe ARP的请求是广播；而应答是单播。
+
+### 19.2 Dynamic Host Configuration Protocol
+
+有些人连IP地址都不会配，那怎么办？只能动态给他分配一个。而MAC地址是自带的，所以由链路层地址去找到IP地址的协议，DHCP(Dynamic Host Configuration Protocol)就是其中之一。
+
+最一开始没有DHCP，有的是RARP协议，即Reverse-ARP。这个协议也是放在网络层中，和ARP一起干活。但是后来它被BOOTP协议代替，而BOOTP协议是放在应用层中的。再后来，BOOTP协议也被替代，替代他的就是DHCP，**DHCP也是应用层的协议**。
+
+### 19.3 Internet Control Message Protocol
+
+之前说过，IP没有纠错功能，它的错误处理功能全部放在了ICMP中。我们现在使用的ICMP是第四版，也就是ICMPv4。ICMP协议中传的包裹有这两种：
+
+* error-reporting message：当中间节点或者接收方发现IP传过来的datagram出错时，就会发送这样的包裹。
+* query message：这种消息都是成对出现，计算机或者路由器可以用它来获取其他节点的信息。比如某个路由器就可以通过这个知道它连的电脑是谁；它身边的路由器邻居们都是谁。
+
+然后是这两个message的结构，看看就行：
+
+![[Networking/resources/Pasted image 20221127123336.png]]
+
+总结几个ICMP消息的重点：
+
+* 如果一个携带ICMP的datagram本身就出错了，那出错的地方不会再产生一个ICMP；
+* 如果datagram被切了，那只有第一个fragment才会产生ICMP。如果是后面的fragment出错了，在接收方收的时候就能发现，直接全部重传；
+* 如果这个datagram的地址是multicast，那不会产生ICMP。因为这样有可能会影响其他节点，多播的理念本来就是蒙，你少蒙一种情况没啥问题。
+* 私有地址不会产生ICMP，比如127.0.0.0或者0.0.0.0
+
+ICMP也会打包成datagram传给source：
+
+![[Networking/resources/Pasted image 20221127123944.png]]
+
+> 另外补充一点，我们用的`ping`命令其实就是ICMP中的query message。
+
+除了ICMP，还有一种按组来管理差错的协议，叫Internet Group Management Protocol(IGMP)。它和ICMP的形式几乎一模一样。
+
+### 19.4 Forwarding
+
+现在终于开始讲路由器中的Forwarding Table了！当一个datagram传过来时，我要解析出其中的Destination Address，然后按着这个地址去查表。先强调一点，这个地址其实是有问题的：[[#^ad42ee|我们说过]]，通常传递datagram的时候是先传到对面的网络段总管路由器，然后再下发。因此这里的Destination Address其实并不需要是真正接收的那个计算机的IP，只需要知道它的网络段的IP就行了。因此我们通常要用mask把这个地址给掩一下然后再和表中的项对比。下面来看看Forwarding Table的结构：
+
+![[Networking/resources/Pasted image 20221127131855.png]]
+
+比如来一个地址是`180.70.65.200`，那我在第一行就要把这个地址和`n0`来一次与运算，看得到的结果是不是`x0.y0.z0.t0`。如果是，那就对了。比如`n0`是26，那掩过之后就是`180.70.65.192`；表中的第二列是下一跳的IP，也就是路由器或者接收方的IP；第三列是接口号，就是下一条的这个东西连在了我的哪个接口上。
+
+#example #poe 生成Forwarding Table是必考点。
+
+给下图中的R1路由器生成一个Forwarding Table：
+
+![[Networking/resources/Pasted image 20221127132314.png]]
 
