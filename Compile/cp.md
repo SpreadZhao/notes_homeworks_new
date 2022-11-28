@@ -249,7 +249,7 @@ x = 8 / y;
 
 理解终结的含义：单词在这里再继续推导没有意义，也就是字母它本身也不在里面，所以不用继续推导，达到终点
 
-***重点：$\epsilon$不是Nonterminal，也不是Terminal！！！***
+#keypoint ***重点：$\epsilon$不是Nonterminal，也不是Terminal！！！***
 
 ## 2.2 Nonterminal Symbol
 
