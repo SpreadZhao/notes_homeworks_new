@@ -281,30 +281,30 @@ P = {<句子> $\rightarrow$ <名词短语><动词短语>, <名词短语> $\right
 
 G = ($V_T,V_N$, P, S)
 
-> 例：G = ( { **id**, **+**, **\***, **(**, **)** }, {**E**}, **P**, **E** )
->
-> 那么:
->
-> * $V_T$ = {id, +, *, (, )}
-> * $V_N$ = {E}
-> * P = P
-> * S = E
->
-> *注：其中E就是Expression表达式，非终结符只有表达式一种*
->
-> 接下来讨论P到底是什么：因为$V_N$只有E一个，所以，只需要定义E即可
->
-> P = {E -> E + E, E -> E *  E, E -> (E), E -> id}
->
-> 也就是：表达式和表达式加起来还是表达式；表达式和表达式乘起来还是表达式；把表达式用括号括起来还是表达式；每一个表达式都可以赋给它一个id
->
-> 那既然有这么多种表达E的方法，太多了，简化以下：也就是说，**把表达式加起来，乘起来，括起来，给个id，得到的都是表达式**，那么可以用**或(|)**的方式来简写：
->
-> E -> E + E | E * E | (E) | id
->
-> 那么对于任意一个产生式P = {$\alpha$ -> $\beta_1$, $\alpha$ -> $\beta_2$, ... , $\alpha$ -> $\beta_n$}，都可以简化为：
->
-> P = $\alpha$ -> $\beta_1|\beta_2|...|\beta_n$
+#example 例：G = ( { **id**, **+**, **\***, **(**, **)** }, {**E**}, **P**, **E** )
+
+那么:
+
+* $V_T$ = {id, +, *, (, )}
+* $V_N$ = {E}
+* P = P
+* S = E
+
+*注：其中E就是Expression表达式，非终结符只有表达式一种*
+
+接下来讨论P到底是什么：因为$V_N$只有E一个，所以，只需要定义E即可
+
+P = {E -> E + E, E -> E *  E, E -> (E), E -> id}
+
+也就是：表达式和表达式加起来还是表达式；表达式和表达式乘起来还是表达式；把表达式用括号括起来还是表达式；每一个表达式都可以赋给它一个id
+
+那既然有这么多种表达E的方法，太多了，简化以下：也就是说，**把表达式加起来，乘起来，括起来，给个id，得到的都是表达式**，那么可以用**或(|)**的方式来简写：
+
+E -> E + E | E * E | (E) | id
+
+那么对于任意一个产生式P = {$\alpha$ -> $\beta_1$, $\alpha$ -> $\beta_2$, ... , $\alpha$ -> $\beta_n$}，都可以简化为：
+
+P = $\alpha$ -> $\beta_1|\beta_2|...|\beta_n$
 
 补充：
 
@@ -353,7 +353,7 @@ G = ($V_T,V_N$, P, S)
 * <名词> $\rightarrow$ boy | apple
 * <动词> $\rightarrow$ eat
 
-#question 这里对于$\alpha$的概念：是不是$\alpha$表示的是左边所有东西构成的集合？还是任何一个比如<动词短语>都可以叫做$\alpha$变量？如果是前者的话，那为什么要用$\in$而不是$\subseteq$?
+#question 这里对于$\alpha$的概念：是不是$\alpha$表示的是左边所有东西构成的集合？还是任何一个比如`<动词短语>`都可以叫做$\alpha$变量？如果是前者的话，那为什么要用$\in$而不是$\subseteq$?
 
 > 那既然<句子>可以定义为<名词短语>和<动词短语>拼一起，那么就可以这么写：
 >
@@ -703,41 +703,41 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 
 > 运算的优先级：克林闭包($^*$) > 连接 > 或(|)，括号还是最牛b
 
-> 例：
->
-> 1. 令$\Sigma = \{a,b\}$，求L(a|b)，L((a|b)(a|b))，$L(a^*)$，$L((a|b)^*)$，$L(a|a^*b)$
->
->    因为a和b都是字母，那a和b自然都是一个正则表达式，表示的语言分别是L(a) = {a}，L(b) = {b}
->
->    接下来由小变大，就可以由这些规则开始了
->
->    * $L(a|b) = L(a) \cup L(b) = \{a\} \cup \{b\} = \{a,b\}$
->
->    * $L((a|b)(a|b)) = L(a|b)L(a|b) = \{a,b\}\{a,b\} = \{aa,ab,ba,bb\}$
->
->      *注意：这里是用的上面第三条中的第二条连接的规则*
->
->    * $L(a^*) = (L(a))^* = \{a\}^* = \{\epsilon,a,aa,aaa,...\}$
->
->    * $L((a|b)^*) = (L(a|b))^* = \{a,b\}^* = \{\epsilon,a,b,aa,ab,ba,bb,aaa,...\}$
->
->    * $L(a|a^*b) = L(a) \cup L(a^*b) = L(a) \cup L(a^*)L(b) = \{a\} \cup \{\epsilon,a,aa,aaa,...\}\{b\} = \{a,b,ab,aab,...\}$
->
-> 2. 十进制整数的RE
->
->    (1|...|9)(0|...|9)$^*$|0
->
->    *这里最后的0是表示整个就是个0*
->
-> 3. 八进制整数的RE(C语言)
->
->    0(1|2|3|...|7)(0|1|2|...|7)$^*$
->
-> 4. 十六进制整数的RE(C语言)
->
->    0x(1|2|...|f)(0|1|...|f)$^*$
->
->    *大写字母这里不写了先*
+#example Regular Expression
+
+1. 令$\Sigma = \{a,b\}$，求L(a|b)，L((a|b)(a|b))，$L(a^*)$，$L((a|b)^*)$，$L(a|a^*b)$
+
+    因为a和b都是字母，那a和b自然都是一个正则表达式，表示的语言分别是L(a) = {a}，L(b) = {b}
+
+    接下来由小变大，就可以由这些规则开始了
+
+    * $L(a|b) = L(a) \cup L(b) = \{a\} \cup \{b\} = \{a,b\}$
+
+    * $L((a|b)(a|b)) = L(a|b)L(a|b) = \{a,b\}\{a,b\} = \{aa,ab,ba,bb\}$
+
+     *注意：这里是用的上面第三条中的第二条连接的规则*
+
+    * $L(a^*) = (L(a))^* = \{a\}^* = \{\epsilon,a,aa,aaa,...\}$
+
+    * $L((a|b)^*) = (L(a|b))^* = \{a,b\}^* = \{\epsilon,a,b,aa,ab,ba,bb,aaa,...\}$
+
+    * $L(a|a^*b) = L(a) \cup L(a^*b) = L(a) \cup L(a^*)L(b) = \{a\} \cup \{\epsilon,a,aa,aaa,...\}\{b\} = \{a,b,ab,aab,...\}$
+
+2. 十进制整数的RE
+
+    (1|...|9)(0|...|9)$^*$|0
+
+    *这里最后的0是表示整个就是个0*
+
+3. 八进制整数的RE(C语言)
+
+    0(1|2|3|...|7)(0|1|2|...|7)$^*$
+
+4. 十六进制整数的RE(C语言)
+
+    0x(1|2|...|f)(0|1|...|f)$^*$
+
+    *大写字母这里不写了先*
 
 写出下列Token的RE：
 
@@ -759,21 +759,17 @@ $r=a(a|b)^*(\epsilon|(.|\_)(a|b)(a|b)^*)$
 
 identifier -> letter\_(letter\_|digit)$^*$
 
-> 例：
->
-> * digit -> 0|1|2|...|9
->
-> * digits -> digit digit$^*$
->
-> * optionalFraction(可选小数部分) -> .digits|$\epsilon$
->
-> * optionalExponent(可选指数部分) -> (E(+|-|$\epsilon$)digits)|$\epsilon$
->
-> * number -> digits optionalFraction optionalExponent
->
->   比如2.15E+3，2就是digits；.15是optionalF；E+3是optionalE
->
-> *之所以是可选的，是因为最后的那个|$\epsilon$，最后这个number表达的就是所有整形或者浮点型的无符号整数*
+#example Regular Definition
+
+* digit -> 0|1|2|...|9
+* digits -> digit digit$^*$
+* optionalFraction(可选小数部分) -> .digits|$\epsilon$
+* optionalExponent(可选指数部分) -> (E(+|-|$\epsilon$)digits)|$\epsilon$
+* number -> digits optionalFraction optionalExponent
+
+> 比如2.15E+3，2就是digits；.15是optionalF；E+3是optionalE
+
+*之所以是可选的，是因为最后的那个|$\epsilon$，最后这个number表达的就是所有整形或者浮点型的无符号整数*
 
 ## 3.3 Finite Automata
 
@@ -978,7 +974,7 @@ graph LR;
 
 老师给的这个思想非常好：在NFA中，一开始人们的想法是，我先走一条路，当失败之后，就**回溯**；但是如果我一开始就可以并行去走，那么我就可以同时去试好多可能。那么这种做法就把**状态和状态之间的转移$\longrightarrow$状态集合和状态集合之间的转移**。
 
-比如给一个NFA：
+#example 比如给一个NFA：
 
 ![img](img/nd1.png)
 
@@ -1074,13 +1070,9 @@ ABC接收2之后会进入C，C是终态
 然后是无符号数的定义：
 
 * digit -> 0|1|2|...|9
-
-* digits -> digit digit^*^
-
+* digits -> digit digit$^*$
 * optionalFraction(可选小数部分) -> .digits|$\epsilon$
-
 * optionalExponent(可选指数部分) -> (E(+|-|$\epsilon$)digits)|$\epsilon$
-
 * **number -> digits optionalFraction optionalExponent**
 
 构造DFA：也是要有一个初始状态，然后这个状态接收的首先是digits部分，也就是digit digit$^*$。此时其实已经可以结束了，因为后面两个都是可选的部分，那么此时的状态图是
@@ -1192,6 +1184,8 @@ A和C经过a都会到B，经过b都会到自己这个整体，所以没法再拆
 ![[Pasted image 20221106132858.png]]
 
 ### 3.8.3 RE -> FA
+
+#homework RE->FA
 
 ![[Compile/resources/Pasted image 20221122141129.png]]
 
@@ -1669,7 +1663,7 @@ $$
 
 ### 4.3.7 Calculation
 
-文法中有如下产生式：
+#example 文法中有如下产生式：
 
 * E -> TE'
 * E' -> +TE' | $\epsilon$
