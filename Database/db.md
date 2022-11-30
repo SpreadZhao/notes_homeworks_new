@@ -1996,3 +1996,87 @@ BC范式是牛逼，但是有极少的情况会有问题：比如我分解了一
 * 三范式：不存在传递依赖
 * BC范式：所有被依赖的一定都是superkey
 
+---
+
+前面的F+算起来太麻烦了，所以我们有了属性的闭包。对于关系R中的一个属性$\alpha$，它的闭包就是$\alpha$本身和它能确定的所有属性加起来。下面给个例子：
+
+#example 有下面的关系R和其中存在的依赖F：
+
+$$
+\begin{array}
+\\
+R = (A,\ B,\ C,\ G,\ H,\ I)\\
+F = (A \rightarrow B,\ A \rightarrow C,\ CG \rightarrow I,\ B \rightarrow H)
+\\
+\end{array}
+$$
+
+写出属性AG的闭包$(AG)^+$。
+
+非常简单，我们只要把AG能确定的属性加进去，再把这些确定的属性能确定的属性再加进去……直到加不了为止。首先，结果中就两个元素：
+
+$$
+result = AG
+$$
+
+之后，**遍历F**。因为A能确定B和C，所以它俩也在闭包里：
+
+$$
+result = ABCG
+$$
+
+再之后，由于B能确定H，CG能确定I，所以这俩也在里面：
+
+$$
+result = ABCGHI
+$$
+
+这样就写完了。接下来，问个问题：AG是不是candidate key？别忘了，candidate key表示**最精简**的集合。这意味着**AG能确定R，但是AG的任何一个真子集都做不到**。那么我们就要去算A的闭包，G的闭包能不能去确定R。答案是否，因此我们可以说AG是一个candidate key。
+
+---
+
+然后是一个和属性闭包并肩的概念。这玩意儿其实就是关系的依赖，只不过是最简形式。比如某个Relation有如下的依赖关系：
+
+$$
+F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow C)
+$$
+
+那么我们可以发现：最后一条完全可以由前两条推出来。那还写它干嘛？删掉：
+
+$$
+F = (A \rightarrow B,\ B \rightarrow C)
+$$
+
+这样，我们发现没法再化简了，也就达到了最精简。
+
+除了这种一眼丁真的依赖关系，我们还可能遇到一眼丁不了真的情况：
+
+$$
+F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow CD)
+$$
+
+乍一看没啥，但是这个最后一条，不就是刚刚说的那种情况？A确定C根本不用你写，只是A确定D我推不出来而已。因此我们要简化成这种形式：
+
+$$
+F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow D)
+$$
+
+再给一个例子，$F = (A \rightarrow B,\ B \rightarrow C,\ AC \rightarrow D)$也可以简化成$F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow D)$。
+
+---
+
+然后是**无关属性**。当函数依赖的左半部分或者右半部分有多个项时，我们就要判一判有没有可能这玩意儿写了属于画蛇添足。比如下面的依赖：
+
+$$
+F = (A \rightarrow C,\ AB \rightarrow C)
+$$
+
+这里AB有两个，所以我们要看一看。我们能把A去掉吗？不能！B确定C我们推不出来；但是我们能去掉B，这样关系就变成了两个$A \rightarrow C$了。这两个去掉一个，最终只剩下一个$A \rightarrow C$。
+
+里另外一个例子：
+
+$$
+F = (A \rightarrow C,\ AB \rightarrow CD)
+$$
+
+把A去掉行吗？不行！把B去掉行吗？不行！到了箭头右边，就不太一样了。我们要看C是不是无关的，就把除了C的都去掉。AB能确定C吗？当然能！因为A自己都能确定C，加个B当然也可以了。**所以C就是无关的属性**；而对D来说，AB确定D并不能根据其它的推出来，所以D不是无关的。
