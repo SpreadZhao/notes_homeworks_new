@@ -424,8 +424,8 @@ P = $\alpha$ -> $\beta_1|\beta_2|...|\beta_n$
 
 那么给出句型和句子的定义
 
-* 如果S经过若干步推导得到了$\alpha$**(S $\Rightarrow^*$ $\alpha$)**，并且$\alpha$ $\in$ $(V_T \cup V_N)^*$，则称$\alpha$是G的一个**句型**。句型中包含Terminal Symbol和Nonterminal Symbol，还可能是空串$\epsilon$
-* 如果S $\Rightarrow^*$ $\omega$，并且$\omega$ $\in$ $(V_T \cup V_N)^*$，则称$\omega$是G的一个句子。**句子**是不包含Nonterminal Symbol的句型
+* 如果S经过若干步推导得到了$\alpha$**(S $\Rightarrow^*$ $\alpha$)**，并且$\alpha \in (V_T \cup V_N)^*$，则称$\alpha$是G的一个**句型**。句型中包含Terminal Symbol和Nonterminal Symbol，还可能是空串$\epsilon$
+* 如果S $\Rightarrow^*$ $\omega$，并且$\omega$ $\in$ $V_T^*$，则称$\omega$是G的一个句子。**句子**是不包含Nonterminal Symbol的句型
 
 ### 2.7.3 Language
 
@@ -1353,7 +1353,7 @@ A和C经过a都会到B，经过b都会到自己这个整体，所以没法再拆
 >
 > 输入：`id + id * id`
 
-这里的问题是，首先指向id，而Start Symbol右边哪几个没有一个是id开头的，所以只能一个一个试。首先来试试E + T，替换完了，如果采用Left-most的方式，那就是替换最左边那个E，而这个E再一替换还是E + T，这样就会无限循环下去
+这里的问题是，首先指向id，而Start Symbol右边那几个没有一个是id开头的，所以只能一个一个试。首先来试试E + T，替换完了，如果采用Left-most的方式，那就是替换最左边那个E，而这个E再一替换还是E + T，这样就会无限循环下去
 
 > $E \Rightarrow E + T$
 >
