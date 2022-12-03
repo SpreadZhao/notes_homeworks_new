@@ -1618,7 +1618,7 @@ SELECT(A\rightarrow\alpha)=[FIRST(\alpha)-\{\epsilon\}]\cup FOLLOW(A)\ (\epsilon
 $$
 这里要减掉{$\epsilon$}的原因是，可选集的右边表示的是输入的符号，总不可能是空串吧！
 
-### 4.3.6 Left-Right Left-most (1) Grammar
+### 4.3.6 Left-Right Left-most (1) Grammar(LL1)
 
 先来回顾下，整个4.3都是为了干什么。4.1.3中我们提到了Backtracking和Predictive Parsing。预测分析就是用来避免掉回溯的。那么我们怎么做到预测分析呢？就是**让每个输入符号只能对应一个候选式**。那么怎么做到呢？正好可选集就表示了被选择的关系。那么我们只需要**让所有的可选集都不相交**，自然就不会有**"两个候选式被同一个输入符号选择"**的情况了。而像S文法和q文法中的第二条，也正是为了达到这样的效果。而我们的LL(1)文法也是为了这个。那么它和前两个有啥区别呢？前两个文法很鸡肋啊！比如S文法，它只能以Terminal开头，限制就已经很大了。根本不允许在开始就套娃；而q文法也只是在S的基础上加了一个空串。而LL(1)文法就不会有这样的限制，并且也能做到每个输入符号只对应一个候选式。
 
@@ -1820,6 +1820,8 @@ $$
 
 ## 4.x 习题
 
+### 4.x.1 CFG & Derive & Tree
+
 #homework CFG & Derive & Tree
 
 ![[Compile/resources/Pasted image 20221122182733.png]]
@@ -1839,3 +1841,17 @@ $$
 ![[Compile/resources/Pasted image 20221122183202.png]]
 
 ![[Compile/resources/Pasted image 20221122183211.png]]
+
+### 4.x.2 Top-down parsing & LL1
+
+#homework Top-down parsing and LL1
+
+![[Compile/resources/Pasted image 20221203193327.png]]
+
+![[Compile/resources/Pasted image 20221203193339.png]]
+
+![[Compile/resources/Pasted image 20221203193358.png]]
+
+![[Compile/resources/Pasted image 20221203193408.png]]
+
+![[Compile/resources/Pasted image 20221203193450.png]]
