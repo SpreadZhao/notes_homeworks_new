@@ -2479,7 +2479,7 @@ IP层传的是数据报，但是这只是逻辑上的，实际传递还是需要
 
 ![[Networking/resources/Pasted image 20221127114030.png]]
 
-ARP如何工作的呢？假设一个LAN中又N1，N2，N3，N4这几个主机(或者系统或者路由器)，当N1想要知道N2的IP地址对应的MAC地址是多少时，就先发送一个广播的包(因为在知道链路层地址之前它也不知道N2在哪里)，这个包里面包括下面的信息：
+ARP如何工作的呢？假设一个LAN中有N1，N2，N3，N4这几个主机(或者系统或者路由器)，当N1想要知道N2的IP地址对应的MAC地址是多少时，就先发送一个广播的包(因为在知道链路层地址之前它也不知道N2在哪里)，这个包里面包括下面的信息：
 
 * 发送方N1的MAC地址和IP地址
 * 接收方N2的IP地址
@@ -2512,9 +2512,12 @@ ARP如何工作的呢？假设一个LAN中又N1，N2，N3，N4这几个主机(�
 * Hardware Type：链路层的协议，Ethernet等等
 * Protocol Type：网络层的协议，IPv4或者IPv6
 * Hardware length：发送方和接收方链路层地址的长度(因为协议一样，所以接收方和发送方相等，下面同理)
+
+  > #idea 协议为什么一样？因为[[#1.4 Five components of data communication|这里]]呀！
+
 * Protocol length：发送方和接收方的网络层地址的长度
 * Operation：是Request还是Reply
-* 再下面就是四个地址了。注意在发送方发送的时候，接收方的链路层地址为空，等着接收方填。
+* 再下面就是四个地址了。注意在发送方发送的时候，接收方的链路层地址为空，等着接收方填；另外注意hardware address和protocol address的区别。**当协议是IPv4，使用Ethernet的时候，hardware address是6 byte而protocol address是8 byte**。
 
 有了这个包，我们将他作为**Data**，添加到[[Networking/img/8f.png|链路层的Frame]]中，就可以发送了。注意在请求的时候，因为是广播地址，所以Destination address字段是全1。 ^bf222a
 
@@ -2548,6 +2551,8 @@ ICMP也会打包成datagram传给source：
 
 ![[Networking/resources/Pasted image 20221127123944.png]]
 
+> 这里从上往下看，首先是收到的datagram，这个是出错的datagram；之后将这个datagram的IP header和后面的8byte的东西扒出来塞到ICMP的包裹里形成一个ICMP的包；最后将这个ICMP的包整个再作为另一个datagram的data字段发送出去。
+> 
 > 另外补充一点，我们用的`ping`命令其实就是ICMP中的query message。
 
 除了ICMP，还有一种按组来管理差错的协议，叫Internet Group Management Protocol(IGMP)。它和ICMP的形式几乎一模一样。
