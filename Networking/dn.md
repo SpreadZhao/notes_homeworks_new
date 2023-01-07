@@ -2517,7 +2517,7 @@ ARP如何工作的呢？假设一个LAN中有N1，N2，N3，N4这几个主机(�
 
 * Protocol length：发送方和接收方的网络层地址的长度
 * Operation：是Request还是Reply
-* 再下面就是四个地址了。注意在发送方发送的时候，接收方的链路层地址为空，等着接收方填；另外注意hardware address和protocol address的区别。**当协议是IPv4，使用Ethernet的时候，hardware address是6 byte而protocol address是8 byte**。
+* 再下面就是四个地址了。注意在发送方发送的时候，接收方的链路层地址为空，等着接收方填；另外注意hardware address和protocol address的区别。**当协议是IPv4，使用Ethernet的时候，hardware address是6 byte而protocol address是4 byte**。
 
 有了这个包，我们将他作为**Data**，添加到[[Networking/img/8f.png|链路层的Frame]]中，就可以发送了。注意在请求的时候，因为是广播地址，所以Destination address字段是全1。 ^bf222a
 
@@ -2616,7 +2616,7 @@ ICMP也会打包成datagram传给source：
 我们拿上面图中的A和B举个例子。假设A先把自己的这个vector发给了B，B在收到之后，就使用Bellman算法来更新自己的vector：
 
 * ABC都是已知的最短路径，就不管了；
-* 对于D来说，现在我认为到达D的最短距离是$D_{BD} = \infty$。而我又找到了一个新路径，就是从B -> A -> D。这个路径插入了一个新结点，也就是说，我已经知道了新节点到D的最短路径$D_{AD} = 3$，而从当前结点B到达新结点A的花费$c_{BA} = 3$。因此根据Bellman的思想，$D_{BD} = min\{\infty,\ 2 + D_{AD}\} = 5$；
+* 对于D来说，现在我认为到达D的最短距离是$D_{BD} = \infty$。而我又找到了一个新路径，就是从B -> A -> D。这个路径插入了一个新结点，也就是说，我已经知道了新节点到D的最短路径$D_{AD} = 3$，而从当前结点B到达新结点A的花费$c_{BA} = 2$。因此根据Bellman的思想，$D_{BD} = min\{\infty,\ 2 + D_{AD}\} = 5$；
 * 接下来继续按照这个思想来更新其他结点，但是好像更新不了什么了。
 
 将上面的过程画成图：
@@ -2629,3 +2629,32 @@ ICMP也会打包成datagram传给source：
 
 ![[Networking/resources/Pasted image 20221127164502.png]]
 
+这种方式看起来非常精巧，但是也会有隐含的问题。其中一个比较典型的就是**Count to Infinity**问题。当网络中的某个link突然断掉时，理论上这里的花费应该变成$\infty$。但是，我们已经知道了这种distance-vector是靠结点之间不断发送消息来构建的，所以不可能所有的结点立刻都知道这段链接断了。下面我们通过一个例子来看一看这个过程。
+
+![[Networking/resources/Pasted image 20230107151305.png]]
+
+> 三个节点X, A, B。X和A之间的花费是1，A和B之间的花费也是1。因此A到X的花费是1，而B到X的花费是2。除了图上的链路之外再无别的链路。
+
+此时，网络在正常地工作着。而如果某个时刻，A和X的之间的链路突然断了。此时B能知道吗？当然不知道！但是A可以知道。因此A立刻将自己到X的花费改成无穷大：
+
+![[Networking/resources/Pasted image 20230107151852.png]]
+
+此时，我们看看，如果A将自己的vector发给B会发生什么。B接到了A发来的vector，一看，欸？我通过A到达X不是只需要2吗？为啥现在你A到X就变成正无穷了？那我这个2不就不成立了吗？噢！只有一种可能，那就是你A和X的链接断了！因此我要更改自己到X的花费，也是正无穷。
+
+其实，这样的话，问题就解决了，也不会出现Count to Infinity的问题。但是，就怕是相反的情况，也就是B先把自己的vector发给了A。如果是这种情况的话，A就会想了：欸？我这儿和X已经断掉了，但是你B为啥还能和X连上呢(这就体现出异步的缺点，A不知道B是啥时候知道的，**只要它收到了消息，都会以为是最新的消息**)？那肯定你和X中间有个我不知道啥时候建起来的链路吧！就像这样：
+
+![[Networking/resources/Pasted image 20230107152530.png]]
+
+而且A也会傻傻地以为，这条链路的花费就是2。因此它会将这个数字加到AB之间的花费上，和无穷比较大小。显然，A会稀里糊涂地将自己到X的花费改成了3：
+
+![[Networking/resources/Pasted image 20230107152743.png]]
+
+再之后，A又会将自己的vector发给B。B接受到这个，它也蒙了：B一直以为到达X的唯一途径就是通过A，那条红色虚线只是A自己的幻想而已。那么，现在B就会认为，A到达X的路径没有断，只不过花费从1变成了3(仔细思考为啥是从1变成3)。因此B会将自己到达X的花费修改成1+3=4：
+
+![[Networking/resources/Pasted image 20230107153154.png]]
+
+再往后，它们不断发送vector，也不断重复着上述过程，直到他俩最终都意识到，这花费是无穷啊！
+
+![[Networking/resources/Pasted image 20230107153235.png]]
+
+---
