@@ -2735,3 +2735,84 @@ Distance-Vector(DV) Routing就是基于Bellman-Ford算法。这个算法用来�
 
 ![[Networking/resources/Pasted image 20230108184505.png]]
 
+很简单，头加上数据就是了。下面我们看看这个头里都有什么：
+
+![[Networking/resources/Pasted image 20230109120939.png]]
+
+![[Networking/resources/Pasted image 20230109121248.png]]
+
+> UDP中checksum的计算要算上ip地址。
+
+## 22. Transmission Control Protocol
+
+和UDP相反，TCP是一种可靠的传输协议。进程和进程之间搭了一个管子，而TCP就通过这根管子来传输字节流：
+
+![[Networking/resources/Pasted image 20230109121502.png]]
+
+既然是这种方式的话，就要注意了。发送方和接收方的速率不一样，所以我们不能像UDP一样啥也不管一股脑塞过去。因此我们可以使用buffer来传递。下面是一个例子，发送方和接收方都有一个buffer，使用循环队列来实现，都是20byte：
+
+![[Networking/resources/Pasted image 20230109122001.png]]
+
+对发送方来讲，白色是空的，进程可以往里面填数据；黑色是已经被进程写上，但是还没开始发送的部分；蓝色是已经发送，但是对面还没确认接收的部分。
+
+接收方就简单了，只需要确定我这个buffer的字节读没读。没读的是蓝色；读过的清空变成白色。
+
+这样就行了？还不行。我们说过，数据在网络层是按着datagram的方式传递的。而我们这样塞字节流肯定是不合适的。因此我们也要把若干个字节打成包才行。这个包就是**segment**。将若干个字节绑在一起，然后在前面加一个Header，就形成了一个segment。然后把这个segment提交给网络层，在网络层继续打包成datagram即可。
+
+![[Networking/resources/Pasted image 20230109150418.png]]
+
+> 注意，segment的大小不一定非要是一样的。
+
+#poe 接下来我们看一看TCP的segment到底是什么格式。它和UDP的user datagram是对应的。
+
+![[Networking/resources/Pasted image 20230109150817.png]]
+
+还是很简单！但是，这个头却很复杂：
+
+![[Networking/resources/Pasted image 20230109150839.png]]
+
+首先来介绍一下Sequence Number。字面上看，它就是segment的编号。每个Sequence Number对应唯一的一个segment。假设有5000byte的东西需要传，每个segment携带1000byte。那么就能算出一共需要5个segment。那这5个segment的Sequence Number又都是多少呢？**我们选用第一个字节作为Sequence Number**。假设这5000个字节里，第一个的编号是10001的话，那么第一个segment的SN就是10001；第二个segment的SN显然就是11001了： ^c7b399
+
+![[Networking/resources/Pasted image 20230109152001.png]]
+
+在TCP连接建立的时候，会使用时间种子随机生成一个**Initial Sequence Number(ISN)**，之后的sequence的SN都是在这基础上累加的。
+
+这里的HLEN和[[#^d40096|IP那一章]]介绍的一样，都是以4byte为单位。
+
+这里还有6个bit，它们相当于6个开关。具体的功能之后再聊。
+
+![[Networking/resources/Pasted image 20230109153417.png]]
+
+其实，TCP的传输过程非常像我们讨论过的[[#12.2.2 Go-Back-N Protocol(GBN)|Go Back N]]协议，之后我们就会看到。
+
+TCP传输有三个部分：建立连接、传输、终止连接。我们从建立连接开始，这也是我们经常听到的**三次握手**。
+
+![[Networking/resources/Pasted image 20230109175735.png]]
+
+* 服务器开机之后，它的TCP就一直在就绪了。但是，它不能主动建立连接，要等客户端发来申请才可以。因此我们认为客户端是Active open，而服务端是Passive open。
+* 客户端首先发送一个Segment，它的SN是8000(随机生成)，并且将SYN位置1。这表示这个segment是用来发起同步请求的。也就是客户端想要和服务端进行数据同步。**这个segment消耗一个SN，不能携带数据**。
+* 服务端收到了这个请求，也回了客户端一个segment，表示：我收到你的同步请求了，你继续吧！注意，这句话包含两个要素。一个是服务端也要进行数据同步，另一个是客户端确认收到了刚才的segment。因此需要将SYN和ACK这两位都置为1。接下来，服务端还要确定它要的下一个segment是谁，那显然就是8000+1=8001了。然后，由于使用了GBN协议，所以需要定义receive window的大小来供客户端使用。**这个segment消耗一个SN，不携带数据**。
+* 客户端收到服务端的ACK之后，其实已经可以真正开始传数据了。但是，由于刚才发来的是个SYN+ACK，还有SYN的那部分，所以我也要对这部分再发一个ACK，表示：OK，那我说了哦，(我要说的是……)。所以在这个ACK中，我想要的是服务端的15000+1=15001号。那么客户端现在要真正开始传数据吗？可以传也可以不传。**如果传的话，那当前segment既是ACK，也是携带数据的segment，因此要消耗SN，消耗的个数取决于携带了多少字节的数据；如果不传，仅作为ACK使用的话，那么就不消耗SN(在本例中，第三个segment的SN就应该是8000而不是8001)**。
+
+> 我们可以将SYN的segment理解为开启TCP连接的步骤。SYN的segment一定不会携带数据，并且它的SN是单独使用，不算在TCP传输时的SN里。
+
+接下来是数据传输的过程了。这个过程其实还是挺简单的：
+
+![[Networking/resources/Pasted image 20230109182409.png]]
+
+开始传的时候，第一个字节是8001号，一直到9000号。等它开始传第二个segment的时候，就是从9001号开始了。它咋知道的呢？就是用[[#^c7b399|之前我们介绍的方法]]。用第一个字节的编号加上data部分的长度，就能得到下一个segment应该从多少号开始。如果看到这里你发现了问题，那么你的思考还是比较细致的：**data的长度从哪儿来啊**？回看之前的segment的结构，并没有找到哪个部分是data长度或者总体的长度，只能找到HLEN。那么我们咋得到？实际上，这部分长度是和网络层合作算出来的。虽然segment不知道自己有多长，但是将它打包成datagram的时候，[[Pasted image 20221109201214.png|datagram]]可知道自己有多长！datagram中有一个Total Length的字段，用这个长度减去datagram的头部，就能得到整个segment的长度；再用segment的长度剪掉segment的头部就可以了！
+
+上图中前两个设置了PSH(push)位，表示从客户端向服务端推送数据。而第三个是服务端向客户端传输的数据，没有要求返回。另外，我们也能发现，**数据和ACK是在一起(同一个segment中)传的。这样既能发送ACK，也能同时传输数据，比较节约通道**。最后一个segment老师认为有错误，这个SN应该是10000而不是10001。因为它没有携带数据，只是单纯的ACK，不应该消耗SN。
+
+进程有时候会突然有急事，就会发一些比较重要的数据。这些重要的数据叫做**Urgent Data**。之前那张图里，segment的header里就有一个urgent pointer。**比如某个segment的SN是15000，它的urgent pointer是200，那么Urgent Data的范围就是15000-15200**。
+
+最后我们来说说TCP连接的关闭。关闭有三次握手和四次握手。我们通常用的是四次握手，而不是三次。为什么呢？因为三次握手一下就全关了，**而大多数的TCP连接都是不能一下子全部关掉的**。我们先来看看正常三次关闭TCP连接是如何做到的，这和TCP连接的建立几乎一模一样：
+
+![[Networking/resources/Pasted image 20230109215403.png]]
+
+* 数据一直在传来传去，传来传去(传的过程大概都是ACK和数据绑在一个segment里传)……突然客户端这边发现数据都传完了，那么就会发送一个FIN的segment(这里既是ACK也是FIN，是因为这个ACK可能是之前服务端给客户端传数据时，客户端传回去的，顺便就在它身上加FIN了)。和SYN一样，也是一个申请关闭连接的segment。**这个segment会消耗一个SN，如果不携带数据的话**。
+* 当服务端收到之后，自然要回一个ACK，同时也要加上FIN，表示：我同意你关了，你关吧。
+
+  > 以上两个segment都可以是带数据的，只不过图中是空的而已。
+
+* 最后客户端再发一个ACK，表示所有都结束了。
