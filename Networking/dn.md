@@ -426,7 +426,7 @@ OSI: Open Systems Interconnection，是一个模型，由International Organizat
 
 ![img](img/hz.png)
 
-#idea **频率就是1秒钟扑腾的次数。**
+#idea **频率就是1秒钟扑腾的次数。** ^84ab18
 
 **常用的频率和周期单位：**
 
