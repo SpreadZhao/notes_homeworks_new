@@ -2305,6 +2305,267 @@ void animal(){
     printf("animal program!\n");
 }
 
+## 6.1 Git Overview
+
+接下来我们开始正式使用git吧！新建一个`demo`文件夹，在里面进行`git init`，然后创建一个文件：
+
+```shell
+echo haha > haha.txt
+```
+
+这样我们就创建好了一个由git管理的最小的项目。现在我们查看一下当前的状态：
+
+![[Study Log/resources/Pasted image 20230112144142.png]]
+
+我们看到，这个`haha.txt`是还没有被track的文件。也就是说，它还没受git的管理。那么我们如何让他被管理呢？就是使用`add`命令：
+
+```shell
+git add haha.txt
+```
+
+![[Study Log/resources/Pasted image 20230112144331.png]]
+
+接下来，自然是进行提交。而每次提交都代表着什么？我们要先说说这个事儿。在上面图中的每一个状态，其实都代表着一次提交。而提交必定不止有文件本身，还要有一些说明信息：
+
+```c
+typedef struct{
+	byte * parents;
+	char * author;
+	char * message;
+	Tree snapshot;
+}Commit;
+```
+
+`parents`就是图中指向父亲的指针，另外还要有作者信息，提交时的说明，整个项目的快照(这里存的只是id)等等。因此我们每次提交的过程中都要给出这些信息：
+
+```shell
+git commit
+```
+
+![[Study Log/resources/Pasted image 20230112145103.png]]
+
+保存退出后看到如下信息：
+
+![[Study Log/resources/Pasted image 20230112145346.png]]
+
+这其实就相当于创建了一个新的状态结点，并且这里的commit信息也存了下来：
+
+![[Excalidraw/Drawing 2023-01-12 17.39.05.excalidraw|100]]
+
+这个`c4cf3ec`是什么？实际上就是sha-1码，对应的就是我们刚才添加进去的说明信息。我们可以使用`git cat-file`命令来查看这些信息：
+
+![[Study Log/resources/Pasted image 20230112174228.png]]
+
+最后一行就是我们写的commit信息，没问题。那前面这些乱七八糟的码是什么？我们从这个tree开始。我们依然可以使用上面的命令查看它：
+
+![[Study Log/resources/Pasted image 20230112174420.png]]
+
+我们可以看到，**当前的tree中有一个blob，就是我们创建的`haha.txt`**。那么我们再看看这个blob里有什么：
+
+![[Study Log/resources/Pasted image 20230112174554.png]]
+
+这不就是`haha.txt`文件中的内容吗！因此，我们已经捋清楚了git项目的结构：
+
+![[Excalidraw/Drawing 2023-01-12 17.46.33.excalidraw]]
+
+> tree就是文件夹，blob就是文件。tree可以包含tree和blob，而blob不能包含任何blob和tree。
+
+## 6.2 Log
+
+接下来我们对当前的仓库做出一些改变。在`haha.txt`中追加一行：
+
+```shell
+echo "heihei" >> haha.txt
+```
+
+然后再次添加，查看状态，提交：
+
+![[Study Log/resources/Pasted image 20230112180819.png]]
+
+此时我们相当于又新建了一个结点，指向之前的结点，并且也包含提交信息：
+
+![[Excalidraw/Drawing 2023-01-12 18.08.44.excalidraw]]
+
+这下有了多个结点，我们可以回顾我们的历史纪录了：
+
+```shell
+git log
+```
+
+![[Study Log/resources/Pasted image 20230112181200.png]]
+
+这样看纯文本有点没意思，我们给log指令加一些参数：
+
+```shell
+git log --all --graph --decorate
+```
+
+![[Study Log/resources/Pasted image 20230112181314.png]]
+
+这个星号就是我们图上的圆圈，新的提交在上面，旧的提交在下面。下一个问题是，括号里的`HEAD -> master`是什么意思？git仓库在创建时，会默认生成一个master分支。因此我们所在的位置就是master。**我们可以把master想象成一个指针，它总是指向最新的一次commit**。
+
+现在我们已经处于第二个结点了，但是我们要是想回看第一个结点中的东西应该咋办？不用怕！git已经帮我们记下来了！**我们只需要输入想要的commit的hash的前缀就可以了**：
+
+![[Study Log/resources/Pasted image 20230112182025.png]]
+
+我们将HEAD指向第一次修改，然后查看`haha.txt`中的内容，发现文本又变回第一次提交时的状态了。我们再查看一下日志，看看会发生什么：
+
+![[Study Log/resources/Pasted image 20230112182229.png]]
+
+HEAD的位置从上面变到了下面。而我们要想回去呢？照葫芦画瓢呗！只是，**除了输入一长串hash之外，我们还可以这样**：
+
+![[Study Log/resources/Pasted image 20230112182412.png]]
+
+只需要输入master就可以了！那么我们不禁会想：master和那一长串东西之间有关系啊！没错！这就是**reference**。在git中有许多reference，它其实就是将一长串人不可读的代号变成可读的字符串。
+
+## 6.3 Diff
+
+接下来是`git diff`的介绍。我们再修改一下`haha.txt`：
+
+![[Study Log/resources/Pasted image 20230112183017.png]]
+
+我们比较的是谁？**是当前还没add的版本，和HEAD指向的版本(相当于`git diff HEAD haha.txt`)**。因此，如果我想要和最一开始的版版本比较，就可以：
+
+![[Study Log/resources/Pasted image 20230112183148.png]]
+
+## 6.4 Branch
+
+接下来我们介绍git中的分支。首先建立一个`animal.c`，写上如下内容：
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+void animal(){
+    printf("animal program!\n");
+}
+
+int main(int argc, char ** argv){
+    printf("argc: %d\n", argc);
+    if(argc == 1) animal();
+    return 0;
+}    
+```
+
+很简单的一个小程序。从这个时候开始，我们建立分支。首先，使用`git branch`命令可以看到当前创建的所有分支：
+
+![[Study Log/resources/Pasted image 20230112185947.png]]
+
+接下来，我们就可以创建分支了。使用如下命令建立一个名为cat的分支：
+
+```shell
+git branch cat
+```
+
+我们使用`git log --all --graph --decorate`来查看一下当前的情况：
+
+![[Study Log/resources/Pasted image 20230112190146.png]]
+
+可以看到，唯一的变化就是多了一个cat，而HEAD指向的还是master而不是cat。那么如何切换到cat呢？使用如下命令：
+
+```shell
+git checkout cat
+```
+
+![[Study Log/resources/Pasted image 20230112190312.png]]
+
+> 这里出了点问题，我应该先提交animal再创建cat分支。这里搞反了，所以使用`git branch --delete cat`删除cat分支，然后添加上新的东西再提交到master里，最后应该变成这个样子：
+> 
+> ![[Study Log/resources/Pasted image 20230112190658.png]]
+
+既然到了cat分支，我们就该加点cat的东西。修改`animal.c`：
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+void animal(){
+    printf("animal program!\n");
+}
+
+void cat(){
+    printf("miao~\n");
+}
+
+int main(int argc, char ** argv){
+    printf("argc: %d\n", argc);
+    if(argc == 1) animal();
+    else {
+        if(strcmp(argv[1], "cat") == 0) cat();
+    }
+
+    return 0;
+}
+```
+
+在我们commit之后再查看日志，就会发现：
+
+![[Study Log/resources/Pasted image 20230112191117.png]]
+
+那么就可以干点好玩儿的了，现在就能够回到master中，并且查看当时我们的代码：
+
+![[Study Log/resources/Pasted image 20230112191312.png]]
+
+> 这里的注释是因为我一开始在master中就把所有代码写好了，在cat分支中只是把注释去掉了。
+
+接下来，我要加一个dog分支。这个分支干了什么？添加dog的特性啊！它和cat分支是**并行**的，所以我们要先回到master后，再创建dog分支：
+
+![[Study Log/resources/Pasted image 20230112191626.png]]
+
+> 这里涉及的细节：
+> 
+> * `--oneline`表示简略地显示log，每个commit只占一行
+> * 创建dog分支并切换到它应该是`git branch dog; git checkout dog`，我们可以用图中的命令替代这两句。
+
+接下来，我们修改`animal.c`，加入dog元素：
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+void animal(){
+	printf("animal program!\n");
+}
+
+void dog(){
+	printf("wang!\n");
+}
+
+int main(int argc, char ** argv){
+	printf("argc: %d\n", argc);
+	if(argc == 1) animal();
+	else {
+		if(strcmp(argv[1], "dog") == 0) dog();
+	}
+	return 0;
+}
+```
+
+> 这里不应包括cat中的内容，因为cat和dog是并行的。
+
+我们将这次修改commit之后再查日志，就能看到最重要的结果了：
+
+![[Study Log/resources/Pasted image 20230112192353.png]]
+
+我们看到，master分了两个岔。一个是cat而另一个是dog。这正于我们的设想吻合。接下来，我们将这两个分支都合并回master，这也对应了我们一开始图中的内容。**注意，要合并回master，最好先checkout到master中**。
+
+![[Study Log/resources/Pasted image 20230112193225.png]]
+
+![[Study Log/resources/Pasted image 20230112193244.png]]
+
+合并cat的时候没问题，但是合并dog的时候出事了。因此我们可以进入`animal.c`中看看为什么：
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+void animal(){
+    printf("animal program!\n");
+}
 
 void cat(){
     printf("miao~\n");
