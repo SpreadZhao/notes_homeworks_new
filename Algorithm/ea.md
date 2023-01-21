@@ -7,7 +7,7 @@ description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法�
 
 <h1>Efficient Algorithms + Intractable Problems</h1>
 
-# 1. Introduction
+# 1. The Efficiency of Arithmetic
 
 算加法，怎么算？数数呗！从小我们就知道，算5+7是多少，**就从5开始，数7个数，得到结果是12**。但是，这个过程从计算机的角度来讲，应该是什么呢？换句话说，**我们如何用计算机程序来模拟数数的过程呢**？计算机并不知道1的后面是2，2的后面是3。因此我们要是想模拟数数的过程，需要的Runtime时间$\leq 10^n \cdot n$。
 
@@ -16,7 +16,7 @@ description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法�
 列竖式的思想其实也是这个， 我们算2568+347，就是这样：
 
 ```
-	2 5 6 8
+    2 5 6 8
   +   3 4 7
    ---------
 ```
@@ -125,4 +125,125 @@ $$
 ![[Algorithm/resources/Pasted image 20230120214905.png]]
 
 > 可以看到，就在最近的2019年，Harvey Vander Hoeven已经将两个整数相乘的算法复杂度提高到了$O(nlogn)$，这在从前是不敢想的。以后会不会更快，甚至到$O(logn)$的级别，也未可知。
+
+# 2. More Skill
+
+## 2.1 Fibonacci
+
+What is Fibonacci Sequence? It starts from 0 and then 1, and then the next number is always the **sum** of the previous two numbers. Just like:
+
+$$
+0 \ 1 \ 1 \ 2 \ 3 \ 5 \ 8 \cdots
+$$
+
+How to calculate `fib(n)`? We've all already learned this algorithm(**Index starts from 0**): 
+
+```c
+int fib(int n){
+	if n <= 1 return n;
+	else return fib(n - 1) + fib(n - 2);
+}
+```
+
+This is also known as **Recursion Algorithm**, which seems to be terribly costly. Now let's analyze it's Run Time performance. We will count "flops"(**floating point ops**). The time cost is easy to configure: 
+
+$$
+T(n) = \left \{
+\begin{align}
+& 0 & n \leqslant 1 \\
+& T(n - 1) + T(n - 2) + 1 & n > 1
+\end{align}
+\right.
+$$
+
+If n is less than or equal to 1, we don't cost time, **because we know the answer**; if n is bigger than 1, we should cost time of T(n - 1) and T(n - 2), **also the time to add the two, which is 1 flop**. To analyze the time cost, we should firstly look at the sequence itself:
+
+$$
+F_n = F_{n - 1} + F_{n - 2} \geqslant 2 \cdot F_{n - 2} \geqslant 2 \cdot 2 \cdot F_{n - 4} \geqslant \cdots \geqslant 2^{\frac{n}{2}}
+$$
+
+The similar argument says the similar thing in the recurrence. So the time cost is something like:
+
+$$
+T \geqslant 2^{.5n}\ (flops)
+$$
+
+#question I also don't know what is the teacher saying.
+
+---
+
+Here's alg 2, which is the **Iteration**.
+
+```c
+int fasterFib(int n){
+	if n <= 1 return n;
+	A = 0;
+	B = 1;
+	for(int i = 2; i <= n; i++){ // At this time, i points to the temp.
+		int temp = A + B;
+		A = B;
+		B = temp;
+	}
+	return B;
+}
+```
+
+You can run it by yourself. `A` refers to the F(i - 2) and `B` refers to the F(i - 1). Everytime when a for loop starts, i points to the `temp` which is to be calculated, and we do it by add `A` with `B`. Then we move both `A` and `B` forward, which means now `B` is F(i) and `A` is F(i - 1). **Every time after a for loop, `B` will store the value of F(i).** So when the loop ends, we get F(n) because it stop calculating when `i == n`.
+
+How many flops are there? **Only one in each for loop, which is in the sentence `int temp = A + B;`**. We do the loop for (n - 1) times, which means **there're (n - 1) flops in the algorithm**.
+
+---
+
+Next let's talk about another fast algorithm known as **Fast Matrix Powering**. We can define a matrix and a vector and multiply them. Then we'll get a vector contains $F_2$ and $F_1$.
+
+$$
+\left[
+\begin{array}{l}
+1 & 1 \\
+1 & 0
+\end{array}
+\right]
+\left[
+\begin{array}{l}
+F_1 \\
+F_0
+\end{array}
+\right]
+=
+\left[
+\begin{array}{c}
+F_1 + F_0 \\
+F_1
+\end{array}
+\right]
+=
+\left[
+\begin{array}{l}
+F_2 \\
+F_1
+\end{array}
+\right]
+$$
+
+We give the conclusion here. If we mark the matrix $\left[ \begin{array}{l} 1 & 1 \\ 1 & 0 \end{array} \right]$ as A, we'll get a formula:
+
+$$
+A^n \left[
+\begin{array}{l}
+F_1 \\
+F_0
+\end{array}
+\right]
+=
+\left[
+\begin{array}{c}
+F_{n + 1} \\
+F_{n}
+\end{array}
+\right]
+$$
+
+As we learned in **Linear Algibra**, if we get $A^n$ quickly, we get the result quickly. It's run time performance is also $O(n)$ the same as the alg above(`fasterFib`).
+
+---
 
