@@ -243,7 +243,91 @@ F_{n}
 \right]
 $$
 
-As we learned in **Linear Algibra**, if we get $A^n$ quickly, we get the result quickly. It's run time performance is also $O(n)$ the same as the alg above(`fasterFib`).
+As we learned in **Linear Algibra**, if we get $A^n$ quickly, we get the result quickly. ~~It's run time performance is also $O(n)$ the same as the alg above(`fasterFib`).~~ Now let's analyze it's run time performance. The mainly cost is the time to get $A^n$. So how long? Instead of a matrix, let's talk about the constant number first. **How long does it take to get $9^n$**? For example, let's calculate $9^{71}$:
+
+$$
+\begin{array}{l}
+9^1 & 9^2 & 9^4 & 9^8 & 9^{16} & 9^{32} & 9^{64}
+\end{array}
+$$
+
+At first, we got 9, with 0 time cost. Then we need one flop to get $9^2$, because of the mutiplication($9^1 \times 9^1$). We need one more flop to get $9^4(9^2 \times 9^2)$ ... So how many flops past before we get $9^n$?
+
+$$
+\begin{array}{l}
+\overbrace{
+\overbrace{9^1 \ 9^2}^{1 flop}
+\overbrace{9^3 \ 9^4}^{1 flop}
+\cdots
+\overbrace{9^{n-1} \ 9^n}^{1 flop}
+}^{?flops}
+
+\end{array}
+$$
+
+It seems that, **when we get $9^4$, we use 2 flops, which is $log_24$; when we get $9^8$, we use 3 flops, which is $log_28$**. So we can conclude that, **if we want to get $9^n$, we should use $log_2n$ flops**. And now let's make n 71. if we want to get $9^{71}$, we should use $log_271$ flops. But what is that? It is not an integer. So should we **round it down($[log_271]$)**, or  do something else? The result is that, **flops used to get $9^{71}$ is definitely integral**. Let's conquer it first:
+
+$$
+71 = 64 + 4 + 2 + 1
+$$
+
+Given this, we can combine $9^{71}$ like:
+
+$$
+9^{71} = 9^1 \times 9^2 \times 9^4 \times 9^{64}
+$$
+
+What does that mean? It means that we can get $9^{71}$ by:
+
+* getting $9^2$ -> 1 flop
+* getting $9^4$ -> 1 flop($9^2 \times 9^2$)
+* getting $9^{64}$ -> 4 flops(from $9^4$, square it 4 times)
+* multiplying them together -> 3 flops
+
+So, the time for getting is $1 + 1 + 4 = 6$, which is just $log_271$, and the time for multiplying is just the constant time, which means almost no cost. **Change 71 to n, we'll get the same conclusion**. It means that, **the run time performance of getting $9^n$(or the power of any constant number) is something like $O(log_2n)$, or short as $O(logn)$**. If we turn the constant number to a matrix, we will find that, the time to multiply number and number is very similar to matrix and matrix. So the result is that, **the run time performance of the alg Fast Matrix Powering is $O(logn)$**. The alg that constantly multiply matrix and matrix is also known as **Repeated Squaring**.
 
 ---
+
+Alg 4 is the fastest one, which only costs constant time! It gives you a formula, you bring the value of `n` to it, and you will get the result of `Fib(n)`. To approach this alg, you should use a lot of knowledge of Linear Algebra.
+
+Such as the formula in alg 3: 
+
+$$
+A^n \left[
+\begin{array}{l}
+F_1 \\
+F_0
+\end{array}
+\right]
+=
+\left[
+\begin{array}{c}
+F_{n + 1} \\
+F_{n}
+\end{array}
+\right]
+$$
+
+We define the matrix $\left[ \begin{array}{l} F_1 \\ F_0 \end{array} \right]$ as vector $v$, so we should calculate the value of:
+
+$$
+A^nv
+$$
+
+And if we could give matrix $A$ a decomposition $A = Q \Lambda Q^T$, where:
+
+* Q is a **orthogonal matrix**, which meats the condition $QQ^T = I$, and $I$ is a matrix like $\left[ \begin{array}{l} 1 & 0 \\ 0 & 1 \end{array} \right]$;
+* and $\Lambda$ is a matrix like $\left[ \begin{array}{c} \lambda_1 & 0 \\ 0 & \lambda_2 \end{array} \right]$.
+
+We have known that A is a constant matrix, whose number in itself does not change. Now we can define some numbers:
+
+* $\phi = \frac{1+\sqrt{5}}{2},\ \psi = \frac{1-\sqrt{5}}{2}$
+* $\lambda_1 = \phi,\ \lambda_2 = \psi$
+* $Q = \left[ \begin{array}{l} \sqrt{\phi} & -\sqrt{-\psi} \\ \sqrt{-\psi} & \sqrt{\phi} \end{array} \right] \cdot \frac{1}{\sqrt[4]{5}}$
+
+With these numbers, we can calculate `Fib(n)` easily(hehe) by the **exact formula**:
+
+$$
+F_n = \frac{1}{\sqrt{5}} \cdot (\phi^n - \psi^n)
+$$
 
