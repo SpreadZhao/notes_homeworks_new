@@ -13,7 +13,7 @@ description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法�
 
 #question 视频里这块完全不知道他在讲什么，好在没啥大用，就记结论了。
 
-列竖式的思想其实也是这个， 我们算2568+347，就是这样：
+列竖式的思想其实也是这个， 我们算2568+347，就是这样： ^429ac9
 
 ```
     2 5 6 8
@@ -136,6 +136,8 @@ $$
 0 \ 1 \ 1 \ 2 \ 3 \ 5 \ 8 \cdots
 $$
 
+### 2.1.1 Four Algorithms to Calculate Fibonacci
+
 How to calculate `fib(n)`? We've all already learned this algorithm(**Index starts from 0**): 
 
 ```c
@@ -168,7 +170,7 @@ $$
 T \geqslant 2^{.5n}\ (flops)
 $$
 
-#question I also don't know what is the teacher saying.
+#question I also don't know what is the teacher saying. Just remember that this alg takes **exponential flops of $cn$**, marked as **exp(cn).** **Flops! Not real time!**
 
 ---
 
@@ -255,13 +257,18 @@ At first, we got 9, with 0 time cost. Then we need one flop to get $9^2$, becaus
 
 $$
 \begin{array}{l}
-\overbrace{
-\overbrace{9^1 \ 9^2}^{1 flop}
-\overbrace{9^3 \ 9^4}^{1 flop}
-\cdots
-\overbrace{9^{n-1} \ 9^n}^{1 flop}
-}^{?flops}
-
+\underbrace{
+\underbrace{
+\underbrace{
+\underbrace{
+9^1 \ \  9^2
+}_{1\ flop}
+\ \ 9^4
+}_{2\ flops}
+\ \ 9^8
+}_{3\ flops}
+\ \ 9^{16} \ \ 9^{32} \ \ 9^{64}
+}_{?\ flops}
 \end{array}
 $$
 
@@ -288,7 +295,7 @@ So, the time for getting is $1 + 1 + 4 = 6$, which is just $log_271$, and the ti
 
 ---
 
-Alg 4 is the fastest one, which only costs constant time! It gives you a formula, you bring the value of `n` to it, and you will get the result of `Fib(n)`. To approach this alg, you should use a lot of knowledge of Linear Algebra.
+Alg 4 is the fastest one, which only costs constant time(**may be**)! It gives you a formula, you bring the value of `n` to it, and you will get the result of `Fib(n)`. To approach this alg, you should use a lot of knowledge of Linear Algebra.
 
 Such as the formula in alg 3: 
 
@@ -330,4 +337,24 @@ With these numbers, we can calculate `Fib(n)` easily(hehe) by the **exact formul
 $$
 F_n = \frac{1}{\sqrt{5}} \cdot (\phi^n - \psi^n)
 $$
+
+### 2.1.2 The Real Time of These Algorithms
+
+In the section ahead, we just talked about the flops each alg takes but the real time. Now let's see what it is on earth. Start with Alg 1, it costs **exp(cn)** flops, each of them cost the time of adding two numbers. Because the cost is so small, **the real time is supposed to be $exp(cn) \cdot small = exp(cn)$ too**.
+
+In the **Iterator** algorithm, we cost approximately n flops to get it. During each flop, we add two numbers together, so the time cost by the addition [[#^429ac9|is also n]]. This n time is almost the same as the $small$ in the 1st alg, **but we multiply it with n instead of $exp(cn)$**. So this time is not small in this case. The Runtime of alg 2 is at most $n \cdot n = n^2$.
+
+> You may ask: these two n is not supposed to do mutiplication! One is the number of flops; the other is the time cost **when the two number is n digits long**. In all the cases above, **n is the index of the number in Fibonacci Sequence**. Does the index do have some relations to the length of the number? The answer is: Yes! Below is my illustration. In the alg 1, we see that Fibonacci number $F_n$ is at least $2^{\frac{n}{2}}$, **which means that $F_n$ grows at a exponential speed**. Given that, we can say that $F_n \approx exp(cn)$. Then the question becomes that **how long does a number of $exp(cn)$ or $exp(n)$ scale**? Let's take some example:
+>
+> * $2^1$ is $10$ in binary, which is 2 digits long;
+> * $2^2$ is $100$ in binary, which is 3 digits long;
+> * $2^3$ is $1000$ in binary, which is 4 digits long;
+> * $\cdots$
+> * $2^n$ is $\underbrace{100 \cdots 0}_{n+1\ digits}$ in binary, which is n+1 digits long.
+> 
+> For a number of $exp(n)$ scale, we can calculate its length by the exponent of it, or we can say that, the length of a number $x$ with such scale is approximately $log_2x$. Eventually we are able to give this conclusion: **the length of a number $F_n$ in Fibonacci Sequence with the index `n` is approximately $log_2F_n$**. Continue our deduction: 
+>
+> $$
+> length \approx log_2F_n \approx log_2(exp(cn)) \approx log_2(exp(n)) \approx log_2(2^n) \approx n
+> $$
 
