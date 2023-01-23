@@ -25,7 +25,7 @@ description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法�
 
 ---
 
-接下来是乘法，列竖式的话，最多需要n位乘以n位，所以时间复杂度是$O(n^2)$。很长一段时间，人们都认为没有比这更快的算法了。下面我们给出这段时间内的一个证明，这也是之后的Divide and Conquer问题。比如我们算$5143 \times 291$，可以这样：
+接下来是乘法，列竖式的话，最多需要n位乘以n位，所以时间复杂度是$O(n^2)$。很长一段时间，人们都认为没有比这更快的算法了。下面我们给出这段时间内的一个证明，这也是之后的Divide and Conquer问题。比如我们算$5143 \times 291$，可以这样： ^8b7991
 
 ![[Excalidraw/Drawing 2023-01-20 17.15.11.excalidraw|300]]
 
@@ -44,7 +44,7 @@ $$
 x \cdot y = x_hy_h \cdot 10^n + (x_hy_l + x_ly_h) \cdot 10^{\frac{n}{2}} + x_ly_l
 $$
 
-我们看看这个式子需要花多长时间。每算一次x和y相乘，都要递归地算4次分割之后的乘法，并且还要算两次乘法，分别是$10^n$和$10^{\frac{n}{2}}$。但是由于这个乘法只是在最后加0，因此非常简单。算多少次呢？因为最长的是n所以最多算n次，也就是这些加0的操作花费是$cn$。因此算这个乘法的时间：
+我们看看这个式子需要花多长时间。每算一次x和y相乘，都要递归地算4次分割之后的乘法，并且还要算两次乘法，分别是$10^n$和$10^{\frac{n}{2}}$。但是由于这个乘法只是在最后加0，因此非常简单。最后我们要将这些部分加起来，因为差不多都是n位，或者$\frac{n}{2},\ cn$位。也就是加起来的操作花费差不多是$cn$。因此算这个乘法的时间：
 
 $$
 T(n) \le \left\{
@@ -59,7 +59,7 @@ $$
 
 ![[Excalidraw/Drawing 2023-01-20 17.50.21.excalidraw|500]]
 
-递归的求和其实和等比数列很像。将这些框里的时间加起来就是最终的时间了。也就是$4^0 \cdot c \cdot n + 4^1 \cdot c \cdot \frac{n}{2} + 4^2 \cdot c \cdot \frac{n}{4} + \cdots = cn(1 + 2 + 2^2 + 2^3 + \cdots + 2^k)$。k是多少？观察一下就知道，这棵树有多深k就是多少。显然，当n除的是n的时候这棵树截至，那么分母的变化为$2^0,2^1,2^2,\cdots,2^l$。求出$l = log_2n$，因此$k = l + 1 = log_2n + 1$。根据等比求和公式，上面的式子结果是$cn(2^{k+1}-1)$，带入得到最终结果：$cn(4n-1) \longrightarrow \theta(n^2)$。**这里$\theta$和$O$的区别是，前者表示差不多相等，后者表示通常情况下都是(远)小于等于，后面给出的只是最复杂的情况**。
+递归的求和其实和等比数列很像。将这些框里的时间加起来就是最终的时间了。也就是$4^0 \cdot c \cdot n + 4^1 \cdot c \cdot \frac{n}{2} + 4^2 \cdot c \cdot \frac{n}{4} + \cdots = cn(1 + 2 + 2^2 + 2^3 + \cdots + 2^k)$。k是多少？观察一下就知道，这棵树有多深k就是多少。显然，当n除的是n的时候这棵树截至，那么分母的变化为$2^0,2^1,2^2,\cdots,2^l$。求出$l = log_2n$，因此$k = l + 1 = log_2n + 1$。根据等比求和公式，上面的式子结果是$cn(2^{k+1}-1)$，带入得到最终结果：$cn(4n-1) \longrightarrow O(n^2)$。**这里$\Theta$和$O$的区别是，前者表示差不多相等，后者表示通常情况下都是(远)小于等于，后面给出的只是最复杂的情况**。
 
 #question 老师的板书：
 
@@ -106,7 +106,7 @@ $$
 \begin{align}
 S & = cn \cdot \frac{1 \cdot [1 - (\frac{3}{2})^{k + 1}]}{1 - \frac{3}{2}} = cn \cdot (-2) \cdot \left[1 - \left(\frac{3}{2}\right)^{k + 1}\right] = 2cn \cdot \left[\left(\frac{3}{2}\right)^{log_2n + 2} - 1\right] \\
  & = 2cn \cdot \left(\frac{9 \cdot 3^{log_2n}}{4n} - 1\right) = c \cdot \frac{9 \cdot (2^{log_23})^{log_2n}}{2} - 2cn = \frac{9}{2}c \cdot n^{log_23} - 2cn \\
- & \rightarrow \theta(n^{log_23})
+ & \rightarrow O(n^{log_23})
 \end{align}
 $$
 
@@ -118,7 +118,7 @@ $$
 
 ![[Algorithm/resources/Pasted image 20230120212757.png]]
 
-意思就是说，如果两个操作数的长度有一个小于等于70，就用在学校里学过的方法(模拟列竖式)；只有两个数字的长度都超过70的时候，采用这种比较复杂的算法。那么为啥是70呢？比如，一个$\theta(50n)$和一个$\theta(n^2)$的算法，我们该选那个？那就看这俩谁小呗！如果n < 50就选n2；如果大于50就选50n。这里也是一样的道理，只不过它们测出这个70的手段更高级一些。
+意思就是说，如果两个操作数的长度有一个小于等于70，就用在学校里学过的方法(模拟列竖式)；只有两个数字的长度都超过70的时候，采用这种比较复杂的算法。那么为啥是70呢？比如，一个$\Theta(50n)$和一个$\Theta(n^2)$的算法，我们该选那个？那就看这俩谁小呗！如果n < 50就选n2；如果大于50就选50n。这里也是一样的道理，只不过它们测出这个70的手段更高级一些。
 
 下面是算乘法的记录：
 
@@ -357,4 +357,149 @@ In the **Iterator** algorithm, we cost approximately n flops to get it. During e
 > $$
 > length \approx log_2F_n \approx log_2(exp(cn)) \approx log_2(exp(n)) \approx log_2(2^n) \approx n
 > $$
+
+In the **Matrix Powering** alg, we multiply two matrix every flop. The multipication of two matrices costs $n^2$ time, **because the number in the matrix is also growing n digits long**. So the eventual Runtime of the alg is approximately $logn \cdot n^2$. Actually, the Runtime also depends on the algorithm you use to multiply those numbers in the matrix, [[#^8b7991|just as we have talked about]].
+
+Alg | Flops | Runtime
+-- | -- | --
+recursive | $exp(cn)$ | $exp(cn) \cdot small$
+iter | n | $n^2$
+matrix powering | $logn$ | $logn \cdot n^2$
+
+### 2.1.3 Asymptotic Notation
+
+What is $O$, and what is $\Theta$? I'll show you some definition first. $f,\ g$ are functions mapping $\mathbb{Z^+}$ to $\mathbb{Z^+}$ where $\mathbb{Z^+}$ is positive integers. We can mark that:
+
+* "Big Oh" -> $f = O(g)\ if\ \exists\ c > 0,\ s.t. \forall n,\ f(n) \leqslant c \cdot g(n)$. (*s.t. means "such that"*)
+* "little oh" -> $f = o(g)\ if\ \lim\limits_{n \rightarrow \infty}\frac{f(n)}{g(n)} = 0$.
+* "Big Omega" -> $f = \Omega(g)\ if\ g = O(f)$.
+* "little omega" -> $f = \omega(g)\ if\ g = o(f)$.
+* "Theta" -> $f = \Theta(g)\ if\ \left\{\begin{align} & f = O(g) \\ & f = \Omega(g) \end{align} \right.$.
+
+**We can remember it with this analogy**:
+
+$$
+\begin{align}
+O\ means\ \leqslant \\
+o\ means\ < \\
+\Omega\ means\ \geqslant \\
+\omega\ means\ > \\
+\Theta\ means\ =
+\end{align}
+$$
+
+### 2.1.4 Divide and Conquer
+
+In the 1st lecture, we talked about the **Kara Tsuba** Alg to multiply two integers, which is an example of **Divide-and-Conquer**. In that case, the time cost is like this:
+
+$$
+T(n) \le \left\{
+\begin{aligned}
+& 4 \cdot T(\frac{n}{2}) + c \cdot n & n > 1 \\
+& 1 & n = 1 \\
+\end{aligned}
+\right.
+$$
+
+The result is to be $O(n^2)$ which equals to $O(n^{log_24})$. If we do 3 recursion instead of 4, the time cost:
+
+$$
+T(n) \le \left\{
+\begin{aligned}
+& 3 \cdot T(\frac{n}{2}) + c \cdot n & n > 1 \\
+& 1 & n = 1 \\
+\end{aligned}
+\right.
+$$
+
+and the result is to be $O(n^{log_23})$. But what if we expand it to a common formula?
+
+$$
+T(n) \le \left\{
+\begin{aligned}
+& a \cdot T(\frac{n}{b}) + c \cdot n^d & n > 1 \\
+& 1 & n = 1 \\
+\end{aligned}
+\right.
+$$
+
+**We do $a$ recursion instead of 3; we divide the number into $b$ pieces instead of 2; we cost $n^d$ time to put all of them together every recursion**. Now what is the time cost? After a series of decuction, the result is that:
+
+$$
+T(n) = \left\{ \begin{array}{lr} O(n^d \cdot logn) & a = b^d \\ O(n^d) & a < b^d \\ O(n^{log_ba}) & a > b^d \end{array} \right.
+$$
+
+The formula is called **Master Theorem**. You just plug numbers in it, and it gives you the answer. ^b745d8
+
+# 3. More Divide and Conquer
+
+## 3.1 Matrix Multiplication
+
+How to calculate one element in a matrix? **You just need 1 loop to do that.** Fix the `i` row of Matrix X and the `j` colomn of Matrix Y, loop `k` from 0 to n, and sum those result up like:
+
+```c
+for(k = 0; k < n; k++){
+	Z[i][j] += X[i][k] + Y[k][j];
+}
+```
+
+After that loop, you got 1 elem. But what if we want to calculate the whole matrix? Obviously, **you should nest it with two more loops**, which cover the whole of Matrix X and Y:
+
+```c
+for(i = 0; i < n; i++){
+	for(j = 0; j < n; j++){
+		for(k = 0; k < n; k++){
+			Z[i][j] += X[i][k] + Y[k][j];
+		}
+	}
+}
+```
+
+So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better with Divide and Conquer? The answer is yes!
+
+![[Algorithm/resources/Pasted image 20230123144213.png]]
+
+![[Algorithm/resources/Pasted image 20230123144232.png]]
+
+> Matrix multiplication is unlike the integer one, we still don't have a relatively good alg to solve it.
+
+## 3.2 Sorting(Merge sort)
+
+If we have an array consist of just 1 elem: 3, and we also have another array also consist of 1 elem: 5. We want to **merge them to an entire array** like:
+
+![[Excalidraw/Drawing 2023-01-23 14.54.34.excalidraw|200]]
+
+This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done anything before the last merge, we will get two arrays which has been in order:
+
+![[Excalidraw/Drawing 2023-01-23 14.58.12.excalidraw|500]]
+
+What we need to do is to merge them together. But how? Make 2 ponters, point to the smallest one: 
+
+![[Excalidraw/Drawing 2023-01-23 15.00.11.excalidraw|250]]
+
+**Which one is smaller? 2! So we put 2 to the new array**:
+
+![[Excalidraw/Drawing 2023-01-23 15.02.02.excalidraw|500]]
+
+Continuously do this, until both the two pointers reach the end. After that, we will get the merged array. So the structure of Merge Sort is supposed to be:
+
+```c
+MergeSort(a[1 .. n]){
+	b[] = MergeSort(a[1 .. n/2]);
+	c[] = MergeSort(a[n/2 + 1 .. n]);
+	return Merge(B, C);
+}
+```
+
+We do recursion for 2 times; we divide the entire into 2 pieces and we take $cn$ times to combine those together. With the [[#^b745d8|Master Thorem]] introduced in 2.1.4, we can write the time cost down:
+
+$$
+T(n) \leqslant 2 \cdot T(\frac{n}{2}) + cn
+$$
+
+which means that $a = 2,\ b = 2,\ d = 1$. Refers to the thorem, we can conclude that
+
+$$
+T(n) = O(nlogn)
+$$
 
