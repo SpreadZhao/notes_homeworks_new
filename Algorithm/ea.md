@@ -3,6 +3,7 @@ author: "Spread Zhao"
 title: ea
 category: inter_class
 description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法的理论基础与复杂度分析。课程内容涵盖了分治、图算法、最短路、生成树、贪心、动规、并查集、线性规划、网络流、NP 问题、随机算法、哈希算法等等。网站：[CS170](https://cs170.org/)。本笔记是在学习西电《算法分析于设计》之前所记，作为对其的补充和扩展。
+link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list=PLkFD6_40KJIyKLUW_4cm44mIdXSUpZry3)"
 ---
 
 <h1>Efficient Algorithms + Intractable Problems</h1>
@@ -465,11 +466,11 @@ So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better 
 
 ## 3.2 Sorting(Merge sort)
 
-If we have an array consist of just 1 elem: 3, and we also have another array also consist of 1 elem: 5. We want to **merge them to an entire array** like:
+If we have an array consist of just one elem: 3, and we have another array also consist of one elem: 5. We want to **merge them to an entire array** like:
 
 ![[Excalidraw/Drawing 2023-01-23 14.54.34.excalidraw|200]]
 
-This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done anything before the last merge, we will get two arrays which has been in order:
+This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done everything before the last merge, we will get two arrays which has been in order:
 
 ![[Excalidraw/Drawing 2023-01-23 14.58.12.excalidraw|500]]
 
