@@ -340,9 +340,9 @@ $$
 
 ### 2.1.2 The Real Time of These Algorithms
 
-In the section ahead, we just talked about the flops each alg takes but the real time. Now let's see what it is on earth. Start with Alg 1, it costs **exp(cn)** flops, each of them cost the time of adding two numbers. Because the cost is so small, **the real time is supposed to be $exp(cn) \cdot small = exp(cn)$ too**.
+* In the section ahead, we just talked about the flops each alg takes but the real time. Now let's see what it is on earth. Start with Alg 1, it costs **exp(cn)** flops, each of them cost the time of adding two numbers. Because the cost is so small, **the real time is supposed to be $exp(cn) \cdot small = exp(cn)$ too**.
 
-In the **Iterator** algorithm, we cost approximately n flops to get it. During each flop, we add two numbers together, so the time cost by the addition [[#^429ac9|is also n]]. This n time is almost the same as the $small$ in the 1st alg, **but we multiply it with n instead of $exp(cn)$**. So this time is not small in this case. The Runtime of alg 2 is at most $n \cdot n = n^2$.
+* In the **Iterator** algorithm, we cost approximately n flops to get it. During each flop, we add two numbers together, so the time cost by the addition [[#^429ac9|is also n]]. This n time is almost the same as the $small$ in the 1st alg, **but we multiply it with n instead of $exp(cn)$**. So this time is not small in this case. The Runtime of alg 2 is at most $n \cdot n = n^2$.
 
 > You may ask: these two n is not supposed to do mutiplication! One is the number of flops; the other is the time cost **when the two number is n digits long**. In all the cases above, **n is the index of the number in Fibonacci Sequence**. Does the index do have some relations to the length of the number? The answer is: Yes! Below is my illustration. In the alg 1, we see that Fibonacci number $F_n$ is at least $2^{\frac{n}{2}}$, **which means that $F_n$ grows at a exponential speed**. Given that, we can say that $F_n \approx exp(cn)$. Then the question becomes that **how long does a number of $exp(cn)$ or $exp(n)$ scale**? Let's take some example:
 >
@@ -358,7 +358,7 @@ In the **Iterator** algorithm, we cost approximately n flops to get it. During e
 > length \approx log_2F_n \approx log_2(exp(cn)) \approx log_2(exp(n)) \approx log_2(2^n) \approx n
 > $$
 
-In the **Matrix Powering** alg, we multiply two matrix every flop. The multipication of two matrices costs $n^2$ time, **because the number in the matrix is also growing n digits long**. So the eventual Runtime of the alg is approximately $logn \cdot n^2$. Actually, the Runtime also depends on the algorithm you use to multiply those numbers in the matrix, [[#^8b7991|just as we have talked about]].
+* In the **Matrix Powering** alg, we multiply two matrix every flop. The multipication of two matrices costs $n^2$ time, **because the number in the matrix is also growing n digits long**. So the eventual Runtime of the alg is approximately $logn \cdot n^2$. Actually, the Runtime also depends on the algorithm you use to multiply those numbers in the matrix, [[#^8b7991|just as we have talked about]].
 
 Alg | Flops | Runtime
 -- | -- | --
