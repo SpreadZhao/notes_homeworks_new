@@ -504,3 +504,34 @@ $$
 T(n) = O(nlogn)
 $$
 
+There're also other implements to achieve this time cost **without recursion**. One of them is using **a queue of list**. If the number to be sorted is like: 
+
+```
+8 5 7 3 9
+```
+
+what you should do is making a queue, and pushing all the elems in it, **one in a list**:
+
+![[Excalidraw/Drawing 2023-01-27 00.08.55.excalidraw]]
+
+Now you just need to do as the follow, until there're only 1 list in the queue:
+
+* pop 2 lists
+* merge them
+* push the merged list to the tail
+
+![[Excalidraw/Drawing 2023-01-27 00.11.17.excalidraw]]
+
+Is there any algs which is faster than $O(nlogn)$? The answer is true when your computer can not only do comparison(Well, actually almost all computers now fit it). Let's take **Counting Sort** as an example. If every number to be sorted is between 1 to B, then I can make B-size buckets:
+
+![[Excalidraw/Drawing 2023-01-27 00.27.09.excalidraw|300]]
+
+And here is the array I want to sort:
+
+![[Excalidraw/Drawing 2023-01-27 00.28.13.excalidraw]]
+
+What I need to do is terribly easy: Go through the array. The 1st is 2, so we put it in the bucket 2; the next one is 4, so we put it in the bucket 4 ... . After we have went through the array, all the numbers have been put into their affiliated buckets. **So we just need to turn to the buckets by going through it.** Then we'll get the sorted array.
+
+If the size of input(array) is `n`, the time cost is just `n` times to scanning the array and `B` time to allocate the buckets, which is $n + B$.
+
+But if you assume the comparison based model, why $O(nlogn)$ is the fasted time you can achieve?
