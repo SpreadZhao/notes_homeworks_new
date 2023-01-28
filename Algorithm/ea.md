@@ -426,6 +426,8 @@ $$
 
 **We do $a$ recursion instead of 3; we divide the number into $b$ pieces instead of 2; we cost $n^d$ time to put all of them together every recursion**. Now what is the time cost? After a series of decuction, the result is that:
 
+#keypoint Master Theorem
+
 $$
 T(n) = \left\{ \begin{array}{lr} O(n^d \cdot logn) & a = b^d \\ O(n^d) & a < b^d \\ O(n^{log_ba}) & a > b^d \end{array} \right.
 $$
@@ -534,4 +536,150 @@ What I need to do is terribly easy: Go through the array. The 1st is 2, so we pu
 
 If the size of input(array) is `n`, the time cost is just `n` times to scanning the array and `B` time to allocate the buckets, which is $n + B$.
 
-But if you assume the comparison based model, why $O(nlogn)$ is the fasted time you can achieve?
+But if you assume the comparison based model, why $O(nlogn)$ is the fasted time you can achieve? Let's assume the input as **some unknown permutation $\sigma$ of $A_1,\ A_2,\ \cdots ,\ A_n$** and that all the thing I can do is just make less than comparison.
+
+> *Why not equal comparison or bigger than comparison? Because it makes no sense. A is less than B just means that B is bigger than one; and A = B is no need in sorting algorithm, they're just the same!*
+
+Then there's a machine constantly asking dummy questions like: $A_5 < A_7\ ?$. If the answer is yes, it strach to a new question like $A_4 < A_7\ ?$ ... ... When the machine stop asking questions, the sorting alg is over:
+
+![[Algorithm/resources/Pasted image 20230127181051.png|300]]
+
+If every question the machine asks just hits the point, the alg is faster; other wise like the machine is asking questions like: $A_1 < A_2\ ?\ A_2 < A_1\ ? \cdots$, the alg is slower. Whatever, once the process got to the end of the tree, we will get a bigger-less relation ship of the permutation. If it is assumed that the height of this tree is `T`(where `T` is just the times of comparison, or time cost), there're $2^T$ leaves in the tree, and **every permutation of the input must mapping a leaf itself**, which means **the number of leaves is at least the number of the permutations**:
+
+$$
+\begin{array}{lrcl}
+&\#leaves & \geqslant & \#perms \\
+\Rightarrow & 2^T & \geqslant & A_n^n = n! \\
+\Rightarrow & T & \geqslant & log_2(n!) \\
+& & \geqslant & n \cdot lnn - O(n) \\
+& & = & \Omega(nlogn)
+\end{array}
+$$
+
+## 3.3 (Median) Select
+
+First let's recall the core idea of **Quick Sort**. The goal of every recursion in quick sort is **finding the right place of the pivot**. You chose a number as the pivot, and move all the numbers less than the pivot to the left; and all the numbers bigger than the pivot to the right.
+
+Now given the array\[1 .. n\], and $1 \leqslant k \leqslant n$, what we want to do is **outputing the `kth` smallest entry of A**, where usually k is n/2, which called the **Median Select**. If deal it easily, you can just sort the array, then you absolutely know the kth smallest one; but this time we will do it in linear time instead of the $O(nlogn)$ sorting alg.
+
+**Quick Select** is similar to Quick Sort, but you will do less(usually half) recursions. You also chose a pivot, **move all the numbers less or bigger than it to the left and right, just as what Quick Sort do**. Then the point is, because what we're doing is **select**, so if it(pivot) is just the kth smallest one, return it; if it is bigger than kth, recurse the left instead of both sides; if it is smaller than kth, recurse the right side also instead of both sides. This is why it costs usually half recursions than Quick Sort.
+
+In Quick Select, your desire is:
+
+$$
+T(n) \leqslant T(\frac{n}{2}) + cn
+$$
+
+where $cn$ is the time of comparing the pivot with other elems in the array; $T(\frac{n}{2})$ is the time to recursively do this **when k = n/2**. However, notice that we say it **the desire**, because you <u>can't alway chose the most suitable pivot</u>. To solve this problem, **we have another algorithm to let you chose the best pivot in most cases(wow\~)**. 
+
+> The algorithm below is based on one important thing: The final goal is to find the **kth** smallest elem in the array, not the median one. <u>Every "median" word we say below is just the way to find the best pivot for finding the kth smallest elem</u>.
+
+Here's my array and it has **n distinct** entries. The next thing I will do looks like a little weird, but after that I will show you that the weirdness is not out of no where. **I'm going to group the entries with blocks of size 5**:
+
+![[Excalidraw/Drawing 2023-01-28 20.18.04.excalidraw|600]]
+
+Then I'll find the median of every group. The way I can use is various, like merge sort, bubble sort etc. Because the size of the group is constant, so **whatever the alg used to find the median is, the time cost is always constant**. For example, if I use Merge Sort to find the median, then the time cost will be:
+
+$$
+O(nlogn)\ when\ n\ is\ 5,\ namely\ O(5log5),\ which\ is\ constant\ time.
+$$
+
+Totally I've got the number of the groups of medians. Then I'll **recursively call the function to find the median of the medians**:
+
+![[Excalidraw/Drawing 2023-01-28 20.26.08.excalidraw|700]]
+
+> You may ask why recursively? Because the algorithm itself is a way to find the kth smallest elem in the array, so it absolutely fits our expectation when
+>  
+> $$
+> k = \frac{number\ of\ groups}{2} = \frac{n}{10}.
+> $$
+> 
+> So we could just **take $\frac{n}{10}$ as the parameter of the function(take the place of `k`)**.If there're 2 or more recursions, the number will goes down like:
+>
+>$$
+>\begin{array}{c}
+>k = \dfrac{n}{5}(base\ fun),\ k = \dfrac{n}{10}(1st\ recursion), \\
+>k = \dfrac{n}{20}(2nd\ recursion),\ k = \dfrac{n}{40}(3rd\ recursion),\\
+>\cdots
+>\end{array}
+>$$
+> *Notice that k and n here are both refer to the origin value, instead of the actual argument passed to the function*.
+
+The next thing I will do is obvious: **use the pivot to do Quick Select just as what we have done**. Let `L` be the stuff smaller than the pivot `p`; `R` be the numbers that is bigger than `p`. So the array is broken apart to:
+
+```
+[L p R]
+```
+
+We are to find the kth smallest one, so:
+
+```c
+/*
+	Where |L| means the length of L,
+	namely the number of elems in L.
+*/
+if(k = |L| + 1) return p;
+else if(k <= |L|) return Something Recursively;
+else return Something Else Recursively;
+```
+
+> Notice that the code above is **also** used to find the median of the group, or the median of the medians we've already talked.
+
+Then I'll explain what the `Something Recursively` is. If `k <= |L|`, which means the kth smallest elem is in the array `L` instead of `p` or `R`, so we should recursive to the left side of the array which is `L` it self. On the other hand, if `k > |L| + 1`, which means the kth is in the array `R`, so we should do the recursion in the `R`. The complete code is:
+
+```c
+/*
+	A: the target array
+	k: the kth smallest one
+*/
+Select(A[1 .. n], k){
+	groups = Break(A, 5); // Break A into group of size 5 each.
+	B = FindMedians(group); // B is the array of medians in each group.
+
+	// Size of B is n/5. The n/5/2th smallest one in B, which is the median.
+	p = Select(B, n/10); // Recursively find the median of medians.
+
+	// You can do the following funs in linear scan.
+	L = Lessthaners(A, p); // Numbers less than p in A.
+	R = Biggerthaners(A, p); // Numbers bigger than p in A.
+
+	if(k = |L| + 1) return p;
+	else if(k <= |L|) return Select(L, k);
+	else return Select(R, k - |L| - 1);
+}
+```
+
+> Notice the param in the last recursion. `k - |L| - 1` means that, if the kth smallest elem is in `R`, we're gonna say that **the kth smallest elem in `A` is the No. `k - |L| - 1` smallest one in `R`**. It's just a simple math question, I think you can do it!
+
+Now let's analyze the time cost of this alg:
+
+* At first we broke `A` into 5 groups, which cost a linear time $O(n)$.
+* Then we spend some segments of constant time to find the medians of groups. There're n/5 groups in total, so the time cost is $\frac{n}{5} \cdot O(1)$.
+* Then we recursively call the function itself, and the size of the array param is just the number of groups, which is n/5. So we cost $T(\frac{n}{5})$.
+* Then we pivot around the array, namely do a linear scan on it to find `L` and `R`. So we cost another $O(n)$.
+* Finally is the toughest thing. What if we do the recursion in `L` and `R`? Is it $T(\frac{n}{2})$? Notice that the best pivot is not always the midium of the array, **it is just bigger than half of the numbers in some groups, but not the half in the entire array**. So let's see what is the size of `L` and `R`.
+
+  ![[Algorithm/resources/Pasted image 20230128214203.png]]
+
+  The best pivot is **guaranteed to be in the product of the first selection**, which is just `B`. So the `p` is guaranteed to be bigger than half of the elems in `B`(From here, you could see, instead of the half of `A` which is the origin entire array). And the half of `B` which is smaller than `p` is also guaranteed to be bigger than half of the elems in **their respective group**. And the number of groups is ought to be:
+
+  $$
+ \frac{1}{2} \times \frac{n}{5}
+ $$
+
+  So the best pivot is guaranteed to be bigger or equal than 3 in each group above, namely:
+
+  $$
+p\ is\ bigger\ or\ equal\ than\  \frac{1}{2} \times \frac{n}{5} \times 3 = \frac{3n}{10}\ elems.
+ $$
+
+  That means the size of `L` or `R` is both no more than $n - \frac{3n}{10} = \frac{7n}{10}$. Finally we'll conclude that we'll cost $T(\frac{7n}{10})$ in either `L` recursion branch or `R` recursion branch.
+
+To sum up, the time performance of this alg is:
+
+$$
+\begin{array}{rcl}
+T(n) & \leqslant & O(n) + \dfrac{n}{5} \cdot O(1) + T(\dfrac{n}{5}) + O(n) + T(\dfrac{7n}{10}) \\
+& \leqslant & T(\dfrac{n}{5}) + T(\dfrac{7n}{10}) + cn
+\end{array}
+$$
