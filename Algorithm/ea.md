@@ -683,3 +683,40 @@ T(n) & \leqslant & O(n) + \dfrac{n}{5} \cdot O(1) + T(\dfrac{n}{5}) + O(n) + T(\
 & \leqslant & T(\dfrac{n}{5}) + T(\dfrac{7n}{10}) + cn
 \end{array}
 $$
+
+But how good is it? The answer is, **if we break the array into any odd numbers at least 5 blocks, the time cost is linear**. Now let's prove it via induction. We just guess the conclusion, and try to prove it with induction.
+
+$$
+Guess: T(n) \leqslant B \cdot n
+$$
+
+where B is a constant. So we're going to prove that **the constant B does actually exists**. The base case is that B is definitely a positive number which is at least 1, because even linearly scan the array still costs $n$ time, when B is 1. Then we use the **strong induction** that $T(\frac{n}{5})$ and $T(\frac{7n}{10})$ both fit the assume, which means:
+
+$$
+\begin{array}{l}
+T(\dfrac{n}{5}) \leqslant B \cdot \dfrac{n}{5}, \\
+T(\dfrac{7n}{10}) \leqslant B \cdot \dfrac{7n}{10}, \\
+Assume\ that:\\
+T(\dfrac{n}{5}) + T(\dfrac{7n}{10}) + cn \leqslant B \cdot \dfrac{n}{5} + B \cdot \dfrac{7n}{10} + cn \leqslant B \cdot n
+\end{array}
+$$
+
+So the question becomes to: **is there any B exist so that the inquality above works**? If the answer is yes, we can say that **all the assume work when B is the answer we've got**. Evidently, we can easily solve this problem:
+
+$$
+\begin{array}{rl}
+& B \cdot \dfrac{n}{5} + B \cdot \dfrac{7n}{10} + cn \leqslant B \cdot n \\
+\Rightarrow & B(1 - \dfrac{1}{5} - \dfrac{7}{10}) \geqslant c \\
+\Rightarrow & B \geqslant 10c
+\end{array}
+$$
+
+Wonderful! B is really exists! We can say that, if B is bigger or equal than 10c, the following assume is do correct:
+
+$$
+T(n) \leqslant B \cdot n\ (B \geqslant 10c)
+$$
+
+Remember what we said: **at least 5 blocks**, how about 3? And how about an even number? The 2nd question is easy to solve, because the median is expected to be the only one; but the 1st question is a little bit harder. But I'll show the teacher's blackboard-writing as a tip:
+
+![[Algorithm/resources/Pasted image 20230129011048.png]]
