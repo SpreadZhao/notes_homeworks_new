@@ -2350,7 +2350,7 @@ git commit
 
 这其实就相当于创建了一个新的状态结点，并且这里的commit信息也存了下来：
 
-![[Excalidraw/Drawing 2023-01-12 17.39.05.excalidraw|100]]
+![[Study Log/resources/Drawing 2023-01-12 17.39.05.excalidraw.png]]
 
 这个`c4cf3ec`是什么？实际上就是sha-1码，对应的就是我们刚才添加进去的说明信息。我们可以使用`git cat-file`命令来查看这些信息：
 
@@ -2366,7 +2366,7 @@ git commit
 
 这不就是`haha.txt`文件中的内容吗！因此，我们已经捋清楚了git项目的结构：
 
-![[Excalidraw/Drawing 2023-01-12 17.46.33.excalidraw]]
+![[Study Log/resources/Drawing 2023-01-12 17.46.33.excalidraw.png]]
 
 > tree就是文件夹，blob就是文件。tree可以包含tree和blob，而blob不能包含任何blob和tree。
 
@@ -2384,7 +2384,7 @@ echo "heihei" >> haha.txt
 
 此时我们相当于又新建了一个结点，指向之前的结点，并且也包含提交信息：
 
-![[Excalidraw/Drawing 2023-01-12 18.08.44.excalidraw]]
+![[Study Log/resources/Drawing 2023-01-12 18.08.44.excalidraw.png]]
 
 这下有了多个结点，我们可以回顾我们的历史纪录了：
 

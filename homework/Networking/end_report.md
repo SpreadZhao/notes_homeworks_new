@@ -16,7 +16,7 @@
 
 本次实验只是熟悉一下交换机的使用，以及常见的配置命令。下面是本次实验的拓扑图：
 
-![[Excalidraw/Drawing 2022-12-12 16.04.11.excalidraw|500]]
+![[homework/Networking/resources/Drawing 2022-12-12 16.04.11.excalidraw.png]]
 
 经过测试，pc1可以ping通pc2，但是pc1和pc2无法ping通pc3。这正好验证了要求中的第4条。交换机本身不需要额外的配置，而下面的命令可以查看交换机当前的配置：
 
@@ -37,11 +37,11 @@ display current-configuration
 
 首先来看前半部分的实验。意思就是让一个交换机划分出两个VLAN，处在这两个VLAN下的计算机是不能相互通信的。因此我们画出拓扑图：
 
-![[Excalidraw/Drawing 2022-12-12 16.16.02.excalidraw|500]]
+![[homework/Networking/resources/Drawing 2022-12-12 16.16.02.excalidraw.png]]
 
 这样我们就能看到，虽然在同一个交换机下，也处于同一网段，但是由于VLAN区域不同，所以pc1能ping通pc2，但是ping不通pc3。接下来是跨交换机的配置，实际上就是首先进行一些设置，把两个交换机变成一个交换机，然后在这个大交换机上配置VLAN，进行同样的操作
 
-![[Excalidraw/Drawing 2022-12-12 16.21.56.excalidraw|700]]
+![[homework/Networking/resources/Drawing 2022-12-12 16.21.56.excalidraw.png]]
 
 和刚才的实验没有什么不同，唯一的区别是VLAN2被建立在了两个交换机上。因此pc1还是能ping通pc2，但是ping不通pc3。
 

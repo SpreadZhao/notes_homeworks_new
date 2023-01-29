@@ -149,13 +149,13 @@ class Person{
 
 这样的结果和我们最开始int的情况一模一样。那么为什么**对非基本类型数据的成员进行修改时能成立**呢？这就要画出第二种情况的jvm图示了：
 
-![[Excalidraw/Drawing 2022-11-30 11.18.52.excalidraw]]
+![[Article/resources/Drawing 2022-11-30 11.18.52.excalidraw.png|400]]
 
 我们创建出来的实例本身是存放在堆空间中的；而person(实参)和p(形参)只不过是指向这个实例的引用。因此，无论对它们俩谁进行修改，都修改的是同一个实例。
 
 但是在最后一种情况中，就变成了这样：
 
-![[Excalidraw/Drawing 2022-11-30 11.22.23.excalidraw]]
+![[Article/resources/Drawing 2022-11-30 11.22.23.excalidraw.png|400]]
 
 一开始person和p都指向同一个实例，年龄是5；但是执行了这句话之后：
 

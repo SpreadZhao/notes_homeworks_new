@@ -28,7 +28,7 @@ link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list
 
 接下来是乘法，列竖式的话，最多需要n位乘以n位，所以时间复杂度是$O(n^2)$。很长一段时间，人们都认为没有比这更快的算法了。下面我们给出这段时间内的一个证明，这也是之后的Divide and Conquer问题。比如我们算$5143 \times 291$，可以这样： ^8b7991
 
-![[Excalidraw/Drawing 2023-01-20 17.15.11.excalidraw|300]]
+![[Algorithm/resources/Drawing 2023-01-20 17.15.11.excalidraw.png]]
 
 在这个例子中，我们把每个数字分成了2份，因此，如果要算出x和y的话，就应该是：
 
@@ -58,7 +58,7 @@ $$
 
 为啥n=1的时候是1呢？因为99乘法表！当n=1时，意味着这时已经分到了1位数乘以1位数，那还算啥？乘法表都背下来，直接给结果就可以了！下一个问题：这个算法的时间复杂度是多少？
 
-![[Excalidraw/Drawing 2023-01-20 17.50.21.excalidraw|500]]
+![[Algorithm/resources/Drawing 2023-01-20 17.50.21.excalidraw.png|400]]
 
 递归的求和其实和等比数列很像。将这些框里的时间加起来就是最终的时间了。也就是$4^0 \cdot c \cdot n + 4^1 \cdot c \cdot \frac{n}{2} + 4^2 \cdot c \cdot \frac{n}{4} + \cdots = cn(1 + 2 + 2^2 + 2^3 + \cdots + 2^k)$。k是多少？观察一下就知道，这棵树有多深k就是多少。显然，当n除的是n的时候这棵树截至，那么分母的变化为$2^0,2^1,2^2,\cdots,2^l$。求出$l = log_2n$，因此$k = l + 1 = log_2n + 1$。根据等比求和公式，上面的式子结果是$cn(2^{k+1}-1)$，带入得到最终结果：$cn(4n-1) \longrightarrow O(n^2)$。**这里$\Theta$和$O$的区别是，前者表示差不多相等，后者表示通常情况下都是(远)小于等于，后面给出的只是最复杂的情况**。
 
@@ -99,7 +99,7 @@ $$
 
 那么总时间的图就会变成这样：
 
-![[Excalidraw/Drawing 2023-01-20 18.35.54.excalidraw|500]]
+![[Algorithm/resources/Drawing 2023-01-20 18.35.54.excalidraw.png|400]]
 
 来算一下这棵树的总时间，就是$3^0 \cdot c \cdot n + 3^1 \cdot c \cdot \frac{n}{2} + 3^2 \cdot c \cdot \frac{n}{2^2} + \cdots + 3^l \cdot c \cdot \frac{n}{2^l} = cn(1 + \frac{3}{2} + (\frac{3}{2})^2 + (\frac{3}{2})^3 + \cdots + (\frac{3}{2})^k)$。树的深度并没有变，只是分叉少了一个。那么k还是$log_2n + 1$。带入之前的求和公式，能够得到最终的结果：
 
@@ -470,19 +470,19 @@ So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better 
 
 If we have an array consist of just one elem: 3, and we have another array also consist of one elem: 5. We want to **merge them to an entire array** like:
 
-![[Excalidraw/Drawing 2023-01-23 14.54.34.excalidraw|200]]
+![[Algorithm/resources/Drawing 2023-01-23 14.54.34.excalidraw.png]]
 
 This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done everything before the last merge, we will get two arrays which has been in order:
 
-![[Excalidraw/Drawing 2023-01-23 14.58.12.excalidraw|500]]
+![[Algorithm/resources/Drawing 2023-01-23 14.58.12.excalidraw.png]]
 
 What we need to do is to merge them together. But how? Make 2 ponters, point to the smallest one: 
 
-![[Excalidraw/Drawing 2023-01-23 15.00.11.excalidraw|250]]
+![[Algorithm/resources/Drawing 2023-01-23 15.00.11.excalidraw.png|300]]
 
 **Which one is smaller? 2! So we put 2 to the new array**:
 
-![[Excalidraw/Drawing 2023-01-23 15.02.02.excalidraw|500]]
+![[Algorithm/resources/Drawing 2023-01-23 15.02.02.excalidraw.png|500]]
 
 Continuously do this, until both the two pointers reach the end. After that, we will get the merged array. So the structure of Merge Sort is supposed to be:
 
@@ -514,7 +514,7 @@ There're also other implements to achieve this time cost **without recursion**. 
 
 what you should do is making a queue, and pushing all the elems in it, **one in a list**:
 
-![[Excalidraw/Drawing 2023-01-27 00.08.55.excalidraw]]
+![[Algorithm/resources/Drawing 2023-01-27 00.08.55.excalidraw.png]]
 
 Now you just need to do as the follow, until there're only 1 list in the queue:
 
@@ -522,15 +522,15 @@ Now you just need to do as the follow, until there're only 1 list in the queue:
 * merge them
 * push the merged list to the tail
 
-![[Excalidraw/Drawing 2023-01-27 00.11.17.excalidraw]]
+![[Algorithm/resources/Drawing 2023-01-27 00.11.17.excalidraw.png|400]]
 
 Is there any algs which is faster than $O(nlogn)$? The answer is true when your computer can not only do comparison(Well, actually almost all computers now fit it). Let's take **Counting Sort** as an example. If every number to be sorted is between 1 to B, then I can make B-size buckets:
 
-![[Excalidraw/Drawing 2023-01-27 00.27.09.excalidraw|300]]
+![[Algorithm/resources/Drawing 2023-01-27 00.27.09.excalidraw.png|300]]
 
 And here is the array I want to sort:
 
-![[Excalidraw/Drawing 2023-01-27 00.28.13.excalidraw]]
+![[Algorithm/resources/Drawing 2023-01-27 00.28.13.excalidraw.png]]
 
 What I need to do is terribly easy: Go through the array. The 1st is 2, so we put it in the bucket 2; the next one is 4, so we put it in the bucket 4 ... . After we have went through the array, all the numbers have been put into their affiliated buckets. **So we just need to turn to the buckets by going through it.** Then we'll get the sorted array.
 
@@ -576,7 +576,7 @@ where $cn$ is the time of comparing the pivot with other elems in the array; $T(
 
 Here's my array and it has **n distinct** entries. The next thing I will do looks like a little weird, but after that I will show you that the weirdness is not out of no where. **I'm going to group the entries with blocks of size 5**:
 
-![[Excalidraw/Drawing 2023-01-28 20.18.04.excalidraw|600]]
+![[Algorithm/resources/Drawing 2023-01-28 20.18.04.excalidraw.png]]
 
 Then I'll find the median of every group. The way I can use is various, like merge sort, bubble sort etc. Because the size of the group is constant, so **whatever the alg used to find the median is, the time cost is always constant**. For example, if I use Merge Sort to find the median, then the time cost will be:
 
@@ -586,7 +586,7 @@ $$
 
 Totally I've got the number of the groups of medians. Then I'll **recursively call the function to find the median of the medians**:
 
-![[Excalidraw/Drawing 2023-01-28 20.26.08.excalidraw|700]]
+![[Algorithm/resources/Drawing 2023-01-28 20.26.08.excalidraw.png]]
 
 > You may ask why recursively? Because the algorithm itself is a way to find the kth smallest elem in the array, so it absolutely fits our expectation when
 >  

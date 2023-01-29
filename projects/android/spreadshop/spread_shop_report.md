@@ -29,7 +29,7 @@ By Spread Zhao:
 
 ## 0.2 整体架构
 
-![[Drawing 2022-10-19 16.58.37.excalidraw|700]]
+![[projects/android/spreadshop/resources/Drawing 2022-10-19 16.58.37.excalidraw.png]]
 
 ## 0.3 数据库Schema
 
@@ -63,13 +63,13 @@ By Spread Zhao:
 
 **客户端**
 
-![[Drawing 2022-10-27 21.28.04.excalidraw|700]]
+![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 ---
 
 **服务端**
 
-![[Drawing 2022-11-10 19.33.21.excalidraw]]
+![[projects/android/spreadshop/resources/Drawing 2022-11-10 19.33.21.excalidraw.png]]
 
 > *注：各模块的说明在下面已经展示的非常详细了，所以这里只给出模块图。*
 
@@ -77,7 +77,7 @@ By Spread Zhao:
 
 最一开始，我们的想法和上面的架构图还不是太一样：
 
-![[Drawing 2022-11-10 12.12.12.excalidraw]]
+![[projects/android/spreadshop/resources/Drawing 2022-11-10 12.12.12.excalidraw.png]]
 
 可以看到，我们一开始打算直接将jdbc嵌入到安卓设备中，并让它访问电脑上的MySQL。这种做法能极大简化原来的架构，但是最终还是失败了。1.1介绍的就是我们失败的经历；而1.2开始就是我们最终完成整个项目的架构。
 
@@ -1541,7 +1541,7 @@ public Balance balance(@RequestParam("username") String username){
 
 # 3. 用户端
 
-![[Drawing 2022-10-27 21.28.04.excalidraw|700]]
+![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 这是整个用户端的MVVM架构。实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。
 

@@ -6,5 +6,15 @@
       ],
       "key": "Key244"
     }
-  ]
+  ],
+  "editor:toggle-blockquote": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "/"
+    }
+  ],
+  "backlink:toggle-backlinks-in-document": []
 }

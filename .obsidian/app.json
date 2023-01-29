@@ -8,5 +8,6 @@
     "downscalePercent": 100
   },
   "promptDelete": false,
-  "strictLineBreaks": true
+  "strictLineBreaks": true,
+  "alwaysUpdateLinks": true
 }

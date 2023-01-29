@@ -9,15 +9,15 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 
 举个洗衣服的例子：
 
-![[Pasted image 20221115130320.png]]
+![[Computer Structure/resources/Pasted image 20221115130320.png]]
 
 那么如果是**纯串行**的话，就是张三洗烘熨放；李四洗烘熨放……
 
-![[Pasted image 20221115130443.png]]
+![[Computer Structure/resources/Pasted image 20221115130443.png]]
 
 这样一共要八个小时，也太浪费了。其实，第一个人在洗完之后，洗衣机完全就可以给第二个人用了，烘干机、熨斗、晾衣架也是如此。那么我们完全可以这样：
 
-![[Pasted image 20221115130650.png]]
+![[Computer Structure/resources/Pasted image 20221115130650.png]]
 
 **由此例子，我们能总结出流水线任务的特点**：
 
@@ -26,7 +26,7 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 
 当然，流水线的特点不止这些：
 
-![[Pasted image 20221115131321.png]]
+![[Computer Structure/resources/Pasted image 20221115131321.png]]
 
 * 大量：不能好多人只做一道题，那分也没啥意思
 * 可分解：比如好多人都只做洗衣服，难道还要给某个人分工只放洗衣粉？
@@ -34,11 +34,11 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 * 交错式：Concurrent和Parrallel的区别。并发和同时进行的区别。多个人不一定在一个时刻干同一件事，它们是交错进行的。
 * 时间特征：
 
-  ![[Pasted image 20221115131545.png]]
+  ![[Computer Structure/resources/Pasted image 20221115131545.png]]
   
   我们能看到，圈起来的空档是不饱和的，也就是流水线中的人没有都全部进入工作状态；而框起来的部分就是饱和的。
 
-![[Pasted image 20221115131930.png]]
+![[Computer Structure/resources/Pasted image 20221115131930.png]]
 
 ## 1.1 Classification
 
@@ -57,11 +57,11 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 
 我们看这样一个流水线：
 
-![[Pasted image 20221115161103.png]]
+![[Computer Structure/resources/Pasted image 20221115161103.png]]
 
 这8个就是当前流水线的各个**功能段**。我们注意到，这里面不仅有加减法，还有乘法。这代表这个流水线不止能完成加减运算，还能做乘除运算。那么我们如何去实现它们呢？显然是通过不同的编程模式，**让这8个stage中的某几个以不同的方式连接起来**，就能完成不同的操作：
 
-![[Pasted image 20221115161305.png]]
+![[Computer Structure/resources/Pasted image 20221115161305.png]]
 
 像这样能通过编程来实现不同功能的流水线就叫做多功能流水线；反之，如果只能一条道走到黑，那就是单功能流水线。
 
@@ -71,15 +71,15 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 
 比如我们要算加法和乘法。静态流水线就是，先算加法，当所有的加法全算完时，才能开始算乘法。中间宁可空闲也不能提前做：
 
-![[Pasted image 20221115161916.png|300]]
+![[Computer Structure/resources/Pasted image 20221115161916.png|300]]
 
 而动态流水线就能很好得利用空闲，提前让一些人去做下一步任务。这样自然也增加了控制的难度，让流水线调度变复杂。
 
-![[Pasted image 20221115162032.png]]
+![[Computer Structure/resources/Pasted image 20221115162032.png]]
 
 还是举之前单功能多功能的例子，对于静态和动态，它们的**时空图**就是这样的：
 
-![[Pasted image 20221115162340.png|300]]   ![[Pasted image 20221115162418.png|300]]
+![[Computer Structure/resources/Pasted image 20221115162340.png|300]]   ![[Computer Structure/resources/Pasted image 20221115162418.png|300]]
 
 ---
 
@@ -87,23 +87,23 @@ description: 计算机组成与结构2课堂笔记，蒋志平老师
 
 我们在上学期学过，处理器执行指令就分[[cs#2.1 Overview|四步走]]，那么对于这样重复的事情，很显然用流水线可以极大地提高性能。
 
-![[Pasted image 20221115163001.png]]
+![[Computer Structure/resources/Pasted image 20221115163001.png]]
 
 那么比如我们取到了一个浮点加法的指令，我们之前也学过，浮点的加减法非常复杂，那么肯定会分成许多步骤去执行。那么在这里又可以使用流水线来提高性能。这样就相当于大流水线(处理机级)里夹了一个小流水线(部件级)。
 
-![[Pasted image 20221115163211.png]]
+![[Computer Structure/resources/Pasted image 20221115163211.png]]
 
 宏级日常用不到，直接给了：
 
-![[Pasted image 20221115163345.png]]
+![[Computer Structure/resources/Pasted image 20221115163345.png]]
 
 ---
 
 **线性，非线性**
 
-![[Pasted image 20221115163527.png]]
+![[Computer Structure/resources/Pasted image 20221115163527.png]]
 
-![[Pasted image 20221115163537.png]]
+![[Computer Structure/resources/Pasted image 20221115163537.png]]
 
 ---
 
@@ -130,7 +130,7 @@ x = y + z; // 3
 
 **标量，向量**
 
-![[Pasted image 20221115171017.png]]
+![[Computer Structure/resources/Pasted image 20221115171017.png]]
 
 ---
 
@@ -138,7 +138,7 @@ Concurrent vs Parallel
 
 前者就是流水线的思想：四个人分工，在不同的时刻干不同的事。而后者是完全意义上的并行，也就是不同的人在同一时刻干的就是同一个事。而这两者完全可以叠加起来，也就是时间并行+空间并行：
 
-![[Pasted image 20221115171354.png]]
+![[Computer Structure/resources/Pasted image 20221115171354.png]]
 
 ## 1.2 流水线性能分析
 
@@ -160,11 +160,11 @@ $$
 
 而如果每个stage所占的时间不相等的话，比如下面这样：
 
-![[Pasted image 20221115172139.png]]
+![[Computer Structure/resources/Pasted image 20221115172139.png]]
 
 显然这个最长的2，就限制了整个流水线。我们看下面的图：
 
-![[Pasted image 20221115172309.png]] ^10b49a
+![[Computer Structure/resources/Pasted image 20221115172309.png]] ^10b49a
 
 最左下角的2可以在红圈里滑动，但是咋滑都没用，因为这个最长的2任务就限制了它运行的时间，不管你提前做还是后做，你都要等1这个人把2任务做完之后，2这个人才能做他的2任务。这样就导致了每个任务的输出间隔都变成了最长的$3\Delta t_0$，因此如果间隔不相等的话，最大吞吐率：
 
@@ -174,11 +174,11 @@ $$
 
 怎么解决这个问题？一个比较直观的方法是：将$3\Delta t_0$拆成三个$\Delta t_0$不就好了嘛！所以我们可以这样：
 
-![[Pasted image 20221115172701.png]]
+![[Computer Structure/resources/Pasted image 20221115172701.png]]
 
 这种方法的问题显而易见：拆不了咋办？那也有招。我原来是让4个人干4个活，而第二个活用的时间是其他的三倍，**那我就找6个人干4个活，第二个活让三个人来干**。这样虽然进度是一样的，但是第二个活被加速了3倍，所以最终速度也是一样的。只不过这种方式的时空图不太好理解：
 
-![[Pasted image 20221115173155.png]]
+![[Computer Structure/resources/Pasted image 20221115173155.png]]
 
 综上所述，完成n个任务所需要的总时间：
 
@@ -188,7 +188,7 @@ $$
 
 其中m和n的意义可以看下图：
 
-![[Pasted image 20221117115226.png]]
+![[Computer Structure/resources/Pasted image 20221117115226.png]]
 
 m就是第一个任务在输出的时候已经经过了多少个段；而总任务是n个，已经完成了1个，剩下的就是n-1个，每隔$\Delta t_0$输出一个。
 
@@ -222,7 +222,7 @@ $$
 
 #example Throughput
 
-![[Pasted image 20221118204532.png]]
+![[Computer Structure/resources/Pasted image 20221118204532.png]]
 
 根据公式$T_{流水} = m\Delta t_0 + (n-1)\Delta t_0$，我们能得到该流水线的时间为
 
@@ -250,7 +250,7 @@ $$
 
 ---
 
-![[Pasted image 20221118205218.png]]
+![[Computer Structure/resources/Pasted image 20221118205218.png]]
 
 这道题的问题有两个：首先是每个stage的时间参差不齐，这对应上面的[[#^10b49a|这种情况]]；另外它也没给要执行多少个任务，只让求加速比。通过这点我们也能推测出来，**其实加速比和执行多少任务没有很大关系**。那么这个时候如何计算$T_{流水}$呢？这里需要一个比较灵活的思想。在处理流水线时，其实就是每隔$\Delta t$会完成一个任务。而如果不适用流水线，每隔$\Delta t1$才会完成一个任务。因此只需要让它们两个相除就能计算出大概的加速比了。
 
@@ -274,19 +274,19 @@ $$
 
 #poe 非常爱考
 
-![[Pasted image 20221118211007.png]]
+![[Computer Structure/resources/Pasted image 20221118211007.png]]
 
 上图表示的是一个流水线，如果算乘法的话，路线是1678；如果算加法，路线是123458。那么它要你去计算这样一个式子：
 
-![[Pasted image 20221118211311.png]]
+![[Computer Structure/resources/Pasted image 20221118211311.png]]
 
 让你给出合理的规划。首先为什么要规划？因为乘法和加法交替算就根本没办法用流水线，所以我们需要对这个计算重新排序，让它尽可能先算乘法，后算加法。那么思想就是：先分别算$A1B1$ ... $A4B4$，然后再把这四个值加起来。因此需要算4次乘法和3次加法。下面是解法的其中之一：
 
-![[Pasted image 20221118211523.png]]
+![[Computer Structure/resources/Pasted image 20221118211523.png]]
 
 根据这个思路，我们能画出时空图(我觉得还是比较简单的)：
 
-![[Pasted image 20221118211705.png]]
+![[Computer Structure/resources/Pasted image 20221118211705.png]]
 
 需要注意的是，时空图最上面的一排是输出，也就是一个任务完成的标志。该题中一共输出了7个任务，正好就是我们之前分配的4个乘法和三个加法，它们每个都是一个任务。
 
@@ -304,7 +304,7 @@ $$
 
 而采用了流水线，我们还用之前的公式？out了！时空图都在这儿摆着，我们不妨看看$T_{流水}$到底是什么：
 
-![[Pasted image 20221117115226.png]]
+![[Computer Structure/resources/Pasted image 20221117115226.png]]
 
 **这不就是横坐标最长有多少时间嘛**！所谓的$T_{流水}$其实就是采用了流水线后完成这些任务的总时长，那么就对应的是时空图的坐标。在本题中，显然
 
@@ -320,15 +320,15 @@ $$
 
 最后是效率，没啥好说的，数方块！
 
-![[Pasted image 20221118212916.png]]
+![[Computer Structure/resources/Pasted image 20221118212916.png]]
 
 可以看到，太慢了。能不能快点，比如这样？
 
-![[Pasted image 20221118213344.png]]
+![[Computer Structure/resources/Pasted image 20221118213344.png]]
 
 答案是：no！注意4,5之间的方块，这表示取A1B1和A2B2的值的操作。但是此时A1B1是有了，而A2B2正在进行输出，所以不能执行。而5,6之间的方块表示取A3B3和A4B4的值，此时正在输出A3B3，A4B4甚至还没开始写回，所以肯定不行。我们要改进，只能改进成这样：
 
-![[Pasted image 20221118213608.png]]
+![[Computer Structure/resources/Pasted image 20221118213608.png]]
 
 可以看到，总的时间节省了1个t。
 
@@ -343,7 +343,7 @@ $$
 
 简单来讲，就是：$E = \frac{平行四边形}{矩形}$。
 
-![[Pasted image 20221117121249.png]]
+![[Computer Structure/resources/Pasted image 20221117121249.png]]
 
 比如这张图中，就是所有任务占的总格子数除以整个的时间格数。那么这里平行四边形的面积显然就是$mn$，而总的时间已经给出，那么它的效率
 
@@ -359,11 +359,11 @@ $$
 
 ### 1.3.1 Structure
 
-![[Pasted image 20221117122633.png]]
+![[Computer Structure/resources/Pasted image 20221117122633.png]]
 
 在上图中，这个标红的MEM操作集合IF操作是不能同时进行的：一个表示写回，另一个表示取址。即使它俩写的和读的不是同一个地址，那对于一个硬件来说，它如果本身就不支持同时读写该咋办？这种和**硬件结构相关的错误**是最底层的。那么我们如何解决呢？先说一个不靠谱的方法：等。
 
-![[Pasted image 20221117122922.png]]
+![[Computer Structure/resources/Pasted image 20221117122922.png]]
 
 在这里告诉它：你先等会儿，等他写完了你再读。但是这样属于治标不治本：后面还有MEM和IF冲突，甚至还有好多，所以我们需要别的方法。
 
@@ -406,7 +406,7 @@ A = m + n;
 
 下面是一个这些情况的例子：
 
-![[Pasted image 20221117124426.png]]
+![[Computer Structure/resources/Pasted image 20221117124426.png]]
 
 ---
 
@@ -414,11 +414,11 @@ A = m + n;
 
 比如这个Forwarding技术。如果我们不使用Forwarding的话，下面是一个例子：
 
-![[Pasted image 20221117125300.png]]
+![[Computer Structure/resources/Pasted image 20221117125300.png]]
 
 可以看到，因为k+2这个任务使用了k这个任务的结果，所以必须等k写回之后才能执行k+2。这样就会产生大量的空闲时间，k+2在$t_{i+3}$时刻才发生了读取。而如果我们让k计算出的结果**不但能写回内存，还能直接传给k+2**的话，那样效率就会提升很多了：
 
-![[Pasted image 20221117125706.png]]
+![[Computer Structure/resources/Pasted image 20221117125706.png]]
 
 看到增加了回路之后，在$t_{i+1}$时刻就能发生读取了。
 
@@ -438,7 +438,7 @@ if(compare()){
 
 当执行到if语句的时候，问题来了：如果我要提前去取址的话，是取if里的还是else里的？必须得等`compare()`的结果得到之后才可以。那么这个时候就会产生空档：
 
-![[Pasted image 20221117130810.png]]
+![[Computer Structure/resources/Pasted image 20221117130810.png]]
 
 > 图中的I3就可以当做比较的这个函数。在它写回之前不能提前去取址。
 
@@ -460,7 +460,7 @@ if(compare()){
 
 什么是预测？就是赌！
 
-![[Pasted image 20221119201917.png]]
+![[Computer Structure/resources/Pasted image 20221119201917.png]]
 
 还是那段代码：
 
@@ -480,7 +480,7 @@ if(compare()){
 
 总之，**静态分支预测的策略就是让编译器翻译出来的代码尽可能都是不会跳转的**。比如：
 
-![[Pasted image 20221119202643.png]]
+![[Computer Structure/resources/Pasted image 20221119202643.png]]
 
 > a中基本上循环执行的时候每次都会提前去取**再后面**的指令，那相当于不断地白干活；而b中只有最后一次跳的时候才会取**循环体**中这些本来不会被执行的代码，只会错一次。
 
@@ -507,11 +507,11 @@ flag:
 
 那么我们之前说的表是什么呢？一个有效位(这个标志是否有效)、这个标志本身(可以是地址或者其他的)、还有上面说的这个bit就是表中的每一项了，这也叫做**1位跳转历史表**：
 
-![[Pasted image 20221119204537.png]]
+![[Computer Structure/resources/Pasted image 20221119204537.png]]
 
 由此我们也能画出上面过程的自动机：
 
-![[Drawing 2022-11-19 20.46.01.excalidraw]]
+![[Computer Structure/resources/Drawing 2022-11-19 20.46.01.excalidraw.png]]
 
 除了1位的，我们还有2位的。这里首先给出4种状态的含义：
 
@@ -526,7 +526,7 @@ state bit | meaning
 
 当处于01时，表示我认为不会跳，但是我有点动摇。这个时候如果下次真就是不会跳，那表示我的猜测还是不错的嘛！那我就变成强烈认为不会跳；而如果我猜错了，跳了，那我就变成墙头草，变成11，坚信认为会跳。处于10时的操作类似。那么根据这些，我们就能画出2位的自动机：
 
-![[Drawing 2022-11-19 20.54.34.excalidraw|700]]
+![[Computer Structure/resources/Drawing 2022-11-19 20.54.34.excalidraw.png]]
 
 ## 1.4 Even Faster
 

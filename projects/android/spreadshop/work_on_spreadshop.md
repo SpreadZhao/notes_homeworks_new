@@ -2077,7 +2077,7 @@ class GoodsViewModel: ViewModel() {
 
 结项了！！！最后的操作，只不过是在已经有的技术基础上加了亿点功能而已。所以这里我给出了整个项目的MVVM架构的图：
 
-![[Drawing 2022-10-27 21.28.04.excalidraw|1000]]
+![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 **实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。**
 
