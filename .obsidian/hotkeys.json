@@ -1,12 +1,5 @@
 {
-  "editor:toggle-code": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "Key244"
-    }
-  ],
+  "editor:toggle-code": [],
   "editor:toggle-blockquote": [
     {
       "modifiers": [
