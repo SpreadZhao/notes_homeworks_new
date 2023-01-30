@@ -720,3 +720,53 @@ $$
 Remember what we said: **at least 5 blocks**, how about 3? And how about an even number? The 2nd question is easy to solve, because the median is expected to be the only one; but the 1st question is a little bit harder. But I'll show the teacher's blackboard-writing as a tip:
 
 ![[Algorithm/resources/Pasted image 20230129011048.png]]
+
+## 3.4 Polynomial Multipication
+
+We have input like:
+
+$$
+\begin{array}{l}
+A(x) = a_0 + a_1 \cdot x + a_2 \cdot x^2 + \cdots + a_{d-1} \cdot x^{d-1} \\
+B(x) = b_0 + b_1 \cdot x + b_2 \cdot x^2 + \cdots + b_{d-1} \cdot x^{d-1}
+\end{array}
+$$
+
+A(x) and B(x) are polynomials that have the degree **less than d**, and we need tu compute the vector of coefficients of:
+
+$$
+C = A \times B
+$$
+
+which means that
+
+$$
+C(x) = c_0 + c_1 \cdot x + \cdots + c_{2d-2} \cdot x^{2d-2}.
+$$
+
+The result $C(x)$ is a polynomial that have the degree less than 2d-1. So we're going to say that **all of A, B and C are polynomials that have the degree less than $n = 2d-1$**, because I can pad out A and B with 0 coeff.
+
+> $A(x) = a_0 + a_1 \cdot x + a_2 \cdot x^2 + \cdots + a_{d-1} \cdot x^{d-1} + 0 \cdot x^d + \cdots + 0 \cdot x^{2d-2}$
+
+Here we just talk about the coeffs of C, so let's try to find the law:
+
+$$
+c_0 = a_0b_0,\ c_1 = a_0b_1 + a_1b_0,\ c_2 = a_0b_2 + a_1b_1 + a_2b_0,\cdots
+$$
+
+We can induce that:
+
+$$
+c_k = \sum_{j=0}^k a_jb_{k-j}
+$$
+
+Notice that polynomial multiplication is simmilar to integer multiplication. If I want to calculate $1074 \times 2351$, we can say it in polynomial degree that:
+
+$$
+\begin{array}{l}
+A(x) = 4 + 7 \cdot x + 0 \cdot x^2 + 1 \cdot x^3 \\
+B(x) = 1 + 5 \cdot x + 3 \cdot x^2 + 2 \cdot x^3
+\end{array}
+$$
+
+and when $C(x) = A(x) \cdot B(x)$, the result is just $C(10)$. Now let's think about the algs that solve the problem. The 1st one is the naive alg using nested for loops. We just go through the coeffs of the result, for each one, it involves at most n terms(j from 0 to k, and the maximum of k is n-1, when there's totally n terms). Evidently, the alg is $O(n^2)$.
