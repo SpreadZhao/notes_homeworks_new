@@ -769,4 +769,20 @@ B(x) = 1 + 5 \cdot x + 3 \cdot x^2 + 2 \cdot x^3
 \end{array}
 $$
 
-and when $C(x) = A(x) \cdot B(x)$, the result is just $C(10)$. Now let's think about the algs that solve the problem. The 1st one is the naive alg using nested for loops. We just go through the coeffs of the result, for each one, it involves at most n terms(j from 0 to k, and the maximum of k is n-1, when there's totally n terms). Evidently, the alg is $O(n^2)$.
+and when $C(x) = A(x) \cdot B(x)$, the result is just $C(10)$. Now let's think about the algs that solve the problem. The 1st one is the naive alg using nested for loops. We just go through the coeffs of the result, for each one, it involves at most n terms(j from 0 to k, and the maximum of k is n-1, when there's totally n terms). Evidently, the alg is $O(n^2)$ flops. However, notice what I said before, "at most n terms", which means that there're also some coeffs that cost little. For example, $c_1$ has only one term, so it needs only 1 flop to compute. **For nearly half of the coefficients of $C$, we need almost $\Omega(n)$ flops to get it**, and there're also nearly n/2 terms fit such case, so the total cost of these terms is nearly $\Omega(n^2)$. **Considering the 2 cases above, we can conclude that:**
+
+$$
+\left. 
+\begin{array}{r}
+T(n) = O(n^2) \\
+T(n) = \Omega(n^2)
+\end{array}
+\right\}
+\Rightarrow
+T(n) = \Theta(n^2)(flops)
+$$
+
+We can also do KaraTsuba Alg in poly mult. And the trick to divide and conquer is also the same:
+
+![[Algorithm/resources/Pasted image 20230131132601.png]]
+
