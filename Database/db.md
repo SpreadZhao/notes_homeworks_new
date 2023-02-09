@@ -103,6 +103,12 @@ Database: a collection of data, contains information relevant to an enterprise.
 
 ### 1.2.4 DBMS Architecture
 
+#keypoint Database Engine
+
+* Stroage manager -> How to store?
+* Query processing -> How to query?
+* Transaction manager -> What if on failure?
+
 DBMS在内部做的事情其实是很复杂的，尽管我们看起来很简单。比如下面有三张表：
 
 ![img](img/d1.png)
@@ -165,7 +171,7 @@ Data-manipulation language(DML): 数据操作语言，就是对数据库进行**
 
 Relation表示关系，关系的模型其实就是一个表格。比如下面的这个
 
-![img](img/rm.png)
+![[Database/img/rm.png|300]]
 
 每一列都代表着一个**属性(attribute)**，每一行都是一个**元组(tuple)**，其实就是一个对象。这里列其实描述的就是之前说的Schema，而每一行其实就在描述这个数据库的Instance。
 
@@ -181,7 +187,7 @@ Relation表示关系，关系的模型其实就是一个表格。比如下面的
 
 现在有一个学院的关系，叫做department relation。
 
-![img](img/dr.png)
+![[Database/img/dr.png|300]]
 
 那么我们观察可得，这表里有三个属性：dept_name, building, budget。我们记作$A_1,\ A_2,\ A_3$，那么我们就可以写出这个relation的schema了：
 $$
@@ -193,7 +199,7 @@ $$
 
 那么在这些superkey中，我们总要选合适的。所以我们选择**元素个数最少的集合**(基本上都是只有1个元素的)，将它叫做**candidate key**。比如各种网络游戏，会有千千万万玩家。在刚进入游戏的时候，会要求每个玩家起名字，并且不能重名。那么很显然这个`name`就可以成为candidate key；另外，我们还给每个玩家定义了一个`user_id`(因为玩家起的名字通常千奇百怪，尽管没有重名但是管理起来依然很复杂)，也要求所有的`user_id`不能重复。很显然`user_id`也可以成为candidate key。 ^017685
 
-在上面游戏的例子中，`user_id`比起`name`显然更加适合搜索，因为`user_id`是程序有秩序的赋予而`name`是玩家起的各种千奇百怪的名字。所以我们将`user_id`作为**primary key**。需要注意的是，**primary key可以不止有一个，可以同时有很多**。
+在上面游戏的例子中，`user_id`比起`name`显然更加适合搜索，因为`user_id`是程序有秩序的赋予而`name`是玩家起的各种千奇百怪的名字。所以我们将`user_id`作为**primary key**。需要注意的是，**primary key中的元素可以不止有一个，可以同时有很多**。
 
 现在那之前说的两张表来：
 
@@ -221,7 +227,7 @@ $$
 
 我们如果想选出所有物理学院的老师，我们很容易写出结果：
 
-![img](img/select.png)
+![[Database/img/select.png|400]]
 
 那么想想我们整个操作的过程：**我们对一个relation进行了操作，这个操作叫做select，同时得到了一个结果，这个结果也是个relation，而这个结果是原来的relation的一部分**。这样的过程就是进行了选择的过程。我们可以将这个**得到的结果relation**记作：
 $$
@@ -231,13 +237,13 @@ $$
 
 那么如果不是只按照一个标准选怎么办？再看一个例子。
 
-![img](img/select2.png)
+![[Database/img/select2.png|200]]
 
 如果这个是relation r，那么问：$\sigma_{A=B\ \wedge \ D>5}(r)$是多少？
 
 一看就能看明白，是让我们找：A=B并且D>5的tuple。那么也很容易写出结果：
 
-![img](img/select3.png)
+![[Database/img/select3.png|200]]
 
 #### 2.1.2.2 Project
 
@@ -251,25 +257,25 @@ $$
 $$
 **注意另一种情况：**
 
-![img](img/project2.png)
+![[Database/img/project2.png|100]]
 
 如果我们要写出$\Pi_{A,\ C}(r)$，会发现：
 
-![img](img/project3.png)
+![[Database/img/project3.png|100]]
 
 **有两行是重复的，因为这里我们不要的B其实是superkey。**那么我们得到的这个就不是最后的结果，**还要删除所有重复的tuple才行**。
 
-![img](img/project4.png)
+![[Database/img/project4.png|100]]
 
 #### 2.1.2.3 Union
 
 前面两个操作都是对单个的relation，接下来就是对多个relation了。首先是“并”，也就是两个relation并起来形成一个新的relation。
 
-![img](img/union.png)
+![[Database/img/union.png|200]]
 
 那么我们很容易能写出$r\cup s$：
 
-![img](img/union2.png)
+![[Database/img/union2.png|100]]
 
 需要注意的是，这里只写了4条而不是5条，是因为$\alpha\ 2$这个数据在两个relation中都有，所以还要**去重**。接下来再看一个复杂一点的例子。
 
@@ -309,7 +315,7 @@ $$
 $$
 最后的结果就是：
 
-![img](img/union4.png)
+![[Database/img/union4.png|100]]
 
 **这里依然要注意，CS-101和CS-319出现了2次，所以要去重**。
 
@@ -321,7 +327,7 @@ $$
 $$
 结果就是:
 
-![img](img/in.png)
+![[Database/img/in.png|100]]
 
 #### 2.1.2.5 Set-difference
 
@@ -331,17 +337,17 @@ $$
 $$
 其实结果一定是Fall 2017中的一部分。把在Spring 2018里也有份的那个刨掉就行了。
 
-![img](img/sd1.png)
+![[Database/img/sd1.png|100]]
 
 #### 2.1.2.6 Cartesian-product
 
 笛卡尔积还是稍微复杂一点的。我们看一个例子。
 
-![img](img/dk1.png)
+![[Database/img/dk1.png|200]]
 
 我们把$r\times s$叫做笛卡尔积的结果。先拿出来$\alpha\ 1$，把它和s中的所有tuple都分别拼到一块；然后再拿出$\beta\ 2$做相同的操作。最终得到的relation就是笛卡尔积的结果。
 
-![img](img/dk2.png)
+![[Database/img/dk2.png|200]]
 
 之前的操作符都多多少少有重复的问题。那么这个笛卡尔积这么可劲儿乘，肯定是有很大的隐患的。我们还是看之前老师和课的例子。
 
@@ -363,7 +369,7 @@ $$
 
 比如关系r：
 
-![img](img/rename1.png)
+![[Database/img/rename1.png|100]]
 
 如果我们要算$r\times r$，会有一个问题：结果的属性应该是4个。但是这俩r的属性都是A和B，那么我们怎么区分结果中的A和B是**前面r的**还是**后面r的**呢？这个时候只需要改个名字就好了：
 $$
@@ -371,7 +377,7 @@ r \times \rho_s(r)
 $$
 这表示把后面的r改名为s。那么结果也就很好区分了：
 
-![img](img/rename2.png)
+![[Database/img/rename2.png]]
 
 #### 2.1.2.8 Join
 
@@ -483,13 +489,16 @@ $$
 
 上面进行的操作，就叫做**division**。而这道题最终的结果也可以记为：
 $$
+\begin{array}{c}
+A1 \div A2,\ or \\
 \pi_{customer\_name,\ branch\_name}(depositor \bowtie account) \div \pi_{branch\_name}(\sigma_{branch\_city="Brooklyn"}(branch))
+\end{array}
 $$
 然后来说一下division的定义。
 
 我们有两个relation: r和s。
 
-![img](img/div1.png)
+![[Database/img/div1.png|200]]
 
 被除的是s，而除它的是r。s中有B，而r中有A和B。我们规定，$r \div s$中的属性是**r中的属性中把s的扣掉**。那么在这个例子中，就是AB扣掉B，自然就剩A了。
 
@@ -557,7 +566,7 @@ $$
 $$
 \sigma_{A1.balance>A2.balance}(\rho_{A1}(account) \times \rho_{A2}(account))
 $$
-但是注意看表格中加粗的部分：这三个tuple都满足`A1.balance > A2.balance`，这代表我们一次选择并不能选出最大的balance。我们再想一想我们到底选了个什么：当然，我们最后要筛出A1那一列，因为选择的时候我们是假定A1大的。但是我们在比较的时候，并不是比最大的，而是**只要我比他大，我就入选了**。那么其实我们并不是选了最大的，而是**只是没有选最小的，其他的都选了**。所以我们不妨反着来：将>改成<，这样我们就是只是没有选最大的，然后再用整个集合减去它，就把最大的留了下来，注意别忘了筛选出balance那列，我们要的只是余额而已：
+但是注意看表格中加粗的部分：这三个tuple都满足`A1.balance > A2.balance`，这代表我们一次选择并不能选出最大的balance。我们再想一想我们到底选了个什么：当然，我们最后要筛出A1那一列，因为选择的时候我们是假定A1大的。但是我们在比较的时候，并不是比最大的，而是**只要我比他大，我就入选了**。那么其实我们并不是选了最大的，而是**只是没有选最小的，其他的都选了，因为最小的那个由于不可能比任何人大(顶多相等，和自己比的时候)，必定不会入选**。所以我们不妨反着来：将>改成<，这样我们就是只是没有选最大的，然后再用整个集合减去它，就把最大的留了下来，注意别忘了筛选出balance那列，我们要的只是余额而已：
 $$
 \Pi_{balance}(account)-\Pi_{A1.balance}(\sigma_{A1.balance<A2.balance}(\rho_{A1}(account) \times \rho_{A2}(account)))
 $$
@@ -1244,6 +1253,129 @@ drop table [if exists] instructor;
 >
 > 
 
+## 3.4 Exercise
+
+#example Self Join Example
+
+person | supervisor
+-- | --
+Bob | Alice
+Mary | Susan
+Alice | David
+David | Mary
+
+> Relation `emp_super`.
+
+1. Find the supervisor of "Bob";
+2. Find the supervisor of the supervisor of "Bob";
+3. Find **All** supoervisors (direct and indirect) of "Bob".
+
+```sql
+# 1
+select supervisor
+from emp_super
+where person = "Bob";
+
+# 2
+select S.supervisor
+from emp_super as T, emp_super as S
+where T.supervisor = S.person and T.person = "Bob"
+
+# Another soluton of 2
+select supervisor
+from emp_super as S # Brackets cannot be removed!!!
+where S.person = (select supervisor # note that '=' can be replaced with "in"
+				  from emp_super as T
+				  where T.person = "Bob");
+```
+
+---
+
+#example Nested Subqueries
+
+* Find courses offered in Fall 2009 and in Spring 2010.
+
+  ```sql
+  select distinct course_id
+  from section
+  where semester = "Fall" and year = 2009 and course_id in(
+	  select course_id
+	  from section
+	  where semester = "Spring" and year = 2010
+  );
+
+  # equals to:
+  select distince course_id
+  from section
+  where (semester = "Fall" and year = 2009) or (semester = "Spring" and year = 2010);
+
+  # also equals to:
+  select course_id
+  from section as S
+  where semester = "Fall" and year = 2009 and exists (
+	  select *
+	  from section as T
+	  where semester = "Spring" and year = 2010 and S.course_id = T.course_id
+  );
+  ```
+
+  > First find out the coursed offered in Spring 2010; then find out the courses offered in Fall 2019; finally find the intersection of them.
+
+* Find courses offered in Fall 2009 **but not** in Spring 2010.
+
+  ```sql
+  select distinct course_id
+  from section
+  where semester = "Fall" and year = 2009 and course_id not in (
+	  select course_id
+	  from section
+	  where semester = "Spring" and year = 2010
+  );
+  ```
+
+* Find the total number of (distinct) students who have taken course sections taught by the instructor with ID 10101.
+
+  ```sql
+  select count(distinct ID)
+  from takes
+  where (course_id, sec_id, semester, year) in (
+	  select course_id, sec_id, semester, year
+	  from teaches
+	  where teaches.ID = 10101
+  );
+  ```
+
+* Find names of instructors with salary greater than that of some(**at least one**) instructor in the Biology department.
+
+  ```sql
+  select distinct T.name
+  from instructor as T, instructor as S
+  where T.salary > S.salary and S.dept_name = "Biology";
+
+  # equals to
+  select name
+  from instructor
+  where salary > some (
+	  select salary
+	  from instructor
+	  where dept_name = "Biology"
+  );
+  ```
+
+  > Remember what we've talked about in [[#2.1.3.1 Ex1]].
+
+* Find names of instructors with salary greater than that of **all** instructors in the Biology department.
+
+  ```sql
+  select name
+  from instructor
+  where salary > all (
+	  select salary
+	  from instructor
+	  where dept_name = "Biology"
+  );
+  ```
+
 # 4. Intermediate SQL
 
 ## 4.1 View
@@ -1780,6 +1912,11 @@ delimiter ;
 
 逻辑设计之后，就是**物理设计**。首先，确定选用哪个产品，是MySQL，还是Oracle还是其他的；另外，还要决定最终物理存储的介质是什么。是磁盘还是ssd还是内存还是云，甚至是分布式的文件系统(比如[[1. hadoop|Hadoop]])等等。
 
+#poe Design Phase
+
+* Conceptual design: ![[Database/resources/Drawing 2023-02-09 18.14.53.excalidraw.png]]
+* Logical design: **Deciding on the Database Schema**, to find a good collection of schemas.
+
 ## 6.1 Introduction to ER
 
 ER模型主要包括这三个东西：
@@ -1940,11 +2077,13 @@ A | B
 **二范式条件：对于Relation中的每个属性，都至少满足下面两个条件之一：**
 
 * 是candidate key的一部分
-* 如果不是candidate key，那就**不能**部分依赖于candidate key
+* 如果不是candidate key，那就**不能**==部分==依赖于candidate key
 
 > 这里补充一下对于candidate key的说明。[[#^017685|之前]]说过candidate key是能确定一行的元素最少的集合。那么这里的元素最少到底是为什么？其实，就是能确定一行的**最精简**的集合。任何一个它的真子集都不能再确定这行了。
 
 比如下面一个relation：Takes(S_ID, name, class_id, grade, credit)。candidate key是{ S_ID, class_id }，因为只有这两个在一起才能确定一行。那么这两个属性就满足了二范式的第一条；接下来看其他的属性满不满足第二条。首先是name，它部分依赖于candidate key吗？是的！因为只要S_ID确定了，name就确定了。那很显然name就不满足第二个条件，那么整个的Relation也不满足二范式。
+
+#keypoint 这里注意"部分"的意思。Relation的candidate key是个集合，里面可能有多个属性。而**只有当有两个以上属性时，才可能会发生不满足二范式的情况**。也就是某个属性只依赖于candidate key中的某个或某些而不是全部。像上面的例子中，name必须在S_ID和class_id都确定的情况下才确定，这才满足二范式。但显然实际情况与之不符。
 
 ---
 
@@ -1996,7 +2135,7 @@ BC范式是牛逼，但是有极少的情况会有问题：比如我分解了一
 * 三范式：不存在传递依赖
 * BC范式：所有被依赖的一定都是superkey
 
----
+## 7.3 Attribute Closure
 
 前面的F+算起来太麻烦了，所以我们有了属性的闭包。对于关系R中的一个属性$\alpha$，它的闭包就是$\alpha$本身和它能确定的所有属性加起来。下面给个例子：
 
@@ -2031,9 +2170,9 @@ $$
 result = ABCGHI
 $$
 
-这样就写完了。接下来，问个问题：AG是不是candidate key？别忘了，candidate key表示**最精简**的集合。这意味着**AG能确定R，但是AG的任何一个真子集都做不到**。那么我们就要去算A的闭包，G的闭包能不能去确定R。答案是否，因此我们可以说AG是一个candidate key。
+#poe 这样就写完了。接下来，问个问题：AG是不是candidate key？别忘了，candidate key表示**最精简**的集合。这意味着**AG能确定R，但是AG的任何一个真子集都做不到**。那么我们就要去算A的闭包，G的闭包能不能去确定R。答案是否，因此我们可以说AG是一个candidate key。
 
----
+## 7.4 Canonical Cover
 
 然后是一个和属性闭包并肩的概念。这玩意儿其实就是关系的依赖，只不过是最简形式。比如某个Relation有如下的依赖关系：
 
@@ -2061,7 +2200,7 @@ $$
 F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow D)
 $$
 
-再给一个例子，$F = (A \rightarrow B,\ B \rightarrow C,\ AC \rightarrow D)$也可以简化成$F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow D)$。
+再给一个例子，$F = (A \rightarrow B,\ B \rightarrow C,\ AC \rightarrow D)$也可以简化成$F = (A \rightarrow B,\ B \rightarrow C,\ A \rightarrow D)$
 
 ---
 
@@ -2080,3 +2219,67 @@ F = (A \rightarrow C,\ AB \rightarrow CD)
 $$
 
 把A去掉行吗？不行！把B去掉行吗？不行！到了箭头右边，就不太一样了。我们要看C是不是无关的，就把除了C的都去掉。AB能确定C吗？当然能！因为A自己都能确定C，加个B当然也可以了。**所以C就是无关的属性**；而对D来说，AB确定D并不能根据其它的推出来，所以D不是无关的。
+
+# 8. Indexing and Hashing
+
+> *We only cover **B+ Tree** Index Files for the purpose of exam.*
+
+* Search Key
+
+  Attribute to a set of attributes used to look up records in a file. For example, if I want to use `ID` to search tuples in `instructor` table, the Search Key is `ID`; recurrence happens when I want to use `name` to search in it.
+
+* Index File
+
+  An Index File consists of records(called index entries) of the form like:
+  
+  search-key | pointer
+  -- | --
+
+  Once I got the target `search-key`, I can use the corresponding `pointer` to get the target tuple. Just like what happens in book pages finding: I looked around the content of a book, then I got the page number of the target title I'm looking forward to, finally I use the page number to jump to that specified page quickly.
+
+## 8.1 Some Indices
+
+**Dense Index**
+
+![[Database/resources/Pasted image 20230209190915.png]]
+
+**Sparse Index**
+
+![[Database/resources/Pasted image 20230209190929.png]]
+
+**Dense Index with search key `dept_name`**
+
+![[Database/resources/Pasted image 20230209191046.png]]
+
+**Multilevel Indices** - What if the existing index is too bigggg?
+
+![[Database/resources/Pasted image 20230209191605.png|300]]
+
+All the indices above can be classified as **Primary Indices**, which means the entries of it can mostly determine a tuple of the target relation. Beyond that, we also have another sort of indices called **Secondary Indices**. The Primary Indices are also called the **Clustering Indices**, which means **the physical layout of itself is definitely consistent**. However in Secondary Indices, even if **the logical format of the entries is in a particular order, the real storage of those is mostly not consistent**. Secondary Indices are dedicated in the queries with Non primary-key.
+
+![[Database/resources/Pasted image 20230209192408.png]]
+
+> * Secondary index on instructor file, on noncandidate key dept name.
+> * The sequence of entries is sorted alphabetically.
+> * Notice that the median blue blocks indicate the physical address on our hard disk.
+
+## 8.2 B+ Tree Index Files
+
+**Overview**
+
+![[Database/resources/Pasted image 20230209195044.png]]
+
+#poe B+ Tree specs:
+
+* All paths from root to leaf are of the same length.
+* Each node that is not a root or a leaf has between $\lceil \dfrac{n}{2} \rceil$ and $n$ children.
+* A leaf node has between $\lceil \dfrac{n-1}{2} \rceil$ and $n-1$ values.
+* Root spec:
+	* Mostly has at least 2, at most $n$ children.
+	* If root is leaf(1 level tree), it can have between 0 and $n-1$ values.
+
+  > Where $n$ means the pointers number of each node.
+  
+# 9. Transactions
+
+18.mkv 1:04:48
