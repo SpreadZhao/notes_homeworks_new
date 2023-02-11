@@ -5,7 +5,7 @@ category: inter_class
 description: 数据库系统课堂笔记，刘伟老师
 ---
 
-# 数据库笔记
+<h1>Database System Concepts</h1>
 
 # 1. Introduction
 
@@ -2282,4 +2282,31 @@ All the indices above can be classified as **Primary Indices**, which means the 
   
 # 9. Transactions
 
-18.mkv 1:04:48
+**Transaction ACID Properties**
+
+* **Atomicity**: Either all operations of the transaction are reflected properly in the database, or none are.
+* **Consistency**: Execution of a transaction in isolation (i.e., with no other transaction executing concurrently) preserves the consistency of the database.
+
+  > The sum of two account's **ballance is consistent both before and after the transfer**.
+
+* **Isolation**: Even though multiple transactions may execute concurrently, the system guarantees that, for every pair of transactions $T_i$ and $T_j$, it appears to $T_i$ that either $T_j$ finished execution before $T_i$ started or $T_j$ started execution after $T_i$ finished. Thus, each transaction is unaware of other transactions executing concurrently in the system.
+* **Durability**: After a transaction completes successfully, the changes it has made to the database persist, even if there are system failures.
+
+---
+
+**Transaction State**
+
+![[Database/resources/Pasted image 20230210161236.png|300]]
+
+---
+
+#poe Transaction Isolation Levels
+
+* Serializable: Thoroughly isolation, default.
+* Repeatable read: Only committed records to be read, repeated reads of same record must return same value. However, a transaction may not be serializable - it may find some records inserted by a transaction but not find others.
+* Read committed: Only committed records can be read, but successive reads of record may return **different(but committed)** values.
+* Read uncommitted: Even uncommitted records may be read.
+
+  > ![[Database/resources/Pasted image 20230210210406.png|200]]
+  > 
+  > The `read(A)` in $T_2$ may read the value witten by $T_1$ **during the execution**, which means the process of any transaction is transparent to other's. Such is always not a good choice!
