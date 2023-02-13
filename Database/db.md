@@ -2310,3 +2310,14 @@ All the indices above can be classified as **Primary Indices**, which means the 
   > ![[Database/resources/Pasted image 20230210210406.png|200]]
   > 
   > The `read(A)` in $T_2$ may read the value witten by $T_1$ **during the execution**, which means the process of any transaction is transparent to other's. Such is always not a good choice!
+  
+# 10. Recovery System
+
+#poe Failure Classification
+
+* Transaction failure
+	* Logical errors: tuple not found
+	* System errors: deadlock
+* System crash: os bug, power failure
+* Disk failure: disk crash
+
