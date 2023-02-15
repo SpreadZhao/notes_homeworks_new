@@ -1037,7 +1037,7 @@ $$
 $$
 Bit\ rate=Nyquist\ rate \times n_b
 $$
-其中的Nyquist rate就是上文提到的**采样速率**。比如我们要数字化人的语音，使用8bit编码，那么比特率就是这样计算的(人的语音通常包含0-4000 Hz)：
+#poe 其中的Nyquist rate就是上文提到的**采样速率**。比如我们要数字化人的语音，使用8bit编码，那么比特率就是这样计算的(人的语音通常包含0-4000 Hz)：
 $$
 Nyquist\ rate=2 \times f_{max}=2 \times 4000 = 8000\ (samples/s)
 $$
