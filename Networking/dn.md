@@ -88,7 +88,7 @@ The term **physical topology** refers to <u>the way in which a network is laid o
 
 ![img](img/mesh.png)
 
-你看这里的每一个结点。除了它自己，它和其他所有的结点都有Link，并且每个Link都只有这俩独享，也就是p2p。简单的数学可以算出，如果有n个结点，那么Link的个数就是$\frac{n(n-1)}{2}$。当然，一切的前提是这里的Link是Duplex而不是Simplex。
+你看这里的每一个结点。除了它自己，它和其他所有的结点都有Link，并且每个Link都只有这俩独享，也就是p2p。简单的数学可以算出，如果有n个结点，那么Link的个数就是$\dfrac{n(n-1)}{2}$。当然，一切的前提是这里的Link是Duplex而不是Simplex。
 
 Mesh的优缺点：
 
@@ -532,7 +532,7 @@ $$
 
 对于上面的这个频域图，我们人需要的其实只是前半部分，靠近0的，峰值高的部分。
 
-![img](img/bt.png)
+![[Networking/img/bt.png|300]]
 
 怎么掐掉后面那一咕噜呢？用的就是**low-pass channel**。字面意思，只允许低频的信号通过，并且**一定要是从0开始才行**。这样的传输就叫做**基带传输**。下面是两种带宽的low-pass channel。
 
@@ -638,7 +638,7 @@ $$
 
 #### 3.5.1 Nyquist Bit Rate
 
-如果是**无噪声的通道**，那么根据Nyquist定律可以得出**最大的bit rate**：
+#poe 如果是**无噪声的通道**，那么根据Nyquist定律可以得出**最大的bit rate**：
 $$
 N_{max}=2 \times B \times log_2L
 $$
@@ -733,7 +733,7 @@ $$
 
 然后要衡量传的有多快，我们之前也介绍过，就是bit rate。显然，**bit rate是用来衡量data传的速度的**；而如何去衡量signal传的速度(**signal rate**)呢？用的就是**pulse rate**(也可以叫**modulation rate**或者**baud rate**)。
 
-如果信息要想传的快，归根结底就是**用更少量的信号去传递更多的数据**，这样我们才能最高效地传输。之前说过$\frac{data\ element}{signal\ element}=r$，也就是一个信号能承载r个数据。那么**假设在$t$时间内传输了$x$个信号，我们就能知道，这x个信号承载了$xr$个数据**。我们分别计算一下数据和信号的速度：
+如果信息要想传的快，归根结底就是**用更少量的信号去传递更多的数据**，这样我们才能最高效地传输。之前说过$\dfrac{data\ element}{signal\ element}=r$，也就是一个信号能承载r个数据。那么**假设在$t$时间内传输了$x$个信号，我们就能知道，这x个信号承载了$xr$个数据**。我们分别计算一下数据和信号的速度：
 $$
 data\ rate=\frac{xr}{t},\ signal\ rate=\frac{x}{t}
 $$
@@ -745,7 +745,7 @@ $$
 $$
 S=c \times N \times \frac{1}{r}\ \ \ \ or\ \ \ \ S=\frac{cN}{r}
 $$
-#poe 其中c是case factor，会根据情况改变。通常取值为$[\frac{1}{2},\ 1]$。**这个公式背下来！**
+#poe 其中c是case factor，会根据情况改变。通常取值为$[\frac{1}{2},\ 1]$。**这个公式背下来**！本章中是$\frac{1}{2}$，下一章是1。
 
 带宽实际上就是频率，而频率就是信号的改变。那么信号的改变和signal rate之间有没有什么关系呢？经过实验可以得到，**最小的带宽就是signal rate**。因此我们把这个发现带入上式，可以得到：
 $$
@@ -829,6 +829,8 @@ $$
 
 这种编码也是1个bit用两个信号来表示，所以$r=\frac{1}{2}$，因此它的平均信号速率和最小带宽都是N。**而它相比较于RZ的好处就是只使用了2个电平，所以SNR会比它更加高**。
 
+#poe NRZ-I: 见1就翻；Differential Manchester: 见0就翻，中间全翻。
+
 ##### 4.1.2.3 Bipolar Schemes
 
 相比较于Polar，就是使用了3个电平：正，负，零。
@@ -845,11 +847,11 @@ $$
 
 在介绍多电平编码之前，回想一下之前说的r < 1的情况：r表示一个信号元素能携带几个数据元素(bit)。而如果r < 1的话，就是说多个信号元素只能携带1个bit。也就是下面的情况。
 
-![img](img/r1.png)
+![[Networking/img/r1.png|200]]
 
 而我们似乎很少讨论诸如：3个信号元素携带4个bit的情况。
 
-![img](img/r2.png)
+![[Networking/img/r2.png|200]]
 
 现在就讨论讨论这种多个信号合在一起去表示多个数据bit合在一起的情况。假设我们有m个bit，那么很容易就能算出有$2^m$种组合。
 
@@ -857,7 +859,7 @@ $$
 
 > 如果我们现在有2个电平，每个笼罩切成1段，那么很显然就只有2种组合：
 >
-![img](img/r3.png)
+  ![[Networking/img/r3.png|200]]
 >
 > * **这一段要么是0，要么是1。**
 >
@@ -1048,7 +1050,7 @@ $$
 $$
 B_{min}=S_{avg}=\frac{cN}{r}=\frac{c}{r} \times Nyquist\ rate \times n_b=\frac{c}{r} \times 2 \times f_{max} \times n_b
 $$
-而我们的f~max~如果是**在最低频率为0**的情况下，就是带宽。但是要注意这个带宽是**未采样时的带宽**，也就是**模拟信号的带宽**，记为$B_{ana}$。这样再带入上式：
+而我们的$f_{max}$如果是**在最低频率为0**的情况下，就是带宽。但是要注意这个带宽是**未采样时的带宽**，也就是**模拟信号的带宽**，记为$B_{ana}$。这样再带入上式：
 $$
 B_{min}=\frac{c}{r} \times 2 \times B_{ana} \times n_b
 $$
@@ -1150,7 +1152,7 @@ $$
 S=\frac{N}{r}
 $$
 
-> *An analog signal has a bit rate of 8000 bps and a baud rate of 1000 baud. How many data elements are carried by each signal element? How many signal elements do we need?*
+> #example *An analog signal has a bit rate of 8000 bps and a baud rate of 1000 baud. How many data elements are carried by each signal element? How many signal elements do we need?*
 >
 > 根据$S=\frac{N}{r}$可以知道其中S = 1000，N = 8000，因此r = 8(bits / baud)
 >
@@ -1172,7 +1174,7 @@ $$
 
 上图中最惹人注目的就是带宽中间的那个$f_c$。这个叫做**carrier frequency**，也就是**载波频率**。它实际上是带宽的中点，也就是最中间的频率。那么这个东西有什么用呢？其实它和我们的c的取值有关。为什么之前数字信号的时候c=1/2，而在模拟信号里就取1了呢？我们知道，数字信号的频率是从0开始的，那么**它会不会有负频率呢**？答案是有的，但是我们并不需要它，所以我们可以推测出来：**数字信号的$f_c$ = 0**。在$f_c$右边的叫做上边带；在$f_c$左边的叫做下边带。在实际应用中，只需要两者取其一就可以了。**因此，如果至少有上边带和下边带之一的话，c = 1/2**。
 
-通常上边带和下边带是相等的，在数字信号的时候，因为只有一半，所以c=1/2，而在模拟信号中因为都是正的，所以c=1。 而如果我们要**再多选一些呢**？这部分因素来源于**调制解调器**和**滤波器**，**我们把这部分因素==增量==统称为d**。而整个的影响因素$\frac{1}{case\ factor}=\frac{1}{c}=1+d$，因为d的取值是\[0, 1\]所以c的取值就是$[\frac{1}{2},\ 1]$了。
+通常上边带和下边带是相等的，在数字信号的时候，因为只有一半，所以c=1/2，而在模拟信号中因为都是正的，所以c=1。 而如果我们要**再多选一些呢**？这部分因素来源于**调制解调器**和**滤波器**，**我们把这部分因素==增量==统称为d**。而整个的影响因素$\dfrac{1}{case\ factor}=\dfrac{1}{c}=1+d$，因为d的取值是\[0, 1\]所以c的取值就是$[\frac{1}{2},\ 1]$了。
 
 解释了c的取值和d的含义，接下来看一下带宽的计算，因为c = 1，r = 1，所以$S=\frac{cN}{r}=N$，而这里的最小带宽也不再是信号速率了，还记得我们之前说要实现全双工吗？既然是两个方向，那肯定是要把带宽给拆开，所以各自的部分之间只算自己的信号速率，而整个的带宽是**这两个信号速率所需要的带宽的和**：
 $$
