@@ -1596,6 +1596,8 @@ VCI就是上面所说的局限的地址，又叫做label。这是一个很小的
 1. The Hamming distance d(000, 011) is 2 because (000 ⊕ 011) is 011 (两个1).
 2. The Hamming distance d(10101, 11110) is 3 because (10101 ⊕ 11110) is 01011 (三个1).
 
+> Hamming Distance的本质其实就是看两个码不同的bit有多少个。
+
 #### 11.3.2 Minimum Hamming Distance
 
 在一个编码方案中所有的可能之间最小的Hamming Distance。比如，下面表中的最小海明距离：
@@ -1615,11 +1617,13 @@ VCI就是上面所说的局限的地址，又叫做label。这是一个很小的
 
 #poe 考点：CRC(循环冗余校验码)，这里贴出计组的笔记：
 
-![img](img/crc.png)
+![[Networking/img/crc.png|300]]
 
-![img](img/crc2.png)
+![[Networking/img/crc2.png|300]]
 
-![img](img/crc3.png)
+> 这里笔记中有错误，模2除法的意思是使用模2减法，也就是**不借位的减法**，这里和异或操作正好是相对应的。
+
+![[Networking/img/crc3.png|300]]
 
 ## 12. Data Link Control
 
