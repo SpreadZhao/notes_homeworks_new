@@ -2485,6 +2485,8 @@ IP层传的是数据报，但是这只是逻辑上的，实际传递还是需要
 
 ![[Networking/resources/Pasted image 20221127114030.png]]
 
+> #poe ARP: Resolving IP address to physical address.
+
 ARP如何工作的呢？假设一个LAN中有N1，N2，N3，N4这几个主机(或者系统或者路由器)，当N1想要知道N2的IP地址对应的MAC地址是多少时，就先发送一个广播的包(因为在知道链路层地址之前它也不知道N2在哪里)，这个包里面包括下面的信息：
 
 * 发送方N1的MAC地址和IP地址
@@ -2559,7 +2561,7 @@ ICMP也会打包成datagram传给source：
 
 > 这里从上往下看，首先是收到的datagram，这个是出错的datagram；之后将这个datagram的IP header和后面的8byte的东西扒出来塞到ICMP的包裹里形成一个ICMP的包；最后将这个ICMP的包整个再作为另一个datagram的data字段发送出去。
 > 
-> 另外补充一点，我们用的`ping`命令其实就是ICMP中的query message。
+> #poe 另外补充一点，我们用的`ping`命令其实就是ICMP中的query message。
 
 除了ICMP，还有一种按组来管理差错的协议，叫Internet Group Management Protocol(IGMP)。它和ICMP的形式几乎一模一样。
 
@@ -2594,7 +2596,7 @@ ICMP也会打包成datagram传给source：
 
 现在假设有个包，地址是180.70.65.140。那就首先和第一行与，结果是180.70.65.128，和180.70.65.192不相等，所以和第二行与；第二行判断相等，那就从m0口发出去，而且不用给IP了，因为到终点了。
 
-### 19.5 Algorithms
+### 19.5 Algorithms in RIP and OSPF
 
 #### 19.5.1 Bellman-Ford
 
