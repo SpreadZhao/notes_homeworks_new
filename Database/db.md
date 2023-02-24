@@ -2300,11 +2300,24 @@ All the indices above can be classified as **Primary Indices**, which means the 
 
 ---
 
+#poe Transaction and two phase lock
+
+![[Database/resources/SmartSelect_20230224_173741_Samsung Notes.jpg|400]]
+
+> Class replay 18.mkv, 1:11:19
+
+![[Database/resources/SmartSelect_20230224_173813_Samsung Notes.jpg|400]]
+
+---
+
 #poe Transaction Isolation Levels
 
 * Serializable: Thoroughly isolation, default.
 * Repeatable read: Only committed records to be read, repeated reads of same record must return same value. However, a transaction may not be serializable - it may find some records inserted by a transaction but not find others.
 * Read committed: Only committed records can be read, but successive reads of record may return **different(but committed)** values.
+
+  ![[Database/resources/tempFileForShare_20230224-174150.jpg|400]]
+
 * Read uncommitted: Even uncommitted records may be read.
 
   > ![[Database/resources/Pasted image 20230210210406.png|200]]
