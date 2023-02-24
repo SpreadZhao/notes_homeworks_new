@@ -119,7 +119,7 @@ DBMS在内部做的事情其实是很复杂的，尽管我们看起来很简单�
 
 我们会发现，如果我们要打印一个这样的成绩单：
 
-![img](img/d3.png)
+![[Database/img/d3.png|300]]
 
 我们需要他同时具有这三个表的信息才可以。因为成绩单那张表只有课程号和成绩，并没有课程名，需要调用课程信息的表才可以。从外面看，我们只能看到这个成绩单；但是**在DBMS内部需要转化成对三张表的查询和对两个物理存储介质的增删改查**，因此DBMS的内部逻辑是很复杂的。
 
@@ -211,7 +211,7 @@ $$
 
 **对于一个学校的教务系统，我们就可以画出这样一张表。**
 
-![img](img/sd.png)
+![[Database/img/sd.png|]]
 
 > 这里的箭头表示被引用的关系。比如takes中的ID指向了student里的ID，表示了takes中的ID是一个foreign key，它来自student。
 >
@@ -470,19 +470,20 @@ $$
 
 按着上面的叙述来，第一步就是找出Brooklyn的所有账户：
 $$
-\sigma_{branch\_city="Brooklyn"}(branch)
+\sigma_{branch\_city="Brooklyn"}(branch) \longrightarrow A
 $$
-depositor那张表因为只有customer_name是有用的信息，account_number一看就是用来连接的。所以我们直接把depositor和account连接上。
+我们将这张表记为$A$。depositor那张表因为只有customer_name是有用的信息，account_number一看就是用来连接的。所以我们直接把depositor和account连接上。
 $$
 depositor \bowtie account
 $$
-然后问题来了。我们需要找的是Brooklyn中的branch，所以比较的重点就是这两张表中的branch_name属性。那么我们要怎么比？我们的目的是找到一个customer_name，他对应的branch_name会有很多个，**而这很多个一定要包括$\sigma_{branch\_city="Brooklyn"}(branch)$里全部的branch_name**。明确了这些，我们开始下面的操作。首先要去除无用的信息。在比较的过程中，我们发现只比较了$depositor \bowtie account$中的`customer_name`和`branch_name`，还有$\sigma_{branch\_city="Brooklyn"}(branch)$中的`branch_name`。所以我们要**分别把两张表做投影，把有用的属性筛出来**：
+然后问题来了。我们需要找的是Brooklyn中的branch，所以比较的重点就是这两张表中的branch_name属性。那么我们要怎么比？我们的目的是找到一个customer_name，他对应的branch_name会有很多个，而这很多个一定要包括$A$里全部的branch_name(**其实就是Brighton和Downtown**)。明确了这些，我们开始下面的操作。首先要去除无用的信息。在比较的过程中，我们发现只比较了$depositor \bowtie account$中的`customer_name`和`branch_name`，还有$A$中的`branch_name`。所以我们要**分别把两张表做投影，把有用的属性筛出来**：
+
 $$
 \pi_{customer\_name,\ branch\_name}(depositor \bowtie account)\longrightarrow A1
 $$
 
 $$
-\pi_{branch\_name}(\sigma_{branch\_city="Brooklyn"}(branch))\longrightarrow A2
+\pi_{branch\_name}(A)\longrightarrow A2
 $$
 
 最后就是开始寻找：遍历A1中的customer_name，对于每个name，看其对应的**一个或多个**branch_name是否完全包括了A2中所有的branch_name。如果有，那么就将这个name添加到结果的relation中。
@@ -536,8 +537,6 @@ $$
 
 ### 2.1.3 Exercise
 
-#### 2.1.3.1 Ex1
-
 现在我们有一个银行的relation：
 
 | account_number | Branch_name | balance |
@@ -571,7 +570,7 @@ $$
 \Pi_{balance}(account)-\Pi_{A1.balance}(\sigma_{A1.balance<A2.balance}(\rho_{A1}(account) \times \rho_{A2}(account)))
 $$
 
-#### 2.1.3.2 Ex2
+---
 
 现在有两个relation:
 
@@ -613,6 +612,56 @@ $$
 本题和Ex1很像，只不过最后的比较条件由一个变成了三个。另外，这道题用了两次"笛卡尔积+选择"，而Ex1只用了一次。**这两次一次是为了将两张表和成一张；另一次是在这张合成的表中进行自我比较**。
 
 ***剩下的练习题见录播第二集和第三集***
+
+---
+
+#homework Relational Algebra
+
+<h2>2.7</h2>
+
+![[Database/resources/Pasted image 20230224211651.png|400]] ![[Database/resources/Pasted image 20230224213014.png|250]]
+
+![[Database/resources/Pasted image 20230224211608.png]]
+
+<h2>2.8</h2>
+
+![[Database/resources/Pasted image 20230224212303.png|400]] ![[Database/resources/Pasted image 20230224213136.png|250]]
+
+![[Database/resources/Pasted image 20230224212330.png]]
+
+<h2>2.12</h2>
+
+![[Database/resources/Pasted image 20230224212634.png|400]] ![[Database/resources/Pasted image 20230224213014.png|250]]
+
+![[Database/resources/Pasted image 20230224212703.png|400]]
+
+![[Database/resources/Pasted image 20230224212723.png]]
+
+<h2>2.13</h2>
+
+![[Database/resources/Pasted image 20230224213223.png|400]] ![[Database/resources/Pasted image 20230224213136.png|250]]
+
+![[Database/resources/Pasted image 20230224213558.png|400]]
+
+![[Database/resources/Pasted image 20230224213612.png]]
+
+<h2>6.1</h2>
+
+![[Database/resources/Pasted image 20230224213856.png|400]]
+
+> [[Database/img/sd.png|University Schema]]
+
+![[Database/resources/Pasted image 20230224214518.png|400]]
+
+![[Database/resources/Pasted image 20230224214532.png|400]]
+
+![[Database/resources/Pasted image 20230224214559.png]]
+
+<h2>6.2</h2>
+
+![[Database/resources/Pasted image 20230224214648.png|400]] ![[Database/resources/Pasted image 20230224214715.png|250]]
+
+![[Database/resources/Pasted image 20230224214841.png]]
 
 #  3. SQL
 
@@ -1375,6 +1424,167 @@ where S.person = (select supervisor # note that '=' can be replaced with "in"
 	  where dept_name = "Biology"
   );
   ```
+
+---
+
+#homework SQL
+
+<h2>3.2</h2>
+
+![[Database/resources/Pasted image 20230224215125.png|400]]
+
+![[Database/resources/Pasted image 20230224215215.png|400]]
+
+```sql
+select sum(credit * points) as 'total grade points'
+from course natural join takes natural join grade_points
+where ID = 12345;
+```
+
+![[Database/resources/Pasted image 20230224215424.png|400]]
+
+```sql
+select sum(credits * points) / sum(credits) as GPA
+from course natural join takes natural join grade_points
+where ID = 12345;
+```
+
+![[Database/resources/Pasted image 20230224215503.png|400]]
+
+```sql
+select distinct ID, sum(credits * points) / sum(credits) as GPA
+from course natural join takes natural join grade_points
+group by ID;
+```
+
+<h2>3.9</h2>
+
+![[Database/resources/Pasted image 20230224220125.png|400]] ![[Database/resources/Pasted image 20230224220140.png|250]]
+
+![[Database/resources/Pasted image 20230224220203.png|400]]
+
+```sql
+select employee_name, city
+from employee natural join works
+where company_name = 'First Bank Corporation';
+```
+
+![[Database/resources/Pasted image 20230224220304.png|400]]
+
+```sql
+select employee_name, street, city
+from employee natural join works
+where company_name = 'First Bank Corporation' and salary > 10000;
+```
+
+![[Database/resources/Pasted image 20230224220340.png|400]]
+
+```sql
+select employee_name
+from works
+where employee_name not in (
+    select employee_name
+    from works
+    where company_name = 'First Bank Coproration'
+);
+```
+
+![[Database/resources/Pasted image 20230224220533.png|400]]
+
+```sql
+select employee_name
+from works
+where salary > all(
+	select salary
+	from works
+	where company_name = 'Small Bank Corporation'
+);
+# all改成max行不行？我觉得行
+```
+
+![[Database/resources/Pasted image 20230224220739.png|400]]
+
+```sql
+select company_name
+from company as S
+where (
+	select city
+	from company as T
+	where T.company_name = 'Small Bank Corporation'
+) in (
+	select city
+	from company as U
+	where U.company_name = S.company_name
+);
+```
+
+![[Database/resources/Pasted image 20230224220913.png|400]]
+
+```sql
+select T.company_name
+from works as T
+where (
+	select count(distinct employee_name)
+	from works as S
+	where S.company_name = T.company_name
+) > all (
+	select count(distinct employee_name)
+	from works
+	group by company_name
+);
+```
+
+![[Database/resources/Pasted image 20230224221007.png|400]]
+
+```sql
+select company_name, avg(salary) as avg_salary
+from works
+group by company_name
+having avg_salary > (
+	select avg(salary)
+	from works
+	where company_name = 'First Bank Corporation'
+);
+```
+
+<h2>3.15</h2>
+
+![[Database/resources/Pasted image 20230224221201.png|400]] ![[Database/resources/Pasted image 20230224221217.png|250]]
+
+![[Database/resources/Pasted image 20230224221246.png|400]]
+
+```sql
+select S.customer_name
+from customer natural join depositor natural join account natural join branch as S
+where(
+	select branch_name
+	from branch
+	where branch_city = 'Brooklyn'
+)in(
+	select T.branch_name
+	from (customer natural join depositor natural join account natural join branch) as T
+	where T.customer_name = S.customer_name
+);
+```
+
+![[Database/resources/Pasted image 20230224221545.png|400]]
+
+```sql
+select sum(amount)
+from loan;
+```
+
+![[Database/resources/Pasted image 20230224221641.png|400]]
+
+```sql
+select branch_name
+from branch
+where assets > some(
+	select assets
+	from branch
+	where branch_city = 'Brooklyn'
+);
+```
 
 # 4. Intermediate SQL
 
