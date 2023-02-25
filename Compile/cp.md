@@ -1792,6 +1792,8 @@ T以F开头，而F以(或者id开头，所以T肯定也是以(或者id开头
 
 再来一轮，发现所有FOLLOW集都没更新，这才真算完了！
 
+> 注意：这里所有的结束符号都来自开始符号，**不是在产生式末尾后面就能跟结束符号的**！
+
 ---
 
 **==3. 计算SELECT集==**
@@ -1846,6 +1848,96 @@ $$
 **这道题有一种特殊情况没涉及到。比如说第四条：有F的FIRST集自当天经地义；但是如果F能推出空串的话，也就是F压根不存在，那么开头就变成了F之后的东西，也就是F的FOLLOW集中的东西也应该有。**
 
 总结：通过这道题，和之前的概念，我们也能发现，FOLLOW集是用在单个的Nonterminal上的，而FIRST集是用在串上的。因为Nonterminal本身也是一个串，所以自然都可以。而SELECT集是用在产生式上的，因此才会由小到大的计算。另外，FIRST集中要么是Terminal，要么是$\epsilon$；而FOLLOW集本身就是Terminal的集合，自然不能有$\epsilon$，而是用\$代替；而SELECT集中因为表示的是输入符号，肯定要有意义，所以元素种类和FOLLOW集中的是一样的。
+
+#poe Prediction Table
+
+Let's use a case to see how we build the prediction table with the FIRST set and FOLLOW set.
+
+1. L -> E;L | $\epsilon$
+2. E -> TE'
+3. E' -> +TE' | -TE' | $\epsilon$
+4. T -> FT'
+5. T' -> \*FT' | /FT' | mod FT' | $\epsilon$
+6. F -> (E) | id | num
+
+First let's calculate the FIRST set of each left part of the productions:
+
+Nonterminal | FIRST
+-- | --
+L | $\{(,\ id,\ num,\ \epsilon\}$
+E | $\{(,\ id,\ num\}$
+E' | $\{+,\ -,\ \epsilon\}$
+T | $\{(,\ id,\ num\}$
+T' | $\{*,\ /,\ mod,\ \epsilon\}$
+F | $\{(,\ id,\ num\}$
+
+With FIRST sets, now let's move to the FOLLOW sets of them:
+
+Nonterminal | FIRST | FOLLOW
+-- | -- | --
+L | $\{(,\ id,\ num,\ \epsilon\}$ | $\{\#\}$
+E | $\{(,\ id,\ num\}$ | $\{;,\ )\}$
+E' | $\{+,\ -,\ \epsilon\}$ | $\{;,\ )\}$
+T | $\{(,\ id,\ num\}$ | $\{+,\ -,\ ;,\ )\}$
+T' | $\{*,\ /,\ mod,\ \epsilon\}$ | $\{+,\ -,\ ;,\ )\}$
+F | $\{(,\ id,\ num\}$ | $\{*,\ /,\ mod,\ +,\ -,\ ;,\ )\}$
+
+Finally, **scan the productions and fill the production to the corresponding blanks**:
+
+Nonterminal | id | num | + | - | \* | / | mod | ( | ) | ; | \#
+-- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --
+L | 
+E | 
+E' | 
+T | 
+T' | 
+F | 
+
+During 1st scan, **ignore the null string ones**. At what time can I expand the Nontermial `L` with the first production "L -> E;L"? The answer is: the next input is just the one in the FIRST(L)! So we fill the table following this rule:
+
+Nonterminal | id | num | + | - | \* | / | mod | ( | ) | ; | \#
+-- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --
+L | E;L | E;L | | | | | | E;L
+E | 
+E' | 
+T | 
+T' | 
+F | 
+
+> Note that we ignore the $\epsilon$ just as what we have talked about.
+
+After scanning all of the $\epsilon$-free productions, we've got a table like this:
+
+Nonterminal | id | num | + | - | \* | / | mod | ( | ) | ; | \#
+-- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --
+L | E;L | E;L | | | | | | E;L
+E | TE' | TE' | | | | | | TE'
+E' | | | +TE' | -TE'
+T | FT' | FT' | | | | | | FT'
+T' | | | | | \*FT' | /FT' | mod FT'
+F | id | num | | | | | | (E)
+
+After doing things above, let's concentrate on the **$\epsilon$ and FOLLOW set**. At what time can I use the production "L -> $\epsilon$" to expand the Nonterminal `L`? Let's think about that: once I have done this, it means that **the next input is definitly in FOLLOW(L)**, which makes it naturally to cancel the present Nonterminal `L` to embrace the next comming sequence. So the conclusion is: **we do that when the next input is in FOLLOW(L)**. And the FOLLOW(L) is just the end symbol \#, so just fill it!
+
+Nonterminal | id | num | + | - | \* | / | mod | ( | ) | ; | \#
+-- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --
+L | E;L | E;L | | | | | | E;L | | | $\epsilon$
+E | TE' | TE' | | | | | | TE'
+E' | | | +TE' | -TE'
+T | FT' | FT' | | | | | | FT'
+T' | | | | | \*FT' | /FT' | mod FT'
+F | id | num | | | | | | (E)
+
+The next is production "E' -> $\epsilon$". When to expand like that? Obviously the time the next input is in FOLLOW(E')! We just finish it in the table below:
+
+Nonterminal | id | num | + | - | \* | / | mod | ( | ) | ; | \#
+-- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --
+L | E;L | E;L | | | | | | E;L | | | $\epsilon$
+E | TE' | TE' | | | | | | TE'
+E' | | | +TE' | -TE' | | | | | $\epsilon$ | $\epsilon$
+T | FT' | FT' | | | | | | FT'
+T' | | | $\epsilon$ | $\epsilon$ | \*FT' | /FT' | mod FT' | | $\epsilon$ | $\epsilon$
+F | id | num | | | | | | (E)
 
 ## 4.4 Down-Top Parsing
 
@@ -2300,8 +2392,6 @@ E -> E-T|T
 * 按照这个规则，我们也可以把所有的规约操作也填好：
 
 ![[Compile/resources/Pasted image 20221214174818.png]]
-
-
 
 ## 4.5 习题
 
