@@ -2435,8 +2435,6 @@ E -> E-T|T
 
 #homework Down-top parsing & SLR1
 
-#TODO 正确答案老师还没给全
-
 ![[Compile/resources/Pasted image 20221212181030.png]]
 
 ![[Compile/resources/Pasted image 20221212181042.png]]

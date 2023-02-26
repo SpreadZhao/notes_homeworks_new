@@ -1,7 +1,7 @@
 ---
 author: "Spread Zhao"
 title: ea
-category: inter_class
+category: self_study
 description: UC Berkeley-CS170，伯克利的算法设计课，更注重算法的理论基础与复杂度分析。课程内容涵盖了分治、图算法、最短路、生成树、贪心、动规、并查集、线性规划、网络流、NP 问题、随机算法、哈希算法等等。网站：[CS170](https://cs170.org/)。本笔记是在学习西电《算法分析于设计》之前所记，作为对其的补充和扩展。
 link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list=PLkFD6_40KJIyKLUW_4cm44mIdXSUpZry3)"
 ---
