@@ -2449,7 +2449,11 @@ E -> E-T|T
 
 ![[Compile/resources/Pasted image 20221212181124.png|300]] ![[Compile/resources/Pasted image 20221212181135.png|300]]
 
+![[Compile/resources/Pasted image 20230226142202.png]]
+
 ![[Compile/resources/Pasted image 20221212181144.png]]
+
+![[Compile/resources/Pasted image 20230226142339.png]]
 
 # 5. Syntax-Directed Translation
 
