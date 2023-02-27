@@ -2156,6 +2156,8 @@ $$
 
 另外，有一些Schema的主键是多个，也就是这些主键缺一不可。但是如果这些主键的其中一个被鉴定为冗余数据的时候，该怎么办呢？这时就出现了另一类概念：**Week Entity & Strong Entity**。弱实体就是依赖其他实体而存在的实体，比如section，只有确定是时间，季节，课程id，还有啥啥的一些属性才能唯一确定一个section，那么很显然这个Schema是依赖于这些爹而存在的。因此在构建这种实体关系的时候要小心再小心；而强实体就是上面的instructor和department，它们本身的存在不依赖于任何实体，所以这个时候只要主键在，就是自己的。
 
+> 弱实体：主键中的某些属性是外键，引用自其他实体的主键。这就叫依赖于其他实体存在。显然弱实体的主键**几乎**都是多个属性。
+
 ## 6.2 ER Diagram
 
 接下来我们看看怎么画图，其实画图非常简单，所以我直接贴ppt了(**这里的ppt一定要看，后面会直接提这里面的内容**)：
@@ -2511,6 +2513,8 @@ All the indices above can be classified as **Primary Indices**, which means the 
 ---
 
 #poe Transaction and two phase lock
+
+![[Database/resources/Pasted image 20230227150629.png]]
 
 ![[Database/resources/SmartSelect_20230224_173741_Samsung Notes.jpg|400]]
 
