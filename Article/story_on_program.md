@@ -1,4 +1,4 @@
-# 2022-11-1
+# 2022-11-1 Segmentation Fault
 
 今天偶然在群里看到有人问了个这样的问题：
 
@@ -32,7 +32,7 @@ int main()
 
 这里的`char *p2 = '1';`就是在让p2去指向'1'的ASCII码对应的地址，因此这里是对虚地址的低地址进行访问，也是一种非法访问。
 
-# 2022-11-30
+# 2022-11-30 Java Value Passing by
 
 **java为啥只有值传递**？这里先给一个非常简单的例子：
 
@@ -261,7 +261,7 @@ elem = "SpreadZhao";
 
 只不过是让这个临时的elem指向了一个新字符串常量而已，原来list中的那个元素并没有指向新的字符串常量，因此这里的修改是无效的。
 
-# 2022-12-19
+# 2022-12-19 fflush
 
 在学习linux signal的时候，本来想写一个信号处理的测试程序。但是在干这件事之前就遇到一个很奇怪的问题：
 
@@ -326,3 +326,25 @@ int main(){
 
 [033”(ESC)的用法-ANSI的Esc屏幕控制](https://blog.csdn.net/lzuacm/article/details/8993785)
 
+# 2023-3-10 int[] to List
+
+How to convert `int[]` into `List<Integer>` in java? I found it on Stack Overflow:
+
+[arrays - How to convert int\[\] into List\<Integer\> in Java? - Stack Overflow](https://stackoverflow.com/questions/1073919/how-to-convert-int-into-listinteger-in-java)
+
+1.  In Java 8+ you can make a stream of your `int` array. Call either [`Arrays.stream`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Arrays.html#stream(int%5B%5D)) or [`IntStream.of`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/IntStream.html#of(int...)).
+2.  Call [`IntStream#boxed`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/IntStream.html#boxed()) to use boxing conversion from `int` primitive to [`Integer`](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Integer.html) objects.
+3.  Collect into a list using `Stream.collect( Collectors.toList() )`. Or more simply in Java 16+, call [`Stream#toList()`](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/stream/Stream.html#toList()).
+
+Example:
+
+```java
+int[] ints = {1,2,3};
+List<Integer> list = Arrays.stream(ints).boxed().collect(Collectors.toList());
+```
+
+In Java 16 and later:
+
+```java
+List<Integer> list = Arrays.stream(ints).boxed().toList();
+```
