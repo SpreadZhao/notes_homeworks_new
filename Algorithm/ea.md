@@ -536,7 +536,7 @@ What I need to do is terribly easy: Go through the array. The 1st is 2, so we pu
 
 If the size of input(array) is `n`, the time cost is just `n` times to scanning the array and `B` time to allocate the buckets, which is $n + B$.
 
-But if you assume the comparison based model, why $O(nlogn)$ is the fasted time you can achieve? Let's assume the input as **some unknown permutation $\sigma$ of $A_1,\ A_2,\ \cdots ,\ A_n$** and that all the thing I can do is just make less than comparison.
+But if you assume the comparison based model, why $O(nlogn)$ is the fasted time you can achieve? Let's assume the input as **some unknown permutation $\sigma$ of $A_1,\ A_2,\ \cdots ,\ A_n$** and that all the thing I can do is just making **less than** comparison.
 
 > *Why not equal comparison or bigger than comparison? Because it makes no sense. A is less than B just means that B is bigger than one; and A = B is no need in sorting algorithm, they're just the same!*
 
