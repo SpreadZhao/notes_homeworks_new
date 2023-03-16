@@ -476,7 +476,7 @@ This is the core idea of Merge Sort. **We recursively divide the array in two pi
 
 ![[Algorithm/resources/Drawing 2023-01-23 14.58.12.excalidraw.png]]
 
-What we need to do is to merge them together. But how? Make 2 ponters, point to the smallest one: 
+What we need to do is to merge them together. But how? Make 2 pointers, pointing to the smallest one: 
 
 ![[Algorithm/resources/Drawing 2023-01-23 15.00.11.excalidraw.png|300]]
 
@@ -484,7 +484,7 @@ What we need to do is to merge them together. But how? Make 2 ponters, point to 
 
 ![[Algorithm/resources/Drawing 2023-01-23 15.02.02.excalidraw.png|500]]
 
-Continuously do this, until both the two pointers reach the end. After that, we will get the merged array. So the structure of Merge Sort is supposed to be:
+Continuously do this, until both of the two pointers reach the end. After that, we will get the merged array. So the structure of Merge Sort is supposed to be:
 
 ```c
 MergeSort(a[1 .. n]){
