@@ -72,7 +72,7 @@ description: 操作系统课堂笔记，李航老师
 
 ​		在上面的例子中，我们首先需要了解英特尔的CPU架构：
 
-![img](img/intelcpu.png)
+![[Operating System/img/intelcpu.png|300]]
 
 由于是从低地址拷贝到高地址，因此拷贝的16byte会将low覆盖。**同时我们也能看出，Stack Segment存放的是局部变量和函数的返回地址**
 
@@ -80,11 +80,11 @@ description: 操作系统课堂笔记，李航老师
 
 ​		一会儿切一个Process在CPU的一个核上
 
-![img](img/processmodel.png)
+![[Operating System/img/processmodel.png]]
 
 ### 1.8 Process State
 
-![img](img/processstate.png)
+![[Operating System/img/processstate.png]]
 
 #### 1.8.1 Process Creation
 
@@ -141,8 +141,9 @@ description: 操作系统课堂笔记，李航老师
   > ```
   >
   > Result
-  >
-![img](img/myfvkylin.png)
+  
+![[Operating System/img/myfvkylin.png|100]]
+
   >
   > **注意：子进程从fork返回处开始执行**
   >
@@ -220,7 +221,7 @@ description: 操作系统课堂笔记，李航老师
   >
   > Result
   >
-  > ![img](img/execl.png)
+  > ![[Operating System/img/execl.png]]
 
 #### 1.8.2 Process Termination
 
@@ -252,7 +253,7 @@ description: 操作系统课堂笔记，李航老师
   >
   >Result
   >
-  >![img](img/fatalerror.png)
+  >![[Operating System/img/fatalerror.png]]
   >
   >Reason
   >
@@ -266,21 +267,21 @@ description: 操作系统课堂笔记，李航老师
   >
   >* 当`kill -9 3539`后的状态
   >
-  >  ![img](img/kill3539.png)
+  >  ![[Operating System/img/kill3539.png]]
   >
   >* 与此同时，看到3539变为僵尸态
   >
-  >  ![img](img/3539zb.png)
+  >  ![[Operating System/img/3539zb.png]]
   >
   >现在有俩进程，3700的父进程是3699
   >
   >* 若`kill -9 3699`(也就是把孩子他爸干掉)会
   >
-  >  ![img](img/kill3699.png)
+  >  ![[Operating System/img/kill3699.png]]
   >
   >* 与此同时，发现这个孩子被1号进程接管
   >
-  >  ![img](img/adopted.png) ^467bf0
+  >  ![[Operating System/img/adopted.png]] ^467bf0
 
 ##### 1.8.2.1 Process Termination Implementation
 
@@ -298,13 +299,13 @@ description: 操作系统课堂笔记，李航老师
 
 * PCB里的内容
 
-  ![img](img/pcbcontent.png)
+  ![[Operating System/img/pcbcontent.png]]
 
 ### 1.9 Process Model Implementation
 
 #### 1.9.1 Process Switching
 
-![img](img/psswitch.png)
+![[Operating System/img/psswitch.png]]
 
 ## 2. Thread
 
@@ -341,7 +342,7 @@ int main(){
 
 Result
 
-![img](img/threadhaha.png)
+![[Operating System/img/threadhaha.png]]
 
 ### 2.2 Definition
 
@@ -351,26 +352,26 @@ Result
 
 ### 2.3 Thread Model
 
-![img](img/threadmodel.png)
+![[Operating System/img/threadmodel.png]]
 
 ### 2.4 Why Thread?
 
 1. 在一个application里有多个活动，其中一些会block，这时把app分成几个能并行的顺序线程，模型会更简单
 2. Thread比Process更容易创建/消除
-3. ![img](img/whythread3.png)
+3. ![[Operating System/img/whythread3.png]]
 4. Finally, threads are useful on systems with multiple CPUs, where real parallelism is possible.
 
 ### 2.5 Implementation of  thread model
 
 * TCB(Thread Control Block)
 
-![img](img/tcb.png)
+![[Operating System/img/tcb.png]]
 
 * Three Implementation Way
 
   1. In User Space
 
-![img](img/tinus.png)
+![[Operating System/img/tinus.png]]
 
 **优点**
 
@@ -384,29 +385,28 @@ Result
 
 问题：如何实现阻塞系统调用
 
-![img](img/howsyscall.png)
+![[Operating System/img/howsyscall.png]]
   
   2. In Kernel Space
   
-![img](img/tinks.png)
+![[Operating System/img/tinks.png]]
   
-     >* 创建Thread要用系统调用，进入Kernel Space
-     >
-     >* Process Table保存每个Process的状态等
-     >
-![img](img/tinkspb.png)
+* 创建Thread要用系统调用，进入Kernel Space
+* Process Table保存每个Process的状态等
+
+![[Operating System/img/tinkspb.png]]
   
   3. Hybrid
   
-![img](img/thybrid.png)
+![[Operating System/img/thybrid.png]]
   
-![img](img/thbdpb.png)
+![[Operating System/img/thbdpb.png]]
 
 ### 2.6 POSIX Thread-学会！
 
 * IEEE定义的线程包：pthread
 
-![img](img/tphread.png)
+![[Operating System/img/tphread.png]]
 
 * Why POSIX?
 
@@ -416,9 +416,9 @@ Result
 
 * Definition, Advantage
 
-![img](img/pptd.png)
-  >
-![img](img/pptd2.png)
+![[Operating System/img/pptd.png]]
+
+![[Operating System/img/pptd2.png]]
 
 * Why Pop-Up Thread?
 
@@ -430,7 +430,7 @@ Result
 
 ### 3.1 Race Conditions
 
-![img](img/rccd.png)
+![[Operating System/img/rccd.png]]
 
 ### 3.2 Critical Region
 
@@ -476,19 +476,19 @@ Result
 
       1. Strict Alternation
 
-![img](img/strictat.png)
+![[Operating System/img/strictat.png]]
 
          >**缺点：2个Process/Thread的顺序是固定的，TURN有个初值，则一定是某一个人先来**
 
       2. Peterson's solution
 
-![img](img/ptsolu.png)
+![[Operating System/img/ptsolu.png]]
 
-![img](img/tsl.png)
+![[Operating System/img/tsl.png]]
 
       4. Another TSL - XCHG(Intel)
 
-![img](img/xchg.png)
+![[Operating System/img/xchg.png]]
 
          >**Exercise：gcc用C语言嵌入汇编语言**
 
@@ -571,20 +571,20 @@ Result
       **Semaphore - System Call**
 
       >Code
-      >
-![img](img/semacode.png)
+
+![[Operating System/img/semacode.png]]
       >
       >Result
       >
-![img](img/semares.png)
+![[Operating System/img/semares.png]]
 
   2个Process和Semaphore
   
-![img](img/twosem.png)
+![[Operating System/img/twosem.png]]
   
   使用GDB调试
   
-![img](img/semgdb.png)
+![[Operating System/img/semgdb.png]]
 
     * Semaphore Disadvantage
     
@@ -608,7 +608,7 @@ Result
 
     Example
 
-    ![img](img/mutexex.png)
+    ![[Operating System/img/mutexex.png]]
 
   * Mutex, Semaphore区别
   
@@ -636,9 +636,9 @@ Result
   
 * Mutex Other: Conditional Variables
   
-  ![img](img/cdvb.png)
+  ![[Operating System/img/cdvb.png]]
   
-  ![img](img/cdvb2.png)
+  ![[Operating System/img/cdvb2.png]]
   
   * Monitor
   
@@ -646,7 +646,7 @@ Result
     >
     >What is Dead lock?
     >
-    >![img](img/ddlk.png)
+    >![[Operating System/img/ddlk.png]]
     >
     >结论：
   >
@@ -853,7 +853,7 @@ Result
   
     用于一组Process同步
   
-![img](img/barrier.png)
+![[Operating System/img/barrier.png]]
 
 ## 4. Scheduling
 
@@ -908,7 +908,7 @@ Arrive order: P1, P2, P3
 
 解决思路：画Gannt Chart
 
-![img](img/fcfsgc.png)
+![[Operating System/img/fcfsgc.png]]
 
 Turnaround time for
 
@@ -932,7 +932,7 @@ Average turnaround time
 
 Gannt Chart
 
-![img](img/sjfnpgc.png)
+![[Operating System/img/sjfnpgc.png]]
 
 Average turnaround time
 
@@ -953,7 +953,7 @@ Average turnaround time
 
 Gannt Chart
 
-![img](img/sjfpgc.png)
+![[Operating System/img/sjfpgc.png]]
 
 Average turnaround time
 
@@ -963,15 +963,15 @@ Average turnaround time
 
 #### 4.4.1 Round Robin
 
-![img](img/rr.png)
+![[Operating System/img/rr.png]]
 
 #### 4.4.2 Priority Scheduling
 
-![img](img/prioritysc.png)
+![[Operating System/img/prioritysc.png]]
 
 #### 4.4.3 Multiple Queue
 
-![img](img/mqueue.png)
+![[Operating System/img/mqueue.png]]
 
 #### 4.4.4 Guaranteed Scheduling
 
@@ -1055,7 +1055,7 @@ void philosopher(int i) 					 /*i: philosopher number, from 0 to 4*/
 
 解决：引入中控
 
-![img](img/eatf.png)
+![[Operating System/img/eatf.png]]
 
 > IPC Design
 >
@@ -1064,7 +1064,7 @@ void philosopher(int i) 					 /*i: philosopher number, from 0 to 4*/
 
 ### 5.2 Readers and writers Problem
 
-![img](img/raw.png)
+![[Operating System/img/raw.png]]
 
 **如果有读者，那么读者随便进，写者不能进，因为后来的读者，rc != 1，不会走down(&db)这句话**
 
@@ -1170,7 +1170,7 @@ Ticket_Seller(){
 
 #### 6.1.1 **What will happen if no Memory Abstraction?**
 
-![img](img/noma.png)
+![[Operating System/img/noma.png]]
 
 #### **6.1.2 How to solve?**
 
@@ -1184,7 +1184,7 @@ Implementation: Use **Static relocation(静态重定位)**
 >
 > **Static relocation Problem**
 >
-> ![img](img/sr.png)
+> ![[Operating System/img/sr.png]]
 
 #### 6.1.3 **Memory Abstraction**
 
@@ -1196,7 +1196,7 @@ How to implement address space?
 
 **Base and Limit Registers**
 
-![img](img/dyrc.png)
+![[Operating System/img/dyrc.png]]
 
 Proplems all solved?
 
@@ -1209,7 +1209,7 @@ Use Swap
 >
 > *Bringing in each process in its entirety, running it for a while, then putting it back on the disk*
 
-![img](img/swap.png)
+![[Operating System/img/swap.png]]
 
 Swap Problem<a name = "downward" ></a>
 
@@ -1219,19 +1219,19 @@ Another Problem
 
 * Dynamic relocation Problem
 
-![img](img/drp.png)
+![[Operating System/img/drp.png]]
 
 #### 6.1.4 Free Space Management(**Dynamic**)
 
 * bit map & list
 
-![img](img/bl.png)
+![[Operating System/img/bl.png]]
 
 * 对于list的升级：List Management
 
   当X结束时，更改List
 
-![img](img/gglist.png)
+![[Operating System/img/gglist.png]]
 
 * Four methods to insert A new Process
 
@@ -1258,7 +1258,7 @@ How to solve this Problem?
 
 MMU
 
-![img](img/mmu.png)
+![[Operating System/img/mmu.png]]
 
 An Example
 
@@ -1274,11 +1274,11 @@ Why introduce Virtual Address?
 
 #### 6.2.1 **Paging**
 
-![img](img/paging.png)
+![[Operating System/img/paging.png]]
 
 #### **6.2.2 Virtual Address Translation**
 
-![img](img/vat.png)
+![[Operating System/img/vat.png]]
 
 假设虚拟地址64KB，物理地址32KB，4KB一个Page，则虚拟16Page，物理8Page
 
@@ -1294,7 +1294,7 @@ Why introduce Virtual Address?
 
   2. 算虚拟地址的位置与虚拟页面(起始位置)的偏移量：
 
-![img](img/vat2.png)
+![[Operating System/img/vat2.png]]
      >
      > 则最终物理地址：<u>110</u> <u>0000 0000 0100</u>
      >
@@ -1304,7 +1304,7 @@ Why introduce Virtual Address?
 
 **Page Table Entry**
 
-![img](img/pta.png)
+![[Operating System/img/pta.png]]
 
 加速分页
 
@@ -1312,15 +1312,15 @@ Why introduce Virtual Address?
 
   > 计算机的一个小型硬件设备，**将虚拟地址直接映射到物理地址，<u>而不必再访问页表</u>**，这种设备成为转换检测缓冲区(Translation Lookaside Buffer, TLB)，又称相联存储器(associate memory)，或快表，**通常在MMU中**，包含少量的表项
   >
-![img](img/tlb.png)
+![[Operating System/img/tlb.png]]
 
 Multilevel Page Tables
 
-![img](img/mpt.png)
+![[Operating System/img/mpt.png]]
 
 Inverted Table
 
-![img](img/ip.png)
+![[Operating System/img/ip.png]]
 
 > 区别
 >
@@ -1337,7 +1337,7 @@ Page Fault: 缺页中断(**Abscent位**)
 
   Ex: 内存访问序列：0 1 3 2 2 5 3 4 2 1，3个物理Page，计算Page Fault数
 
-![img](img/opr.png)
+![[Operating System/img/opr.png]]
 
   PS：**这里的页面号都是虚拟的！！！**
 
@@ -1347,15 +1347,15 @@ Page Fault: 缺页中断(**Abscent位**)
 
   Ex: 内存访问序列：0 1 3 2 2 5 3 4 2 1，3个物理Page，计算Page Fault数
 
-![img](img/lru.png)
+![[Operating System/img/lru.png]]
 
   LRU另一种图解
 
-![img](img/lruan.png)
+![[Operating System/img/lruan.png]]
 
   使用硬件模拟LRU
 
-![img](img/lruhd.png)
+![[Operating System/img/lruhd.png]]
 
   硬件模拟缺点：管理成本巨大，Matrix太大
 
@@ -1370,7 +1370,7 @@ Page Fault: 缺页中断(**Abscent位**)
 
   NFU改进：Let it forget!
 
-![img](img/lif.png)
+![[Operating System/img/lif.png]]
 
 * NRU(Not Recently Used)
 
@@ -1394,7 +1394,7 @@ Page Fault: 缺页中断(**Abscent位**)
 
 * Clock Page Replacement
 
-![img](img/cpr.png)
+![[Operating System/img/cpr.png]]
 
   > 为什么R位要Clear?
   >
@@ -1410,11 +1410,11 @@ Page Fault: 缺页中断(**Abscent位**)
 
   推测
 
-![img](img/wspr.png)
+![[Operating System/img/wspr.png]]
 
 * WSClock = Clock + Working Set
 
-![img](img/wscpr.png)
+![[Operating System/img/wscpr.png]]
 
 * FIFO(First in First out)
 
@@ -1424,7 +1424,7 @@ Page Fault: 缺页中断(**Abscent位**)
 
 * 改进FIFO: Second Chance
 
-![img](img/sc.png)
+![[Operating System/img/sc.png]]
 
   > 栈底的元素的R位如果是
   >
@@ -1435,13 +1435,13 @@ Page Fault: 缺页中断(**Abscent位**)
 
 #### 6.3.1 Local & Global
 
-![img](img/lg.png)
+![[Operating System/img/lg.png]]
 
 > **Age: 上次访问的时刻，越小表示越久没用了**
 
 #### 6.3.2 Page Fault Frequency(PFF)
 
-![img](img/pff.png)
+![[Operating System/img/pff.png]]
 
 > Page Fault越多，Page分配越多
 >
@@ -1504,7 +1504,7 @@ Solution：加内存！
   >
   > 一个Page有P个地址，从全空到全满，有P+1种情况，则等概率分布，期望
   >
-  > E = [1 / (p + 1)] * (0 + 1 + ... + p) = p/2
+  > E = \[1 / (p + 1)\] * (0 + 1 + ... + p) = p/2
   >
   > #question 为什么se/p不判一下s/p的余数是否为0
 
@@ -1516,13 +1516,13 @@ Solution：加内存！
 
 如果内存足够大，Single address Space就够了
 
-![img](img/sas.png)
+![[Operating System/img/sas.png]]
 
 但是不够咋办？
 
 比如16位机子上，分成了Ispace，Dspace
 
-![img](img/isds.png)
+![[Operating System/img/isds.png]]
 
 这样，一个Process有2个Page Table，分别在要翻译的时候对应自己的，这样变向扩大了内存(**运用Dynamic relocation**)
 
@@ -1530,28 +1530,28 @@ Solution：加内存！
 
 * Create: shmget
 
-![img](img/shmget.png)
+![[Operating System/img/shmget.png]]
 
   > 查看：**ipcs**
 
 * Write: shmat(Shared Memory Attach)
 
-![img](img/shmat.png)
+![[Operating System/img/shmat.png]]
 
 * Read
 
-![img](img/shmrd.png)
+![[Operating System/img/shmrd.png]]
 
 #### 6.3.6 Shared Library
 
 * Shared Memory -> Data Share
 * Shared Library -> Code Share
 
-![img](img/sl.png)
+![[Operating System/img/sl.png]]
 
 **注：编译时，库里的应是<u>相对地址</u>**
 
-![img](img/sl2.png)
+![[Operating System/img/sl2.png]]
 
 > **Exercise: c + gcc -> Shared Library**
 
@@ -1566,7 +1566,7 @@ Advantage
 
 普通访问File
 
-![img](img/fwfile.png)
+![[Operating System/img/fwfile.png]]
 
 > 不能像指针一样在File中来回跳
 
@@ -1602,7 +1602,7 @@ int main()
 
 补充：open函数
 
-![img](img/open.png)
+![[Operating System/img/open.png]]
 
 运行mmap
 
@@ -1685,11 +1685,11 @@ CISC与RISC的区别
 
 #### 6.4.3 Instruction Backup
 
-![img](img/ib.png)
+![[Operating System/img/ib.png]]
 
 **前面说的CISC会有以下问题：**
 
-![img](img/ciscpb.png)
+![[Operating System/img/ciscpb.png]]
 
 假设MOVE和6在一个Page，2在下一个Page。当发现2是Abscent，就会产生一个**Page Fault**，**返回地址是2的地址（产生缺页中断处）。**这样就会先把MOV 6存在CPU的某个位置，等2进来后再拼一起，放到Instruction流水线上执行
 
@@ -1711,7 +1711,7 @@ CISC与RISC的区别
 
   Page被换出去，存在磁盘的哪儿？ -> Disk中的swap area
 
-![img](img/bs.png)
+![[Operating System/img/bs.png]]
 
   > Windows: C:\pagefile.sys, swapfile.sys就是
   >
@@ -1719,7 +1719,7 @@ CISC与RISC的区别
 
 #### 6.4.5 Separation of Policy and Mechanism
 
-![img](img/sopam.png)
+![[Operating System/img/sopam.png]]
 
 #### 6.4.6 Segmentation
 
@@ -1739,7 +1739,7 @@ Segentation已弃用 -> 改用Page
 
 MULTICS：多级翻译
 
-![img](img/multics.png)
+![[Operating System/img/multics.png]]
 
 * 一个Virtual Address还是表示成：SG + offset
 
@@ -1751,7 +1751,7 @@ MULTICS：多级翻译
 
   还有一张Segment Table
 
-![img](img/st.png)
+![[Operating System/img/st.png]]
 
   > 注意：得到的IA也是虚地址
 
@@ -1786,7 +1786,7 @@ Why file naming
 
 * Help you identify the information you need, i.e, help you speedup searching process
 
-![img](img/fnex.png)
+![[Operating System/img/fnex.png]]
 
 Example: regedit on Windows
 
@@ -1807,7 +1807,7 @@ Example: regedit on Windows
 
 Most important: exe and archive
 
-![img](img/exeac.png)
+![[Operating System/img/exeac.png]]
 
 > **Magic number: 标识符，表示程序是可执行的**
 >
@@ -1819,7 +1819,7 @@ Most important: exe and archive
 
 在linux下执行`ll`命令
 
-![img](img/ll.png)
+![[Operating System/img/ll.png]]
 
 > 第一列
 >
@@ -1832,7 +1832,7 @@ Device file下的block device file和character device file
 
 进入`/dev`目录，使用`ll`命令
 
-![img](img/devll.png)
+![[Operating System/img/devll.png]]
 
 > 第一列中c代表character device file
 >
@@ -1840,7 +1840,7 @@ Device file下的block device file和character device file
 
 使用`ll loop1`命令：
 
-![img](img/loop1.png)
+![[Operating System/img/loop1.png]]
 
 > 这个b就是block device file
 
@@ -1860,7 +1860,7 @@ Device file下的block device file和character device file
 
 想要修改文件的属性，只能通过操作系统提供的接口
 
-![img](img/fa.png)
+![[Operating System/img/fa.png]]
 
 #### 7.2.5 File Operations
 
@@ -1949,7 +1949,7 @@ Three kinds of file's logical structure(**这是每一个文件内部的结构�
 
 * **后两种都是在第一种的基础上搭建的！**
 
-![img](img/tkfs.png)
+![[Operating System/img/tkfs.png]]
 
 > **这三种是逻辑结构，不是在磁盘上存的物理结构**
 
@@ -1967,12 +1967,12 @@ Three kinds of file's logical structure(**这是每一个文件内部的结构�
 
 #### 7.3.1 Single-Level Directory
 
-![img](img/sld.png)
+![[Operating System/img/sld.png]]
 
 * Contains 4 files
 * Owned by 4 different people: A, B, C and D
 
-![img](img/sld2.png)
+![[Operating System/img/sld2.png]]
 
 * Conatins 4 files
 * Owned by 3 different people: A, B, and C
@@ -1983,13 +1983,13 @@ Problems of Single-Level Directory
 
 #### 7.3.2 Double-Level Directory
 
-![img](img/dld.png)
+![[Operating System/img/dld.png]]
 
 * 每个用户一个文件夹
 
 #### 7.3.3 Hierarchical Directory
 
-![img](img/hd.png)
+![[Operating System/img/hd.png]]
 
 > *Is it perfect?*
 >
@@ -2014,7 +2014,7 @@ Problems of Single-Level Directory
 
 Path Name Work
 
-![img](img/dtree.png)
+![[Operating System/img/dtree.png]]
 
 > 如果要想快点查找：使用索引
 >
@@ -2069,7 +2069,7 @@ ln -s s.c sln.c
 
 输入`ll s.c sln.c`可以看到他们的关系
 
-![img](img/sln.png)
+![[Operating System/img/sln.png]]
 
 ### 7.4 File System Implementation
 
@@ -2093,7 +2093,7 @@ How do we implement file?
 
 * Raw version: Continuous Allocation
 
-![img](img/ca.png)
+![[Operating System/img/ca.png]]
 
   > * 在特定情况下(类似机械硬盘)，读写效率比较高，机械臂来回动的时候，由于是连续的，移动少，**不用来回寻道**
   > * 不停生成删除文件，会形成大大小小的空洞，要消除空洞，就要把文件往前移一移(参考<a href = "#downward">downward</a>操作)
@@ -2102,13 +2102,13 @@ How do we implement file?
 
 按照上面那种方式存完了，只是表面上感觉着是顺序存的，**实际上还是分散在磁盘中，只不过是用了某种方式让用户从表面上看起来是顺序存的**。用什么方式呢？Maybe Link list
 
-![img](img/llcun.png)
+![[Operating System/img/llcun.png]]
 
 > * 这么存，随机访问很慢，每次都要从表头一个一个搜索，改进 -> FAT
 
 ##### 7.4.1.3 FAT(File Allocation Table)
 
-![img](img/fat.png)
+![[Operating System/img/fat.png]]
 
 > * 要访问的时候，**整张表全部加载到内存里**，这样访问某一个Block，查表(看下面英文)就行了
 > * 当磁盘超大的时候，FAT表太大了，太占空间，FAT表里存的是**所有文件**的Block占用情况
@@ -2137,7 +2137,7 @@ How do we implement file?
 * **一个文件对应一个Inode**，对比前面的FAT，要访问那个文件，加载哪个文件的Inode即可，不向上面那样导入整张表
 * 一个文件坏了，不会影响到其他文件，可靠性提高
 
-![img](img/inode.png)
+![[Operating System/img/inode.png]]
 
 * 前半部分存File Attributes
 * 逻辑块0对应的物理块
@@ -2164,7 +2164,7 @@ How do we implement file?
 
 ##### 7.4 2.1 Fixed size
 
-![img](img/fxsize.png)
+![[Operating System/img/fxsize.png]]
 
 > * 一个Directory Entry(目录项)的大小是固定的
 > * 比如前面一半存名字，后面一半可能存属性
@@ -2174,7 +2174,7 @@ How do we implement file?
 
 ##### 7.4.2.2 Improved
 
-![img](img/ipr.png)
+![[Operating System/img/ipr.png]]
 
 > * 以一个叉号表示文件名的结束
 > * 阴影表示**字节对齐**
@@ -2190,11 +2190,11 @@ How do we implement file?
 >
 > 使用`ls -i sln.c`看到sln.c对应Inode的编号
 >
-> ![img](img/lsisln.png)
+> ![[Operating System/img/lsisln.png]]
 >
 > 再看一下s.c的编号
 >
-> ![img](img/lsis.png)
+> ![[Operating System/img/lsis.png]]
 >
 > * **这个就是软连接-soft**
 
@@ -2202,15 +2202,17 @@ How do we implement file?
 
 对s.c创建硬链接，使用`ln s.c hln.c`，再看一下他的信息和Inode编号
 
-![img](img/hl.png)
+![[Operating System/img/hl.png]]
 
 和s.c一样，所以硬链接创建的是同一个文件
 
-![img](img/hli.png)
+![[Operating System/img/hli.png]]
 
 > 问题：
->
-![img](img/link.png)
+
+
+![[Operating System/img/link.png]]
+
 >
 > **可不可以这么想：软连接的话，如果改了源文件的名字，软连接就会失效。那是不是意味着，软连接其实就是一个新文件，在里面通过源文件的名字来打开这个文件，如果打开失败，返回的错误码和`open`系统调用返回的错误码是一样的。**
 
@@ -2257,7 +2259,7 @@ How do we implement file?
 
 #### 7.4.4 File System Layout
 
-![img](img/fsl.png)
+![[Operating System/img/fsl.png]]
 
 把整个磁盘看成一个大文件，一个顺序字节集合，磁盘可以被分成很多个区(Disk Partion)，每一个分区中又有Boot block, Super block, Free space mgmt ... 通常一个分区认为可以装一个操作系统
 
@@ -2293,9 +2295,9 @@ How do we implement file?
 
 #### 7.4.7 Virtual File System
 
-![img](img/pavs.png)
+![[Operating System/img/pavs.png]]
 
-![img](img/vfa.png)
+![[Operating System/img/vfa.png]]
 
 比如你电脑是NTFS的，为啥还能识别FAT32硬盘呢？就是因为虚拟文件系统，将各个不同的文件系统统一抽象成一个接口，变成类似c++的虚函数，java的抽象类中不加final的函数，这样不管啥系统，都调用这个父类的函数，就直接向下转型为自己的函数执行了，也就是多态，实现了多种文件系统的共存，移植方便
 
@@ -2310,13 +2312,13 @@ How do we implement file?
 
 **Keeping Track of Free Blocks**
 
-![img](img/ktfb.png)
+![[Operating System/img/ktfb.png]]
 
-![img](img/kt2.png)
+![[Operating System/img/kt2.png]]
 
 有些用户会恶意写垃圾数据，因此需要做一些限制：Quota table(配额表)
 
-![img](img/qtt.png)
+![[Operating System/img/qtt.png]]
 
 * Soft: 过了会警告
 
@@ -2340,7 +2342,7 @@ How do we implement file?
 
 增量式备份(incremental dump)：当修改文件时，不拷贝整个文件系统，只拷贝修改过的文件
 
-![img](img/dump.png)
+![[Operating System/img/dump.png]]
 
 * 应用：虚拟机镜像，拍照做，快速拍只拍改变的部分
 
@@ -2369,7 +2371,7 @@ How do we implement file?
 * UNIX: fsck
 * Windows scandisk(非法关机)
 
-![img](img/sd.png)
+![[Operating System/img/sd.png]]
 
 两张表，一张记当前block在bitmap/list中使用的出现次数；一张记空闲次数。那么只能是0 1或者1 0，其他情况都是有问题
 
@@ -2383,7 +2385,7 @@ How do we implement file?
 
 **Cache**
 
-![img](img/cache.png)
+![[Operating System/img/cache.png]]
 
 > 使用**LRU**，Hash算法
 >
@@ -2403,8 +2405,10 @@ How do we implement file?
 > * Log File Structure
 >
 > * 每次分配新块，分到上一个块的旁边
->
-![img](img/cid.png)
+
+
+![[Operating System/img/cid.png]]
+
 >
 >   把Inode分散，这样加载Inode的时候，不用移到外围，再移回来
 >
@@ -2425,7 +2429,7 @@ How do we implement file?
 
 #### 7.6.1 ISO 9660
 
-![img](img/iso.png)
+![[Operating System/img/iso.png]]
 
 > * the first field is a byte telling how long the entry is directory entries have variable lengths
 > * second byte tells how long the extended attributes are Directory entries may optionally have an extended attributes
@@ -2436,7 +2440,7 @@ How do we implement file?
 
 #### 7.6.2 MS-DOS
 
-![img](img/msdos.png)
+![[Operating System/img/msdos.png]]
 
 > * 文件名11个byte，左对齐，右补空格
 > * **Attributes描述一个文件是否是Read-Only, Archived, Hidden, System file**，不能写只读文件,这样避免了文件意外受损。存档位没有对应的操作系统的功能（即MS-DOS不检査和设置它）。存档位主要的用途是使用户级别的存档程序在存档ー个文件后清理这一位,其他程序在修改了这个文件之后设置这一位。以这种方式,ー个备份程序可以检査毎个文件的这一位来确定是否需要备份该文件。设置隐藏位能够使一个文件在目录列表中不出现,其作用是避免初级用户被ー些不熟悉的文件搞糊涂了。最后,系统位也隐藏文件。另外,系统文件不可以用del命令刪除,在MS-DOS的主要组成部分中，系统位都被设置
@@ -2445,7 +2449,7 @@ How do we implement file?
 
 #### 7.6.3 UNIX V7
 
-![img](img/unixv7.png)
+![[Operating System/img/unixv7.png]]
 
 > *给了这个目录项，问你：UNIX V7能容纳的文件个数是多少？*
 >
@@ -2456,11 +2460,11 @@ How do we implement file?
 > * 不是2^(14*8) = 2^112，因为这是：如果这些目录项都存在在同一个文件夹(一个表示为文件夹的目录项)下的时候，这些目录项(并不是所有目录项)的文件名肯定不同，这个数表示的是这个文件夹下的文件最多能有多少个不同的名字。
 > * 实际有多少，大于2^16就行了，因为软连接对应Inode，硬链接不对应Inode，所以(文件+软+硬)一定是大于(文件+软)=2^16
 
-![img](img/uxi.png)
+![[Operating System/img/uxi.png]]
 
 > 最后三个槽位都是扩展槽位
 
-![img](img/usc.png)
+![[Operating System/img/usc.png]]
 
 ## 8. I/O
 
@@ -2468,7 +2472,7 @@ How do we implement file?
 
 对于操作系统开发者，关心硬件要关心到什么程度？-> API
 
-![img](img/std.png)
+![[Operating System/img/std.png]]
 
 可以看到，假设两个键盘厂商生产两个键盘，接口都不一样，操作系统为了适配这两种键盘，就要设计两套接口，太麻烦也太浪费。解决办法，就是**将这些设备分类，为每一类设备提供一套接口**
 
@@ -2503,19 +2507,19 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 * Separate I/O and memory space
 
-![img](img/smi.png)
+![[Operating System/img/smi.png]]
 
   > 需要用特殊指令加上地址，表示访问的是IO space
 
 * Memory-Mapped I/O
 
-![img](img/mmi.png)
+![[Operating System/img/mmi.png]]
 
   > 不管在内存还是IO，用一种指令就行，比如MOVE
 
 * Hybrid
 
-![img](img/hy.png)
+![[Operating System/img/hy.png]]
 
 > 当今的CPU，采用的一般是Hybrid结构，早期的外设很慢，和CPU啥的是挂在不同的Address Bus上，所以用两种不同的指令访问不同的地址空间，也就是Separate类型，这样会比较快。后来外设(比如显存)越来越快，甚至和MM不相上下，所以和MM一块编址更加方便。而为了向前兼容，使用Hybrid
 
@@ -2527,11 +2531,11 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 * CPU，IO，MM用一根总线
 
-![img](img/algo.png)
+![[Operating System/img/algo.png]]
 
 * 在上面的基础上，CPU和MM之间搭了一根高速总线
 
-![img](img/gs.png)
+![[Operating System/img/gs.png]]
 
 **DMA(Direct Memory Access)**
 
@@ -2539,7 +2543,7 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 > 如果没有DMA，CPU想要读硬盘里的东西，要等很长时间，这个时间里CPU本来可以干其他的事。因此把这个工作交给DMA。**当CPU要读IO时，分配给DMA任务，DMA来控制读IO，当把内容读到MM后，通知一下CPU说我干完了就行**
 
-![img](img/dma.png)
+![[Operating System/img/dma.png]]
 
 * Address，Count，Control都是CPU给DMA发的，告诉它应该从哪儿读，读多少，是读还是写
 * **DMA在控制IO和MM进行读取的时候，完全不需要CPU干预，只是在读完的时候产生中断通知CPU我干完活了**
@@ -2560,7 +2564,7 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 **Interrupt**
 
-![img](img/it.png)
+![[Operating System/img/it.png]]
 
 * **和使用DMA的区别**：需要CPU亲自来把IO的东西塞到内存里。比如一个IO设备每次只能发一个字节，而CPU要读取1000个字节。那么如果使用DMA，只会在最后一次读完之后给CPU发送一个中断；而Interrupt方式每准备好一个字节都会给CPU发一个中断
 
@@ -2590,7 +2594,7 @@ I/O设备和它们提供的API也是有地址的，那怎么知道我访问的�
 
 I/O软件设计采用分层架构
 
-![img](img/layer.png)
+![[Operating System/img/layer.png]]
 
 *为什么采用分层？*
 
@@ -2621,11 +2625,11 @@ I/O软件设计采用分层架构
 
 写一个驱动程序的时候，不仅要关心操作系统的接口，还要关心硬件的接口，就像之前说的，一个SSD和U盘，都可以用read函数来读，那肯定是利用多态来定位到ssd_read或者flash_read。
 
-![img](img/jk.png)
+![[Operating System/img/jk.png]]
 
 **Device-Independent I/O Software**
 
-![img](img/fi.png)
+![[Operating System/img/fi.png]]
 
 > 虚拟文件系统就是一种Device-Independent Software
 >
@@ -2633,13 +2637,13 @@ I/O软件设计采用分层架构
 
 提供统一接口的好处
 
-![img](img/hc.png)
+![[Operating System/img/hc.png]]
 
 > TCP-IP网卡，不管是啥牌子的网卡，都可以用Socket做
 
 关于其中的Buffering
 
-![img](img/bf.png)
+![[Operating System/img/bf.png]]
 
 * 不用buffer，有可能会丢数据
 * 把buffer放在User space，如果那个page被swap out了咋办？
@@ -2648,7 +2652,7 @@ I/O软件设计采用分层架构
 
 如果把buffer放在内核态，会有copy问题
 
-![img](img/cppb.png)
+![[Operating System/img/cppb.png]]
 
 > 拷一个buffer要这么多次copy，那像百度网盘(网络其实也可以看做像硬盘、键盘这样的IO设备)那种在线看视频的话，会非常慢，因此这种会有特定优化，将buffer直接放在User space，并且操作的进程要进行保护，普通用户根本没有权限访问
 
@@ -2665,7 +2669,7 @@ I/O软件设计采用分层架构
 
 整个调用的流程
 
-![img](img/zlc.png)
+![[Operating System/img/zlc.png]]
 
 > 比如printf函数就是一个User process，调用屏幕的驱动，系统调用write
 
@@ -2673,7 +2677,7 @@ I/O软件设计采用分层架构
 
 比如要打印一个字符串，在CPU发送打印一个字符的指令之后，执行打印的过程是很慢的，CPU不能紧接着又发一个打印指令，因此在发送之前要检查打印机的状态。这样的话打印机就会有两个Reg，一个用来接收打印字符，一个用来表明自己的状态是Ready还是Busy
 
-![img](img/pt.png)
+![[Operating System/img/pt.png]]
 
 这样CPU的程序就是这样的
 
@@ -2760,13 +2764,13 @@ return_from_interrupt();
 
 两种硬盘的参数
 
-![img](img/td.png)
+![[Operating System/img/td.png]]
 
 * Server disk and PC disk: Server的更贵，存储密度低，通常一个文件分散在多个硬盘上，可以多个硬盘一块儿读，效率高
 
 新老硬盘对比
 
-![img](img/no.png)
+![[Operating System/img/no.png]]
 
 * 左新右旧
 * 新硬盘每道的扇区数不一样，存储密度高，能做到更大容量
@@ -2774,7 +2778,7 @@ return_from_interrupt();
 
 RAID(Redundant Array of Inexpensive / Independent Disks)
 
-![img](img/raid.png)
+![[Operating System/img/raid.png]]
 
 * RAID0: 不保存数据，没有备份
 * RAID1: 保存一份(后面的阴影)
@@ -2785,12 +2789,12 @@ RAID(Redundant Array of Inexpensive / Independent Disks)
 
 **Disk Formatting**
 
-![img](img/ds.png)
+![[Operating System/img/ds.png]]
 
 * Preamble: 标志一个扇区的开始，ECC校验位 ^c31505
 * 低级格式化：格式化出扇区，高级格式化：格式化出一些管理数据(bitmap, superblock...)，**存放在Data里面**。所以尽量做高级格式化，做低级格式化要把所有扇区重新建一遍，对硬盘损伤很大
 
-![img](img/df.png)
+![[Operating System/img/df.png]]
 
 * 第一圈的0和第二圈的0没对齐：为了优化
 
@@ -2804,31 +2808,31 @@ RAID(Redundant Array of Inexpensive / Independent Disks)
 
 Shorted Seek First(SSF)
 
-![img](img/ssf.png)
+![[Operating System/img/ssf.png]]
 
 > 假设现在在11，然后读11的时候，来了一堆请求 ，要读12,9,16,1,34，那就看这几个里谁离11最近读谁，那就是12，然后再看剩下的谁离12最近，9，所以读9……然后算seek motion就是看11读12挪了1,12读9挪了3
 
 Elevator
 
-![img](img/ele.png)
+![[Operating System/img/ele.png]]
 
 > 就和坐电梯一样，只能往一个方向走，只有目的地都在另一边时才转向
 
 **Error handling**
 
-![img](img/eh.png)
+![[Operating System/img/eh.png]]
 
 > 有保留扇区，如果第七块坏了，就把保留扇区替换那块坏的，号还是7
 
 **CD-ROM**
 
-![img](img/cdr.png)
+![[Operating System/img/cdr.png]]
 
 * 比如有坑是0，凸起是1，那就能存数据了
 
 **Stable Storage**
 
-![img](img/ss.png)
+![[Operating System/img/ss.png]]
 
 > 两块盘
 >
@@ -2839,13 +2843,13 @@ Elevator
 
 **Clock**
 
-![img](img/cl.png)
+![[Operating System/img/cl.png]]
 
 > Crystal oscillator：发射方波，发一个Counter减一下，减到0后就发一个中断
 
 **Soft Timer**
 
-![img](img/scl.png)
+![[Operating System/img/scl.png]]
 
 > 用一个时钟通过软件来模拟多个时钟
 
@@ -2853,7 +2857,7 @@ Elevator
 
 比如用户想要访问远方的一个主机，那就用一套硬件练到远方的主机上，这套硬件就叫做一个终端
 
-![img](img/ter.png)
+![[Operating System/img/ter.png]]
 
 > 比如登陆网站访问网页，那当前的电脑就可以叫终端，只不过这个终端是智能终端，早期的终端没有CPU啥的东西，只有键盘鼠标显示器，所以通过一个接口RS-232
 
@@ -2861,11 +2865,11 @@ Elevator
 
 Section management
 
-![img](img/sm.png)
+![[Operating System/img/sm.png]]
 
 **GUI Software**
 
-![img](img/gui.png)
+![[Operating System/img/gui.png]]
 
 ```c
 #include <windows.h>
@@ -2915,17 +2919,17 @@ long CALLBACK WndProc(HWND hwnd, UINT message, UINT wParam, long lParam){
 
 可以在网络上进行图像的处理
 
-![img](img/xw.png)
+![[Operating System/img/xw.png]]
 
 > **Exercise: **虚拟机Linux，然后Windows上下X Window程序，然后"远程"连接虚拟机
 
 **Power Management**
 
-![img](img/pm.png)
+![[Operating System/img/pm.png]]
 
 > 显示器省电，window1要显示要点亮9块，那把它移到左上角，就只点亮4块了
 
-![img](img/pmc.png)
+![[Operating System/img/pmc.png]]
 
 > CPU省电
 
@@ -2969,8 +2973,8 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
   > * Must be a circular chain of 2 or more processes
   > * Each is waiting for resource held by next member of the chain
-  >
-![img](img/cir.png)
+
+![[Operating System/img/cir.png]]
 
 解释一下必要条件：有Deadlock，一定同时有这4个；但是有这4个里的某些，不一定是Deadlock
 
@@ -2989,13 +2993,13 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
 **每种资源有一个**
 
-![img](img/dd.png)
+![[Operating System/img/dd.png]]
 
 > 使用离散数学中的环，如果有环，那这个程序就有可能会产生Deadlock
 
 **每种资源有多个**
 
-![img](img/dd2.png)
+![[Operating System/img/dd2.png]]
 
 > 用个矩阵来检测
 >
@@ -3006,7 +3010,7 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
 咋整捏？看个栗子就懂了
 
-![img](img/lz.png)
+![[Operating System/img/lz.png]]
 
 > 现在有3个进程，有四种资源，一共分别有4, 2, 3, 1个；在当前状态下，还能用的有2, 1, 0, 0个
 >
@@ -3044,7 +3048,7 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
 **Resource trajectories**
 
-![img](img/dilei.png)
+![[Operating System/img/dilei.png]]
 
 > 用的比较少，看有没有地雷，有就绕着走
 
@@ -3057,7 +3061,7 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
   > * Safe State不代表不产生死锁，只是有那么一丝希望
   > * Unsafe State也不一定正处于死锁，只是有可能离死锁已经不远了；Safe也不一定正处于死锁，只是以后有可能遇到死锁，也有可能遇不到
 
-![img](img/su.png)
+![[Operating System/img/su.png]]
 
 > 有五种状态，判断是Safe还是Unsafe。Free表示**ABC都想要**的，而且空闲的资源
 >
@@ -3068,13 +3072,13 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
 > What the algo-rithm does is check to see if <u>granting the request leads to an unsafe state</u>. If so, the request is denied. If granting the request leads to a safe state, it is carried out.
 
-![img](img/bks.png)
+![[Operating System/img/bks.png]]
 
 * a：随便走都能分完，一次分一个就行，safe
 * b：先给c，然后给b或者d，然后……也是safe
 * c：不管咋给都不行，unsafe
 
-![img](img/bks2.png)
+![[Operating System/img/bks2.png]]
 
 * 现在有5个进程，4种资源，A表示还能用的资源，E表示总共有多少资源，P表示已经分配了多少资源
 * 左边矩阵是每个进程已经有了多少资源；右边是每个进程还要多少才完事儿
@@ -3131,9 +3135,10 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
   > 最推荐的方式
   >
   > 假设有两个进程，一个进程做`p(1); p(2);`，另一个进程做`p(2); p(1);`那么如果第一个进程在`p(1)`的时候没问题，然后进到`p(2)`的时候把自己阻塞了，就代表"我已经占用了资源1，但我还等着你把资源2给我"；同理，另一个进程就是"我已经占用了资源2，但我还等着你把资源1给我"。这样就会导致Deadlock。如果让两个进程都是`p(1); p(2)`，那么就不会产生Deadlock，原因就是破坏了环路等待
-  >
-![img](img/cw.png)
-  >
+  
+
+![[Operating System/img/cw.png]]
+
   > provide a global numbering of all the resources, processes can request resources whenever they want to, but all requests must be made **in numerical order**.
   >
   > * Normally ordered resources
@@ -3162,7 +3167,7 @@ Deadlock的4个必要条件(如果出现了Deadlock的话，那么)
 
 ## 10. Multiprocessor
 
-![img](img/mp.png)
+![[Operating System/img/mp.png]]
 
 > * a: shared memory motiprocessor
 >
