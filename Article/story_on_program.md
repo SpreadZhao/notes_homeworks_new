@@ -355,7 +355,7 @@ Core idea of Depth First Search: **If one node has connected neighbors <u>but no
 
 ![[Article/resources/Drawing 2023-03-22 16.23.29.excalidraw.png|340]] ![[Article/resources/Drawing 2023-03-22 16.26.07.excalidraw.png|340]] 
 
-![[Article/resources/Drawing 2023-03-22 16.27.32.excalidraw.png|340]] ![[Article/resources/Drawing 2023-03-22 16.27.32.excalidraw.png|340]]
+![[Article/resources/Drawing 2023-03-23 20.45.14.excalidraw.png|340]] ![[Article/resources/Drawing 2023-03-22 16.27.32.excalidraw.png|340]]
 
 ![[Article/resources/Drawing 2023-03-22 16.31.19.excalidraw.png|340]] ![[Article/resources/Drawing 2023-03-22 16.32.59.excalidraw.png|340]]
 
