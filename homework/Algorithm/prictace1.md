@@ -186,6 +186,305 @@ int PriorityQueue::dequeue(){
 
 这里完全按照之前的叙述编写，在上面又加了一些特殊情况的处理。
 
+## 3.3 Quick Sort
+
+快速排序的核心思想，就是选出一个pivot，将比它小的和比它大的放在两边，并递归地进行左半边和右半边。因此，总体思想是这样的：
+
+```cpp
+void SortHelper::QSort(vector<int>& nums, int low, int high){  
+    int pivot;  
+    if(low < high){  
+        pivot = partition(nums, low, high);  
+        QSort(nums, low, pivot - 1);  
+        QSort(nums, pivot + 1, high);  
+    }  
+}
+```
+
+其中，`partition()`函数会修改`nums`这个序列，将我们选择的pivot放到该去的位置，并将它的坐标返回。下面我们来着重讲解一下这个函数的实现。
+
+首先，是pivot的选择，这个选择可以很随意，也可以很精巧。我们可以每次都选择序列(或子序列)中的第一个元素作为pivot，也可以使用比较靠谱的算法来进行选择(比如[[Algorithm/ea#3.3 (Median) Select|Median Select]])。在下面的实现中，我们使用前者。之后，就是对这个数组的操作了。我们现在要做的，**是给这个pivot选定一个位置，让所有比它小的在它左边，所有比它大的在它右边**。
+
+```cpp
+int SortHelper::partition(vector<int>& nums, int low, int high){  
+    int pivot = nums.at(low);  
+    while(low < high){  
+        while(low < high && nums.at(high) >= pivot) high--;  
+        swap(nums, low, high);  
+        while(low < high && nums.at(low) <= pivot) low++;  
+        swap(nums, low, high);  
+    }  
+    return low;  
+}
+```
+
+我们来逐行解释一下这个while循环。首先是第一句：
+
+```cpp
+while(low < high && nums.at(high) >= pivot) high--;  
+```
+
+这句话的意思是，只要high指针指向的元素比pivot大，那么就不统计它了，直接让high往回走。因此只要符合条件，就让high--。之后，如果一旦跳出了这个循环，**就表示high指针发现了一个比pivot小的元素**。那此时，我们就清楚了pivot的位置：至少是这里！由于我们让low就是pivot，因此这里直接将low和high指向的元素互换：
+
+```cpp
+swap(nums, low, high);
+```
+
+互换完之后，low这个位置就变成了那个**原来比pivot小的元素**。因此在下一个while循环中，第一次是一定会符合条件的，会让low++。在之后的循环中，我们的目的就是找到那个比pivot大的元素，并让它位于pivot的右边：
+
+```cpp
+while(low < high && nums.at(low) <= pivot) low++;
+    swap(nums, low, high);  
+```
+
+我们可以发现，这个函数神奇的地方就在与，它使用两个指针，**这两个指针扫过的区域，都是已经确定了和pivot大小关系的元素**：
+
+![[homework/Algorithm/resources/Drawing 2023-03-26 12.58.40.excalidraw.png]]
+
+**而low和high中的一个，就负责承载pivot这个元素**。每一次交换的过程中，这个pivot要么被换到了low身上，要么被换到了high身上。随着not sure区域逐渐变短，我们就逐渐地为pivot找到了它该去的地方。
+
+下面，是题目中的那两个问题。
+
+<h2>How many comparisons will Quicksort do on a list of n elements that all have the same value?</h2>
+
+从上面的叙述中也看到了，**只有比pivot小或者比pivot大的时候，才会进行交换，即改变pivot的下标**。如果所有元素都一样的话，最终pivot依然还是处于low的位置。此时两边的子序列中一个是空，另一个是除了pivot以外的其它元素。在右边的元素进行递归时，依然会进行同样的过程。这意味着，**我们每一次递归只能处理好一个元素的位置**。如果我们将这个比较过程画成一个树，那么将是一棵斜树，树的深度就是我们要进行递归的次数。因此，我们比较的次数为：
+
+$$
+(n - 1) + (n - 2) + \cdots + 1 = \frac{n(n - 1)}{2}
+$$
+
+此时时间复杂度为：
+
+$$
+O(n^2)
+$$
+
+---
+
+<h2>What are the maximum and minimum number of comparisons will Quicksort do on a list of n elements, give an instance for maximum and minimum case respectively.</h2>
+
+既然一边倒的划分会导致最坏情况，那么均匀的分配就是最好的情况了。如果我们每次都恰好让pivot处于中间的位置，那么两边的元素会非常平均。如果我们把它画成一棵树的话，这棵树的左右子树会非常均匀，因此这棵树的深度大概为：
+
+$$
+\lfloor log_2n \rfloor + 1
+$$
+
+因此，我们只需要根据Divide and Conquer的思想，将每个结点需要的时间加起来，就能得到最终的时间复杂度：
+
+$$
+\begin{array}{rclcl}
+T(n) & \leqslant & 2T(\dfrac{n}{2}) + n \\
+& \leqslant & 2(2T(\dfrac{n}{4}) + \dfrac{n}{2}) + n & = & 4T(\dfrac{n}{4}) + 2n \\
+& \leqslant & 4(2T(\dfrac{n}{8}) + \dfrac{n}{4}) + 2n & = & 8T(\dfrac{n}{8}) + 3n \\
+\cdots \\
+& \leqslant & n(T(1) + (log_2n)) \times n & = & O(nlogn)
+\end{array}
+$$
+
+至于最坏的情况，在第一个问题中已经叙述了，就是序列原本就有序，或者元素都相同的情况下。根本原因就是pivot最终处于序列的端点而非正中间。以下是二者的举例：
+
+```c
+// 最好：
+[2, 6, 1, 8, 3, 7, 5, 4]
+
+// 最坏：
+[1, 2, 3, 4, 5]
+```
+
+## 3.4 Median of Two Sorted Arrays
+
+本题的描述很像力扣的第四题，难度为Hard：
+
+[Median of Two Sorted Arrays - LeetCode](https://leetcode.com/problems/median-of-two-sorted-arrays/)
+
+> *我受力扣的影响，以为成了第k小的元素。因此下面的大实际上是认为**数字越小越大**。而题中的要求就是kth largest。所以算法理应将大小相互调换，不过无伤大雅。*
+
+我们要在两个已经有序的序列中，找出第k大的元素。稍微想一想就能知道，这个元素一定位于这两个数组中某一个的**前面一段的位置**，而这个前面一段就和k的大小有关。如果k是3的话，那这个值存在的区间就是`nums1[0] ~ nums1[2]`以及`nums2[0] ~ nums2[2]`。但是我们要注意，这只是k存在的区间，**而在k已经确定的条件下，我们能确定点儿什么呢**？下面我们来学习一下牛人的思想：
+
+![[homework/Algorithm/resources/Drawing 2023-03-26 14.34.00.excalidraw.png]]
+
+我们从这两个序列中一共选出k个元素。其中nums1选x个，nums2选y个(至于x和y是多少，之后再讨论)。因此，位于这个区域边缘的两个数字的编号就是x - 1和y - 1。那么，如果`nums1[x - 1] > nums2[y - 1]`这个条件成立的话，会发生什么呢？我们能说：**`nums2`目前选中的所有数字，都是比我们最终选出的target要大的**！换句话说，就是它们正好被包含在了k这个范围内。
+
+![[homework/Algorithm/resources/Drawing 2023-03-26 14.40.51.excalidraw.png]]
+
+为什么会这样说呢？我们给一个例子：
+
+```c
+// nums1
+[7, 8, 9, 10, ...]
+
+// nums2
+[1, 2, 3, 4, 5, 6, 21, ...]
+```
+
+如果我们要选出第8大的，也就是数字8。而我们选择的区域是这样的：
+
+![[homework/Algorithm/resources/Pasted image 20230326144416.png]]
+
+正好是8个元素。那么既然9要比5大，就说明**1到5这几个数字都不可能是第8大的**，它们正好被包含在了前8位中。
+
+> *这里注意，我认为1是最大的，2是第二大的... ...，数字越大，认为它越小。读者可以认为是**考试成绩的排名**之类的，第一名是最大的。*
+
+何出此言？我们使用反证法证明一下：如果第8大的数字target出现在了`nums[2]`的前5位中，并且它在`nums[2]`是第r位，我们能够得到一系列的结论：
+
+1. `nums2[y - 1]`(也就是上图中的5，nums2的第y个元素)一定要比target大，因为都是升序排列的；
+2. 由于r一定$\leqslant$y，因此r也一定$\leqslant x + y = k$；
+3. `nums2`的前r - 1个元素一定$\leqslant$target，`nums2`从第r + 1个元素开始必定要大于target，依然是因为升序排列。这其中也必然包括第y个元素；
+4. 由于$r - 1 \leqslant k$，而nums2只有r - 1个元素比target小，所以`nums1`中从第一个元素开始，必然有$k - (r - 1) = x + y - (r - 1)$个元素比target小；
+
+从第2个结论可以得到，$y - r \geqslant 0$，再根据第4个结论，可以得到`nums1`中比target小的元素是$x + y - (r - 1) \geqslant x$个。那么就意味着，从`nums[x - 1]`开始，之后的所有元素都满足下面的条件：
+
+```
+it <= target <= nums2[y - 1]
+```
+
+不等式的后半部分出自结论3。很显然，**这和我们之前的假设`nums[x - 1] > nums[y - 1]`是矛盾的**。因此，target必定不会出现在`nums2`的前y个元素中。根据这个结论，我们就可以做出响应的操作了：
+
+* 从两个序列中框出k个元素；
+* 比较边缘的两个元素的大小；
+* **舍弃小的那个元素以及其左边的所有元素**；
+* 从新的两个表中继续上述过程。
+
+下面是上述过程的代码实现：
+
+```cpp
+int SortHelper::medianSelect(vector<int>& nums1, vector<int>& nums2, int k) {  
+    int m = nums1.size();  
+    int n = nums2.size();  
+    if (m > n) {  
+        return medianSelect(nums2, nums1, k);  
+    }  
+    if (m == 0) {  
+        return nums2[k - 1];  
+    }  
+    if (k == 1) {  
+        return std::min(nums1[0], nums2[0]);  
+    }  
+    int i = std::min(m, k / 2);  
+    int j = k - i;  
+    if (nums1[i - 1] < nums2[j - 1]) {  
+        vector<int> nums1_new(nums1.begin() + i, nums1.end());  
+        return medianSelect(nums1_new, nums2, k - i);  
+    } else {  
+        vector<int> nums2_new(nums2.begin() + j, nums2.end());  
+        return medianSelect(nums1, nums2_new, k - j);  
+    }  
+}
+```
+
+其中最核心的部分，就是上面介绍的一大堆：
+
+```cpp
+int i = std::min(m, k / 2);  
+int j = k - i;  
+if (nums1[i - 1] < nums2[j - 1]) {  
+	vector<int> nums1_new(nums1.begin() + i, nums1.end());  
+	return medianSelect(nums1_new, nums2, k - i);  
+} else {  
+	vector<int> nums2_new(nums2.begin() + j, nums2.end());  
+	return medianSelect(nums1, nums2_new, k - j);  
+}  
+```
+
+其中的i和j就是我们说过的x和y。而i和j的取值，就保证了i + j = k的成立。至于为什么是m和k/2中小的那个，就是让每次框到两个序列中数字的个数尽量差不多，但不能比这个序列的长度还多。**我们每次都让nums1是更短的那个序列，也是为了不让这句代码出现异常**：
+
+```cpp
+int m = nums1.size();  
+int n = nums2.size();  
+if (m > n) {  
+	return medianSelect(nums2, nums1, k);  
+}
+```
+
+现在说回刚才的例子：
+
+![[homework/Algorithm/resources/Pasted image 20230326144416.png]]
+
+如果我们舍弃了`nums2`的前5个元素，那么就意味着，**在新的序列里，我们只需要选出第8 - 5 = 3大的数字了**。所以，k变成了1的时候，我们只需要看这两个序列开头的元素谁更小，返回就可以了。
+
+至于`m == 0`的情况，就是当断的序列中根本不存在元素时，这时第k大的数就是`nums2`中第k大的数字。所以直接返回就可以了。
+
 # 4. 实验环境
 
+* OS: Windows 11
+* IDE: Clion
+* Compiler: g++, CMake
+
 # 5. 项目测试
+
+## 5.1 Two Sum
+
+```cpp
+vector<int> nums{  
+    10, 20, 14, 1, 3, 77, 33, 18  
+};  
+int target = 19;  
+  
+SortHelper sh;  
+std::cout << sh.sumToTarget(nums, target) << std::endl;
+```
+
+![[homework/Algorithm/resources/Pasted image 20230326151924.png]]
+
+---
+
+```cpp
+vector<int> nums{  
+    10, 20, 14, 1, 3, 77, 33, 18  
+};  
+int target = 999;  
+  
+SortHelper sh;  
+std::cout << sh.sumToTarget(nums, target) << std::endl;
+```
+
+![[homework/Algorithm/resources/Pasted image 20230326151953.png]]
+
+## 5.2 Priority Queue
+
+```cpp
+int val[] = {  
+    1, 5, 6, 4, 3  
+};  
+  
+PriorityQueue q(val, sizeof(val) / sizeof(int));  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";  
+std::cout << q.dequeue() << " ";
+```
+
+![[homework/Algorithm/resources/Pasted image 20230326152356.png]]
+
+> -1表示队列已经空了，无法再出队。
+
+## 5.3 Quick Sort
+
+```cpp
+vector<int> nums{  
+    10, 20, 14, 1, 3, 77, 33, 18  
+};  
+  
+SortHelper s;  
+s.QuickSort(nums);  
+for(auto n : nums) std::cout << n << " ";
+```
+
+![[homework/Algorithm/resources/Pasted image 20230326152605.png]]
+
+## 5.4 Median Select
+
+```cpp
+vector<int> a{1, 4, 5, 6, 7, 8};  
+vector<int> b{3, 12, 15, 19};  
+  
+SortHelper sh;  
+  
+for(int i = 10; i >= 1; i--) 
+	std::cout << "k = " << i << ": " << sh.medianSelect(a, b, i) << std::endl;
+```
+
+![[homework/Algorithm/resources/Pasted image 20230326152909.png]]
