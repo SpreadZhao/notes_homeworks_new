@@ -59,3 +59,29 @@ A.onPause() -> A.onSaveInstanceState() -> A.onStop() -> A.onDestroy() -> A.onCre
 2. singleTop：当Activity处于栈顶，只允许创建一次(栈内)。
 3. singleTask：任何Activity都只能被创建一次(栈内)。
 4. singleInstance：特立独行，只要Activity被设为这种模式，创建的时候使用专享返回栈。一般用于和其他程序共享Activity。
+
+# 2. Service
+
+[Services overview  |  Android Developers (google.cn)](https://developer.android.google.cn/guide/components/services)
+
+> A Service is an [application component](https://developer.android.google.cn/guide/components/fundamentals#Components) that can perform long-running operations in the background. It does not provide a user interface. Once started, a service might continue running for some time, even after the user switches to another application. Additionally, a component can bind to a service to interact with it and even perform interprocess communication (IPC). For example, a service can handle network transactions, play music, perform file I/O, or interact with a content provider, all from the background.
+
+## 2.1 Start of Service
+
+![[Article/resources/Pasted image 20230328205312.png|400]]
+
+### 2.1.1 startService()
+
+其它组件可以调用`startService()`函数来启动service，同时可以传递Intent作为参数，来向Service提供一些信息。比如，在后台下载服务时，可以将下载地址的Url传递进去。从Service来看，它回在`onStartCommand()`函数调用时接收到这个intent。
+
+```kotlin
+override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {        
+	// The service is starting, due to a call to startService()        
+	return startMode  
+}
+```
+
+使用这种方式，即使Service所关联的Activity挂掉了，它还是会继续运行。直到Service调用`stopSelf()`或者其它组件调用`stopService()`时才会停止。
+
+### 2.1.2 bindService()
+
