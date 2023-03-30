@@ -85,3 +85,121 @@ override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {  
 
 ### 2.1.2 bindService()
 
+这种方式启动的Service更像是CS架构中的Server，而对应的客户端就是启动它的Activity或者其它组件。当Activity调用了`bindService()`绑定一个Service，那么它就能够调用这个Service提供的各种接口。而我们必须手动实现`bindService()`函数，如果不用的话，需要返回一个null。
+
+```kotlin
+override fun onBind(intent: Intent): IBinder? {
+// We don't provide binding, so return null        
+	return null    
+}
+```
+
+# 3. Broadcast Receiver
+
+## 3.1 Receiving Broadcasts
+
+### 3.1.1 Menifest-declared Receivers
+
+在AndroidMenifest.xml中注册的，也叫静态的Receiver。
+
+```xml
+<!-- If this receiver listens for broadcasts sent from the system or from  
+     other apps, even other apps that you own, set android:exported to "true". -->  
+<receiver android:name=".MyBroadcastReceiver" android:exported="false">    
+	<intent-filter>        
+		<action android:name="APP_SPECIFIC_BROADCAST" />    
+	</intent-filter>  
+</receiver>
+```
+
+这样注册的组件就会监听`APP_SPECIFIC_BROADCAST`这个事件，并调用我们重写的`onReceive()`函数来实现相应的逻辑了。**这种注册下，即使APP没有在运行，也能做到接受广播**。
+
+```kotlin
+private const val TAG = "MyBroadcastReceiver"  
+  
+class MyBroadcastReceiver : BroadcastReceiver() {    
+	override fun onReceive(context: Context, intent: Intent) {        
+		StringBuilder().apply {            
+			append("Action: ${intent.action}\n")            
+			append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")            
+			toString().also { log ->                
+				Log.d(TAG, log)                
+				val binding = ActivityNameBinding.inflate(layoutInflater)                
+				val view = binding.root          
+				setContentView(view)                
+				Snackbar.make(view, log, Snackbar.LENGTH_LONG).show()            
+			}        
+		}    
+	}  
+}
+```
+
+### 3.1.2 Context-registered Receivers
+
+动态注册的话，那就是什么时候用到，什么时候注册。**注册的方式就是使用IntentFilter**。IntentFilter有一个`addAction()`方法，可以用来添加类似`APP_SPECIFIC_BROADCAST`这样的事件。因此，我们添加够了事件之后，只需要实现一个BroadcastReceiver的子类并实现它的`onReceive()`函数，最后就只需要将Receiver对象和IntentFilter对象传到`registerReceiver()`方法中就可以了。这个方法就是最终的注册方法。注册谁？什么时候注册？
+
+对于动态注册的广播，其生命周期和组件绑定。当组件消亡时，对应的Receiver也应该注销。
+
+## 3.2 Classify
+
+标准广播和有序广播：
+
+![[Article/resources/Pasted image 20230329144050.png]]
+
+![[Article/resources/Pasted image 20230329144100.png]]
+
+# 4. Content Provider
+
+当Intent传递的数据大小超过1M时，就会崩溃。因此可以用Content Provider来传递大量的数据。ContentProvider这个类其实很像DAO设计模型，它就是给其它进程提供了获取数据的接口。而其它进程就可以用ContentResolver来获取其提供的数据。
+
+# 5. Intent
+
+## 5.1 Explicit Intent
+
+```kotlin
+val intent = new Intent(this, SecondActivity.class);
+startActivity(intent);
+```
+
+## 5.2 Implicit Intent
+
+```xml
+<activity android:name="ShareActivity" android:exported="false">    
+	<intent-filter>        
+		<action android:name="android.intent.action.SEND"/>        
+		<category android:name="android.intent.category.DEFAULT"/>        
+		<data android:mimeType="text/plain"/>    
+	</intent-filter>  
+</activity>
+```
+
+打开的时候之说我想干什么，不说启动哪个，让Activity自己来根据自己的Intent-filter判断自己是否应该被打开。
+
+```kotlin
+// Create the text message with a string.  
+val sendIntent = Intent().apply {    
+	action = Intent.ACTION_SEND  
+    putExtra(Intent.EXTRA_TEXT, textMessage)    
+    type = "text/plain"  
+}
+  
+// Try to invoke the intent.  
+try {    
+	startActivity(sendIntent)  
+} catch (e: ActivityNotFoundException) {    
+	// Define what your app should do if no activity can handle the intent.  
+}
+```
+
+## 5.3 Components
+
+Intent的组成部分：
+
+* conponentName：目的组件
+* action：能响应的动作
+* category：动作的类别
+* data：动作要操作的数据
+* type：data的类型
+* extras：扩展信息(在Activity之间传数据)
+* Flags：运行模式
+
