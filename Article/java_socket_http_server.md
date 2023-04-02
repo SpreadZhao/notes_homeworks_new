@@ -199,7 +199,7 @@ if(returnMsg instanceof File) {
 
 ## 2.1 Duplicate Works
 
-## 2.1 重复工作
+## 2.1 Duplicate Works
 
 有了这个小爱同学的例子，我们已经对socket编程有了一个最最基本的认识。那么接下来就开始用java来手撸一个服务器罢！
 
