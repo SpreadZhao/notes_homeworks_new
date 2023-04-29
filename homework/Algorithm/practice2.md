@@ -355,3 +355,10 @@ fun maxSum(arr: IntArray): Int {
 
 # 5. 项目测试
 
+![[homework/Algorithm/resources/Pasted image 20230425124105.png]]
+
+![[homework/Algorithm/resources/Pasted image 20230425124137.png]]
+
+![[homework/Algorithm/resources/Pasted image 20230425124206.png]]
+
+![[homework/Algorithm/resources/Pasted image 20230425124523.png]]
