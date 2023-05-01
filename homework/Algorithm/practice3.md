@@ -172,32 +172,25 @@ fun zeroOneKnap3(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {
 
 ## 3.2 A simple scheduling problem
 
+本题非常简单：给一些任务的执行时间，输出最短的**平均完成时间**。具体的细节可以看[[Operating System/os#4.3.2 SJF Example(Non Preemptive)|操作系统笔记]]对这部分的讲解。在本题中，**我们假设所有任务的到达时间都是0**。
 
-
-## 3.3 Longest Common Substring
-
-这道题和上道题唯一的区别是：**这道题只能向左上方要数据**！因为是字串而不是子序列，所以两个指针必须同时往左去，才代表之前的序列。而只要当前的字符不相等，那么直接可以肯定：**这两个符串从i到j的结果就是0**：
+既然要算最小的平均完成时间，那么只需要让完成时间之和最小就可以了，因为分母一定是任务的总数，不会改变。如果想要让完成时间的总和最小，那么一定是**越短的任务越要出现在前面**。因为出现在前面的任务加的次数就多，所以这样做总和就能达到最小。因此我们只需要对时间数组进行一个排序，然后按顺序将完成时间计算好就可以了。实际上，虽然没有很复杂的操作，也是体现出了贪心算法的思想。我们每次总是选择了最短的那个任务，也就让完成时间达到了最小。
 
 ```kotlin
-fun longestCommonSubstring(x: String, y: String, m: Int, n: Int): Int {  
-    val dp = Array(m + 1){IntArray(n + 1)}  
-    var res = 0  
-    for(i in 0..m){  
-        for(j in 0..n){  
-            if(i == 0 || j == 0) dp[i][j] = 0  
-            else if(x[i - 1] == y[j - 1]){  
-                dp[i][j] = dp[i - 1][j - 1] + 1  
-                res = max(res, dp[i][j])  
-            }  
-            else  
-                dp[i][j] = 0  
-        }  
-    }  
-    return res  
+fun minAverageCompletion(time: IntArray): Double {  
+	time.sort()  
+	var ac = 0.0; var sum = 0.0  
+	for (t in time) {  
+	sum += t  
+	ac += sum / time.size  
+	}  
+	return ac  
 }
 ```
 
-另一个区别是，我们不返回最后的`dp[m][n]`，而是返回这个数组中的最大值，为什么呢？因为前者`dp[m][n]`一定同时也是最大值！如果统计的是子序列的话，对于整个两个字符串来说，最长子序列的长度本身也一定是最长的；而最长字串却没有这样的特点。
+## 3.3 Single-source shortest paths
+
+
 
 ## 3.4 Max Sum
 
