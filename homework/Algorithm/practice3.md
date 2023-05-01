@@ -190,54 +190,147 @@ fun minAverageCompletion(time: IntArray): Double {
 
 ## 3.3 Single-source shortest paths
 
+最短路径最常见的算法就是Dijkstra和Bellman Ford。二者在[[Networking/dn#19.5 Algorithms in RIP and OSPF|计算机网络笔记]]中都有过介绍。而如果是带负边的图，我们只能用Bellman Ford。想象这种情况：
 
+![[homework/Algorithm/resources/Drawing 2023-05-01 13.25.00.excalidraw.png]]
 
-## 3.4 Max Sum
+这三个节点到达任意节点的最短距离都是负无穷。因为每绕一圈都会导致距离变小。如果想检测出这种负环，那么只能使用Bellman Ford算法。代价就是，它比Dijsktra的时间复杂度要高。
 
-此题为leetcode第53题：[Maximum Subarray - LeetCode](https://leetcode.com/problems/maximum-subarray/)
+现在想象，我已经知道了起点A到达当前节点C的最短距离是D。而如果我们找到了一条新的边L满足：
 
-此题是一道比较小的动态规划，并且也不需要大量的空间。我们从头开始遍历，只要满足：
+* L的起点是B；
+* L的终点是C；
+* **A到达起点B的距离不是无穷大**，
+
+> 第三个条件我们之后会解释
+
+那么这条边就很有可能成为一个新的候选人，只要它满足：
+
+$$
+A到达B的距离 + L的长度 \lt D
+$$
+
+这就说明，A到达C的最短距离不是D了，而是从A到B再沿着这条新的边走到C的距离。下面，我们通过实际代码来把这部分逻辑实现出来。首先思考一下都需要什么数据，如果像题目要求，只传入邻接矩阵的话，我们根本没办法进行这样的遍历，**因为我们需要对每条边都进行遍历**；另外，我们还需要知道每条边的起点是谁，终点是谁，权值是多少。因此，我们首先需要生成一个边的集合：
 
 ```kotlin
-pre + curr > curr
-```
-
-这是什么意思？也就是这个序列前面已经算出来的最优解如果加上当前的值比当前这个数大。我们可能会有这样的疑问：如果想让这个和越来越大，不应该是新的结果比原来的大吗？也就是：
-
-```kotlin
-pre + curr > pre
-```
-
-注意，我们的目的并不是从头开始寻找某个序列，而是**不一定从哪个位置开始**。因此前者的条件只要不成立，那么curr的位置就应该是一个新的候选人的开始。为什么这么说？如果不成立的话，那就代表`pre <= 0`，这意味着之前的序列对于当前的curr是一个**拖后腿**的存在。所以我们只能往后进行统计。并且更重要的是，我们每一次保存的并不是全局的最优解，而是**对于当前这个元素的局部最优解**。如果条件不成立的话，那么这个最优解将成为新的开始。
-
-于此同时，我们在每一次确定了新的局部最优解后，都要不断选择最大的，从而最终确定全局的最优解。
-
-```kotlin
-fun maxSum(arr: IntArray): Int {  
-	var b = arr[0]  // 局部最优解
-	var sum = b  // 全局最优解
-	for (i in 1 until arr.size) {  
-		b = if(b + arr[i] > b) b + arr[i] else arr[i]  
-		if(b > sum) sum = b  
-	}  
-	return sum  
+class ShortestPath {  
+    inner class Edge(val start: Int, val end: Int, val weight: Int)   
+    private fun generateEdges(link: Array<IntArray>): ArrayList<Edge> {  
+        val edges = ArrayList<Edge>()  
+        for (i in link.indices) {  
+            for (j in link.indices) {  
+                if (link[i][j] != Int.MAX_VALUE) {  
+                    edges.add(Edge(i, j, link[i][j]))  
+                }  
+            }  
+        }  
+        return edges  
+    }  
 }
 ```
 
-另外，本题的代码可以简化为：
+参数link就是题目传入的邻接矩阵，我们在里面构建出每一条边。只要权值不是`Int.MAX_VALUE`，就记录下它的起点，终点和权值。有了这样的操作，我们就可以真正开始Bellman Ford算法了：
 
 ```kotlin
-fun maxSum(arr: IntArray): Int {  
-	var b = arr[0]  
-	var sum = b  
-	for (i in 1 until arr.size) {  
-		if(b > 0) b += arr[i]  
-		else b = arr[i]  
-		if(b > sum) sum = b  
-	}  
-	return sum  
+class ShortestPath {  
+    inner class Edge(val start: Int, val end: Int, val weight: Int) 
+    
+    fun shortestPath(link: Array<IntArray>): IntArray {  
+        val edges = generateEdges(link)  
+        ...
+    }  
+  
+    private fun generateEdges(link: Array<IntArray>): ArrayList<Edge>
 }
 ```
+
+构建出每一条边后，我们自然要遍历每一条边，去进行上面所说的判断。这个过程也叫做**松弛操作**：
+
+```kotlin
+class ShortestPath {  
+  
+    inner class Edge(val start: Int, val end: Int, val weight: Int)  
+  
+    fun shortestPath(link: Array<IntArray>): IntArray {  
+        val edges = generateEdges(link)  
+        val res = IntArray(link.size) { Int.MAX_VALUE }  
+        res[0] = 0  
+		for (j in edges.indices) {  
+			if (res[edges[j].start] == Int.MAX_VALUE) continue  
+			if (res[edges[j].end] > res[edges[j].start] + edges[j].weight) {  
+				res[edges[j].end] = res[edges[j].start] + edges[j].weight  
+			}  
+		}  
+    }  
+  
+    private fun generateEdges(link: Array<IntArray>): ArrayList<Edge>
+}
+```
+
+在这里，我们构建了一个结果数组，用来存A节点到达每个节点的最短距离。初始状态，除了A自己是0，剩下的都是`Int.MAX_VALUE`。对于每条边，我都要看看，你当前的新距离是否应该更新。比如，从A到B的距离一开始是`Int.MAX_VALUE`，然而，如果我遍历到了一条边，它的起点是A，终点是B，它的权值是2的话。那么显然，从A到A距离是0，加上2还是2，显然要比`Int.MAX_VALUE`小。这样B的距离就更新成了2。
+
+下面来说一说这句话的作用：
+
+```kotlin
+if (res[edges[j].start] == Int.MAX_VALUE) continue
+```
+
+如果我们有下面这张图：
+
+![[homework/Algorithm/resources/Drawing 2023-05-01 13.48.01.excalidraw.png]]
+
+我们能发现，这道题的答案显然是除了A自己都是不可达。然而，如果没有这个if判断的话，拿A到B来举个例子。A到B的这条边的长度是`Int.MAX_VALUE`，而从A到A的距离是0，加上`Int.MAX_VALUE`之后还是`Int.MAX_VALUE`，并不大于原来的值`Int.MAX_VALUE`。这看起来似乎没啥问题。我们继续往下看：当遍历到B到C这条边时，目前到C的最短距离是`Int.MAX_VALUE`，而从B到C的长度是2，加上从A到B的最短距离`Int.MAX_VALUE`之后会导致**溢出**，变成一个复数。这显然比原来`Int.MAX_VALUE`要小啊！这样就把这个值给换了。**而我们的本意是不应该替换的，因为从A本来就无法到达C**。因此，**只要当前遍历到的边的起点是无法从A到达的，那这个松弛操作就不应该做**！导致这种情况的原因，实际上是代码所限。在实际情况中是不会出现的。
+
+到此为止，写完了吗？并没有！请看一看[这篇文章](https://blog.csdn.net/qq_24884193/article/details/104357889)。由于边的顺序可能并不固定，会导致我们不能及时更新所有节点的信息。最坏情况下，如果相连着A的那些边在最后才出现的话，那么我们只有在循环最后面才会更新结果信息。因此，我们必须做多次循环才可以。通过证明可以得出，即使一次只能更新一条信息，最多也只需要N - 1次循环就能够得到A到达所有节点的最短距离(其中N是节点的数量)。
+
+下面的问题是，如果出现开头那样的负环会如何？显然，如果最短距离每次都能变短的话，那么就能一直松弛下去。而最多只需要N - 1次循环，就意味着如果我再遍历**一遍**所有的边，如果发现还能松弛的话，图中就一定存在负环。那么，这次的逻辑是什么呢？还是和之前一样？别忘了我们说过的那个不可达导致溢出的问题。在这里如果单纯按照原来的逻辑判断，也是会导致溢出从而疯狂报告你有负环。所以我们也要把这个条件给加上。下面是完整的代码：
+
+```kotlin
+class ShortestPath {  
+  
+    inner class Edge(val start: Int, val end: Int, val weight: Int)  
+  
+    fun shortestPath(link: Array<IntArray>): IntArray {  
+	    val edges = generateEdges(link)  
+	    val res = IntArray(link.size) { Int.MAX_VALUE }  
+	    res[0] = 0  
+	    for (i in 1 until link.size) {  
+	        var changed = false  
+	        for (j in edges.indices) {  
+	            if (res[edges[j].start] == Int.MAX_VALUE) continue  
+	            if (res[edges[j].end] > 
+		            res[edges[j].start] + edges[j].weight) {  
+	                res[edges[j].end] = res[edges[j].start] + edges[j].weight  
+	                changed = true  
+	            }  
+	        }  
+	        if (!changed) return res  
+	    }  
+	    for (i in edges.indices) {  
+	        if (res[edges[i].end] > 
+		        res[edges[i].start] + edges[i].weight && 
+		        res[edges[i].start] != Int.MAX_VALUE) {  
+	            println("Negative ring")  
+	        }  
+	    }  
+	    return res  
+	}
+  
+    private fun generateEdges(link: Array<IntArray>): ArrayList<Edge> {  
+        val edges = ArrayList<Edge>()  
+        for (i in link.indices) {  
+            for (j in link.indices) {  
+                if (link[i][j] != Int.MAX_VALUE) {  
+                    edges.add(Edge(i, j, link[i][j]))  
+                }  
+            }  
+        }  
+        return edges  
+    }  
+}
+```
+
+上面代码又进行了一次优化。比如，如果在一次对所有边的遍历中没有发生任何改变，那么其实也没有必要再遍历下去了。所以我们通过一个布尔标记来记录，如果没有改变，直接跳出循环就可以了。并且，这种情况也没必要检测负环，因为检测的手段和循环里的东西也是一样的。
 
 # 4. 实验环境
 
@@ -246,11 +339,3 @@ fun maxSum(arr: IntArray): Int {
 * Language: Kotlin
 
 # 5. 项目测试
-
-![[homework/Algorithm/resources/Pasted image 20230425124105.png]]
-
-![[homework/Algorithm/resources/Pasted image 20230425124137.png]]
-
-![[homework/Algorithm/resources/Pasted image 20230425124206.png]]
-
-![[homework/Algorithm/resources/Pasted image 20230425124523.png]]
