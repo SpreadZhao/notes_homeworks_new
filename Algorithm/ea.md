@@ -28,7 +28,7 @@ link: "[(921) CS170 Spring 2020 - YouTube](https://www.youtube.com/playlist?list
 
 接下来是乘法，列竖式的话，最多需要n位乘以n位，所以时间复杂度是$O(n^2)$。很长一段时间，人们都认为没有比这更快的算法了。下面我们给出这段时间内的一个证明，这也是之后的Divide and Conquer问题。比如我们算$5143 \times 291$，可以这样： ^8b7991
 
-![[Algorithm/resources/Drawing 2023-01-20 17.15.11.excalidraw.png]]
+![[Algorithm/resources/Drawing 2023-01-20 17.15.11.excalidraw.png|center|300]]
 
 在这个例子中，我们把每个数字分成了2份，因此，如果要算出x和y的话，就应该是：
 
@@ -470,7 +470,7 @@ So the time cost is $\Theta(n^3)$ for the nest for loops. Can we make it better 
 
 If we have an array consist of just one elem: 3, and we have another array also consist of one elem: 5. We want to **merge them to an entire array** like:
 
-![[Algorithm/resources/Drawing 2023-01-23 14.54.34.excalidraw.png]]
+![[Algorithm/resources/Drawing 2023-01-23 14.54.34.excalidraw.png|center|200]]
 
 This is the core idea of Merge Sort. **We recursively divide the array in two pieces until is has only 1 elem**. Then we start to put them together, **but with order**. If somehow we have done everything before the last merge, we will get two arrays which has been in order:
 
@@ -719,7 +719,7 @@ $$
 
 Remember what we said: **at least 5 blocks**, how about 3? And how about an even number? The 2nd question is easy to solve, because the median is expected to be the only one; but the 1st question is a little bit harder. But I'll show the teacher's blackboard-writing as a tip:
 
-![[Algorithm/resources/Pasted image 20230129011048.png]]
+![[Algorithm/resources/Pasted image 20230129011048.png|center|200]]
 
 ## 3.4 Polynomial Multipication
 
