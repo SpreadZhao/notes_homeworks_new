@@ -29,7 +29,7 @@
 
 删掉了内部，只看轮廓。这是一个简单的登录窗口：
 
-![[homework/Web/resources/Pasted image 20230407182942.png]]
+![[Homework/Web/resources/Pasted image 20230407182942.png]]
 
 发现，和html本质其实差不多。
 
@@ -51,7 +51,7 @@
 
 > 在B站刷视频的时候，你不停地点下面的推荐，就会刷出一个有一个Activity。这个时候如果你想要回到主界面，需要不停按返回，把之前的Activity都一一退出。但是实际上，在左上角有一个房子按钮，点一下就能回到主界面并**杀死所有已经打开的Activity**。这个功能就可以使用广播来实现。
 > 
-> ![[homework/Web/resources/Screenshot_20230407_190400.jpg|300]]
+> ![[Homework/Web/resources/Screenshot_20230407_190400.jpg|300]]
 
 * Content Provider
 

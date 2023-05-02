@@ -29,47 +29,47 @@ By Spread Zhao:
 
 ## 0.2 整体架构
 
-![[projects/android/spreadshop/resources/Drawing 2022-10-19 16.58.37.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-10-19 16.58.37.excalidraw.png]]
 
 ## 0.3 数据库Schema
 
 **账户表**
 
-![[account_table.jpg]]
+![[Projects/android/spreadshop/resources/account_table.jpg]]
 
 ---
 
 **种类表**
 
-![[category_table.jpg]]
+![[Projects/android/spreadshop/resources/category_table.jpg]]
 
 ---
 
 **商品表**
 
-![[goods_table.jpg]]
+![[Projects/android/spreadshop/resources/goods_table.jpg]]
 
 ---
 
 **订单表**
 
-![[order_table.jpg]]
+![[Projects/android/spreadshop/resources/order_table.jpg]]
 
 ## 0.4 ER图
 
-![[spreadshop_er.jpg]]
+![[Projects/android/spreadshop/resources/spreadshop_er.jpg]]
 
 ## 0.5 模块图
 
 **客户端**
 
-![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 ---
 
 **服务端**
 
-![[projects/android/spreadshop/resources/Drawing 2022-11-10 19.33.21.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-11-10 19.33.21.excalidraw.png]]
 
 > *注：各模块的说明在下面已经展示的非常详细了，所以这里只给出模块图。*
 
@@ -77,7 +77,7 @@ By Spread Zhao:
 
 最一开始，我们的想法和上面的架构图还不是太一样：
 
-![[projects/android/spreadshop/resources/Drawing 2022-11-10 12.12.12.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-11-10 12.12.12.excalidraw.png]]
 
 可以看到，我们一开始打算直接将jdbc嵌入到安卓设备中，并让它访问电脑上的MySQL。这种做法能极大简化原来的架构，但是最终还是失败了。1.1介绍的就是我们失败的经历；而1.2开始就是我们最终完成整个项目的架构。
 
@@ -241,7 +241,7 @@ internal var password = "spreadzhao" // provide the corresponding passw
 
 连接建立完成后，我们就可以调用`executeMySQLQuery()`来执行数据库的SQL语句，这里我们以`SHOW DATABASES`为例：
 
-![[Pasted image 20221016155743.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221016155743.png]]
 
 ### 1.1.4 遇到的问题
 
@@ -269,7 +269,7 @@ internal var password = "spreadzhao" // provide the corresponding passw
 
 当我们在手机上用Connector/J去连接MySQL时，抛出了`Communication Link failure`的错误：
 
-![[94(S4V](3Z8WV]PZ$_L6SQR.jpg]]
+![[Projects/android/spreadshop/resources/94(S4V](3Z8WV]PZ$_L6SQR.jpg]]
 
 我们觉察到是网络权限的问题，在一开始忽略在`AndroidMainifest.xml`文件里声明网络权限，在声明网络权限后，我们满怀期待地继续测试，结果依然失败了！在不断地尝试下，我们还是走不通这条道路，最后发现官方的连接件不支持在Android上使用！
 
@@ -281,7 +281,7 @@ internal var password = "spreadzhao" // provide the corresponding passw
 
 首先我们需要配置好**Apache服务器**，打开Apache24服务。Apache24服务默认在本机下监听80端口，所以我们只要在浏览器输入localhost，就会打开.../Apache24/htdocs下的*index.html*文件
 
-![[Pasted image 20221017192225.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221017192225.png]]
 
 而我们所有服务器上的数据，都要存放在同目录下的*get_data.json*下：
 
@@ -303,7 +303,7 @@ internal var password = "spreadzhao" // provide the corresponding passw
 
 >*192.168.183.39/get_data.json*这一串地址是由两部分组成的，‘/’前的部分叫做***base url***，也就是***基地址***，而后面的部分就是我们具体要访问的文件
 
-![[Pasted image 20221017195500.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221017195500.png]]
 
 ### 1.2.3 测试数据能否转移到手机上
 
@@ -465,7 +465,7 @@ override fun onResponse(call: Call<List<App>>, response: Response<List<App>>) {
 
 在手机上点击*GET APP DATA*按钮，得到如下列表，成功！
 
-![[QQ图片20221017195826.jpg]]
+![[Projects/android/spreadshop/resources/QQ图片20221017195826.jpg]]
 
 ---
 
@@ -740,7 +740,7 @@ IDEA的社区版中没有一键生成Spring Boot项目的功能，在完整版�
 
 [Spring Initializr](https://start.spring.io/)
 
-![[Pasted image 20221022145421.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221022145421.png]]
 
 这里我们在网站上设置好参数和依赖后生成Spring Boot项目，手动导入IDEA中。可气的是测试文件中的import语句全部标红，这说明依赖包没有成功导入。解决办法是进入到Setting-Build,Execution,Deployment-Build Tools-Maven-Runner中勾选*Delegate IDE build/run actions to Maven*选项，应用之后便不再报错
 
@@ -784,7 +784,7 @@ public class Controller {
 
 我们运行测试程序，并在浏览器输入*localhost:8080/demo*，出现了如下报错：
 
-![[(4L48CREM%]_KI2EP[@78~0 1.png]]
+![[Projects/android/spreadshop/resources/(4L48CREM%]_KI2EP[@78~0 1.png]]
 
 这个错误说明该网址是能连接上我们的程序的，但它没有得到任何拥有值。一番检查后发现，终端中存在报错，报错信息显示8080端口被占用。为了检查8080端口的占用情况，我们在Windows PowerShell中检查占用该端口进程的PID，再到任务管理器中检索这个PID，发现是*java.exe*占用了8080端口。我们手动杀掉这个“罪魁祸首”，再去测试，发现这个问题依然存在
 
@@ -800,7 +800,7 @@ public class Controller {
 
 “123”成功后，我们就觉得Spring Boot项目已经构建成功了，能够满足我们的需求。于是我们开始测试自己的代码，再次运行测试程序，并在浏览器输入*localhost:8080/demo*，然而，却出现了如下报错：
 
-![[500error.png]]
+![[Projects/android/spreadshop/resources/500error.png]]
 
 查询资料后得知，Spring Boot项目中**自带配置文件**，会自动配置来连接到数据库，而不是调用我们[[#^d9c767|自己写的配置文件]]。我们按照它的格式重新编写，再次测试，出乎意料地又失败了！
 
@@ -814,7 +814,7 @@ public class Controller {
 
 再再次运行测试程序，并在浏览器输入*localhost:8080/demo*，终于成功了！
 
-![[77Y8~Z7Z%LQ67JA0%[X`1SK.png]]
+![[Projects/android/spreadshop/resources/77Y8~Z7Z%LQ67JA0%[X`1SK.png]]
 
 ## 2.3. 功能实现
 
@@ -932,7 +932,7 @@ LR.setUsername("default");
 
 最后我们看看结果如何，成功了！
 
-![[1O[)L$VHXQBJH4{@7F}NG]6 3.png]]
+![[Projects/android/spreadshop/resources/1O[)L$VHXQBJH4{@7F}NG]6 3.png]]
 
 ### 2.3.2 用户注册
 
@@ -1541,7 +1541,7 @@ public Balance balance(@RequestParam("username") String username){
 
 # 3. 用户端
 
-![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 这是整个用户端的MVVM架构。实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。
 
@@ -1549,7 +1549,7 @@ public Balance balance(@RequestParam("username") String username){
 
 下面是整个客户端的代码结构：
 
-![[Pasted image 20221110221703.png|300]]
+![[Projects/android/spreadshop/resources/Pasted image 20221110221703.png|300]]
 
 ## 3.1 登录界面
 
@@ -1703,7 +1703,7 @@ public Balance balance(@RequestParam("username") String username){
 
 之前在服务端中提到过，实现每个功能后返回给用户端的都是一个定义好的数据模型，将它打包成json文件通过Http协议发送过来，我们就可以在网络层接口利用Gson解析得到数据。而我们这里将所有数据模型的网络接口都封装成了一个*SpreadShopNetwork*，统一由它去发起网络请求，就是架构图中的这部分：
 
-![[Pasted image 20221109211445.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109211445.png]]
 
 封装一次还是不够的，因为[[#^3e4b51|前面]]说过，我们的数据不仅是由网络传来的，还有本地传来的数据。我们需要统一封装到*Repository*中，让它作为数据的唯一来源，方便处理所有的数据。
 
@@ -2975,7 +2975,7 @@ class OrderViewModel: ViewModel() {
 
 **Spread Zhao:** 用户端开发的过程中遇到了许多问题，上面展示的只是最终成型的版本。中间遇到了大大小小的问题，在这里我将我开发的日志展示出来以供参考。另外，上面的许多细节介绍其实也是引用了我的日志。
 
-![[work_on_spreadshop]]
+![[Projects/android/spreadshop/work_on_spreadshop]]
 
 # 4. 项目演示
 
@@ -2983,11 +2983,11 @@ class OrderViewModel: ViewModel() {
 
 现在我们注册一个用户abc，密码就设为asdf吧
 
-![[Pasted image 20221109161045.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109161045.png]]
 
 点击*REGISTER*按钮，弹出`Regist success!!!`，表明注册成功，我们就可以用这个账号密码登录了！
 
-![[Pasted image 20221109160952.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109160952.png]]
 
 ## 4.2 登录
 
@@ -2996,43 +2996,43 @@ class OrderViewModel: ViewModel() {
 1. 输入的用户名未注册
 2. 密码错误
 
-![[Pasted image 20221109161347.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109161347.png]]
 
-![[Pasted image 20221109161413.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109161413.png]]
 
 只有当你输入已注册的用户名和其对应的正确密码时，才能登录上我们的平台，进入主界面
 
-![[Pasted image 20221109162112.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109162112.png]]
 
 点击左上角的书页按钮，可以进入到侧滑菜单，这里会展示账户信息和余额
 
-![[Pasted image 20221109162226.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109162226.png]]
 
 *FORCE LOGIN*则是我们在测试时用的功能，类似于常见的游客登录功能，不需要账号和密码，但登录后用户名为root且不会分配账户余额，这点可以在侧滑菜单查看
 
-![[Pasted image 20221109161941.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109161941.png]]
 
 另外不得不提的是记住密码的功能，在登录时勾选*Remember Password*后点击*LOGIN*按钮，退出重启程序，它会记住用户名和密码
 
 ## 4.3 展示商品
 
-![[Pasted image 20221109162112.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109162112.png]]
 
 主要分为两部分，我们可以看到，Toolbar下的第一横排是商品的种类信息，可以横向滑动查看，可以点击查看该分类的全部商品
 
-![[Pasted image 20221109163047.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109163047.png]]
 
 下面的部分则是我们随机展示的推荐商品，可以纵向滑动查看，同时可以通过上滑刷新出新的一批推荐商品
 
-![[Pasted image 20221109163127.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109163127.png]]
 
 ## 4.4 搜索商品
 
 点击右上角的搜索按钮，程序会唤醒手机输入法，允许用户通过商品名称搜索商品，输入要搜索的商品名称点击>按钮或者输入法输入回车，即可发起搜索请求
 
-![[Pasted image 20221109163345.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109163345.png]]
 
-![[Pasted image 20221109163406.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109163406.png]]
 
 另外，当搜索框清空或者点击X按钮之后，程序会自动展示一批新的推荐商品
 
@@ -3040,7 +3040,7 @@ class OrderViewModel: ViewModel() {
 
 点击任何一个商品，就可以跳转到该商品的详情页
 
-![[Pasted image 20221109163658.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109163658.png]]
 
 这里会展示出商品图片、名称、种类、价格和库存，最下方是商品的其他介绍，由于我们这里不知道该写些什么，就重复填充了商品的名称仅供测试
 
@@ -3050,19 +3050,19 @@ class OrderViewModel: ViewModel() {
 
 点击商品详情页中的绿色按钮，会弹出购买界面让用户确认购买的数量，默认为1
 
-![[Pasted image 20221109164215.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109164215.png]]
 
 这里展示几种购买的情况：
 
-![[Pasted image 20221109164320.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109164320.png]]
 
 购买成功！点击OK会返回主界面，对应的账户余额和商品库存也会发生变化
 
-![[Pasted image 20221109164732.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109164732.png]]
 
 购买失败！商品库存不足，无法满足用户的需求，点击OK会返回商品详情页
 
-![[Pasted image 20221109164846.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109164846.png]]
 
 购买失败！用户余额不足，点击OK会返回商品详情页
 
@@ -3070,4 +3070,4 @@ class OrderViewModel: ViewModel() {
 
 点击侧滑菜单的My Order，可以展示用户所有订单的信息，同样支持下拉刷新
 
-![[Pasted image 20221109165149.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221109165149.png]]

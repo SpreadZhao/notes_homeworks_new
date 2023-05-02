@@ -116,13 +116,13 @@ open class Token {
 
 我们能将其以分号为界，能分为三个句子；将三个句子再进一步细分，就是一个个Token。而top-down parser的思想也就是这么一个不断拆分的过程，把大结构拆成小结构。而拆分需要根据文法来进行：
 
-![[homework/Compile/resources/Pasted image 20230205202028.png]]
+![[Homework/Compile/resources/Pasted image 20230205202028.png]]
 
 > 我们语法分析最核心的目的就是实现这个文法。
 
 最上层的工作就是匹配Program，经过之前的处理，我们的信息已经全部存储在一个大List中，只需要写一个循环遍历完这个List就可以了，下面我们来仔细看看这个大List的结构：
 
-![[homework/Compile/resources/Drawing 2023-02-05 23.06.46.excalidraw.png]]
+![[Homework/Compile/resources/Drawing 2023-02-05 23.06.46.excalidraw.png]]
 
 如果我们要拿到红圈位置的Token，在Java中是`allTokens.get(0).get(3)`，而Kotlin中只需要`allTokens[0][3]`，这和二维数组十分相似。既然如此，我们就把它当成二维数组来分析，遍历这个大List需要访问的下标组合如下：
 
@@ -152,7 +152,7 @@ open class Token {
 
 从Expression到Atom的层层匹配是整个实验项目最为复杂的一部分，这里通过一个表达式简单说明：
 
-![[homework/Compile/resources/Pasted image 20230225211201.png|400]]
+![[Homework/Compile/resources/Pasted image 20230225211201.png|400]]
 
 通过层层递归，上面这个表达式的Token能被一个个拆分出来，建成这么一个树，通过这棵树，我们以后序遍历的方式就可以计算出表达式的值。
 

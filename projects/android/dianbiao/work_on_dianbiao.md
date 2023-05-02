@@ -12,7 +12,7 @@ http://ids.xidian.edu.cn/authserver/login?service=<service>&type=<type>
 
 However, the response body is HTML formatted String, which means we should use String as the generic of `Call<>` and `Callback<>`. But after I have done this, I got an exception like this:
 
-![[projects/android/dianbiao/resources/Pasted image 20230209235809.png]]
+![[Projects/android/dianbiao/resources/Pasted image 20230209235809.png]]
 
 Unlike OkHttp or HttpUrlConnection and others, to get String response in Retrofit, you should do a little more works, which include implementing a new ConverterFactory and add it to the retrofit builder **before the base convertor such as GSON**:
 

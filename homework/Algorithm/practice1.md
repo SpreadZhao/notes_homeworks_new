@@ -63,23 +63,23 @@ bool SortHelper::sumToTarget(vector<int> nums, int target){
 
 以上两种方式并不好，因此我们使用大顶堆(或小顶堆)来实现。堆是一种完全二叉树，所有结点的编号都是相连的，因此不会有空洞：
 
-![[homework/Algorithm/resources/Pasted image 20230325001742.png]]
+![[Homework/Algorithm/resources/Pasted image 20230325001742.png]]
 
 > 左图：大顶堆；右图：小顶堆
 
 当我们想要在大顶堆上插入一个元素时，要做这样一些事情：
 
 1. 首先，让这个元素直接成为结构的最后一个元素：
-  ![[homework/Algorithm/resources/Pasted image 20230325001908.png|200]]
+  ![[Homework/Algorithm/resources/Pasted image 20230325001908.png|200]]
 2. 然后，看他和他的父亲谁大。如果它大，就要交换，并继续向上，直到没有他父亲大为止。
-  ![[homework/Algorithm/resources/Pasted image 20230325002039.png|200]]
+  ![[Homework/Algorithm/resources/Pasted image 20230325002039.png|200]]
 
 因此，我们发现，**堆顶就是我们每次要弹出的元素**。那么在`dequeue`操作中，就需要这样做：
 
 1. 将堆顶和最后一个元素交换位置，并弹出最后一个元素(最后返回的就是它)；
-  ![[homework/Algorithm/resources/Pasted image 20230325002217.png|200]]
+  ![[Homework/Algorithm/resources/Pasted image 20230325002217.png|200]]
 2. 让新的堆顶不断和自己的左儿子和右儿子比较。如果根儿小，那根儿就下去，儿子上来。直到这个堆顶找到自己的位置。
-  ![[homework/Algorithm/resources/Pasted image 20230325002353.png|200]]
+  ![[Homework/Algorithm/resources/Pasted image 20230325002353.png|200]]
 
 通过以上叙述，我们首先总结一下我们需要的工具方法：
 
@@ -205,7 +205,7 @@ void SortHelper::QSort(vector<int>& nums, int low, int high){
 
 其中，`partition()`函数会修改`nums`这个序列，将我们选择的pivot放到该去的位置，并将它的坐标返回。下面我们来着重讲解一下这个函数的实现。
 
-首先，是pivot的选择，这个选择可以很随意，也可以很精巧。我们可以每次都选择序列(或子序列)中的第一个元素作为pivot，也可以使用比较靠谱的算法来进行选择(比如[[Algorithm/ea#3.3 (Median) Select|Median Select]])。在下面的实现中，我们使用前者。之后，就是对这个数组的操作了。我们现在要做的，**是给这个pivot选定一个位置，让所有比它小的在它左边，所有比它大的在它右边**。
+首先，是pivot的选择，这个选择可以很随意，也可以很精巧。我们可以每次都选择序列(或子序列)中的第一个元素作为pivot，也可以使用比较靠谱的算法来进行选择(比如[[Lecture Notes/Algorithm/ea#3.3 (Median) Select|Median Select]])。在下面的实现中，我们使用前者。之后，就是对这个数组的操作了。我们现在要做的，**是给这个pivot选定一个位置，让所有比它小的在它左边，所有比它大的在它右边**。
 
 ```cpp
 int SortHelper::partition(vector<int>& nums, int low, int high){  
@@ -241,7 +241,7 @@ while(low < high && nums.at(low) <= pivot) low++;
 
 我们可以发现，这个函数神奇的地方就在与，它使用两个指针，**这两个指针扫过的区域，都是已经确定了和pivot大小关系的元素**：
 
-![[homework/Algorithm/resources/Drawing 2023-03-26 12.58.40.excalidraw.png]]
+![[Homework/Algorithm/resources/Drawing 2023-03-26 12.58.40.excalidraw.png]]
 
 **而low和high中的一个，就负责承载pivot这个元素**。每一次交换的过程中，这个pivot要么被换到了low身上，要么被换到了high身上。随着not sure区域逐渐变短，我们就逐渐地为pivot找到了它该去的地方。
 
@@ -303,11 +303,11 @@ $$
 
 我们要在两个已经有序的序列中，找出第k大的元素。稍微想一想就能知道，这个元素一定位于这两个数组中某一个的**前面一段的位置**，而这个前面一段就和k的大小有关。如果k是3的话，那这个值存在的区间就是`nums1[0] ~ nums1[2]`以及`nums2[0] ~ nums2[2]`。但是我们要注意，这只是k存在的区间，**而在k已经确定的条件下，我们能确定点儿什么呢**？下面我们来学习一下牛人的思想：
 
-![[homework/Algorithm/resources/Drawing 2023-03-26 14.34.00.excalidraw.png]]
+![[Homework/Algorithm/resources/Drawing 2023-03-26 14.34.00.excalidraw.png]]
 
 我们从这两个序列中一共选出k个元素。其中nums1选x个，nums2选y个(至于x和y是多少，之后再讨论)。因此，位于这个区域边缘的两个数字的编号就是x - 1和y - 1。那么，如果`nums1[x - 1] > nums2[y - 1]`这个条件成立的话，会发生什么呢？我们能说：**`nums2`目前选中的所有数字，都是比我们最终选出的target要大的**！换句话说，就是它们正好被包含在了k这个范围内。
 
-![[homework/Algorithm/resources/Drawing 2023-03-26 14.40.51.excalidraw.png]]
+![[Homework/Algorithm/resources/Drawing 2023-03-26 14.40.51.excalidraw.png]]
 
 为什么会这样说呢？我们给一个例子：
 
@@ -321,7 +321,7 @@ $$
 
 如果我们要选出第8大的，也就是数字8。而我们选择的区域是这样的：
 
-![[homework/Algorithm/resources/Pasted image 20230326144416.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326144416.png]]
 
 正好是8个元素。那么既然9要比5大，就说明**1到5这几个数字都不可能是第8大的**，它们正好被包含在了前8位中。
 
@@ -400,7 +400,7 @@ if (m > n) {
 
 现在说回刚才的例子：
 
-![[homework/Algorithm/resources/Pasted image 20230326144416.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326144416.png]]
 
 如果我们舍弃了`nums2`的前5个元素，那么就意味着，**在新的序列里，我们只需要选出第8 - 5 = 3大的数字了**。所以，k变成了1的时候，我们只需要看这两个序列开头的元素谁更小，返回就可以了。
 
@@ -426,7 +426,7 @@ SortHelper sh;
 std::cout << sh.sumToTarget(nums, target) << std::endl;
 ```
 
-![[homework/Algorithm/resources/Pasted image 20230326151924.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326151924.png]]
 
 ---
 
@@ -440,7 +440,7 @@ SortHelper sh;
 std::cout << sh.sumToTarget(nums, target) << std::endl;
 ```
 
-![[homework/Algorithm/resources/Pasted image 20230326151953.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326151953.png]]
 
 ## 5.2 Priority Queue
 
@@ -459,7 +459,7 @@ std::cout << q.dequeue() << " ";
 std::cout << q.dequeue() << " ";
 ```
 
-![[homework/Algorithm/resources/Pasted image 20230326152356.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326152356.png]]
 
 > -1表示队列已经空了，无法再出队。
 
@@ -475,7 +475,7 @@ s.QuickSort(nums);
 for(auto n : nums) std::cout << n << " ";
 ```
 
-![[homework/Algorithm/resources/Pasted image 20230326152605.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326152605.png]]
 
 ## 5.4 Median Select
 
@@ -489,4 +489,4 @@ for(int i = 10; i >= 1; i--)
 	std::cout << "k = " << i << ": " << sh.medianSelect(a, b, i) << std::endl;
 ```
 
-![[homework/Algorithm/resources/Pasted image 20230326152909.png]]
+![[Homework/Algorithm/resources/Pasted image 20230326152909.png]]

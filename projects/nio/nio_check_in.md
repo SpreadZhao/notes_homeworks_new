@@ -211,7 +211,7 @@ public class SOAConnection implements IMessageLink {
 
 This broadcast is **sent by Car Search App(you can get that by tracking the context), and received by Nearby App**. So we do not connect to the car directly. Notice that the SOAConnection class implemented the interface IMessageLink, which obeys the **Dependency Inversion Principle** in OOP programming:
 
-![[projects/nio/resources/Drawing 2023-04-26 10.46.24.excalidraw.png]]
+![[Projects/nio/resources/Drawing 2023-04-26 10.46.24.excalidraw.png]]
 
 After that, let's turn to the other sentence in `reqConnectionState()` in MessageMgr:
 

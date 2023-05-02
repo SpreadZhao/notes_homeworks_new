@@ -553,7 +553,7 @@ fun getGoods(@Query("cmd") cmd: String): Call<GoodsResponse>
 
 这样的话，侧滑菜单的选项就是这样的：
 
-![[Pasted image 20221023122020.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221023122020.png]]
 
 然后就是headerLayout了，它位于`res/layout/nav_header.xml`：
 
@@ -740,7 +740,7 @@ android.enableJetifier=true
 
 [(29条消息) [Android][踩坑]gradle中配置android.useAndroidX与android.enableJetifier使应用对support库的依赖自动转换为androidx的依赖_Ryan ZHENG的博客-CSDN博客_enablejetifier](https://blog.csdn.net/u014175785/article/details/115295136)
 
-![[Pasted image 20221023140339.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221023140339.png]]
 
 ---
 
@@ -1399,7 +1399,7 @@ class MainActivity : AppCompatActivity() {
 
 今天我感觉并没有费多少功夫，但是今天对我项目的改变是最大的！
 
-![[Pasted image 20221026211618.png|200]]
+![[Projects/android/spreadshop/resources/Pasted image 20221026211618.png|200]]
 
 先来嘚瑟一下\~\~，我们按着昨天的思路来，将下拉刷新处理完毕之后，首先我们要做的是更改这个MaterialCardView，因为它之前实在是太丑了。在这里我就直接展示所有和商品信息相关的xml代码了：
 
@@ -1490,7 +1490,7 @@ class MainActivity : AppCompatActivity() {
 
 这个的高度只有50dp，所以才能像这样短小精悍：
 
-![[Pasted image 20221026212959.png]]
+![[Projects/android/spreadshop/resources/Pasted image 20221026212959.png]]
 
 然后就是其中展示的类别卡片了：
 
@@ -2077,7 +2077,7 @@ class GoodsViewModel: ViewModel() {
 
 结项了！！！最后的操作，只不过是在已经有的技术基础上加了亿点功能而已。所以这里我给出了整个项目的MVVM架构的图：
 
-![[projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
+![[Projects/android/spreadshop/resources/Drawing 2022-10-27 21.28.04.excalidraw.png]]
 
 **实线箭头表示数据的流动方向；虚线箭头表示打开关系；每个箭头的颜色表示了数据是由哪个类掌管的，从Server或者SharedPreferences开始按着一个颜色走才能走通，黑色表示公共路径。**
 

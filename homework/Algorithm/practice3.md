@@ -4,7 +4,7 @@
 
 There are 5 items that have a value and weight list below, the knapsack can contain at most 100 Lbs. Solve the problem both as fractional knapsack and 0/1 knapsack.
 
-![[homework/Algorithm/resources/Pasted image 20230430092113.png]]
+![[Homework/Algorithm/resources/Pasted image 20230430092113.png]]
 
 ## 1.2 A simple scheduling problem
 
@@ -87,7 +87,7 @@ for (i in arr) {
 
 #### 3.1.2.1 BF Recursion
 
-如果一件物品要么放，要么不放，那限制变多了，解决思路也变复杂了。如果我们依然按照贪心的思想去放性价比最高的，**很有可能出现最好的选择反而不是性价比最高的那些物品的情况**。因此，我们不能按照贪心的思路来想。首先，考虑一种最暴力的方案：算出所有物品的所有组合(1件、两件、……、n件)，将所有组合的总价值和总重量算出来，选出重量达标的，价值最高的那个组合即可。显然，这个和[[homework/Algorithm/practice2#3.2 Longset Common Subsequence|第二次实验的最长子序列]]有异曲同工之妙，对于每一件物品，**我都可以选择放或者不放**。因此这又是一个递归的问题：
+如果一件物品要么放，要么不放，那限制变多了，解决思路也变复杂了。如果我们依然按照贪心的思想去放性价比最高的，**很有可能出现最好的选择反而不是性价比最高的那些物品的情况**。因此，我们不能按照贪心的思路来想。首先，考虑一种最暴力的方案：算出所有物品的所有组合(1件、两件、……、n件)，将所有组合的总价值和总重量算出来，选出重量达标的，价值最高的那个组合即可。显然，这个和[[Homework/Algorithm/practice2#3.2 Longset Common Subsequence|第二次实验的最长子序列]]有异曲同工之妙，对于每一件物品，**我都可以选择放或者不放**。因此这又是一个递归的问题：
 
 ```kotlin
 fun zeroOneKnap(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {  
@@ -110,7 +110,7 @@ val w = 50
 
 那么代表有三件物品，它们的价值分别是60，100，120；重量分别是10，20，30；背包的容量是50。那么从后往前，对于每一件物品，我都可以选择要或者不要(当然，只有背包剩余容量够的情况下我才会做出选择，否则选都不用选)
 
-![[homework/Algorithm/resources/Drawing 2023-04-30 18.53.43.excalidraw.png|center|600]]
+![[Homework/Algorithm/resources/Drawing 2023-04-30 18.53.43.excalidraw.png|center|600]]
 
 上面的递归树只是全部情况，有些是不可能发生的(容量不够)。因此我们按照这个思路来走，肯定能找到最终最好的那个。如果容量不够，那直接拜拜，看下一个人了；如果容量够的话，那么我既要看看放了你价值是多少，又要看看不放你价值是多少(把容量留给后面的物品)，二者选一个最大值。
 
@@ -172,7 +172,7 @@ fun zeroOneKnap3(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {
 
 ## 3.2 A simple scheduling problem
 
-本题非常简单：给一些任务的执行时间，输出最短的**平均完成时间**。具体的细节可以看[[Operating System/os#4.3.2 SJF Example(Non Preemptive)|操作系统笔记]]对这部分的讲解。在本题中，**我们假设所有任务的到达时间都是0**。
+本题非常简单：给一些任务的执行时间，输出最短的**平均完成时间**。具体的细节可以看[[Lecture Notes/Operating System/os#4.3.2 SJF Example(Non Preemptive)|操作系统笔记]]对这部分的讲解。在本题中，**我们假设所有任务的到达时间都是0**。
 
 既然要算最小的平均完成时间，那么只需要让完成时间之和最小就可以了，因为分母一定是任务的总数，不会改变。如果想要让完成时间的总和最小，那么一定是**越短的任务越要出现在前面**。因为出现在前面的任务加的次数就多，所以这样做总和就能达到最小。因此我们只需要对时间数组进行一个排序，然后按顺序将完成时间计算好就可以了。实际上，虽然没有很复杂的操作，也是体现出了贪心算法的思想。我们每次总是选择了最短的那个任务，也就让完成时间达到了最小。
 
@@ -190,9 +190,9 @@ fun minAverageCompletion(time: IntArray): Double {
 
 ## 3.3 Single-source shortest paths
 
-最短路径最常见的算法就是Dijkstra和Bellman Ford。二者在[[Networking/dn#19.5 Algorithms in RIP and OSPF|计算机网络笔记]]中都有过介绍。而如果是带负边的图，我们只能用Bellman Ford。想象这种情况：
+最短路径最常见的算法就是Dijkstra和Bellman Ford。二者在[[Lecture Notes/Networking/dn#19.5 Algorithms in RIP and OSPF|计算机网络笔记]]中都有过介绍。而如果是带负边的图，我们只能用Bellman Ford。想象这种情况：
 
-![[homework/Algorithm/resources/Drawing 2023-05-01 13.25.00.excalidraw.png | center | 200]]
+![[Homework/Algorithm/resources/Drawing 2023-05-01 13.25.00.excalidraw.png | center | 200]]
 
 这三个节点到达任意节点的最短距离都是负无穷。因为每绕一圈都会导致距离变小。如果想检测出这种负环，那么只能使用Bellman Ford算法。代价就是，它比Dijsktra的时间复杂度要高。
 
@@ -277,7 +277,7 @@ if (res[edges[j].start] == Int.MAX_VALUE) continue
 
 如果我们有下面这张图：
 
-![[homework/Algorithm/resources/Drawing 2023-05-01 13.48.01.excalidraw.png|center|200]]
+![[Homework/Algorithm/resources/Drawing 2023-05-01 13.48.01.excalidraw.png|center|200]]
 
 我们能发现，这道题的答案显然是除了A自己都是不可达。然而，如果没有这个if判断的话，拿A到B来举个例子。A到B的这条边的长度是`Int.MAX_VALUE`，而从A到A的距离是0，加上`Int.MAX_VALUE`之后还是`Int.MAX_VALUE`，并不大于原来的值`Int.MAX_VALUE`。这看起来似乎没啥问题。我们继续往下看：当遍历到B到C这条边时，目前到C的最短距离是`Int.MAX_VALUE`，而从B到C的长度是2，加上从A到B的最短距离`Int.MAX_VALUE`之后会导致**溢出**，变成一个复数。这显然比原来`Int.MAX_VALUE`要小啊！这样就把这个值给换了。**而我们的本意是不应该替换的，因为从A本来就无法到达C**。因此，**只要当前遍历到的边的起点是无法从A到达的，那这个松弛操作就不应该做**！导致这种情况的原因，实际上是代码所限。在实际情况中是不会出现的。
 

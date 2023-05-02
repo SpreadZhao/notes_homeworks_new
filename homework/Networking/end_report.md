@@ -16,7 +16,7 @@
 
 本次实验只是熟悉一下交换机的使用，以及常见的配置命令。下面是本次实验的拓扑图：
 
-![[homework/Networking/resources/Drawing 2022-12-12 16.04.11.excalidraw.png]]
+![[Homework/Networking/resources/Drawing 2022-12-12 16.04.11.excalidraw.png]]
 
 经过测试，pc1可以ping通pc2，但是pc1和pc2无法ping通pc3。这正好验证了要求中的第4条。交换机本身不需要额外的配置，而下面的命令可以查看交换机当前的配置：
 
@@ -37,11 +37,11 @@ display current-configuration
 
 首先来看前半部分的实验。意思就是让一个交换机划分出两个VLAN，处在这两个VLAN下的计算机是不能相互通信的。因此我们画出拓扑图：
 
-![[homework/Networking/resources/Drawing 2022-12-12 16.16.02.excalidraw.png]]
+![[Homework/Networking/resources/Drawing 2022-12-12 16.16.02.excalidraw.png]]
 
 这样我们就能看到，虽然在同一个交换机下，也处于同一网段，但是由于VLAN区域不同，所以pc1能ping通pc2，但是ping不通pc3。接下来是跨交换机的配置，实际上就是首先进行一些设置，把两个交换机变成一个交换机，然后在这个大交换机上配置VLAN，进行同样的操作
 
-![[homework/Networking/resources/Drawing 2022-12-12 16.21.56.excalidraw.png]]
+![[Homework/Networking/resources/Drawing 2022-12-12 16.21.56.excalidraw.png]]
 
 和刚才的实验没有什么不同，唯一的区别是VLAN2被建立在了两个交换机上。因此pc1还是能ping通pc2，但是ping不通pc3。
 
@@ -59,11 +59,11 @@ display current-configuration
 
 本次实验实质上是模拟的一个小型广域网。两个不同的网段由于路由器的链接，能够进行通信。下面是网络结构拓扑图：
 
-![[homework/Networking/resources/topology1.png]]
+![[Homework/Networking/resources/topology1.png]]
 
 我们以pc1来举例子。它处在20网段，而网关的配置是20.2，正好是路由器的GE_0/0端口。因此pc1发送的数据能够准确到达路由器。对于22网段的pc3也是同理，因此这两个网段经过路由器的链接能够互相ping通。而接下来的单臂路由实验也是如此，只不过单臂路由是为了节省硬件，从而虚拟出来这样的环境。使用到的自然是交换机的VLAN和网络层的802.1q协议：
 
-![[homework/Networking/resources/topology2.png]]
+![[Homework/Networking/resources/topology2.png]]
 
 我们配置三个网段，并且让三台pc机处在三个VLAN下。这样本身它们是不能够通信的。但是我们通过直连一台路由器，让这三个VLAN之间建立类似刚才的实验中的关系，就能够实现和上面实验一样的效果。这里的vid实际上就是虚拟的线，**也就是对交换机和路由器之间的这根线的复用**。
 
@@ -84,7 +84,7 @@ display current-configuration
 
 本次实验其实相当于是在第三次实验的基础上做的，只不过需要额外配置路由表。下面是本次实验的拓扑图(包括静态路由和RIP)：
 
-![[homework/Networking/resources/Pasted image 20221212164406.png]]
+![[Homework/Networking/resources/Pasted image 20221212164406.png]]
 
 交换机不用配置，只需要配置路由器的网关和路由表即可。下面来分别解释一下静态路由和RIP的配置。
 
@@ -107,7 +107,7 @@ display current-configuration
 
 下面是DNS服务器配置的过程。首先我们要给服务器配好自己的静态ip地址。因为服务器的ip不适合经常变动，所以静态ip是比较好的选择；并且，我们要将服务器的DNS服务器地址设置成自己的ip，因为自己本身就是个DNS服务器嘛！
 
-![[homework/Networking/resources/Pasted image 20221212165410.png]]
+![[Homework/Networking/resources/Pasted image 20221212165410.png]]
 
 接下来，按照要求将DNS服务器安装好就可以了。再之后，我们要建立一个查找区域，分别进行正向查找和反向查找。我们的域名就是在这个过程中建立的。比如我可以给我的服务器起一个域名：`spreadzhao.xidian.com`，这样访问这个地址，就等于在访问`192.168.5.5`了。
 
@@ -117,7 +117,7 @@ display current-configuration
 
 DHCP是为了用户考虑的。有些用户压根不会配置ip，所以它的ip地址是这样的：
 
-![[homework/Networking/resources/Pasted image 20221212165833.png]]
+![[Homework/Networking/resources/Pasted image 20221212165833.png]]
 
 我们要做的，就是让服务器能够随时返回给客户一个可用的ip地址，这样用户自己就无需配置了。
 

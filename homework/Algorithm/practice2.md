@@ -138,7 +138,7 @@ private fun dpCore(p: IntArray, i: Int, j: Int, dp: Array<IntArray>): Int {
 
 首先还是暴力求解。最好的办法，就是**找到这个字符串的所有子序列**，然后一一比对即可。首先的问题是，如何找到一个字符串的所有子序列呢？我们用一种很简单的方式来想：**对于这个字符串的每个字符，我都可以选择要或者不要**。因此如果字符串的长度是n的话，它的子序列就是$2^n$个：‘
 
-![[homework/Algorithm/resources/Pasted image 20230414121657.png]]
+![[Homework/Algorithm/resources/Pasted image 20230414121657.png]]
 
 > 图片来自：[(38条消息) 暴力递归——打印一个字符串的全部子序列_递归 给定一个数字的字符串,输出这个字符串的所有子串,子串的顺序和原先字符串中_爱敲代码的Harrison的博客-CSDN博客](https://blog.csdn.net/weixin_44337241/article/details/122143663)
 
@@ -201,7 +201,7 @@ fun longestCommonSubsequence(str1: String, str2: String): String {
 
 除了上面这种纯纯暴力的递归，我们还可以想一个聪明点的。假设有两个序列X和Y，它们的长度分别是m和n：
 
-![[homework/Algorithm/resources/Drawing 2023-04-14 12.45.27.excalidraw.png]]
+![[Homework/Algorithm/resources/Drawing 2023-04-14 12.45.27.excalidraw.png]]
 
 > 其中蓝色区域是**已经算出来最长公共序列的区域**，我们记目前的长度为`L(0..m-2, 0..n-2)`。
 
@@ -233,7 +233,7 @@ private fun lcs(x: String, y: String, m: Int, n: Int): Int {
 
 同理，由于这个`lcs()`函数会很多次重复地调用，算很多次重复的操作，比如下面的例子：
 
-![[homework/Algorithm/resources/Pasted image 20230414155241.png]]
+![[Homework/Algorithm/resources/Pasted image 20230414155241.png]]
 
 在这个例子中`L(AXY, AYZ)`就被调用了两次。因此，我们可以使用动态规划来记住它们的答案。具体的实现方式和上一题一模一样，都是用`dp`数组来记住已经算过的东西：
 
@@ -355,10 +355,10 @@ fun maxSum(arr: IntArray): Int {
 
 # 5. 项目测试
 
-![[homework/Algorithm/resources/Pasted image 20230425124105.png]]
+![[Homework/Algorithm/resources/Pasted image 20230425124105.png]]
 
-![[homework/Algorithm/resources/Pasted image 20230425124137.png]]
+![[Homework/Algorithm/resources/Pasted image 20230425124137.png]]
 
-![[homework/Algorithm/resources/Pasted image 20230425124206.png]]
+![[Homework/Algorithm/resources/Pasted image 20230425124206.png]]
 
-![[homework/Algorithm/resources/Pasted image 20230425124523.png]]
+![[Homework/Algorithm/resources/Pasted image 20230425124523.png]]
