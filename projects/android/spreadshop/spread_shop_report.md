@@ -2973,9 +2973,13 @@ class OrderViewModel: ViewModel() {
 
 ## 3.5 其他
 
-**Spread Zhao:** 用户端开发的过程中遇到了许多问题，上面展示的只是最终成型的版本。中间遇到了大大小小的问题，在这里我将我开发的日志展示出来以供参考。另外，上面的许多细节介绍其实也是引用了我的日志。
+```ad-info
+title: by SpreadZhao:
 
-![[Projects/android/spreadshop/work_on_spreadshop]]
+用户端开发的过程中遇到了许多问题，上面展示的只是最终成型的版本。中间遇到了大大小小的问题，在这里我将我开发的日志展示出来以供参考。另外，上面的许多细节介绍其实也是引用了我的日志。
+
+[[Projects/android/spreadshop/work_on_spreadshop]]
+```
 
 # 4. 项目演示
 
@@ -2985,7 +2989,7 @@ class OrderViewModel: ViewModel() {
 
 ![[Projects/android/spreadshop/resources/Pasted image 20221109161045.png]]
 
-点击*REGISTER*按钮，弹出`Regist success!!!`，表明注册成功，我们就可以用这个账号密码登录了！
+点击<mark class="square-solid">*REGISTER*</mark>按钮，弹出`Regist success!!!`，表明注册成功，我们就可以用这个账号密码登录了！
 
 ![[Projects/android/spreadshop/resources/Pasted image 20221109160952.png]]
 

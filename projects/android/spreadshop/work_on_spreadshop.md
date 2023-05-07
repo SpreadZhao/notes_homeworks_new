@@ -1,5 +1,7 @@
 # 2022-10-20
 
+#date 2022-10-20
+
 昨天在写Retrofit的时候，使用了json传递数据，对象是拿到了，但是返回的都是空。后来才突然想起来，**`data class`里对应的成员名要和json中完全一致才可以**！
 
 这是要传的json：
@@ -230,6 +232,8 @@ bindingLogin.loginBtn.setOnClickListener {
 由于我们并不需要将username和password在屏幕上显示出来，所以根本不需要livedata的observe方法。所以在赋值完之后，直接使用就好。**还有一点，字符串为空并不是`== null`**。这里的空可不是c语言里的空指针，它是有实际内存的，只不过值为空。
 
 # 2022-10-22
+
+#date 2022-10-22
 
 今天将这个项目彻底换成了MVVM架构，全部采用livedata，并且不使用协程去实现。原因就是我想彻底搞清楚MVVM架构的整体思路，而协程虽然能学到很多高级的Kotlin用法，但是对于自己思维的限制实在是太大了。如果用协程的话，我目前只知道抄书，所以想要打破一下这个局限。
 
@@ -720,6 +724,8 @@ override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
 # 2022-10-23
 
+#date 2022-10-23
+
 一个挺吓人的小问题，我修改了MainActivity的名字，然后觉得不妥又改回来了。但是在运行的时候报了一大堆错。好在下面这个网址和我的情况一样，看起来并不是改名字的问题，而是我引入了下面的依赖而引用了androidx库而导致的冲突：
 
 ```groovy
@@ -1088,9 +1094,11 @@ mainViewModel.goodsLiveData.observe(this){
 
 # 2022-10-25
 
+#date 2022-10-25
+
 这次主要是做了下拉刷新的逻辑端操作，并且已经测试成功。需要注意的是，本次的更新改动比较大，将原来的Retrofit处理响应的操作整个更换了。
 
-之前我们的思路是：如果接到Retrofit的响应数据，就在响应操作中设置RecyclerView的adapter之类的。但是，这种思路是**完全错误的！**首先，我们每发一次请求，都会调一次这个函数，那么这个函数每次都会新建一个adapter，而RecyclerView通常都是一个adapter用到底；其次，我们将adapter在这里设置成局部变量，在外部又如何能够通知数据发生了改变？
+之前我们的思路是：如果接到Retrofit的响应数据，就在响应操作中设置RecyclerView的adapter之类的。但是，这种思路是**完全错误的**！首先，我们每发一次请求，都会调一次这个函数，那么这个函数每次都会新建一个adapter，而RecyclerView通常都是一个adapter用到底；其次，我们将adapter在这里设置成局部变量，在外部又如何能够通知数据发生了改变？
 
 因此，我们首先需要将Adapter移到响应处理的外面，也就是直接包含在Activity的onCreate方法里：
 
@@ -1396,6 +1404,8 @@ class MainActivity : AppCompatActivity() {
 **注：此时Category的操作流程还没改，最后要改成和goods一样的模式。**
 
 # 2022-10-26
+
+#date 2022-10-26
 
 今天我感觉并没有费多少功夫，但是今天对我项目的改变是最大的！
 
@@ -2074,6 +2084,8 @@ class GoodsViewModel: ViewModel() {
 ```
 
 # 2022-10-27
+
+#date 2022-10-27
 
 结项了！！！最后的操作，只不过是在已经有的技术基础上加了亿点功能而已。所以这里我给出了整个项目的MVVM架构的图：
 
