@@ -101,6 +101,8 @@ emm，加标签只是为了区分你改了什么地方。不想改不加也行�
 
 #date Exists after every title with the date format *mostly*. Because I have no reason to write every date-related articles in diary, so I have to put a tag to remember this.
 
+#diary Just like what it looks like.
+
 ---
 
 # 2022-10-17
