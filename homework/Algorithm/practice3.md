@@ -25,6 +25,10 @@ D       1   5
 E              -3
 ```
 
+## 1.4 All-pairs shortest paths
+
+The adjacency matrix is as same as that of problem 1.3(Use Floyd or Johnson's algorithm). 
+
 # 2. 实验目的
 
 学习动态规划思想。
@@ -87,7 +91,7 @@ for (i in arr) {
 
 #### 3.1.2.1 BF Recursion
 
-如果一件物品要么放，要么不放，那限制变多了，解决思路也变复杂了。如果我们依然按照贪心的思想去放性价比最高的，**很有可能出现最好的选择反而不是性价比最高的那些物品的情况**。因此，我们不能按照贪心的思路来想。首先，考虑一种最暴力的方案：算出所有物品的所有组合(1件、两件、……、n件)，将所有组合的总价值和总重量算出来，选出重量达标的，价值最高的那个组合即可。显然，这个和[[homework/algorithm/practice2#3.2 longset common subsequence|第二次实验的最长子序列]]有异曲同工之妙，对于每一件物品，**我都可以选择放或者不放**。因此这又是一个递归的问题：
+如果一件物品要么放，要么不放，那限制变多了，解决思路也变复杂了。如果我们依然按照贪心的思想去放性价比最高的，**很有可能出现最好的选择反而不是性价比最高的那些物品的情况**。因此，我们不能按照贪心的思路来想。首先，考虑一种最暴力的方案：算出所有物品的所有组合(1件、两件、……、n件)，将所有组合的总价值和总重量算出来，选出重量达标的，价值最高的那个组合即可。显然，这个和[[Homework/Algorithm/practice2#3.2 longset common subsequence|第二次实验的最长子序列]]有异曲同工之妙，对于每一件物品，**我都可以选择放或者不放**。因此这又是一个递归的问题：
 
 ```kotlin
 fun zeroOneKnap(capacity: Int, wt: IntArray, pft: IntArray, n: Int): Int {  
@@ -332,6 +336,30 @@ class ShortestPath {
 
 上面代码又进行了一次优化。比如，如果在一次对所有边的遍历中没有发生任何改变，那么其实也没有必要再遍历下去了。所以我们通过一个布尔标记来记录，如果没有改变，直接跳出循环就可以了。并且，这种情况也没必要检测负环，因为检测的手段和循环里的东西也是一样的。
 
+## 3.4 All-pairs shortest paths
+
+参考：[Floyd-傻子也能看懂的弗洛伊德算法（转） - Yuliang.wang - 博客园 (cnblogs.com)](https://www.cnblogs.com/wangyuliang/p/9216365.html)
+
+Floyd算法的思想和Bellman-Ford的思想是一模一样的，唯一的区别是后者遍历的是每一条边，而前者考虑的是**每一个节点**。Floyd算法很巧妙地使用了动态规划*由小即大*的思想。将节点编号为$1\sim n$，那么一开始我们只让所有的节点只能通过1号节点，看距离是否会变短；之后允许通过1号和2号节点，看距离是否还会变短。
+
+假设我们已经让通过了1号节点，那么允许1号和2号的情况实际上就是，**已经允许通过1号节点的结果上继续只看通过2号的情况**。因为在上一次操作中我们已经将所有的格子都填写为了只允许通过1号节点时的最佳答案，这种情况也正好符合动态规划的思想。因此，代码如下：
+
+```kotlin
+fun floyd(link: Array<IntArray>) {  
+	for (k in link.indices) {  
+		for (i in link.indices) {  
+			for (j in link.indices) {  
+				if (link[i][k] == Int.MAX_VALUE || 
+					link[k][j] == Int.MAX_VALUE) continue  
+				if (link[i][j] > link[i][k] + link[k][j]) {  
+					link[i][j] = link[i][k] + link[k][j]  
+				}  
+			}  
+		}  
+	}  
+}
+```
+
 # 4. 实验环境
 
 * OS: Windows 11
@@ -339,3 +367,50 @@ class ShortestPath {
 * Language: Kotlin
 
 # 5. 项目测试
+
+## 5.1 Knapsack Problem.
+
+![[Homework/Algorithm/resources/Pasted image 20230511234033.png]]
+
+![[Homework/Algorithm/resources/Pasted image 20230511234647.png]]
+
+## 5.2 A simple scheduling problem
+
+![[Homework/Algorithm/resources/Pasted image 20230511235001.png]]
+
+## 1.3 Single-source / All-pairs shortest paths
+
+```kotlin
+fun shortest() {  
+	val I = Int.MAX_VALUE  
+	val edges = arrayOf(  
+		intArrayOf(0, -1, 3, I, I),  
+		intArrayOf(I, 0, 3, 2, 2),  
+		intArrayOf(I, I, 0, I, I),  
+		intArrayOf(I, 1, 5, 0, I),  
+		intArrayOf(I, I, I, -3, 0)  
+	)  
+	println("before:")  
+	edges.forEach {  
+		it.forEach { num ->  
+			if (num != I) print("$num\t")  
+			else print("I\t")  
+		}  
+		println()  
+	}  
+	println("bellman-ford:")  
+	ShortestPath().shortestPath(edges).forEach { num -> print("$num ") }  
+	println()  
+	ShortestPath().floyd(link = edges)  
+	println("floyd:")  
+	edges.forEach {  
+		it.forEach { num ->  
+			if (num != I) print("$num\t")  
+			else print("I\t")  
+		}  
+		println()  
+	}  
+}
+```
+
+![[Homework/Algorithm/resources/Pasted image 20230511235307.png|center|200]]
