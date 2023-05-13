@@ -1,6 +1,6 @@
 # 1. Preview & Prepare
 
-DianBiao is a android program imitated from the real app developed by **Robot xm**.
+DianBiao is an android program imitated from the real app developed by **Robot xm**.
 
 According to the [python implementation of the authority of Xidian CAS login system](https://github.com/xdlinux/libxduauth), we should firstly send GET http request to below interface:
 
