@@ -6,6 +6,11 @@ description: Japanese incorrect questions in EF exercise
 link: 
 ---
 
+#TODO  重构，和易错词一样
+
+- [ ] 重构，和易错词一样
+
+
 # 1. 丁寧語
 
 #language/communication/japanese Japanese Mistake #date 2023-05-12

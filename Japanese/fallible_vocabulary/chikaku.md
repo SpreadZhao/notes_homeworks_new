@@ -24,6 +24,6 @@ content: "近く"
 ```
 
 ```query
-tag: #language/communication/japanese
+tag: #question/language/japanese 
 content: "近く"
 ```
