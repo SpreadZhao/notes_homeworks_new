@@ -1,4 +1,4 @@
-#language/communication/japanese #point/basic #date 2023-05-16
+#language/communication/japanese #rating/basic #date 2023-05-16
 
 # 日本語の漢字
 
