@@ -23,3 +23,17 @@
 - [ ] Study ActivityThread
 
 [(39条消息) ActivityThread的理解和APP的启动过程_小河同学的博客-CSDN博客](https://blog.csdn.net/hzwailll/article/details/85339714)
+
+# 4. Double Check
+
+#TODO Double Check
+
+- [ ] Study Double check
+
+[(41条消息) 单例模式中的double check_单例模式的doublecheck_十一月上的博客-CSDN博客](https://blog.csdn.net/xdzhouxin/article/details/81192344)
+
+# 5. 自定义View
+
+#TODO 自定义view
+
+- [ ] 自定义view， View的绘制过程。
