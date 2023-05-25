@@ -32,8 +32,17 @@
 
 [(41条消息) 单例模式中的double check_单例模式的doublecheck_十一月上的博客-CSDN博客](https://blog.csdn.net/xdzhouxin/article/details/81192344)
 
+也可以使用内部类Holder来实现
+
 # 5. 自定义View
 
 #TODO 自定义view
 
 - [ ] 自定义view， View的绘制过程。
+
+# 6. try with resources
+
+自动关闭资源
+
+# 7. APK大小优化
+
