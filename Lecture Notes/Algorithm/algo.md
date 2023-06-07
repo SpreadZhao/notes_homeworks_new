@@ -598,6 +598,23 @@ $$
 
 ## 4.2 Dijkstra
 
+# 4. Greedy
+
+![[Lecture Notes/Algorithm/resources/Pasted image 20230607191547.png|500]]
+
+问题的全局最优解是通过局部的最优选择或者贪心选择得到的。
+
+## 4.1 Activity Selection
+
+贪心4步走：
+
+1. 按照结束时间从小到大排序；
+2. 选出第一个活动，也就是最早结束的哪个；
+3. 将所有与这个活动冲突的活动删掉；
+4. 继续在剩下的活动里选最早结束的那个，直到没得选为止。
+
+## 4.2 Dijkstra
+
 [[Lecture Notes/Networking/dn#19.5.2 Dijkstra|Dijkstra]]
 
 注意，我们每次都在未选集合顶点中选择距离最短的那个顶点，将它加入到已选集合中。传统的方式，是对所有未选顶点遍历一遍。那么有没有比较好的方式呢？有！就是[[Homework/Algorithm/practice1#3.2 Priority Queue|优先队列]]！另外，我们还可以使用一个先进先出的队列来管理。但是，这是有条件的，条件就是**这个图是无权图，或者所有边的权值都一样**。
