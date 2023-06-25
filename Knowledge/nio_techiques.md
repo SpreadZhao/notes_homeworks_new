@@ -49,3 +49,18 @@
 # 8. 安全编码
 
 # 9. 如何把debug包和release包分开
+
+# 10. Executors.newSingleThreadExecutor()
+
+# 11. Looper idleHandler
+
+# 12. 悬浮窗
+
+# 13. Gradle添加依赖库
+
+[添加 build 依赖项  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/studio/build/dependencies?hl=zh-cn)
+
+# 14. 切换回主线程更新UI
+
+[(45条消息) 【Android】快速切换到主线程更新UI的几种方法_da_caoyuan的博客-CSDN博客](https://blog.csdn.net/da_caoyuan/article/details/52931007)
+
