@@ -64,3 +64,12 @@
 
 [(45条消息) 【Android】快速切换到主线程更新UI的几种方法_da_caoyuan的博客-CSDN博客](https://blog.csdn.net/da_caoyuan/article/details/52931007)
 
+# 15. Gradle获取git提交记录，类似嵌入SQL语句
+
+# 16. Nanohttpd
+
+[A Guide to NanoHTTPD | Baeldung](https://www.baeldung.com/nanohttpd)
+
+# 17. sharedUserId
+
+# 18. 使用ComponentName打开系统自带文件管理
