@@ -73,3 +73,9 @@
 # 17. sharedUserId
 
 # 18. 使用ComponentName打开系统自带文件管理
+
+# 19. 手动杀死其他进程
+
+forceStopPackage()
+
+# 20. 跑马灯
