@@ -79,3 +79,5 @@
 forceStopPackage()
 
 # 20. 跑马灯
+
+# 21. 获取IP地址
