@@ -1,44 +1,24 @@
 # 1. ActivityResultLauncher
 
-#TODO ActivityResultLauncher
-
-- [ ] Study ActivityResultLauncher
-
 [玩转ActivityResultLauncher领略设计之美 - 掘金 (juejin.cn)](https://juejin.cn/post/7181452064919126071)
 
 [Jetpack：使用 ActivityResult 处理 Activity 之间的数据通信 - 掘金 (juejin.cn)](https://juejin.cn/post/7049158466140635173#comment)
 
 # 2. Fragment
 
-#TODO Fragment
-
-- [ ] Study fragment with tag
-
 [使用标签管理 Android Fragment - 掘金 (juejin.cn)](https://juejin.cn/post/6948992343471030308)
 
 # 3. ActivityThread
 
-#TODO ActivityThread
-
-- [ ] Study ActivityThread
-
 [(39条消息) ActivityThread的理解和APP的启动过程_小河同学的博客-CSDN博客](https://blog.csdn.net/hzwailll/article/details/85339714)
 
 # 4. Double Check
-
-#TODO Double Check
-
-- [ ] Study Double check
 
 [(41条消息) 单例模式中的double check_单例模式的doublecheck_十一月上的博客-CSDN博客](https://blog.csdn.net/xdzhouxin/article/details/81192344)
 
 也可以使用内部类Holder来实现
 
 # 5. 自定义View
-
-#TODO 自定义view
-
-- [ ] 自定义view， View的绘制过程。
 
 # 6. try with resources
 
@@ -81,3 +61,17 @@ forceStopPackage()
 # 20. 跑马灯
 
 # 21. 获取IP地址
+
+# 22. MVVM仓库层得到网络的结果后，调用listener的回调来实现监听
+
+# 23. JobScheduler
+
+[深入理解JobScheduler与JobService的使用 - 掘金 (juejin.cn)](https://juejin.cn/post/6951224625095245861)
+
+# 24. ContentObserver
+
+# 25. Compose透明任务栏rememberSystemUiController
+
+[(45条消息) Android Compose 透明状态栏实现_淘气章鱼哥的博客-CSDN博客](https://blog.csdn.net/qq_41899289/article/details/120290837#:~:text=%E7%9B%AE%E5%89%8D%E7%9F%A5%E9%81%93%E7%9A%84%E6%9C%89%E4%B8%A4%E7%A7%8D%EF%BC%9A%20%E7%AC%AC%E4%B8%80%E7%A7%8D%EF%BC%8C%E6%98%AF%E7%9C%8B%E6%9C%B1%E6%B1%9F%E7%9A%84demo%E9%87%8C%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9A%20%2F%2A%2A%20%2A,%E8%AE%BE%E7%BD%AE%E9%80%8F%E6%98%8E%E7%8A%B6%E6%80%81%E6%A0%8F%20%2A%2F%20fun%20Activity.transparentStatusBar%28%29%20%7B)
+
+[(45条消息) Android Jetpack Compose 沉浸式/透明状态栏 ProvideWindowInsets SystemUiController_YD-10-NG的博客-CSDN博客](https://blog.csdn.net/sinat_38184748/article/details/119345811)
