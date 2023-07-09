@@ -84,6 +84,8 @@ forceStopPackage()
 
 [Android Room persistance library. Drop Table - Stack Overflow](https://stackoverflow.com/questions/55226859/android-room-persistance-library-drop-table)
 
+[使用 Room DAO 访问数据  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/training/data-storage/room/accessing-data?hl=zh-cn#simple-queries)
+
 # 28 Hilt框架
 
 [使用 Hilt 实现依赖项注入  |  Android 开发者  |  Android Developers](https://developer.android.com/training/dependency-injection/hilt-android?hl=zh-cn)
