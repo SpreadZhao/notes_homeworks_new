@@ -1,3 +1,7 @@
+#TODO Techniques
+
+- [ ] 这么多要学的技术，文档还没写呢！！！
+
 # 1 ActivityResultLauncher
 
 [玩转ActivityResultLauncher领略设计之美 - 掘金 (juejin.cn)](https://juejin.cn/post/7181452064919126071)
@@ -35,6 +39,10 @@
 # 11 Looper idleHandler
 
 # 12 悬浮窗
+
+https://blog.csdn.net/qq_37750825/article/details/115754647
+
+https://blog.csdn.net/weixin_38322371/article/details/119185227
 
 # 13 Gradle添加依赖库
 
@@ -91,3 +99,6 @@ forceStopPackage()
 [使用 Hilt 实现依赖项注入  |  Android 开发者  |  Android Developers](https://developer.android.com/training/dependency-injection/hilt-android?hl=zh-cn)
 
 我是如何用Hilt实现在ViewModel中共享wordDao对象的？
+
+# 29 CopyOnWiteArrayList
+
