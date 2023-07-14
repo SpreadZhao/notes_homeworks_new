@@ -36,13 +36,15 @@
 
 # 10 Executors.newSingleThreadExecutor()
 
+[ExecutorService 看这一篇就够了 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/85696638)
+
 # 11 Looper idleHandler
 
 # 12 悬浮窗
 
-https://blog.csdn.net/qq_37750825/article/details/115754647
+[Android悬浮窗看这篇就够了_android应用内悬浮窗_AndroidLMY的博客-CSDN博客](https://blog.csdn.net/qq_37750825/article/details/115754647)
 
-https://blog.csdn.net/weixin_38322371/article/details/119185227
+[(45条消息) Android中自定义悬浮窗flagnotfocusable_淼森007的博客-CSDN博客](https://blog.csdn.net/weixin_38322371/article/details/119185227)
 
 # 13 Gradle添加依赖库
 

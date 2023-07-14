@@ -4,6 +4,8 @@
 
 [Android启动过程分析(图+文)-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1356506)
 
+[Android启动过程分析(图+文)-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1356506)
+
 从点击桌面的APP图标，到APP主页显示出来，大致会经过以下流程：
 
 1.  点击桌面App图标，Launcher进程采用Binder跨进程机制向system_server进程发起startActivity请求；
