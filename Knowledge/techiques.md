@@ -104,3 +104,4 @@ forceStopPackage()
 
 # 29 CopyOnWiteArrayList
 
+# 30 movableContent() + LookaheadLayout()实现跨页面共享数据
