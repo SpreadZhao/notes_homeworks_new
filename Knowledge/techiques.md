@@ -105,3 +105,27 @@ forceStopPackage()
 # 29 CopyOnWiteArrayList
 
 # 30 movableContent() + LookaheadLayout()实现跨页面共享数据
+
+# 31 startActivityForResult deprecated
+
+# 32 使用filePicker实现选择多个文件
+
+[使用“存储访问框架”打开文件  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/guide/topics/providers/document-provider?hl=zh-cn)
+
+[(45条消息) Android SAF（Storage Access Framework）使用攻略_android saf_残风乱了温柔的博客-CSDN博客](https://blog.csdn.net/fitaotao/article/details/112966577)
+
+[(45条消息) Jetpack Compose中的startActivityForResult的正确姿势_川峰的博客-CSDN博客](https://blog.csdn.net/lyabc123456/article/details/128638139)
+
+[复制和粘贴  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/guide/topics/text/copy-paste?hl=zh-cn)
+
+多个文件的实现是Intent中的getClipData()方法。
+
+如何获取到得到的文件的名称？ContentResolver的cursor有一个getColumnIndex方法。里面传入OpenableColumns.DISPLAY_NAME。
+
+# 33 Compose传参
+
+[Compose导航完全解析 - 掘金 (juejin.cn)](https://juejin.cn/post/7108633789051944997#comment)
+
+[使用 Compose 进行导航  |  Jetpack Compose  |  Android Developers (google.cn)](https://developer.android.google.cn/jetpack/compose/navigation?hl=zh-cn#retrieving-complex-data)
+
+[在目的地之间传递数据  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/guide/navigation/navigation-pass-data?hl=zh-cn#supported_argument_types)
