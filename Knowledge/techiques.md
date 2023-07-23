@@ -129,3 +129,9 @@ forceStopPackage()
 [使用 Compose 进行导航  |  Jetpack Compose  |  Android Developers (google.cn)](https://developer.android.google.cn/jetpack/compose/navigation?hl=zh-cn#retrieving-complex-data)
 
 [在目的地之间传递数据  |  Android 开发者  |  Android Developers (google.cn)](https://developer.android.google.cn/guide/navigation/navigation-pass-data?hl=zh-cn#supported_argument_types)
+
+# 34 Side Effects
+
+[Jetpack Compose Side Effect：如何处理副作用 - 掘金 (juejin.cn)](https://juejin.cn/post/6930785944580653070#comment)
+
+[可组合项的生命周期  |  Jetpack Compose  |  Android Developers (google.cn)](https://developer.android.google.cn/jetpack/compose/lifecycle?hl=zh-cn)
