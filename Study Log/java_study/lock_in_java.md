@@ -85,7 +85,9 @@ class LockTest2 {
 
 其实也就是，**这些线程执行的顺序需要是固定且有序的**。我们目前的代码，就是让这些线程七手八脚在运行，完全将控制权交给了CPU。
 
-## Busy Waiting
+## abcd
+
+### Busy Waiting
 
 我们可以按照[[Lecture Notes/Operating System/os#3.3 How to avoid race conditions?|操作系统]]讲的顺序来。首先是Busy Waiting，其实就是**我如果不想让这个线程进入，那就让它在原地空转**：
 
@@ -143,7 +145,7 @@ class LockTest2 {
 
 显然，这种忙等待的方式及其不优雅，并且很低效。因此我们才引入了锁来实现，也就是syncronized。
 
-## Start Using Lock
+### Start Using Lock
 
 首先来介绍一下Kotlin中的syncronized。一般用法是这样的：
 
@@ -327,7 +329,7 @@ class LockTest {
 
 但是，这样的作法其实和之前的Busy Waiting没啥区别。因为无法获得锁的线程依然是在不停进行while循环来尝试获得锁。所以，**我们需要让无法获得锁的线程休息一下**。
 
-## Sleep & Wakeup
+### Sleep & Wakeup
 
 这里使用的方法是`wait()`和`notifyAll()`。需要注意，**它们都是定义在Object**类中的。而Kotlin中的class并没有继承自Object，所以我们需要将锁换一下：
 
@@ -366,3 +368,55 @@ class LockTest {
 ```
 
 注意改动。首先，我们将锁从this换成了变量lock。它是一个Object变量，所以可以调用它的wait()和notifyAll()来操控当前线程；在获得了锁之后，它会检查是否轮到自己输出了。在第一次，只有th1能进行下面的代码，其它的线程都会调用lock的wait()方法。而这个方法会立刻**释放当前持有的锁**，也就是lock变量。直到其它线程调用了notify()方法时，它会继续尝试获得这个锁。如果获得了，会从**wait()方法之后的地方开始执行**。
+
+## 1-100
+
+然后是这个比较难一点的。难在哪儿呢？就难在控制。在之前打印ABCD的时候，我们并没有强调什么时候才要结束。而如果明确强调要打印1-100时，就必须打印100之后立刻停止程序。所以，当某一个线程输出了100时，其它的程序就要立刻停止工作了。
+
+这个需求的Busy Waiting版本是比较难实现的。如果按照之前的思想，代码就是这样的：
+
+```kotlin
+fun main() {  
+	LockTest3().start()  
+}  
+class LockTest3 {  
+	private var currNum = 1  
+	private var curr = 1  
+	private val th1 = Thread {  
+		while (currNum <= 100) {  
+			while (curr != 1) {}  
+			println("[1]$currNum")  
+			currNum++  
+			curr = 2  
+		}  
+	}  
+	private val th2 = Thread {  
+		while (currNum <= 100) {  
+			while (curr != 2) {}  
+			println("[2]$currNum")  
+			currNum++  
+			curr = 3  
+		}  
+	}  
+	private val th3 = Thread {  
+		while (currNum <= 100) {  
+			while (curr != 3) {}  
+			println("[3]$currNum")  
+			currNum++  
+			curr = 1  
+		}  
+	}  
+	fun start() {  
+		th1.start()  
+		th2.start()  
+		th3.start()  
+	}  
+}
+```
+
+但是运行一下你就会发现，程序卡死了。因为这里产生了死锁，导致无法继续进行。另外，上一个abcd的程序，其实也有这样的情况！只是当时运气比较好，没有出现问题。解决方法就是，在会被修改的变量上面加上@Volatile，也就是currNum和curr。然而，加上之后虽然能按顺序输出，但是：
+
+![[Study Log/java_study/resources/Pasted image 20230724192915.png]]
+
+这也是为什么我说这道题的结束控制是一个难点。如果不引入锁的话，是很难用纯粹的逻辑来决定程序何时应该结束的。
+
