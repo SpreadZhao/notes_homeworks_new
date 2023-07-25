@@ -1,4 +1,4 @@
-#language/coding/java #language/coding/kotlin #question/coding/practice 
+#language/coding/java #language/coding/kotlin #question/coding/practice #block_and_conquer #question/interview 
 
 # Syncronized
 
@@ -324,7 +324,7 @@ class LockTest {
 ```ad-warning
 千万不要把curr的赋值语句移到外面！
 
-![[Study Log/java_study/resources/Pasted image 20230724000647.png]]
+![[Study Log/java_study/resources/Pasted image 20230724000647.png|500]]
 ```
 
 但是，这样的作法其实和之前的Busy Waiting没啥区别。因为无法获得锁的线程依然是在不停进行while循环来尝试获得锁。所以，**我们需要让无法获得锁的线程休息一下**。
@@ -367,7 +367,7 @@ class LockTest {
 }
 ```
 
-注意改动。首先，我们将锁从this换成了变量lock。它是一个Object变量，所以可以调用它的wait()和notifyAll()来操控当前线程；在获得了锁之后，它会检查是否轮到自己输出了。在第一次，只有th1能进行下面的代码，其它的线程都会调用lock的wait()方法。而这个方法会立刻**释放当前持有的锁**，也就是lock变量。直到其它线程调用了notify()方法时，它会继续尝试获得这个锁。如果获得了，会从**wait()方法之后的地方开始执行**。
+注意改动。首先，我们将锁从this换成了变量lock。它是一个Object变量，所以可以调用它的wait()和notifyAll()来操控当前线程；在获得了锁之后，它会检查是否轮到自己输出了。在第一次，只有th1能进行下面的代码，其它的线程都会调用lock的wait()方法。而这个方法会立刻**释放当前持有的锁**，也就是lock变量。直到其它线程调用了notify()方法时，它会继续尝试获得这个锁。如果获得了，会从~~**wait()方法之后的地方开始执行**~~[^1]。
 
 ## 1-100
 
@@ -420,3 +420,204 @@ class LockTest3 {
 
 这也是为什么我说这道题的结束控制是一个难点。如果不引入锁的话，是很难用纯粹的逻辑来决定程序何时应该结束的。
 
+我们现在写一个带锁的版本。有了之前abcd的铺垫，这里的代码是很好懂的：
+
+```kotlin
+fun main() {  
+	LockTest3().start()  
+}  
+class LockTest3 {  
+	private var currNum = 1  
+	private var curr = 1  
+	private val lock = Object()  
+	private val limit = 100  
+	private val th1 = Thread {  
+		while (currNum <= limit) {  
+			synchronized(lock) {  
+				while (curr != 1) lock.wait()  
+				println("[1]$currNum")  
+				currNum++  
+				curr = 2  
+				lock.notifyAll()  
+			}  
+		}  
+	}  
+	... ...
+	fun start() {  
+		th1.start()  
+		th2.start()  
+		th3.start()  
+	}  
+}
+```
+
+对于每一个线程，当没有轮到自己执行时，就锁住。每当一个线程执行完，就通知所有的线程来抢锁。这样就好了，现在运行一下代码：
+
+![[Study Log/java_study/resources/Pasted image 20230725153030.png]]
+
+What？为啥还是102？这个问题的原因我想了非常久，最终终于明白了：
+
+任意一个线程，如果卡死了，就是在wait()那里。而输出到最后一个数字limit时，其它的两个线程也都必定会卡在那里。然而，如果这个时候我们还通知它们来抢锁的话，它们一旦抢到了锁，~~**还是会从wait()处执行啊**~~[^1]！所以之后它们就会打印出那两个不应该打出来的数字。知道了问题所在，解决就很简单了：在notifyAll()之前加上currNum的判定就好：
+
+```kotlin
+fun main() {  
+	LockTest3().start()  
+}  
+class LockTest3 {  
+	private var currNum = 1  
+	private var curr = 1  
+	private val lock = Object()  
+	private val limit = 100  
+	private val th1 = Thread {  
+		while (currNum <= limit) {  
+			synchronized(lock) {  
+				while (curr != 1) lock.wait()  
+				println("[1]$currNum")  
+				currNum++  
+				curr = 2  
+				if(currNum <= limit) lock.notifyAll()  
+			}  
+		}  
+	}  
+	... ...
+	fun start() {  
+		th1.start()  
+		th2.start()  
+		th3.start()  
+	}  
+}
+```
+
+这下输出终于是正常了！但是还有一点：*程序为啥没结束呢*？原因也很简单：由于你放弃了notifyAll，**那些被卡住的线程就永远卡住了**！在这之后，我有尝试了N多种可能，最后给出了一个完美实现的版本：
+
+```kotlin
+fun main() {  
+	LockTest3().start()  
+}  
+  
+class LockTest3 {  
+	private var currNum = 1  
+	private var curr = 1  
+	private val lock = Object()  
+	private val limit = 1000  
+	@Volatile  
+	private var shouldTerminate = false // 添加一个标志表示线程是否应该终止  
+	private val th1 = Thread {  
+		while (currNum <= limit && !shouldTerminate) { // 添加检查标志是否终止的条件  
+			synchronized(lock) {  
+				while (currNum <= limit && curr != 1 && !shouldTerminate) lock.wait()  
+				if (currNum < limit) {  
+					println("[1]$currNum")  
+					currNum++  
+					curr = 2  
+				} else if (currNum == limit) {  
+					if (currNum % 3 == 1) println("[1]$currNum")  
+					terminate()  
+				}  
+				lock.notifyAll()  
+			}  
+		}  
+	}  
+	... ...
+	fun start() {  
+		th1.start()  
+		th2.start()  
+		th3.start()  
+	}  
+	  
+	fun terminate() {  
+		shouldTerminate = true // 设置终止标志  
+	}  
+}
+```
+
+首先，我们需要给一个让线程终止的条件，所以定义了shouldTerminate变量。当任意一个线程输出了最后一个数字时，都要调用terminate()方法终结所有线程的运行。并且，**当一个线程被notifyAll()唤醒时，会立刻重新走一遍这个while循环，看到shouldTerminate为true，就会跳出这个循环，然后什么也不会执行，最后跳出外层的while循环，结束自己**。
+
+太复杂了！！！难道不是吗？我们可以观察一下，这些逻辑其实都是可以抽离出来的。所以我们可以定义一个Runnable来实现这个功能。另外，我们可以再继续优化一下，让它支持使用自定义个线程打印1到任意数字。这里给出最终的代码：
+
+```kotlin
+fun main() {  
+	LockTest4(1000, 5).start()  
+}  
+class LockTest4(  
+	limit: Int,  
+	threadCount: Int  
+) {  
+	  
+	private val threadList = ArrayList<Thread>()  
+	  
+	companion object {  
+	  
+		private val lock = Object()  
+		  
+		@Volatile  
+		private var currNum = 1  
+		  
+		@Volatile  
+		private var currThread = 1  
+		  
+		private var isRunning = true  
+	  
+	}  
+	  
+	init {  
+		for (i in 1 .. threadCount) {  
+			threadList.add(  
+				Thread(PrintTask(i, limit, threadCount))  
+			)  
+		}  
+	}  
+	  
+	fun start() {  
+		for (thread in threadList) {  
+			thread.start()  
+		}  
+	}  
+	  
+	class PrintTask(  
+		private val threadNumber: Int,  
+		private val limit: Int,  
+		private val threadCount: Int  
+	) : Runnable {  
+		override fun run() {  
+			while (isRunning && currNum <= limit) {  
+				synchronized(lock) {  
+					while (isRunning && currThread != threadNumber) {  
+						lock.wait()  
+					}  
+					if (currNum < limit) {  
+						println("[$threadNumber]$currNum")  
+						currNum++  
+						currThread = getNext(threadNumber)  
+					} else if (currNum == limit) {  
+						// 最后一次输出是不可控的，不信你就去掉if试试  
+						// 这里currNum和limit相等，用谁都一样。但按理来说应该是前者。  
+						if (match(threadNumber)) {  
+							println("[$threadNumber]$currNum")  
+						}  
+						isRunning = false  
+					}  
+					lock.notifyAll()  
+				}  
+			}  
+		}  
+		  
+		private fun getNext(num: Int) = if (num < threadCount) {  
+			num + 1  
+		} else {  
+			1  
+		}  
+		  
+		private fun match(num: Int) = if (num < threadCount) {  
+			currNum % threadCount == threadNumber  
+		} else {  
+			currNum % threadCount == 0  
+		}  
+	  
+	}  
+}
+```
+
+为什么会有match()方法？如果去掉会怎么样？你可以试试，使用5个线程打印1到1000。如果去掉了match方法，会变成什么样子。
+
+[^1]: ~~这个说法有错误，被唤醒的线程会重新试图获得syncronized中的锁，如果获得了，会重新执行syncronized代码块里面的代码~~。前面的说法还是有错误。确实是从wait()处执行。只不过需要获得锁，获得了锁之后从wait()处执行。又由于**我们是在while循环中**，所以之后还会判断curr的条件。
