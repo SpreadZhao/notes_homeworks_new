@@ -513,3 +513,63 @@ class MyList2<T : Number>  // Class
 fun <E : Number> print(l: MyList2<E>)  // Method
 ```
 
+```ad-warning
+title: 这里再次强调一下！
+
+在定义类时设置上届，和在构造时设置上界有着一样的效果。而这也是我废弃掉之前代码的原因。在定义类时只能设置上界；在构造时都可以设置。
+```
+
+然后就是协变与逆变。在Kotlin中：
+
+* `out`对应关键字`extends`，都是“从...出来”的意思；
+* `in`对应关键字`super`。这里我认为`in`在语义上更加适合，in本身就含有“在...之内”的意思，也就是说，在声明的类之内，都是安全区域，可以随意操作，添加，调用方法。
+
+```kotlin
+fun main() {
+	// Covariant  
+	var list1: ArrayList<out Number> = ArrayList()  
+	val list2 = ArrayList<Int>()  
+	list1 = list2  
+	  
+	  
+	val list3 = arrayListOf(3, 4, 5)  
+	val list4 = arrayListOf(3.3, 4.4, 5.5)  
+	// 两个方法都正确输出
+	printList(list3) 
+	printList(list4)  
+	  
+	// Contravariant  
+	var list5: ArrayList<in Number> = ArrayList()  
+	val list6 = ArrayList<Any>()  
+	list5 = list2  // 编译错误
+	list5 = list6  // 编译通过
+	// Int和Double都可以添加
+	list5.add(1)  
+	list5.add(1.1)  
+}  
+  
+fun printList(list: ArrayList<out Number>) {  
+	list.forEach { print("$it ") }  
+}
+```
+
+最后说一点。你可能会感觉这篇文章里的某些代码实际没有什么意义。比如为什么要让list1的类型是`ArrayList<out Number>`。这样做确实没什么意义，通常协变和逆变都是在参数中出现才能发挥大作用的。就像这篇文章提到的：
+
+[Generics](https://kotlinlang.org/docs/generics.html)
+
+```kotlin
+fun fill(dest: Array<in String>, value: String) { ... }
+```
+
+这才是它们更加常用的地方，有了上面的函数，你就可以这样调用：
+
+```kotlin
+val dest = Array<Any>(5) { }  
+fill(dest, "haha")
+```
+
+形参是`Array<in String>`类型，它指向了一个`Array<Any>`类型。而由于逆变的存在，`Array<in String>`反而是`Array<Any>`的父类。**根据多态的规则，这样的传参是合情合理的**。
+
+其它可以参考的文章：
+
+* [# 扔物线Kotlin讲解学习（三）----kotlin泛型与 in，out，where，reified的点点滴滴](https://blog.csdn.net/XJ200012/article/details/122647899)
