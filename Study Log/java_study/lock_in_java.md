@@ -1,4 +1,4 @@
-#language/coding/java #language/coding/kotlin #question/coding/practice #block_and_conquer #question/interview 
+#language/coding/java #language/coding/kotlin #question/coding/practice  #question/interview 
 
 # Syncronized
 
