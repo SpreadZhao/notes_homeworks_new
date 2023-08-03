@@ -1,3 +1,20 @@
+```markmap
+
+- 泛型
+	- Why
+	- How
+		- 泛型类
+		- 泛型方法
+		- 泛型的上界和下届
+		- 类型擦除
+	- 变形
+		- 不变（Invariant）
+		- 协变（Covariant）
+		- 逆变（Contravariant）
+	- Kotlin 泛型
+
+```
+
 # 泛型
 
 #language/coding/java #language/coding/kotlin #question/coding/practice #question/coding/theory #rating/high #question/interview 

@@ -135,3 +135,5 @@ forceStopPackage()
 [Jetpack Compose Side Effect：如何处理副作用 - 掘金 (juejin.cn)](https://juejin.cn/post/6930785944580653070#comment)
 
 [可组合项的生命周期  |  Jetpack Compose  |  Android Developers (google.cn)](https://developer.android.google.cn/jetpack/compose/lifecycle?hl=zh-cn)
+
+# PendingIntent比startForResult好，尤其是隐私密码
