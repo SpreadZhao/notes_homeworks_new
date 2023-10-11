@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface BeanPostProcessor
+BeanPostProcessor <|- InfrastructureAdvisorAutoProxyCreator
+class InfrastructureAdvisorAutoProxyCreator {
+
+    postProcessAfterInitialization(): {bean后置处理器指定的方法}
+}
+
+interface Advisor
+interface PointcutAdvisor
+Advisor <|- PointcutAdvisor
+PointcutAdvisor <|- BeanFactoryTransactionAttributeSourceAdvisor
+class BeanFactoryTransactionAttributeSourceAdvisor {
+    transactionAttributeSource: String = "" {这个是事务定义的bean}
+    adviceBeanName: String = "" {这个是拦截器的bean}
+}
+
+
+interface MethodInterceptor
+MethodInterceptor <|- TransactionInterceptor
+class TransactionInterceptor {
+    invoke() {拦截器方法：对目标方法的调用进行拦截}
+}
+
+class AnnotationTransactionAttributeSource {
+    getTransactionAttribute(): TransactionAttribute {获取Transactional的属性}
+}
+
+@enduml
