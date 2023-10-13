@@ -689,3 +689,9 @@ title: 为啥要配置免密登录？
 ![[Knowledge/resources/Pasted image 20231013153436.png]]
 
 然后专门用一个gitter账号来进行这些操作。剩下的操作就主要和git有关了，开头官方的教程里也有介绍，就不多bb了。
+
+最后，ssh的git地址如下：
+
+```
+ssh://gitter@spreadzhao.synology.me:6677/volume1/repositories/notes_homeworks
+```
