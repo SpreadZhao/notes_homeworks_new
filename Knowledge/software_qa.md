@@ -1,4 +1,4 @@
-# 1. Apache服务器配置
+# 1 Apache服务器配置
 
 ## 1.1 修改配置文件
 
@@ -29,7 +29,7 @@ httpd -k install -n "Apache24"
 
 当在浏览器中输入`localhost:80`的时候，显示`It works!`就代表启动成功了。
 
-# 2. Git Usage
+# 2 Git Usage
 
 ## 2.1 已经推送过的文件，但是本地发现他不用提交(比如clion的cmake-build-debug或者后来被加入到.gitignore的文件)
 
@@ -158,7 +158,7 @@ httpd -k install -n "Apache24"
 
 ![[Knowledge/resources/push.png]]
 
-# 3. Obsidian
+# 3 Obsidian
 
 ## 3.1 pdf导出
 
@@ -378,7 +378,7 @@ https://www.reddit.com/r/ObsidianMD/comments/onydkq/easiest_way_to_hide_text_spo
 
 https://help.obsidian.md/Editing+and+formatting/Callouts
 
-# 4. MySQL
+# 4 MySQL
 
 ## 4.1 MySQL的配置
 
@@ -470,7 +470,7 @@ source <filename>
 
 [How to Restore MySQL Database from Backup (Different ways) (devart.com)](https://blog.devart.com/how-to-restore-mysql-database-from-backup.html#use_mysql_command_to_restore_database)
 
-# 5. Windows
+# 5 Windows
 
 ## 5.1 备份/恢复驱动
 
@@ -524,13 +524,13 @@ reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\
 reg.exe delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /va /f
 ```
 
-# 6. Linux
+# 6 Linux
 
 ## 6.1 Ubuntu调整字体大小
 
 安装`gnome-tweaks`工具即可，之后便会出现Tweaks工具。在里面就能设置字体大小了。
 
-# 7. Idea
+# 7 Idea
 
 ## 7.1 修改maven仓库位置
 
@@ -538,7 +538,7 @@ reg.exe delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a
 
 Bundled代表idea自带的maven，而settings file默认就是自带maven的配置。所以我们需要自己将仓库迁移到别的位置，这里我迁移到了F盘。
 
-# 8. WSL
+# 8 WSL
 
 ## 8.1 添加环境变量
 
@@ -557,8 +557,135 @@ export PATH=$PATH:/usr/lib/jvm/jdk-17./bin
 
 之后source一下，这个`/usr/lib/jvm/jdk-17./bin`目录就添加到环境变量中了。**实际上，在这个文件的开头就能发现，每次WSL启动的时候都会默认执行一下这个脚本，所以不用担心**。
 
-# 9. Source Insight
+# 9 Source Insight
 
 ## 9.1 更改字体
 
 [(45条消息) Source Insight 4.0 字体设置_sourceinsight4字体_wowocpp的博客-CSDN博客](https://blog.csdn.net/wowocpp/article/details/87274027)
+
+# 10 Synology NAS
+
+## 10.1 配置git仓库
+
+[Git Server - Synology 知识中心](https://kb.synology.cn/zh-cn/DSM/help/Git/git?version=7)
+
+需要注意的地方：
+
+1. 路由器端口转发。需要配置好ssh的端口，内部是22，外部随便，在远程操作的时候用外部端口。
+2. ssh的配置在群晖上有点问题。参考下面的文章：
+
+[【SSH免密登录】ssh免密设置总是无效？这里有完整的配置步骤_无效设置:ssh主机无效-CSDN博客](https://blog.csdn.net/aaaaassssd/article/details/110187983)
+
+修改配置如下：
+
+```shell
+# Package generated configuration file
+# See the sshd_config(5) manpage for details
+
+# What ports, IPs and protocols we listen for
+Port 22
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+#ListenAddress 0.0.0.0
+Protocol 2
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+#Privilege Separation is turned on for security
+UsePrivilegeSeparation yes
+
+# Lifetime and size of ephemeral version 1 server key
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+#PermitRootLogin prohibit-password
+PermitRootLogin yes
+StrictModes no
+
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysFile	%h/.ssh/authorized_keys
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+# For this to work you will also need host keys in /etc/ssh_known_hosts
+RhostsRSAAuthentication no
+# similar for protocol version 2
+HostbasedAuthentication no
+# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
+#IgnoreUserKnownHosts yes
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no
+
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication yes
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosGetAFSToken no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+#UseLogin no
+
+#MaxStartups 10:30:60
+#Banner /etc/issue.net
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+UsePAM yes
+```
+
+接下来是配置**免密登录**，将公钥复制到用户目录下的`.ssh/authoried_keys`文件里就行了。但是要注意，可能没有权限，所以需要用管理员账户先用账号密码登录，然后使用`sudo su`修改这个文件以及`.ssh`目录的权限，然后我们才能复制进去。
+
+最后的效果如下：
+
+![[Knowledge/resources/Pasted image 20231013153307.png]]
+
+这样就不用免密登录了。
+
+```ad-note
+title: 为啥要配置免密登录？
+
+如果不配置，那么提交git的时候每次都要输入密码，很烦。
+```
+
+然后，是git仓库。我的思路是，直接新建一个共享文件夹，用来存所有的git仓库：
+
+![[Knowledge/resources/Pasted image 20231013153436.png]]
+
+然后专门用一个gitter账号来进行这些操作。剩下的操作就主要和git有关了，开头官方的教程里也有介绍，就不多bb了。
