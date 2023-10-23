@@ -155,3 +155,12 @@ forceStopPackage()
 [可组合项的生命周期  |  Jetpack Compose  |  Android Developers (google.cn)](https://developer.android.google.cn/jetpack/compose/lifecycle?hl=zh-cn)
 
 - [ ] PendingIntent比startForResult好，尤其是隐私密码
+
+- [ ] 新的LifeCycle使用方法：
+
+[@OnLifecycleEnvent 被废弃，替代方案更简单 - 掘金 (juejin.cn)](https://juejin.cn/post/7025407355093254151)
+
+- [ ] SnapHelper在西瓜视频的用处
+
+[让你明明白白的使用RecyclerView——SnapHelper详解 - 简书 (jianshu.com)](https://www.jianshu.com/p/e54db232df62)
+
