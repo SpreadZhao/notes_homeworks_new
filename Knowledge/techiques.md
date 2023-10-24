@@ -164,3 +164,13 @@ forceStopPackage()
 
 [让你明明白白的使用RecyclerView——SnapHelper详解 - 简书 (jianshu.com)](https://www.jianshu.com/p/e54db232df62)
 
+- [ ] 看下图，kotlin泛型的一些东西还需要完善。还是不全捏。
+
+![[Knowledge/resources/Pasted image 20231024152138.png]]
+
+- [ ] MultiTypeAdapter
+
+* [MultiType-Adapter 优雅的实现RecyclerVIew中的复杂布局 - 简书 (jianshu.com)](https://www.jianshu.com/p/032a6773620b)
+* [MultiTypeAdapter在recycleView中的使用和点击事件处理 - 掘金 (juejin.cn)](https://juejin.cn/post/6922799056309714952)
+* [drakeet/MultiType: Flexible multiple types for Android RecyclerView. (github.com)](https://github.com/drakeet/MultiType)
+* [Android 复杂的列表视图新写法 MultiType (v3.1.0 修订版) - 掘金 (juejin.cn)](https://juejin.cn/post/6844903487986204680)
