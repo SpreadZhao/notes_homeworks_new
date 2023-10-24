@@ -678,6 +678,10 @@ UsePAM yes
 
 这样就不用免密登录了。
 
+另外，拷贝ssh除了直接在nas上粘贴，还可以用ssh-copy-id：
+
+![[Knowledge/resources/Pasted image 20231024104853.png]]
+
 ```ad-note
 title: 为啥要配置免密登录？
 
