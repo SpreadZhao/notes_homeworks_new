@@ -534,6 +534,10 @@ reg.exe delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a
 
 ![[Knowledge/resources/Pasted image 20231025012340.png]]
 
+## 5.6 Windows激活
+
+[果核剥壳KMS激活服务器 - 果核剥壳 (ghxi.com)](https://www.ghxi.com/kms.html)
+
 # 6 Linux
 
 ## 6.1 Ubuntu调整字体大小
