@@ -1,4 +1,5 @@
 [小米手机使用Magisk进行root - 那个白熊 - 博客园 (cnblogs.com)](https://www.cnblogs.com/amnotgcs/p/17550155.html)
+[lonnieZ - 知乎 (zhihu.com)](https://www.zhihu.com/people/lonniez/posts)
 
 # Android
 
