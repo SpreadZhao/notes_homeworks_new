@@ -174,3 +174,7 @@ forceStopPackage()
 * [MultiTypeAdapter在recycleView中的使用和点击事件处理 - 掘金 (juejin.cn)](https://juejin.cn/post/6922799056309714952)
 * [drakeet/MultiType: Flexible multiple types for Android RecyclerView. (github.com)](https://github.com/drakeet/MultiType)
 * [Android 复杂的列表视图新写法 MultiType (v3.1.0 修订版) - 掘金 (juejin.cn)](https://juejin.cn/post/6844903487986204680)
+
+- [ ] 西瓜视频开源的Scene，了解一下，看看能不能用Kotlin重构一下。
+
+[bytedance/scene: Android Single Activity Applications framework without Fragment. (github.com)](https://github.com/bytedance/scene)

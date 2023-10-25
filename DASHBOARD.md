@@ -40,4 +40,4 @@ dv.list(data.map(it => [`${it.name}: ${it.description}`]));
 	- [[Knowledge/front_end_style|front_end_style]]
 	- [[Knowledge/markdown|markdown]]
 	- [[Knowledge/software_qa|software_qa]]
-	- [[Knowledge/techiques|techiques]]
+	- [[Knowledge/techniques|techniques]]
