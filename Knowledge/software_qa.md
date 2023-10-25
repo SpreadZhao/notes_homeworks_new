@@ -524,6 +524,16 @@ reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\
 reg.exe delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /va /f
 ```
 
+## 5.5 关闭Windows自动更新
+
+打开组策略：
+
+![[Knowledge/resources/Pasted image 20231025012157.png|300]]
+
+![[Knowledge/resources/Pasted image 20231025012250.png]]
+
+![[Knowledge/resources/Pasted image 20231025012340.png]]
+
 # 6 Linux
 
 ## 6.1 Ubuntu调整字体大小
