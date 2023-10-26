@@ -67,6 +67,10 @@ where file.name = "README"
 1. 在当前文档执行[[templates/update_mtrace|update_mtrace]]更新修改日期；
 2. **在修改的模块上添加标签** #date YYYY-MM-DD
 
+```ad-note
+emm，加标签只是为了区分你改了什么地方。不想改不加也行。
+```
+
 ---
 
 # 2022-10-17
