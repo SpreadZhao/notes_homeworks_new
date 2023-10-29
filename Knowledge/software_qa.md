@@ -713,3 +713,17 @@ title: 为啥要配置免密登录？
 ```
 ssh://gitter@spreadzhao.synology.me:6677/volume1/repositories/notes_homeworks
 ```
+
+# 11 Clash
+
+## 11.1 Clash设置导致GitHub无法clone
+
+这个问题我其实也不好分类，不过就先放在这儿吧。我发现今天GitHub突然无法用http协议clone，但是ssh就没问题。所以这一定不是墙的问题，我立刻想到了Clash之前我设置过一个东西：
+
+![[Knowledge/resources/Pasted image 20231029171938.png]]
+
+这里我之前选的是PAC模式，无论是HTTP还是PAC实际上就是在系统的设置里帮你填写一些东西：
+
+![[Knowledge/resources/Pasted image 20231029172103.png]]
+
+由于是手动的代理，所以你如果使用HTTP模式，在关机之后没改回来，下次开机的时候不用clash就会出现连不上网的情况。所以当时我改成PAC了。不过不知道是什么原因，可能这个模式并不支持使用HTTP协议和GitHub传输数据（大概率是我无知。。。），所以还是用回HTTP模式吧。

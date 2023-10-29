@@ -1,3 +1,6 @@
+---
+description: 要学的东西，都在这个里面。不管是安卓的，还是其它乱七八糟的，只要能想到的，都在这里面。
+---
 #TODO Techniques
 
 - [ ] 这么多要学的技术，文档还没写呢！！！
@@ -178,3 +181,36 @@ forceStopPackage()
 - [ ] 西瓜视频开源的Scene，了解一下，看看能不能用Kotlin重构一下。
 
 [bytedance/scene: Android Single Activity Applications framework without Fragment. (github.com)](https://github.com/bytedance/scene)
+
+- [ ] #urgency/high Jupiter，西瓜内部的编译框架，**一定要研究**！
+
+- [ ] Clash for Android，看起来！
+
+- [ ] 字节的资源分发系统Geckox，看起来很牛逼！
+
+# 学习计划
+
+原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
+
+## 进行中
+
+1. 并发艺术：[[Study Log/java_study/concurrency_art|concurrency_art]]
+2. fresco：[[Study Log/android_study/fresco|fresco]]
+3. 毕设
+4. 西电搭子
+
+## 主要学的几个方向
+
+1. 并发艺术
+2. 飞书里的任务
+3. bytetech知识地图
+4. 本文档前面的那些
+
+## 其他方向
+
+1. 微信公众号
+	- [ ] #TODO 要看看具体有哪些公众号，别放过！
+2. bytetech收藏
+3. bytetech关注（主要看Client Infra团队的）
+4. 深入理解kotlin协程
+5. 深入探索Android热修复技术原理（sophix）

@@ -1,6 +1,7 @@
 ---
 mtrace:
   - 2023-10-26
+  - 2023-10-29
 tags:
   - question/coding/android
   - language/coding/kotlin
@@ -45,3 +46,15 @@ description: 安卓开发遇到的问题，bug，编译错误之类的。
 为什么呢？为什么删掉之后泛型里就不用加了呢？
 
 好吧，我知道了，我是个傻逼。在等号右侧先操作完，才会把结果返回到左边。而只有返回到左边之后，类型推导才能工作。而执行到apply的时候，还在等号右边，还没到左边呢。。。。。
+
+## 2023-10-29
+
+#date 2023-10-29
+
+又是编译失败的问题：
+
+java.lang.AssertionError: annotationType(): unrecognized Attribute name MODULE 
+
+查了这篇文章：[android - How can I fix java.lang.AssertionError: annotationType(): unrecognized Attribute name MODULE? - Stack Overflow](https://stackoverflow.com/questions/69457372/how-can-i-fix-java-lang-assertionerror-annotationtype-unrecognized-attribute)
+
+看来是安卓sdk30左右的版本，都要用jdk11才行了。

@@ -52,6 +52,12 @@ where file.name = "README"
 
 #diary Just like what it looks like.
 
+#emergency Emergency for techiques to learn:
+
+* #urgency/low 
+* #urgency/medium
+* #urgency/high
+
 # 日记维护流程
 
 **如果文件需要添加进日记中，需要按照如下流程操作**。
@@ -68,7 +74,7 @@ where file.name = "README"
 2. **在修改的模块上添加标签** #date YYYY-MM-DD
 
 ```ad-note
-emm，加标签只是为了区分你改了什么地方。不想改不加也行。
+emm，加标签只是为了区分你改了什么地方。不想改不加也行。对于一些疑难杂症却又很琐碎的小问题，就非常需要加上日期tag。这里我推荐直接用模板[[templates/date_title_with_tag|date_title_with_tag]]
 ```
 
 ---
