@@ -214,3 +214,6 @@ forceStopPackage()
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
 5. 深入探索Android热修复技术原理（sophix）
+6. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
+7. #urgency/low Clash for Android代码分析
+8. #urgency/medium vim usage
