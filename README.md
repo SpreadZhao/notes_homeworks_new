@@ -61,7 +61,7 @@ where file.name = "README"
 # An Important rule
 
 ```ad-warning
-**Do not simply delete words, but ~~strike through it~~.**
+**Do not <u>always</u> simply delete words, but ~~strike through it~~.**
 ```
 
 # 日记维护流程

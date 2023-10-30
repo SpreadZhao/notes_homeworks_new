@@ -171,22 +171,22 @@ forceStopPackage()
 
 ![[Knowledge/resources/Pasted image 20231024152138.png]]
 
-- [ ] MultiTypeAdapter
+- [ ] #urgency/medium MultiTypeAdapter
 
 * [MultiType-Adapter 优雅的实现RecyclerVIew中的复杂布局 - 简书 (jianshu.com)](https://www.jianshu.com/p/032a6773620b)
 * [MultiTypeAdapter在recycleView中的使用和点击事件处理 - 掘金 (juejin.cn)](https://juejin.cn/post/6922799056309714952)
 * [drakeet/MultiType: Flexible multiple types for Android RecyclerView. (github.com)](https://github.com/drakeet/MultiType)
 * [Android 复杂的列表视图新写法 MultiType (v3.1.0 修订版) - 掘金 (juejin.cn)](https://juejin.cn/post/6844903487986204680)
 
-- [ ] 西瓜视频开源的Scene，了解一下，看看能不能用Kotlin重构一下。
+- [ ] #urgency/high  西瓜视频开源的Scene，了解一下，看看能不能用Kotlin重构一下。
 
 [bytedance/scene: Android Single Activity Applications framework without Fragment. (github.com)](https://github.com/bytedance/scene)
 
 - [ ] #urgency/high Jupiter，西瓜内部的编译框架，**一定要研究**！
 
-- [ ] Clash for Android，看起来！
+- [ ] #urgency/low Clash for Android，看起来！
 
-- [ ] 字节的资源分发系统Geckox，看起来很牛逼！
+- [ ] #urgency/medium  字节的资源分发系统Geckox，看起来很牛逼！
 
 # 学习计划
 
@@ -234,3 +234,5 @@ forceStopPackage()
 10. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
 11. #urgency/medium **bytetech新人培训**
 12. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
+13. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
+14. 飞书文档的收藏
