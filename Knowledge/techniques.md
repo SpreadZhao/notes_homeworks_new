@@ -233,3 +233,4 @@ forceStopPackage()
 9. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
 10. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
 11. #urgency/medium **bytetech新人培训**
+12. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
