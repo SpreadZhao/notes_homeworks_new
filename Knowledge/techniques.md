@@ -210,10 +210,26 @@ forceStopPackage()
 
 1. 微信公众号
 	- [ ] #TODO 要看看具体有哪些公众号，别放过！
+	- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
+	- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
+	- [ ] Kotlin社区：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
+	- [ ] 码上加油站：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/SyX-HtPxECICFFnu3J_XSw)
+	- [ ] 鸿洋：[Google对于开发者的一些架构建议 (qq.com)](https://mp.weixin.qq.com/s/d9Xjnr2NzM1QjWH5WpeQjw)
+	- [ ] 虎哥Lovedroid：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/Bdjet69579KCEbaYhK-k3g)
+	- [ ] 原点技术：[mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg](https://mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg)
+	- [ ] 沐雨花飞蝶：[mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA](https://mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA)
+	- [ ] 勤奋的oyoung：[mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ](https://mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ)
+	- [ ] 彬sir哥：[mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w](https://mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w)
+	- [ ] 黄大官AOSP：[mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg](https://mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg)
+	- [ ] Android 开发者：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
+	- [ ] Android老皮：[Android开源框架面试题：谈谈Glide框架的缓存机制设计 (qq.com)](https://mp.weixin.qq.com/s/OUlP4ghB2CCC4vJe6ia6cw)
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
 5. 深入探索Android热修复技术原理（sophix）
 6. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
 7. #urgency/low Clash for Android代码分析
-8. #urgency/medium vim usage
+8. #urgency/medium **vim usage**
+9. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
+10. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
+11. #urgency/medium **bytetech新人培训**

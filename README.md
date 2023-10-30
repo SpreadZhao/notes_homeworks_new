@@ -52,11 +52,17 @@ where file.name = "README"
 
 #diary Just like what it looks like.
 
-#emergency Emergency for techiques to learn:
+#emergency Emergency for ~~techiques to learn~~ todos:
 
 * #urgency/low 
 * #urgency/medium
 * #urgency/high
+
+# An Important rule
+
+```ad-warning
+**Do not simply delete words, but ~~strike through it~~.**
+```
 
 # 日记维护流程
 
