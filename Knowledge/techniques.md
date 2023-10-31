@@ -198,6 +198,7 @@ forceStopPackage()
 2. fresco：[[Study Log/android_study/fresco|fresco]]
 3. 毕设
 4. 西电搭子
+5. #urgency/high 飞书任务
 
 ## 主要学的几个方向
 
@@ -223,6 +224,16 @@ forceStopPackage()
 	- [ ] 黄大官AOSP：[mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg](https://mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg)
 	- [ ] Android 开发者：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
 	- [ ] Android老皮：[Android开源框架面试题：谈谈Glide框架的缓存机制设计 (qq.com)](https://mp.weixin.qq.com/s/OUlP4ghB2CCC4vJe6ia6cw)
+	- [ ] 群英传：[真•文本环绕问题的探究和分享 (qq.com)](https://mp.weixin.qq.com/s/6IHsfp9SiG1tVgyFwCccIw)
+	- [ ] 混沌致知
+	- [ ] 技术基本功修炼
+	- [ ] 字节流动
+	- [ ] 北院的牛顿
+	- [ ] DFIR
+	- [ ] 硬核物理
+	- [ ] 稀有猿诉
+	- [ ] 徐公
+	- [ ] 
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
