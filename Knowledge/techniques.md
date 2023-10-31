@@ -233,7 +233,9 @@ forceStopPackage()
 	- [ ] 硬核物理
 	- [ ] 稀有猿诉
 	- [ ] 徐公
-	- [ ] 
+	- [ ] 千里马学框架
+	- [ ] 网易云音乐技术团队
+	- [ ] 鸿洋
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
