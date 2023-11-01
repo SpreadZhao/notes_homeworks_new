@@ -1,3 +1,3 @@
 # Weekly Progress
 
-<%* tp.file.exists("resources/every_week") %>
+dsfsdvasdfsa : <% tp.file.title %> asdlkgalskdv
