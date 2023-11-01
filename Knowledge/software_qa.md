@@ -378,6 +378,21 @@ https://www.reddit.com/r/ObsidianMD/comments/onydkq/easiest_way_to_hide_text_spo
 
 https://help.obsidian.md/Editing+and+formatting/Callouts
 
+## 3.11 Ebullientworks
+
+### 3.11.1 Alternative checkboxes
+
+| Syntax  | Description |
+| ------- | ----------- |
+| `- [ ]` | Unchecked   |
+| `- [x]` | Checked     |
+| `- [-]` | Cancelled   |
+| `- [/]` | In Progress |
+| `- [>]` | Deferred    |
+| `- [!]` | Important   |
+| `- [?]` | Question    |
+| `- [r]` | Review      |
+
 # 4 MySQL
 
 ## 4.1 MySQL的配置
