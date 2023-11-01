@@ -2,6 +2,10 @@
 cssclass: dashboard
 ---
 
+# Week progress
+
+![[resources/every_week|every_week]]
+
 # Recent Modified
 
 ```dataviewjs
