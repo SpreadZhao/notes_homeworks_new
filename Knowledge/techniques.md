@@ -210,7 +210,7 @@ forceStopPackage()
 ## 其他方向
 
 1. 微信公众号
-	- [ ] #TODO 要看看具体有哪些公众号，别放过！
+	- [/] #TODO 要看看具体有哪些公众号，别放过！
 	- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
 	- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
 	- [ ] Kotlin社区：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
@@ -236,6 +236,9 @@ forceStopPackage()
 	- [ ] 千里马学框架
 	- [ ] 网易云音乐技术团队
 	- [ ] 鸿洋
+	- [ ] 古哥E下
+	- [ ] 千里马学框架
+	- [ ] GSYTech
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
@@ -249,4 +252,4 @@ forceStopPackage()
 12. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
 13. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
 14. 飞书文档的收藏
-15. 
+15. #urgency/medium obsidian todo
