@@ -253,3 +253,5 @@ forceStopPackage()
 13. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
 14. 飞书文档的收藏
 15. #urgency/medium obsidian todo
+16. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
+17. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
