@@ -255,3 +255,4 @@ forceStopPackage()
 15. #urgency/medium obsidian todo
 16. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
 17. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
+18. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
