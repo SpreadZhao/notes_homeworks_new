@@ -239,6 +239,9 @@ forceStopPackage()
 	- [ ] 古哥E下
 	- [ ] 千里马学框架
 	- [ ] GSYTech
+	- [ ] 我怀里的猫
+	- [ ] 代码说
+	- [ ] 
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
