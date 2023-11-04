@@ -82,7 +82,7 @@ fun ProductCard(
 
 The constructor of ProductCard have two params: modifier and name. The former is the common property in every composable function, and the later is the number under the icon like the number 8 below:
 
-![[Article/resources/Pasted image 20230408230220.png|center|50]]
+![[Article/resources/Pasted image 20230408230220.png|50]]
 
 Because `Alignment.CenterHorizontally` is still an experimental api, so we annotate it at first. Notice that, the passing by of params in HomeScreen to ProductCard does not include the modifier, so in the case above, the 1st param modifier will be it's defalt value - a newer Modifier:
 

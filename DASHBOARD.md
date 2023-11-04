@@ -23,8 +23,6 @@ for (let page of dv.pages('"Lecture Notes"')) {
 		let name = page.file.link;
 		let description = page.description;
 		data.push({name, description});
-	} else {
-		console.log(page.file.category);
 	}
 }
 dv.list(data.map(it => [`${it.name}: ${it.description}`]));
@@ -45,3 +43,4 @@ dv.list(data.map(it => [`${it.name}: ${it.description}`]));
 	- [[Knowledge/markdown|markdown]]
 	- [[Knowledge/software_qa|software_qa]]
 	- [[Knowledge/techniques|techniques]]
+	- [[Knowledge/example|example]]

@@ -10,8 +10,6 @@ for (let page of pages) {
 		if (trace.includes("{{title}}")) {
 			console.log("push!" + trace)
 			res.push(file.link)
-		} else {
-			console.log("mtrace not equal: " + trace)
 		}
 	}
 }
