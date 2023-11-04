@@ -64,7 +64,7 @@
   "Blue-Topaz-Codebox-Highlight@@remove-language-type": false,
   "Blue-Topaz-Codebox-Highlight@@code-box-style-option": "codebox-default-style",
   "Blue-Topaz-Codebox-Highlight@@blur-codebox-frosted-glass": 2,
-  "blue-topaz-theme@@font-size-code": "0.8em",
+  "blue-topaz-theme@@font-size-code": "1em",
   "blue-topaz-theme@@bg-markdown-page-opacity-cp": 0.25,
   "blue-topaz-theme@@background-image-settings-command-palette-switch": false,
   "blue-topaz-theme@@background-image-settings-command-palette-same-as-workplace": true,
@@ -87,6 +87,12 @@
   "blue-topaz-theme@@tag-text@@light": "#4C4C4C",
   "blue-topaz-theme@@tag-text@@dark": "#303030",
   "blue-topaz-theme@@checkbox-size": "1.5rem",
-  "blue-topaz-theme@@circular-checkbox": true
+  "blue-topaz-theme@@circular-checkbox": true,
+  "blue-topaz-theme@@prompt-options": "fancy-prompt-1",
+  "blue-topaz-theme@@remove-heading-indicator": false,
+  "blue-topaz-theme@@embed-content-height": 600,
+  "blue-topaz-theme@@naked-embed": false,
+  "blue-topaz-theme@@hide-embed-title": true,
+  "blue-topaz-theme@@hide-embed-banner": false
 }
 ```
