@@ -277,6 +277,10 @@ System.out.println(list1.getClass() == list2.getClass());
 
 ## 变形
 
+```note-important
+泛型的上界设置，和泛型的变形是没有任何关系的！！！
+```
+
 我们从一个现象级的例子说起：
 
 ```java
