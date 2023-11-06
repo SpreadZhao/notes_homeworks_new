@@ -34,6 +34,41 @@
 * <u>Underlined</u>
 * <font color="yellow">Custom color</font>
 * <mark style="background-color:purple">Custom Highlight</mark>
+- [ ] Unchecked `- [ ]`
+- [x] Checked `- [x]`
+- [>] Rescheduled `- [>]`
+- [<] Scheduled `- [<]`
+- [!] Important `- [!]`
+- [-] Cancelled `- [-]`
+- [/] In Progress `- [/]`
+- ["] Quote`- ["]`
+- [?] Question `- [?]`
+- [*] Star `- [*]`
+- [n] Note `- [n]`
+- [l] Location `- [l]`
+- [i] Information `- [i]`
+- [I] Idea `- [I]`
+- [S] Amount `- [S]`
+- [p] Pro `- [p]`
+- [c] Con `- [c]`
+- [b] Bookmark `- [b]`
+- [f] Fire `- [ f ]`
+- [w] Win `- [w]`
+- [k] Key `- [k]`
+- [u] Up `- [u]`
+- [d] down `- [d]`
+- [F] Feature `- [F]`
+- [r] Rule `- [r]`
+- [m] Measurement `- [m]`
+- [M] Medical `- [M]`
+- [L] Language `- [L]`
+- [t] Clock `- [t]`
+- [T] Telephone `- [T]`
+- [P] Person `- [P]`
+- [#] Tags `- [#]`
+- [W] World `- [W]`
+- [U] Universe `- [U]`
+
 
 #tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9
 
@@ -289,43 +324,6 @@ But I am not sure how to implement them, and I’ve spent too much time working 
 
 
 She took out her phone and scrolled through her messages. She had no new ones, except for a few spam emails. <aside><h1>Important</h1></aside> She deleted them and put her phone back in her purse. She felt a pang of loneliness. She had no one to talk to, no one to care for her. She had moved to the city a year ago, hoping to find a better life. But all she found was a dead-end job, a tiny apartment, and a lot of bills. <aside><h2>Important</h2></aside>She had no friends, no family, no lover. She wondered if anyone would miss her if she disappeared.
-
-## Checkboxes
-
-- [ ] Unchecked `- [ ]`
-- [x] Checked `- [x]`
-- [>] Rescheduled `- [>]`
-- [<] Scheduled `- [<]`
-- [!] Important `- [!]`
-- [-] Cancelled `- [-]`
-- [/] In Progress `- [/]`
-- ["] Quote`- ["]`
-- [?] Question `- [?]`
-- [*] Star `- [*]`
-- [n] Note `- [n]`
-- [l] Location `- [l]`
-- [i] Information `- [i]`
-- [I] Idea `- [I]`
-- [S] Amount `- [S]`
-- [p] Pro `- [p]`
-- [c] Con `- [c]`
-- [b] Bookmark `- [b]`
-- [f] Fire `- [ f ]`
-- [w] Win `- [w]`
-- [k] Key `- [k]`
-- [u] Up `- [u]`
-- [d] down `- [d]`
-- [F] Feature `- [F]`
-- [r] Rule `- [r]`
-- [m] Measurement `- [m]`
-- [M] Medical `- [M]`
-- [L] Language `- [L]`
-- [t] Clock `- [t]`
-- [T] Telephone `- [T]`
-- [P] Person `- [P]`
-- [#] Tags `- [#]`
-- [W] World `- [W]`
-- [U] Universe `- [U]`
 
 ## Mermaid
 
