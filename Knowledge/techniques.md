@@ -190,6 +190,8 @@ forceStopPackage()
 
 - [ ] #urgency/high LightRx 西瓜自研的轻量级RxJava，非常有含金量！
 
+- [ ] 多仓开发的思想
+
 # 学习计划
 
 原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
@@ -262,3 +264,4 @@ forceStopPackage()
 17. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
 18. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
 19. #urgency/low 当时NIO的那些录屏。
+20. #urgency/high bytetech机器人
