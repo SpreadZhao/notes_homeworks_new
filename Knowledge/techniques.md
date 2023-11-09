@@ -203,6 +203,7 @@ forceStopPackage()
 3. 毕设
 4. 西电搭子
 5. #urgency/high 飞书任务
+6. #urgency/high 字节码
 
 ## 主要学的几个方向
 
@@ -265,3 +266,4 @@ forceStopPackage()
 18. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
 19. #urgency/low 当时NIO的那些录屏。
 20. #urgency/high bytetech机器人
+21. #urgency/high ==***想进Infra，狠狠学字节码***==！
