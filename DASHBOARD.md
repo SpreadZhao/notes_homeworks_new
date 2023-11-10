@@ -43,4 +43,4 @@ dv.list(data.map(it => [`${it.name}: ${it.description}`]));
 	- [[Knowledge/markdown|markdown]]
 	- [[Knowledge/software_qa|software_qa]]
 	- [[Knowledge/techniques|techniques]]
-	- [[Knowledge/example|example]]
+	- [[Knowledge/obsidian_tutorial/example|example]]

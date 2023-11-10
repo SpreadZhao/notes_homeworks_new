@@ -17,7 +17,7 @@ Fuck! Use default empty weely notes temporarily. I need to spend more time to de
 
 # Blue Topaz
 
-example: [[Knowledge/example|example]]
+example: [[Knowledge/obsidian_tutorial/example|example]]
 
 # DataView
 

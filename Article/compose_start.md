@@ -1,16 +1,22 @@
+---
+description: Jetpack Compose start tutorial.
+---
 Jetpack Compose start tutorial. Referencing:
 
 [A Glimse Into Jetpack Compose By Building an App | by Aldo Surya Ongko | Better Programming](https://betterprogramming.pub/a-glimse-into-jetpack-compose-by-building-an-app-a7869723d4e8)
 
 You can see my progress here:
 
-[compose_tutorial: My start on Google Jetpack Compose. (gitee.com)](https://gitee.com/spreadzhao/compose_tutorial)
+~~[compose_tutorial: My start on Google Jetpack Compose. (gitee.com)](https://gitee.com/spreadzhao/compose_tutorial)~~
+
+[SpreadZhao/SpreadAndroidStudy (github.com)](https://github.com/SpreadZhao/SpreadAndroidStudy)
 
 # 1. HomeScreen
 
 The core idea of Jetpack Compose is **transferring all xml layout files into kotlin files**. To implement this, Google published **Composable Functions**, which can be used like any layout or views. We can declare a Composable Function in another Composable Function just like putting a ListView in a LinearLayout. The demo below is supposed to be like this:
 
-![[Article/resources/Screenshot_20230408_223849_ComposeTutorial.jpg|200]]  ![[Article/resources/Screenshot_20230408_223852_ComposeTutorial.jpg|200]]
+![[Article/resources/Screenshot_20230408_223849_ComposeTutorial.jpg|inl|200]] 
+![[Article/resources/Screenshot_20230408_223852_ComposeTutorial.jpg|inl|200]]
 
 An [OutlinedTextField](https://developer.android.com/jetpack/compose/text#enter-modify-text) on the top, and a RecyclerView-like List below, with 3 columns. This file is called **HomeScreen.kt** which is a kotlin file instead of a kotlin class, because what we are coding is function but not xml or it's corrisponding object.
 
