@@ -1,6 +1,10 @@
-第一次进行JNI开发。也就是写个Hello World。但是，这里的坑实在是太多了。网上的教程绝大多数都是基于JDK1.8的，然而我是jdk17；另外就是Windows Terminal对于命令解析的改动，使得原来很多的命令现在不好使了。
-
-[NDK 系列（5）：JNI 从入门到实践，万字爆肝详解！ - 掘金 (juejin.cn)](https://juejin.cn/post/7125338583959306248)
+---
+title: jni入门
+description: 第一次进行JNI开发。也就是写个Hello World。但是，这里的坑实在是太多了。网上的教程绝大多数都是基于JDK1.8的，然而我是jdk17；另外就是Windows Terminal对于命令解析的改动，使得原来很多的命令现在不好使了。
+links:
+  - https://juejin.cn/post/7125338583959306248
+  - https://www.baeldung.com/jni
+---
 
 # JNI Hello World
 
