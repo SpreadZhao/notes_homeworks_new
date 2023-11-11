@@ -5,7 +5,7 @@ Fresco在使用之前都要进行initialize，initialize操作主要分为三步
 	* 这个类包含了很多要初始化的参数，比如bitmap的配置，还有内存缓存的一些参数，但是这些东西都有默认值，所以我们通常只是传入一个context，其它的东西都用默认值就好。
 3. 初始化DraweeView
 
-想要给让一个Fresco图片展示，最简单的办法，只要set一下uri就搞定了：
+想要让一个Fresco图片展示，最简单的办法，只要set一下uri就搞定了：
 
 ```kotlin
 image.setImageURI(uri)
@@ -63,7 +63,9 @@ public PipelineDraweeControllerBuilder setUri(@Nullable Uri uri) {
 
 ```java
 /**  
- * Creates a new request builder instance. The setting will be done according to the source type. * * @param uri the uri to fetch  
+ * Creates a new request builder instance. The setting will be done according to the source type. 
+ * 
+ * @param uri the uri to fetch  
  * @return a new request builder instance  
  */
 public static ImageRequestBuilder newBuilderWithSource(Uri uri) {  
@@ -75,7 +77,10 @@ public static ImageRequestBuilder newBuilderWithSource(Uri uri) {
 
 ```java
 /**  
- * Sets the source uri (both network and local uris are supported). Note: this will enable disk * caching for network sources, and disable it for local sources. * * @param uri the uri to fetch the image from  
+ * Sets the source uri (both network and local uris are supported). Note: this will enable disk 
+ * caching for network sources, and disable it for local sources. 
+ * 
+ * @param uri the uri to fetch the image from  
  * @return the updated builder instance  
  */
 public ImageRequestBuilder setSource(Uri uri) {  
@@ -146,4 +151,42 @@ public ImageRequest build() {
 
 好吧，我们好像只总结了setUri()。也就是构建ImageRequest的过程，而这里面其实也都没什么有价值的东西，就是给一些参数赋值，然后用Builder构建出来的过程而已。
 
-接下来，就是
+一切的开始，要从Fresco的initialize()说起。这里面调用了initializeDrawee()方法，构建了一个builder：
+
+```java
+sDraweeControllerBuilderSupplier =
+        new PipelineDraweeControllerBuilderSupplier(context, draweeConfig);
+```
+
+那么，这个PipelineDraweeControllerBuilderSupplier是什么？它实现了Supplier接口：
+
+```java
+/**
+ * A class that can supply objects of a single type. Semantically, this could be a factory,
+ * generator, builder, closure, or something else entirely. No guarantees are implied by this
+ * interface.
+ *
+ * @author Harry Heymann
+ * @since 2.0 (imported from Google Collections Library)
+ */
+@Nullsafe(Nullsafe.Mode.STRICT)
+public interface Supplier<T> {
+  /**
+   * Retrieves an instance of the appropriate type. The returned object may or may not be a new
+   * instance, depending on the implementation.
+   *
+   * @return an instance of the appropriate type
+   */
+  T get();
+}
+```
+
+看起来非常简单，类如其名，Supplier就是提供一个类的。而这个类的类型就由泛型表明。因此我们看看PipelineDraweeControllerBuilderSupplier是怎么实现的：
+
+```java
+public class PipelineDraweeControllerBuilderSupplier
+    implements Supplier<PipelineDraweeControllerBuilder> 
+```
+
+看，PipelineDraweeControllerBuilderSupplier就是提供PipelineDraweeControllerBuilder的，将类名尾部的Supplier删掉，就是它提供的东西。这玩意儿是提供一个Builder的！
+
