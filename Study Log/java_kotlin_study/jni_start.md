@@ -63,7 +63,7 @@ where possible options include:
 
 也就是`-h .`表示将生成的.h文件放在当前目录下，最后加上源文件，也就是HelloClass.java。所以，执行完毕之后，我们能在当前文件找到它：
 
-![[Study Log/java_study/resources/Pasted image 20231021163416.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021163416.png]]
 
 然后，我们可以看看这个.h文件，看看它都帮我们做了什么工作：
 
@@ -93,7 +93,7 @@ JNIEXPORT void JNICALL Java_HelloClass_sayHello
 
 首先引入了一个jni.h，这个是jdk给我们提供的交互接口：
 
-![[Study Log/java_study/resources/Pasted image 20231021163640.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021163640.png]]
 
 然后就是这个native函数的声明了，我们摘出来看看：
 
@@ -156,11 +156,11 @@ g++ -c -I "%JAVA_HOME%\include" -I "%\JAVA_HOME%\include\win32" HelloClass.cpp -
 
 最后就是标准的编译过程，左边是输入，右边是输出，中间加上-o。看起来没啥问题，但是：
 
-![[Study Log/java_study/resources/Pasted image 20231021170148.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021170148.png]]
 
 说找不到jni.h文件。我试了试把路径放在资源管理器上，是能找到的：
 
-![[Study Log/java_study/resources/Obsidian_OhhQqrXxu3.gif]]
+![[Study Log/java_kotlin_study/resources/Obsidian_OhhQqrXxu3.gif]]
 
 包括我找的参考资料里让我这么写：
 
@@ -176,7 +176,7 @@ g++ -c -I 'D:\libs\jdk\jdk17\include' -I 'D:\libs\jdk\jdk17\include\win32' Hello
 
 这下就成功了。为什么读不了环境变量，我也不知道。这下，目录里就能看到新出现的.o文件了：
 
-![[Study Log/java_study/resources/Pasted image 20231021170855.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021170855.png]]
 
 ## 5 生成动态链接库
 
@@ -190,7 +190,7 @@ g++ -shared -o hello_native_lib.dll HelloClass.o -Wl,--add-stdcall-alias
 
 上面的命令也是我从参考网站中抄出来的，毫无疑问，又翻车了...
 
-![[Study Log/java_study/resources/Pasted image 20231021171621.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021171621.png]]
 
 这个问题我看到了这个网站：[gcc Wl option error · Issue #10314 · PowerShell/PowerShell · GitHub](https://github.com/PowerShell/PowerShell/issues/10314)
 
@@ -202,7 +202,7 @@ g++ -shared -o hello_native_lib.dll HelloClass.o "-Wl,--add-stdcall-alias"
 
 这下就成功编译了，生成的dll文件就在当前目录下：
 
-![[Study Log/java_study/resources/Pasted image 20231021171839.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021171839.png]]
 
 ## 6 JNI，启动！
 
@@ -214,7 +214,7 @@ java -cp . -Djava.library.path=. .\HelloClass.java
 
 其中，这个`-Djava.library.path`就是动态链接库配置的选项，配置在当前目录，因为dll就在当前目录。显然，又出错了：
 
-![[Study Log/java_study/resources/Pasted image 20231021172527.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021172527.png]]
 
 经过前几次的教训，我立刻加上了引号：
 
@@ -222,7 +222,7 @@ java -cp . -Djava.library.path=. .\HelloClass.java
 java -cp . "-Djava.library.path=." .\HelloClass.java
 ```
 
-![[Study Log/java_study/resources/Pasted image 20231021172559.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231021172559.png]]
 
 成功！这可是c++的函数而不是java的哟，这种体验还是很不一样的，~~有种NTR的美~~。
 

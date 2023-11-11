@@ -149,7 +149,7 @@ padding很好理解，就是将实例的大小补齐成字节的整数倍，也�
 
 我们之前也听过什么“偏向锁”，“轻量级锁”这些概念。而这些信息就存储在Mark Word里。我们可以稍微浏览一下Mark Word的大致结构，这里就只看64位系统的了：
 
-![[Study Log/java_study/resources/Pasted image 20230921154823.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230921154823.png]]
 
 下面我们先介绍一下锁的其它概念，再回头来看这个表格，就清晰多了。
 
@@ -234,7 +234,7 @@ class LockTest() {
 
 为了重新开启偏向锁，我们需要配置虚拟机参数：
 
-![[Study Log/java_study/resources/Pasted image 20231003164409.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231003164409.png]]
 
 ```
 -XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0
@@ -282,7 +282,7 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 下图中，线程1执行偏向锁的获得过程；线程2执行偏向锁的撤销过程。
 ```
 
-![[Study Log/java_study/resources/Pasted image 20231002215029.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231002215029.png]]
 
 其他资料：[难搞的偏向锁终于被 Java 移除了 - 掘金 (juejin.cn)](https://juejin.cn/post/7046921350065160206#heading-2)这篇资料介绍了为什么偏向锁被废弃，为什么偏向锁启用需要延迟4秒左右。以及还没有提到的epoch等等内容。
 
@@ -327,7 +327,7 @@ class LockTest(private val lock: BiasLock) : Runnable {
 
 程序运行都有个栈空间，这是我们知道的。但是，这个栈空间内部是什么样的呢？我们猜都能猜出来：**就是栈帧组成的呗**！
 
-![[Study Log/java_study/resources/Pasted image 20231003191740.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231003191740.png]]
 
 程序在运行的时候，会**进行若干次的函数调用，甚至递归调用**。每调用一个函数，我们就需要在**这次函数执行的周期内**，在栈空间中分配一段空间，用来存这个函数独有的变量。
 
@@ -351,15 +351,15 @@ ok，现在可以介绍轻量级锁的加锁过程了。其实非常简单：
 
 这一步稍微有点绕，我们画个图解释一下。首先，线程自己的栈帧里存的是Displaced Mark Word，也就是从锁里面复制过来的：
 
-![[Study Log/java_study/resources/Drawing 2023-10-03 22.23.04.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-10-03 22.23.04.excalidraw.png]]
 
 然后，**这个Displaced Mark Word肯定会有个地址呀**！我们假设它是`0x1234abcd`。那么接下来，这个地址就会被替换到锁的Mark Word中：
 
-![[Study Log/java_study/resources/Drawing 2023-10-03 22.26.30.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-10-03 22.26.30.excalidraw.png]]
 
 现在回头看一下之前介绍Mark Word内部结构时的图片：
 
-![[Study Log/java_study/resources/Pasted image 20230921154823.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230921154823.png]]
 
 当锁为轻量级锁时，Mark Word的结构就是一个指针加上标识位00。这和我刚刚画的图是一样的。
 
@@ -385,7 +385,7 @@ title: 注意
 
 如果还原成功，那么就没有发生竞争，成功解锁；如果失败，那么就代表此时依然还存在锁的竞争。那么此时锁就会变成重量级的锁。
 
-![[Study Log/java_study/resources/Pasted image 20231003224859.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231003224859.png]]
 
 其它资料：[死磕Synchronized底层实现--概论 · Issue #12 · farmerjohngit/myblog (github.com)](https://github.com/farmerjohngit/myblog/issues/12)
 
@@ -411,7 +411,7 @@ title: 注意
 
 现在假设，我们要执行两次`i++`操作。如果i的初值是1，那么结果应该是3。但是如果这两次i++操作是由两个线程去完成的，那可能会有这样的情况：
 
-![[Study Log/java_study/resources/Pasted image 20231005134008.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231005134008.png]]
 
 两个CPU同时读到了i的初值都是1，然后分别把它们加成了2，然后写回到内存中。这样的结果就是错误的。
 

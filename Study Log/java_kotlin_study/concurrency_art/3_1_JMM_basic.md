@@ -32,7 +32,7 @@ Java中，通信使用的方式就是共享内存。既然提到共享内存，�
 
 那么如何实现呢？看看JMM模型具体是什么：
 
-![[Study Log/java_study/resources/Pasted image 20231031231058.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231031231058.png]]
 
 **每个线程都有个本地的内存，这里面存着主内存里共享变量的副本**。这个本地内存就是之前那篇文章：[为什么volatile能保证可见性？volitile为什么只能保证可见性-CSDN博客](https://blog.csdn.net/m0_37892106/article/details/97050278)里说的工作内存，大概是。
 
@@ -42,7 +42,7 @@ Java中，通信使用的方式就是共享内存。既然提到共享内存，�
 
 那么这样子，看看一个线程是怎么通知另一个线程的：
 
-![[Study Log/java_study/resources/Pasted image 20231031233508.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231031233508.png]]
 
 这里，先假设三个内存中的x都是0。现在，A线程更新了，把x变成了1，那么之后，如果A要通知B“我的x已经更新啦！”就要这样做：
 
@@ -70,7 +70,7 @@ Java帮我们封装了这个内部的实现，所以在我们看来就是上面�
 
 从Java源代码到最终执行，重排序大概的顺序是这样的：
 
-![[Study Log/java_study/resources/Pasted image 20231104002137.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231104002137.png]]
 
 这些重排序会产生什么问题呢？我们来举个例子。现在有两个线程A和B，分别执行这样的代码：
 
@@ -92,7 +92,7 @@ Java帮我们封装了这个内部的实现，所以在我们看来就是上面�
 
 那么，考虑到之前的JMM模型，我们能想到，a和b其实是分别保存在自己的本地内存中。而我们刚刚也提到过，在做IO操作的时候，会用到Cache之类的，也就是写缓冲区。所以实际上a和b是分别保存在这两个线程的写缓冲区里的：
 
-![[Study Log/java_study/resources/Drawing 2023-11-04 17.46.54.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-11-04 17.46.54.excalidraw.png]]
 
 那么这样你其实也能看出来，当A线程和B线程要更改a和b的值的时候，就涉及到很多小的步骤。拿A线程来举例子：
 
@@ -101,7 +101,7 @@ Java帮我们封装了这个内部的实现，所以在我们看来就是上面�
 
 这样的话，A线程如果想读取b的值，就只能从主存中读。我们将这些操作标个号：
 
-![[Study Log/java_study/resources/Drawing 2023-11-04 17.53.32.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-11-04 17.53.32.excalidraw.png]]
 
 如果这些任务实际执行的顺序是：
 
@@ -117,7 +117,7 @@ $$
 
 像我们上面的操作，先存一个值（a和b），再读取一个值的操作，叫做**Store-Load**操作。而对于大多数处理器，Store-Load操作都是允许重排序的：
 
-![[Study Log/java_study/resources/Pasted image 20231104180430.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231104180430.png]]
 
 那么按着上面的例子，对于A线程或者B线程来说，它做的操作就是：
 
@@ -138,7 +138,7 @@ Load2
 
 这样的指令，一共有4种：
 
-![[Study Log/java_study/resources/Pasted image 20231104183013.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231104183013.png]]
 
 > <small>StoreLoad Barriers 是一个“全能型”的屏障，<mark style="background-color:orange"><font color="black">它同时具有其他 3 个屏障的效果</font></mark>。现代的多处理器大多支持该屏障（其他类型的屏障不一定被所有处理器支持）。执行该屏障开销会很昂贵，因为当前处理器通常要把写缓冲区中的数据全部刷新到内存中（BufferFully Flush）。</smalll>
 
@@ -163,4 +163,4 @@ Load2
 
 happens-before是直接提供给程序员看的，也就是说，程序员用的就是happens-before规则，而这个规则具体的实现就来自JMM，也包括上面说的什么StoreLoad这种屏障指令（大概包括）。
 
-![[Study Log/java_study/resources/Pasted image 20231104185527.png|550]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231104185527.png|550]]

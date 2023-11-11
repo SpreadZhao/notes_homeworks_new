@@ -6,7 +6,7 @@ order: "3"
 
 ```dataviewjs
 let res = []
-for (let page of dv.pages('"Study Log/java_study/concurrency_art"')) {
+for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
 	if (page.chapter == 3) {
 		const link = page.file.link
 		const title = page.title

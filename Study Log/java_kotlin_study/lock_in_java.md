@@ -77,11 +77,11 @@ class LockTest2 {
 
 这里为了方便观察，我设置了3秒后结束程序。现在看一看输出的结果：
 
-![[Study Log/java_study/resources/Pasted image 20230723224323.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230723224323.png]]
 
 好像差距有点大呀！我们想一想现在的运行模式：四个线程同时启动，并且都在拼命地向控制台中打印自己的字母。而我们要的输出是这样的：
 
-![[Study Log/java_study/resources/Pasted image 20230723224447.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230723224447.png]]
 
 其实也就是，**这些线程执行的顺序需要是固定且有序的**。我们目前的代码，就是让这些线程七手八脚在运行，完全将控制权交给了CPU。
 
@@ -217,7 +217,7 @@ class LockTest2 {
 
 错在哪儿了呢？其实不需要深究，想一想：这样写，四个线程都**只会获取一次锁**。而在我们的要求中，锁应该是在四个线程中不停交换的。所以肯定是有问题的。那么下一个问题，*你能猜出来这段代码的执行结果吗*？其实也很简单。任意一个线程拿到了锁之后，都会陷入里面的while循环。因此最终的输出一定是a到d中的其中一个，且只有这个字符。而由于th1是最先开始的，所以最后的结果最有可能是满屏的a：
 
-![[Study Log/java_study/resources/Pasted image 20230723235006.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230723235006.png]]
 
 那么，如果仅仅是把syncronized和while交换位置，可不可以呢？
 
@@ -416,7 +416,7 @@ class LockTest3 {
 
 但是运行一下你就会发现，程序卡死了。因为这里产生了死锁，导致无法继续进行。另外，上一个abcd的程序，其实也有这样的情况！只是当时运气比较好，没有出现问题。解决方法就是，在会被修改的变量上面加上@Volatile，也就是currNum和curr。然而，加上之后虽然能按顺序输出，但是：
 
-![[Study Log/java_study/resources/Pasted image 20230724192915.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230724192915.png]]
 
 这也是为什么我说这道题的结束控制是一个难点。如果不引入锁的话，是很难用纯粹的逻辑来决定程序何时应该结束的。
 
@@ -453,7 +453,7 @@ class LockTest3 {
 
 对于每一个线程，当没有轮到自己执行时，就锁住。每当一个线程执行完，就通知所有的线程来抢锁。这样就好了，现在运行一下代码：
 
-![[Study Log/java_study/resources/Pasted image 20230725153030.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230725153030.png]]
 
 What？为啥还是102？这个问题的原因我想了非常久，最终终于明白了：
 

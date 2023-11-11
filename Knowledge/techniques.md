@@ -198,7 +198,7 @@ forceStopPackage()
 
 ## 进行中
 
-1. 并发艺术：[[Study Log/java_study/concurrency_art|concurrency_art]]
+1. 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]]
 2. fresco：[[Study Log/android_study/fresco|fresco]]
 3. 毕设
 4. 西电搭子

@@ -14,7 +14,7 @@ HashMap的本质功能就是一个数组，没有任何其它的东西。只不�
 
 传统访问下标的方式，就是从0开始，一直到size-1。也就是说，**我们直接访问的就是下标**。而在HashMap中，我们访问的并不是下标，而是key，而如果key相同的话，访问的就是同一个元素。
 
-![[Study Log/kotlin_study/resources/Drawing 2023-08-29 17.12.41.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-08-29 17.12.41.excalidraw.png]]
 
 比如，我想访问这个数组的四号，调用`map.get(4)`就可以了。但是，你有没有想过，*我们在放入值，也就是执行put操作时，并不是按着顺序来的*？也就是说，我想让第10000号是字符串haha，只需要执行`put(10000, "haha")`就可以了。但是，这个HashMap（**或者说数组**）的初始容量可能是10000以上吗？如果是的话，那我如果只往这个map里放一个值，那岂不是非常浪费空间？所以，我们用脚趾头想都能知道，这种直接用数组的方法必定是不可能的。
 
@@ -24,7 +24,7 @@ HashMap采用的策略，就在它的名字里：哈希。既然我们无法给�
 val index = key % array.size
 ```
 
-![[Study Log/kotlin_study/resources/Drawing 2023-08-29 17.21.16.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-08-29 17.21.16.excalidraw.png]]
 
 让key模上数组的长度就好了嘛！这样，不管你key是多少，最后一定会落在这个数组中，也就不会超过限制了。那么紧接着问题就又来了：*key如果不是数字咋办*？
 
@@ -183,11 +183,11 @@ return null
 
 下面是图解。首先是链表中存在key的情况：
 
-![[Study Log/kotlin_study/resources/Drawing 2023-08-30 10.12.49.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-08-30 10.12.49.excalidraw.png]]
 
 然后是链表中不存在key的情况：
 
-![[Study Log/kotlin_study/resources/Drawing 2023-08-30 10.17.34.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-08-30 10.17.34.excalidraw.png]]
 
 ```ad-warning
 千万要注意！这里put中的key不是我真正传入的参数，而是**经过哈希函数运算**后的结果！这样写是为了好说明插入的过程。
@@ -235,7 +235,7 @@ fun remove(k: K): V? {
 
 这和删除链表的结点几乎没啥区别，唯一不同的就是要通过哈希函数来找到这个链表的头节点。下面画个图吧：
 
-![[Study Log/kotlin_study/resources/Drawing 2023-08-30 10.29.49.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-08-30 10.29.49.excalidraw.png]]
 
 ```ad-question
 不知道你会不会有这样的问题：*我的头节点的key是4，数组的下标是3，那我remove的是2，为啥还能找到头节点呢*？还记不记得我之前说的哈希碰撞，之所以这些结点在一个链表里，就是因为它们经过哈希函数计算之后，**结果全部都是3**！所以它们全部都在下标为3的这个链表里。

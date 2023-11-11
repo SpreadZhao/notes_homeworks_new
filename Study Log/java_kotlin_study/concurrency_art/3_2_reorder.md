@@ -12,7 +12,7 @@ order: "5"
 
 其实就是祭祖笔记里提到的Data Harzard。当数据之间存在依赖关系的时候，就不是那么好挪指令了：
 
-![[Study Log/java_study/resources/Pasted image 20231104190014.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20231104190014.png]]
 
 按照之前所说的那种缓存模型，只要稍微调一下这种指令的执行顺序，那么结果就不一样了（在多线程中）。所以，像这种指令，你干脆就别排了。
 
@@ -91,7 +91,7 @@ class ReorderExample {
 
 一样，如果一重排序就完了。那么凭啥它会给你重排序呢？因为**没数据依赖**呀！在这个例子中，操作1和操作2不存在数据依赖；操作3和操作4也不存在。所以它可能给你排成这个样子：
 
-![[Study Log/java_study/concurrency_art/resources/Pasted image 20231104214245.png|400]]
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231104214245.png|400]]
 
 JMM认为：诶呀，你这个线程A里面的代码，两句之间没啥关系，给你重排吧！诶呀，你这个线程B里面两句代码也没啥关系，也给你重排吧！这么一搞，就炸了。这里A重排了，但是B没有，导致B读到的a是还没写入的a。
 
@@ -99,6 +99,6 @@ JMM认为：诶呀，你这个线程A里面的代码，两句之间没啥关系�
 
 而如果B重排了呢？在现实中是确实有这样的例子的，这里我们祭祖笔记还是讲过：[[Lecture Notes/Computer Structure/cs2#^5c1c35|cs2]]。在执行if之前，我们其实就可以提前去里面取值了。所以，可能会重排成这样子：
 
-![[Study Log/java_study/concurrency_art/resources/Pasted image 20231104222240.png|500]]
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231104222240.png|500]]
 
 > <small>在程序中，操作 3 和操作 4 存在控制依赖关系。当代码中存在控制依赖性时，会影响指令序列执行的并行度。为此，编译器和处理器会采用猜测（Speculation）执行来克服控制相关性对并行度的影响。以处理器的猜测执行为例，执行线程 B 的处理器可以提前读取并计算 a\*a，然后把计算结果临时保存到一个名为重排序缓冲（Reorder Buffer，ROB）的硬件缓存中。当操作 3 的条件判断为真时，就把该计算结果写入变量 i 中。（这一坨不就是祭祖笔记里的东西吗？）</small>

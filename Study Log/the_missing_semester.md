@@ -1,6 +1,6 @@
 ---
-author: "Spread Zhao"
-title: the_missing_semester
+author: Spread Zhao
+title: The Missing Semester
 category: self_study
 description: MIT学校的The Missing Section课程，能学到一些非常有用的编程知识和技巧
 link: https://missing.csail.mit.edu/2020/

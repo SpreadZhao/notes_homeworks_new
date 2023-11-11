@@ -10,6 +10,6 @@ description: Java并发编程艺术的读书笔记。
 
 ```dataview
 list title
-from "Study Log/java_study/concurrency_art"
+from "Study Log/java_kotlin_study/concurrency_art"
 sort order asc
 ```

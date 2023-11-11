@@ -33,8 +33,8 @@ dv.list(data.map(it => [`${it.name}: ${it.description}`]));
 - [>] Study Log
 	- [[Study Log/android_study/aa_android_study|aa_android_study]]
 	- [[Study Log/android_study/aa_android_study_outline|aa_android_study_outline]]
-	- [[Study Log/java_study/aa_java_study|aa_java_study]]
-	- [[Study Log/kotlin_study/aa_kotlin_study|aa_kotlin_study]]
+	- [[Study Log/java_kotlin_study/aa_java_study|aa_java_study]]
+	- [[Study Log/java_kotlin_study/aa_kotlin_study|aa_kotlin_study]]
 	- [[Article/jdbc_study|jdbc_study]]
 	- [[Study Log/linux|linux]]
 	- [[Study Log/the_missing_semester|the_missing_semester]]

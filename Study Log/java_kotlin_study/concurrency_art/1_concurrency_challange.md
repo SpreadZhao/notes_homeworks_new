@@ -131,7 +131,7 @@ class Deadlock {
 
 然而，我们要注意。这里其实是一个假的死锁。而真正的死锁还是要满足上面**环路等待**的情况。也就是说，在这个环中，至少有两个线程，并且每个线程都在等着下一个线程的资源。所以，现在我们来写一个真正的死锁：
 
-![[Study Log/java_study/resources/Drawing 2023-09-19 11.40.49.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-09-19 11.40.49.excalidraw.png]]
 
 在这个例子中，t1持有锁A，t2持有锁B。然而此时t1想要t2的B，同时t2又想要t1的A。这种才是一个环路等待的过程。下面我们来大致写一下代码：
 
@@ -193,11 +193,11 @@ fun deadlock() {
 
 在windows中，`tasklist`命令可以输出正在运行的进程。
 
-![[Study Log/java_study/resources/Pasted image 20230919120848.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230919120848.png]]
 
 下面这个pid为18532的就是我们刚刚产生死锁的进程：
 
-![[Study Log/java_study/resources/Pasted image 20230919120928.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230919120928.png]]
 
 下面，通过这个命令来输出dump日志（参考文章：[【Java基础】- JVM之Dump文件详解-阿里云开发者社区 (aliyun.com)](https://developer.aliyun.com/article/1301868)）。`jstack`也是jdk提供的工具。
 
@@ -207,15 +207,15 @@ jstack 18532 > thread.txt
 
 然后日志就会默认输出到用户的目录中了：
 
-![[Study Log/java_study/resources/Pasted image 20230919121051.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230919121051.png]]
 
 在里面，我们也可以成功看到这两个线程的信息：
 
-![[Study Log/java_study/resources/Pasted image 20230919121141.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230919121141.png]]
 
 在日志的最后，dump也给出了死锁的详情：
 
-![[Study Log/java_study/resources/Pasted image 20230919121247.png]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230919121247.png]]
 
 我们在os笔记中也说过，想要避免死锁，最有效的办法就是破坏那四个必要条件中的一个或多个。而这种策略可以总结成下面的几种方法：
 
