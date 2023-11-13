@@ -70,7 +70,7 @@ $$
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231109232551.png]]
 
-这是我们采用了同步之后的结果，让A线程所有操作都执行完才让B开始。这个执行顺序，AB线程都是能看到的。
+这是**我们采用了同步之后**的结果，让A线程所有操作都执行完才让B开始。这个执行顺序，AB线程都是能看到的。
 
 另外，在顺序一致性内存中，我们也可以不同步，虽然不同步，但是也要符合上面的两点要求。比如：
 
@@ -164,3 +164,9 @@ class ReorderExample {
 ```
 
 这样，你想怎么休息就怎么休息。只要A线程先获得锁，你B就得在那儿等着。还记得之前说的吗：[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal#2.2 syncronized|2_concurrency_internal]]？syncronized修饰方法的时候，锁是当前实例的。也就是说，在上面的例子中，锁就是`example`这个实例。
+
+下面，有一个问题：
+
+- [?] *你加了这两个syncronized之后，真的就和内存一致性模型一样了吗？*
+
+答案是否定的。syncronized只是一把锁，它没办法控制内存
