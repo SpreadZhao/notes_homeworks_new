@@ -263,7 +263,9 @@ forceStopPackage()
 	- [ ] Android茶话会
 	- [ ] Android补给站
 	- [ ] 51CTO技术栈
-2. bytetech收藏
+	- [ ] 阿豪讲framework
+	- [ ] Rust学习日记
+
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
 5. 深入探索Android热修复技术原理（sophix）
