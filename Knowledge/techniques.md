@@ -198,6 +198,10 @@ forceStopPackage()
 
 - [ ] ImmersiveViewHolder的预加载（ImmersiveVideoTemplate）
 
+- [ ] gkd: [gkd-kit/gkd: 基于 无障碍 + 高级选择器 + 订阅规则 的自定义屏幕点击 Android APP (github.com)](https://github.com/gkd-kit/gkd)
+
+- [ ] 就不多列了，所有GitHub，Gitee的star都算是
+
 # 学习计划
 
 原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
