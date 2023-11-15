@@ -194,6 +194,10 @@ forceStopPackage()
 
 - [ ] LiveData 的设计思想
 
+- [ ] Block框架
+
+- [ ] ImmersiveViewHolder的预加载（ImmersiveVideoTemplate）
+
 # 学习计划
 
 原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
@@ -248,7 +252,13 @@ forceStopPackage()
 	- [ ] GSYTech
 	- [ ] 我怀里的猫
 	- [ ] 代码说
-	- [ ] 
+	- [ ] TechMerger
+	- [ ] 悖论的技术小屋
+	- [ ] AndroidPub
+	- [ ] 稀土掘金技术社区
+	- [ ] Android茶话会
+	- [ ] Android补给站
+	- [ ] 51CTO技术栈
 2. bytetech收藏
 3. bytetech关注（主要看Client Infra团队的）
 4. 深入理解kotlin协程
