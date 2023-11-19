@@ -14,3 +14,4 @@ link: https://github.com/SpreadZhao/SpreadAndroidStudy
 
 - [ ] Fresco的整体框架结构
 - [ ] 一个图片加载的过程
+- [ ] Fresco的trace是怎么做的，check是怎么做的
