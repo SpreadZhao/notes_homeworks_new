@@ -183,26 +183,18 @@ forceStopPackage()
 [bytedance/scene: Android Single Activity Applications framework without Fragment. (github.com)](https://github.com/bytedance/scene)
 
 - [ ] #urgency/high Jupiter，西瓜内部的编译框架，**一定要研究**！
-
 - [ ] #urgency/low Clash for Android，看起来！
-
 - [ ] #urgency/medium  字节的资源分发系统Geckox，看起来很牛逼！
-
 - [ ] #urgency/high LightRx 西瓜自研的轻量级RxJava，非常有含金量！
-
 - [ ] 多仓开发的思想
-
 - [ ] LiveData 的设计思想
-
 - [ ] Block框架
-
 - [ ] ImmersiveViewHolder的预加载（ImmersiveVideoTemplate）
-
 - [ ] gkd: [gkd-kit/gkd: 基于 无障碍 + 高级选择器 + 订阅规则 的自定义屏幕点击 Android APP (github.com)](https://github.com/gkd-kit/gkd)
-
 - [ ] 就不多列了，所有GitHub，Gitee的star都算是
-
 - [ ] trace的原理，为什么有的时候不准
+- [ ] Compose网易云：[sskEvan/NCMusicDesktop: Compose Desktop仿写网易云桌面应用 (github.com)](https://github.com/sskEvan/NCMusicDesktop)
+- [ ] 为什么RecyclerView往后面填数据的时候就不会滑动，往前面填数据的时候会自动滑倒开头？
 
 # 学习计划
 
@@ -230,16 +222,19 @@ forceStopPackage()
 	- [/] #TODO 要看看具体有哪些公众号，别放过！
 	- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
 	- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
-	- [ ] Kotlin社区：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
+	- [ ] **Kotlin社区**：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
 	- [ ] 码上加油站：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/SyX-HtPxECICFFnu3J_XSw)
 	- [ ] 鸿洋：[Google对于开发者的一些架构建议 (qq.com)](https://mp.weixin.qq.com/s/d9Xjnr2NzM1QjWH5WpeQjw)
 	- [ ] 虎哥Lovedroid：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/Bdjet69579KCEbaYhK-k3g)
 	- [ ] 原点技术：[mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg](https://mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg)
 	- [ ] 沐雨花飞蝶：[mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA](https://mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA)
-	- [ ] 勤奋的oyoung：[mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ](https://mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ)
-	- [ ] 彬sir哥：[mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w](https://mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w)
+	- [ ] **勤奋的oyoung**：[mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ](https://mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ)
+		- [ ] 每日面试题非常好
+	- [ ] **彬sir哥**：[mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w](https://mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w)
+		- [ ] 有很多比如自定义View的编程实战
 	- [ ] 黄大官AOSP：[mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg](https://mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg)
-	- [ ] Android 开发者：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
+	- [ ] **Android 开发者**：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
+		- [ ] 开发者说DTalk
 	- [ ] Android老皮：[Android开源框架面试题：谈谈Glide框架的缓存机制设计 (qq.com)](https://mp.weixin.qq.com/s/OUlP4ghB2CCC4vJe6ia6cw)
 	- [ ] 群英传：[真•文本环绕问题的探究和分享 (qq.com)](https://mp.weixin.qq.com/s/6IHsfp9SiG1tVgyFwCccIw)
 	- [ ] 混沌致知
@@ -267,23 +262,28 @@ forceStopPackage()
 	- [ ] 51CTO技术栈
 	- [ ] 阿豪讲framework
 	- [ ] Rust学习日记
+2. bytetech关注（主要看Client Infra团队的）
+3. 深入理解kotlin协程
+4. 深入探索Android热修复技术原理（sophix）
+5. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
+6. #urgency/low Clash for Android代码分析
+7. #urgency/medium **vim usage**
+8. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
+9. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
+10. #urgency/medium **bytetech新人培训**
+11. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
+12. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
+13. 飞书文档的收藏
+14. #urgency/medium obsidian todo
+15. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
+16. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
+17. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
+18. #urgency/low 当时NIO的那些录屏。
+19. #urgency/high bytetech机器人
+20. #urgency/high ==***想进Infra，狠狠学字节码***==！
 
-3. bytetech关注（主要看Client Infra团队的）
-4. 深入理解kotlin协程
-5. 深入探索Android热修复技术原理（sophix）
-6. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
-7. #urgency/low Clash for Android代码分析
-8. #urgency/medium **vim usage**
-9. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
-10. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
-11. #urgency/medium **bytetech新人培训**
-12. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
-13. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
-14. 飞书文档的收藏
-15. #urgency/medium obsidian todo
-16. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
-17. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
-18. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
-19. #urgency/low 当时NIO的那些录屏。
-20. #urgency/high bytetech机器人
-21. #urgency/high ==***想进Infra，狠狠学字节码***==！
+# 其它学习
+
+* [[Study Log/android_study/aa_android_study_outline|aa_android_study_outline]]
+* [[Study Log/java_kotlin_study/aa_java_study|aa_java_study]]
+* [[Study Log/java_kotlin_study/aa_kotlin_study|aa_kotlin_study]]
