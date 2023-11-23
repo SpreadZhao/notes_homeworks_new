@@ -196,6 +196,7 @@ forceStopPackage()
 - [ ] Compose网易云：[sskEvan/NCMusicDesktop: Compose Desktop仿写网易云桌面应用 (github.com)](https://github.com/sskEvan/NCMusicDesktop)
 - [ ] 为什么RecyclerView往后面填数据的时候就不会滑动，往前面填数据的时候会自动滑倒开头？
 - [ ] 点赞组件DiggComponent，还有旁边的收藏组件设计模式
+- [ ] AndroidStudio官方教学
 
 # 学习计划
 
