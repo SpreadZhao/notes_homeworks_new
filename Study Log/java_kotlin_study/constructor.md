@@ -1,6 +1,7 @@
 ---
 mtrace:
   - 2023-07-02
+  - 2023-11-22
 tags:
   - question/coding/practice
   - language/coding/kotlin
@@ -14,3 +15,45 @@ tags:
 ![[Article/story/resources/Pasted image 20230702225926.png]]
 
 如上图中的`context`成员就不能在类的内部使用。
+
+#date 2023-11-23
+
+遇到了一个例子。下面是一个抽象类：
+
+```kotlin
+abstract class XDPartnerResponse<DATA>(
+  val code: Int,
+  val data: DATA,
+  val msg: String
+)
+```
+
+这个类其实是data class。但是我有个需求，因为我所有的response都是这个格式的，所以字段是复用的。只不过是这个data的类型不一样。所以这里我选择用泛型来配置。然后子类就是data class，继承它这一招从这里学的：[Kotlin data class 遇到的坑及解决方案 - 简书 (jianshu.com)](https://www.jianshu.com/p/a98156d08337)
+
+比如其中一个子类：
+
+```kotlin
+data class ThreadsResponse(
+  @SerializedName("code") val code: Int,
+  @SerializedName("data") val data: List<ThreadMeta>,
+  @SerializedName("msg") val msg: String
+) : XDPartnerResponse<List<ThreadMeta>>(code, data, msg)
+```
+
+**但是这样写是报错的**！错误如下：
+
+![[Study Log/java_kotlin_study/resources/Pasted image 20231122235929.png]]
+
+就是因为父类里面加了val，导致这三个字段变成了成员，不是仅仅用于构造的字段。所以要把抽象父类里的val去掉：
+
+```kotlin
+abstract class XDPartnerResponse<DATA>(
+  code: Int,
+  data: DATA,
+  msg: String
+)
+```
+
+但是有个问题，就是如果不加val就用不了，那我要这个属性有何用？
+
+这个其实不适合在这个例子里说。因为data class比较特殊，它构造方法里所有的变量必须都加上val，也就是说，**所有构造data class的字段都必须是成员**。而普通的类没有这个要求，所以普通的类在继承时，val的添加会更加灵活。
