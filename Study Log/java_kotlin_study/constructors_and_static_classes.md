@@ -254,9 +254,9 @@ title: Kotlin中的静态内部类
 
 千万要注意：Kotlin中的静态内部类就是class，而非静态内部类是inner class。看下面的例子，加上了inner之后，在静态方法中无法创建。这正对应了上面的第一条。不报错的时候，就是构造静态内部类的时候。
 
-![[Study Log/java_study/resources/idea64_o91GamPVcq.gif]]
+![[Study Log/java_kotlin_study/resources/idea64_o91GamPVcq.gif]]
 
 而如果我们想要构造出内部类，需要先构造出外部的类的实例：
 
-![[Study Log/java_study/resources/idea64_hINz9VwptT.gif]]
+![[Study Log/java_kotlin_study/resources/idea64_hINz9VwptT.gif]]
 ```
