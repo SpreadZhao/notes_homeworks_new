@@ -1,6 +1,7 @@
 ---
 mtrace:
   - 2023-09-01
+  - 2023-11-28
 ---
 # Java中的各种构造函数
 
@@ -158,7 +159,7 @@ Student()
 
 [A Guide to Java Initialization | Baeldung](https://www.baeldung.com/java-initialization)
 
-这篇文章有介绍这种单纯的代码块，其实我们几乎完全用不到这个特性。反而是kotlin里的init比较常用。
+这篇文章有介绍这种单纯的代码块，~~其实我们几乎完全用不到这个特性。反而是kotlin里的init比较常用~~（为我的无知道歉。。。 #date 2023-11-28）。
 
 现在，我们来观察另一个特点。看看Student的无参构造：
 
@@ -259,4 +260,8 @@ title: Kotlin中的静态内部类
 而如果我们想要构造出内部类，需要先构造出外部的类的实例：
 
 ![[Study Log/java_kotlin_study/resources/idea64_hINz9VwptT.gif]]
+
+#date 2023-11-29
+
+可以这样理解：`inner`关键字的作用就是，构造的时候必须从外到内全部有实例才行，这其实就像一个成员属性一样，必须有外部类的实例才能访问，所以不是静态的。而不带`inner`的class就相当于java的`static class`。
 ```
