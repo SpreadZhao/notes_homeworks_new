@@ -163,7 +163,7 @@ thread87 result: 8775
 final result: 9975
 ```
 
-这是我随便执行一次的结果。显然每次执行的结果也都是不一样的。那么，如何让执行结果就是10000呢？之前我们是怎么做的？CAS！但是现在，我们用volatile来试一试：
+这是我随便执行一次的结果。显然每次执行的结果也都是不一样的。那么，如何让执行结果就是10000呢？之前（[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal#2.3.2 Java如何实现原子操作（CAS）|2.3.2 Java如何实现原子操作（CAS）]]）我们是怎么做的？CAS！但是现在，我们用volatile来试一试：
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231119150520.png|300]]
 
@@ -201,12 +201,12 @@ set(temp) // 写
 
 我们可以再进一步猜测一下，为什么volatile能保证那个happens-before规则。既然读和写可以满足这种规则，是不是就是说，**它给这两个操作做了同步的呀**！！！
 
-换句话来说，**就是上面的get()方法和set()方法，其实是syncronized修饰的**！按照这个猜测，如果我们有一个volatile的变量：
+换句话来说，**就是上面的get()方法和set()方法，其实==相当于==是syncronized修饰的**！按照这个猜测，如果我们有一个volatile的变量：
 
 ```kotlin
 class VolatileExample {
 	@Volatile
-	private var integer
+	var integer
 }
 ```
 
@@ -218,7 +218,7 @@ class VolatileExample {
 
 ```kotlin
 class VolatileExample {
-	private var integer
+	var integer
 
 	@Syncronized
 	fun get() = integer
@@ -473,3 +473,5 @@ volatileWrite3    |
 所以，volatile最终能保证什么？只能保证对于这个volatile变量的读/写操作是原子的，你再加上任何其它的东西，都可能失效了。
 
 最后，给出一个使用volatile的正确姿势：[Java 理论与实践: 正确使用 Volatile 变量-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1340711)
+
+#TODO 原作者：Brian Goetz。但是我一直找不到原文在哪里。不过有时间可以读一读他写的书。
