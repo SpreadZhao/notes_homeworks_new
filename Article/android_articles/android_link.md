@@ -10,6 +10,7 @@
 * [evilpan's blog](https://evilpan.com/ "evilpan")
 * [麦客奥德彪 的个人主页 - 文章 - 掘金 (juejin.cn)](https://juejin.cn/user/2365804752418232/posts)
 * [辰之猫 - 简书 (jianshu.com)](https://www.jianshu.com/u/6b147fcd94e6)
+* [Tristan的博客 | Tristan Blog (tristanzeng.github.io)](https://tristanzeng.github.io/)
 
 # Article
 
