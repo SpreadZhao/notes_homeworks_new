@@ -9,7 +9,7 @@ override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder 
 }
 ```
 
-将View的高度修改为四分之一屏幕高度+10。屏幕原本的高度是2892，四分之一就是723。原本情况下，屏幕正好能容纳四个item，只要一滑动，第五个item就会走创建的逻辑。然而，为了更好地演示在滑动，创建，bind过程中穿插的计算流程，将高度多加上10，这样每个item的高度变为733，四个View的总高度变为2932，比原本的屏幕高出了40：
+将View的高度修改为四分之一屏幕高度+10。屏幕原本的高度是2892，四分之一就是723。原本情况下，屏幕正好能容纳四个item，只要一滑动，第五个item就会走创建的逻辑。然而，为了更好地演示在滑动，创建，bind过程中穿插的**计算流程**，将高度多加上10，这样每个item的高度变为733，四个View的总高度变为2932，比原本的屏幕高出了40：
 
 ![[Study Log/android_study/recyclerview/2_scroll/resources/Drawing 2023-12-22 16.02.58.excalidraw.png]]
 
