@@ -248,9 +248,9 @@ int fill() {
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Drawing 2023-12-25 19.52.13.excalidraw.png]]
 
-可以看到，我滑动的距离越多，布局的距离也就越多。而我们滑动的距离和第一个Item距离尾部的位置，也就决定了第一个Item是否要被回收。可以看到，在上图中，如果scroll > 743，Item1就应该被回收；如果scroll > 743 * 2，那么Item1和Item2都应该被回收。
+可以看到，我滑动的距离越多，布局的距离也就越多。而`我们滑动的距离`和`第一个Item距离尾部的位置`，也就决定了第一个Item是否要被回收。可以看到，在上图中，如果scroll > 743，Item1就应该被回收；如果scroll > 743 * 2，那么Item1和Item2都应该被回收。
 
-既然如此，scroll是怎么来的？看一下fill()的代码就能够知道，其实scroll就是mScrollingOffset。这个时候你可能会问？mScrollingOffset不是[[#2.1.2 Calculate Info]]开头的时候就说了，是“不需要布局的情况下，最长能滑动的距离”吗？为什么这里又变成实际滑动的距离了？
+既然如此，scroll是怎么来的？看一下fill()的代码就能够知道，其实<label class="ob-comment" title="scroll就是mScrollingOffset" style=""> scroll就是mScrollingOffset <input type="checkbox"> <span style=""> 这里特指while循环中。如果是在while循环之前，scroll和mScrollingOffset的关系在后文中有说明。 </span></label>。这个时候你可能会问？mScrollingOffset不是[[#2.1.2 Calculate Info]]开头的时候就说了，是“不需要布局的情况下，最长能滑动的距离”吗？为什么这里又变成实际滑动的距离了？
 
 这个问题的答案我也是现在才弄明白。注意注释里说的"**set** the amount of"，关键就在这个set。如果没有这个set，那它确实应该一直保存不需要布局的距离。但是有了这个set，就仅仅代表**这个变量的初值是不需要布局的距离**。在之后的计算（while循环）中，mScrollingOffset会不断增加，增加的也就是实际滑动的距离。其实，这也是这个变量名的本意，就是**滑动的偏移量**。
 
@@ -282,7 +282,7 @@ findViewById<Button>(R.id.scroll3).setOnClickListener {
 }
 ```
 
-你也可以写一个Demo来复线我的例子。现在我们需要讨论一下：还是像之前那样，如果scroll > 277，那么Item1就会被回收，反之就不会回收。
+你也可以写一个Demo来复现我的例子。现在我们需要讨论一下：还是像之前那样，如果scroll > 277，那么Item1就会被回收，反之就不会回收。
 
 但是还有个问题，就是**while循环一定会执行吗**？显然，只有scroll > 307的时候才会执行（我们就不讨论等于了，没什么意思）。因为小于307的时候我们是不需要布局的。这就产生了一个尴尬的情况：如果你只在while循环里才有回收的逻辑，那么就代表当277 < scroll < 307的时候，就没人回收了！
 
@@ -389,17 +389,17 @@ $$
 
 除了标红的那一段，剩下的都是之前就总结过的结论。问题是，会不会存在不回收Item3，但是Item7也能显示出来的情况呢？讨论这个问题，我们可以通过仅改变Item 6的高度入手。这个时候，mScrollingOffset就不是end + 30，而是一个随意的值（end是定值）。
 
-而如果mScrollingOffset被调整到 < end的时候，会发生什么？答案是：**while循环之前的那个回收一定不会回收Item3**。因为在**while循环执行之前**，limit只有这两个情况：
+而如果mScrollingOffset被调整到 < end，scroll变化时，会发生什么？答案是：**不管scroll有多小或者多大，while循环之前的那个回收一定不会回收Item3，回收它的要么是while循环里的逻辑，要么是下一次滑动的逻辑**。因为在**while循环执行之前**，limit只有这两个情况：
 
-* limit = scroll < mScrollingOffset**的初值** < end；limit = scroll = mScrollingOffset的终值 < end；
-* limit = mScrollingOffset < (end, scroll)。
+* limit = scroll < mScrollingOffset**的初值** < end；<label class="ob-comment" title="limit = scroll = mScrollingOffset的终值" style=""> limit = scroll = mScrollingOffset的终值 &lt end <input type="checkbox"> <span style=""> 这里会发生初值到终值的变化，就是因为mAvailable &lt 0，所以mScrollingOffset 减去这个值之后就变小到和scroll一样了。 </span></label>；（scroll很小时）
+* limit = mScrollingOffset < (end, scroll)。（scroll很大时）
 
 因此，limit绝对不会超过end，那个for循环里的if条件也绝对不会满足，也就绝对不会回收。这个时候，**回收Item3就要靠while循环里的那个回收了，当layoutChunk()布局了Item7之后，就会更新mScrollingOffset，此时再去判断是否要回收Item3**。
 
 我上面讨论这么复杂一堆，根本目的是什么？答案是：==***证明当回收和复用在一次滑动事件中发生时，回收一定先于复用发生***==。你可能会问，最后这个例子不是还说mScrollingOffset < end的时候Item3不会先回收吗？注意。这种情况下，和Item7就没啥关系了。因为这种情况下在这次滑动中，如果Item7显示出来而Item3没有被回收，**那根本就不算“回收和复用在一次滑动事件中发生”**。所以，只发生回收（Item6非常长），只发生复用，或者都没发生，这些情况不在我们讨论范围内。
 
 ```ad-important
-现在回到这个例子。当scroll > mScrollingOffset的时候，这一次滑动会导致Item7显示，Item3回收。而Item3回收是一定先于Item7显示的。因为此时Item3回收位于while循环之前，Item7显示在while循环里面。
+现在回到这个例子。当scroll > mScrollingOffset的时候，这**一次**滑动会导致Item7显示，Item3回收。而Item3回收是一定先于Item7显示的。因为此时Item3回收位于while循环之前，Item7显示在while循环里面。
 ```
 
 我们可以随便改，改Item的高度，让每个Item都不一样。但是无论怎么改，只要在一次滑动中同时发生了回收和复用，都可以像这样讨论，答案一定是回收先于复用。
