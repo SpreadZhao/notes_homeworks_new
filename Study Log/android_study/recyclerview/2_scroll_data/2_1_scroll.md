@@ -385,11 +385,17 @@ $$
 
 而end < mScrollingOffset。所以我们可以得出结论：
 
-* 如果scroll > mScrollingOffset，while循环之前的那个回收一定会回收Item 3；
-* 如果end < scroll < mScrollingOffset，while循环之前的那个回收也会回收Item3；
+```ad-summary
+**在一次滑动的最开始：**
+
+* 如果scroll > mScrollingOffset，while循环之前的那个回收一定会回收Item 3，**Item 7会在while循环中布局之后显示出来**；
+* 如果end < scroll < mScrollingOffset，while循环之前的那个回收也会回收Item3，**Item7不会显示出来**；
 * 如果0 < scroll < end，不会回收Item3，**但是Item 7也不可能显示出来**。
+```
 
 除了标红的那一段，剩下的都是之前就总结过的结论。问题是，会不会存在不回收Item3，但是Item7也能显示出来的情况呢？讨论这个问题，我们可以通过仅改变Item 6的高度入手。这个时候，mScrollingOffset就不是end + 30，而是一个随意的值（end是定值）。
+
+---
 
 而如果mScrollingOffset被调整到 < end，scroll变化时，会发生什么？答案是：**不管scroll有多小或者多大，while循环之前的那个回收一定不会回收Item3，回收它的要么是while循环里的逻辑，要么是下一次滑动的逻辑**。因为在**while循环执行之前**，limit只有这两个情况：
 
@@ -398,10 +404,14 @@ $$
 
 因此，limit绝对不会超过end，那个for循环里的if条件也绝对不会满足，也就绝对不会回收。这个时候，**回收Item3就要靠while循环里的那个回收了，当layoutChunk()布局了Item7之后，就会更新mScrollingOffset，此时再去判断是否要回收Item3**。
 
+---
+
 我上面讨论这么复杂一堆，根本目的是什么？答案是：==***证明当回收和复用在一次滑动事件中发生时，回收一定先于复用发生***==。你可能会问，最后这个例子不是还说mScrollingOffset < end的时候Item3不会先回收吗？注意。这种情况下，和Item7就没啥关系了。因为这种情况下在这次滑动中，如果Item7显示出来而Item3没有被回收，**那根本就不算“回收和复用在一次滑动事件中发生”**。所以，只发生回收（Item6非常长），只发生复用，或者都没发生，这些情况不在我们讨论范围内。
 
 ```ad-important
 现在回到这个例子。当scroll > mScrollingOffset的时候，这**一次**滑动会导致Item7显示，Item3回收。而Item3回收是一定先于Item7显示的。因为此时Item3回收位于while循环之前，Item7显示在while循环里面。
+
+上面所说的“==***当回收和复用在一次滑动事件中发生时，回收一定先于复用发生***==”其实不完善。真正完整的表述是：**最上面有个View快要被回收了，而下面有个View也快要被布局了。如果此时一次滑动同时导致了最上面的View回收和下面的View布局，则回收一定是先于布局的**。就像Item3和Item7一样。
 ```
 
 我们可以随便改，改Item的高度，让每个Item都不一样。但是无论怎么改，只要在一次滑动中同时发生了回收和复用，都可以像这样讨论，答案一定是回收先于复用。

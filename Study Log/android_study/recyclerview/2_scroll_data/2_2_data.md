@@ -28,7 +28,7 @@ public void onChanged() {
 }
 ```
 
-这里面调用了processDataSetCompletelyChanged()方法。我们在[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.3 Update Adapter|1_2_1_step1]]中提到过，setAdapter()也会调用这里。合情合理，换Adapter了，数据肯定会发生变化，所以全部刷新是没问题的。初次之外，还有一个位置也会调用processDataSetCompletelyChanged()，就是swapAdapter()：
+这里面调用了processDataSetCompletelyChanged()方法。我们在[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.3 Update Adapter|1_2_1_step1]]中提到过，setAdapter()也会调用这里。合情合理，换Adapter了，数据肯定会发生变化，所以全部刷新是没问题的。除此之外，还有一个位置也会调用processDataSetCompletelyChanged()，就是swapAdapter()：
 
 ```java
 /**  
@@ -60,7 +60,7 @@ public void swapAdapter(@Nullable Adapter adapter, boolean removeAndRecycleExist
 
 首先看它是如何标记所有的View都已经被改变的。先来分析现状。根据我们之前的分析，现在屏幕上的情况应该是这样的：只有三个ViewHolder，并且它们都在屏幕上，其它的数据还并没有被布局到。
 
-而据我们所知，RecyclerView中的View有如下几种状态：
+而据我们有限的所知，RecyclerView中的View有如下几种状态：
 
 * 可见；
 * 在Cache中（View的数据还在）；
@@ -91,7 +91,7 @@ void processDataSetCompletelyChanged(boolean dispatchItemsChanged) {
 }
 ```
 
-这里首先将dispatchItemsChanged亦或上去。意味着mDispatchItemsChangedEvent一旦被设置为true，之后就一直是true了。通过这个方法是不会置回false的；然后设置mDataSetHasChangedAfterLayout为true。这两个变量我们之后都会再遇到（其实之前就遇到过了）。
+这里首先将dispatchItemsChanged亦或上去。意味着mDispatchItemsChangedEvent一旦被设置为true，通过这个方法是不会置回false的；然后设置mDataSetHasChangedAfterLayout为true。这两个变量我们之后都会再遇到（其实之前就遇到过了）。
 
 最后markKnownViewsInvalid()方法将所有已知的View全部置为失效。这也是为了刷新去考虑的。这里面涉及到非常多的调用，我将它们都拉出来梳理一遍：
 
@@ -182,3 +182,114 @@ if (viewHolder.isInvalid() && !viewHolder.isRemoved()
 ```
 
 此乃snapOrRecyclerView()的逻辑。如果是INVALID的ViewHolder，会直接让RV移除这个View，然后在内部回收这个ViewHolder。
+
+接下来，就是传统的fill() + layoutChunk()流程了。和之前不同的是，因为我们刚刚回收了View，所以现在不需要create，而是直接从Pool中拿！之前创建新的逻辑是[[Study Log/android_study/recyclerview/1_start/1_2_2_step2#1.2.2.2.1 Find View|1_2_2_step2#1.2.2.2.1 Find View]]，我们现在看的位于它的上面：
+
+```java
+if (holder == null) { // fallback to pool   
+    holder = getRecycledViewPool().getRecycledView(type);  
+}
+```
+
+删掉其它的干扰代码，重要的就这一句。我们来看看里面的逻辑。
+
+```java
+/**  
+ * Acquire a ViewHolder of the specified type from the pool, or {@code null} if none are  
+ * present. 
+ * 
+ * @param viewType ViewHolder type.  
+ * @return ViewHolder of the specified type acquired from the pool, or {@code null} if none  
+ * are present. 
+ */
+@Nullable  
+public ViewHolder getRecycledView(int viewType) {  
+    final ScrapData scrapData = mScrap.get(viewType);  
+    if (scrapData != null && !scrapData.mScrapHeap.isEmpty()) {  
+        final ArrayList<ViewHolder> scrapHeap = scrapData.mScrapHeap;  
+        for (int i = scrapHeap.size() - 1; i >= 0; i--) {  
+            if (!scrapHeap.get(i).isAttachedToTransitionOverlay()) {  
+                return scrapHeap.remove(i);  
+            }  
+        }  
+    }  
+    return null;  
+}
+```
+
+要看这里，就要先介绍一下Pool的结构了。Pool最核心的成员是一个Map，它的key是View的类型，Value是一个叫ScrapData的结构。而ScrapData中最重要的就是一个`ArrayList<ViewHolder>`，也就是被放到Pool中的ViewHolder。
+
+之所以这样设计，是因为Pool在一开始就是可以被多个Adapter复用的，并且即使是一个Adapter，也可以有多种不同类型的ItemView（比如MultiTypeAdapter的原理就是基于这个特性）。所以对于我们写的这种简单的单类型RV来说，我们只用到了这个mScrap的一个Value而已。
+
+现在问个问题：这个scrapHeap的size是多少？当然是3，因为我们之前就回收了3个View，它们最终其实就是被放在了这里。现在的逻辑，就是再次把它们都取出来。
+
+OK，除此之外的逻辑和初次加载就没什么区别了。经过这样一操作，所有View（也就3个）的bind就都会被触发。由于我们反转了数据，重新绑定的话，0 1 2 号就不是原来的数据了，这样就让原来的那三个ViewHolder显示了新的三个数字：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20231229111117.png|300]]
+
+现在我们让事情变复杂一点。滑到下图的情况时，再点击Reverse：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20231229145429.png|300]]
+
+这里我又做了一个调整。将给ViewHolder添加了ViewType。制作的方法也非常简单，记住一句话：**数据驱动UI**。我先将数据集改成了一个类：
+
+```kotlin
+private val dataSet = createListData(1..10, 11, 22)
+```
+
+这个方法很简单，就是按照奇偶数分配不同的type。然后在onCreateViewHolder中按照viewType分配颜色：
+
+```kotlin
+override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {  
+  val view = LayoutInflater.from(parent.context).inflate(R.layout.big_text, parent, false).apply {  
+    layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, ONE_THIRD_HEIGHT + 10)  
+    background = if (viewType == 11) {  
+      ColorDrawable(Color.parseColor("#CC0033"))  
+    } else {  
+      ColorDrawable(Color.parseColor("#0066CC"))  
+    }  
+  }  
+  return MyViewHolder(view)  
+}
+```
+
+最后最重要的一点：重写getItemViewType()。返回dataSet中对应元素的类型即可：
+
+```kotlin
+override fun getItemViewType(position: Int): Int {  
+  return dataSet[position].type  
+}
+```
+
+getItemViewType()这个方法看起来是给开发者用的，然而事实确实给RV用的。在我们介绍过的tryGetViewHolderForPositionByDeadline()方法中，获取ViewHolder之前就要先得到当前这个位置的类型：
+
+```kotlin
+final int type = mAdapter.getItemViewType(offsetPosition);
+```
+
+然后，我依然保持Cache为默认大小，也就是2。现在滑动到这个状态的时候，RV的状态是怎样的？通过之前的猜测，我们可以推测出：
+
+* 2和3的ViewHolder还在Cache中，数据依然有效；
+* 1的ViewHolder被顶到了Pool中，按照1之前ViewHolder的viewType保存到mScrap对应的序列中。
+
+但是可别忘了！由于我们设置的高度比三分之一屏幕要高。如果Item7刚好贴着屏幕底下还没出现的时候，Item4就会超出屏幕上面一块。这就意味着，**此时Item3已经被回收到Cache中了**！也就意味着，此时Item1已经被添加到Pool中了！也就意味着，**Item7出现的时候不会创建新的ViewHolder，而是复用Item1的ViewHolder**！因为7和1都是奇数，所以我们规定的ViewType是一样的。
+
+这一点可以通过日志来证实：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20231229152429.png]]
+
+3刚离开屏幕，立马回收1。然后7显示的时候，复用的holder就是之前1的holder。
+
+所以，现在真实的情况是：只有2和3的ViewHolder在Cache中，Pool中什么也没有。4 5 6 7处于可见状态。因此，点击Reverse后，会出现这样的事情：
+
+1. 将4 5 6 7添加UPDATE | INVALID标记；
+2. 将4 5 6 7的mInsetsDirty设置为true；
+3. 将2 3的mInsetsDirty设置为true；
+4. 将2 3添加UPDATE | INVALID标记；
+5. **将4 5 6 7回收到Pool中**。
+
+这里的操作可以再看一遍这张图：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Notepad_81d70sAv1I.png]]
+
+所以现在Pool里一共有6个ViewHolder，然后重新进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。

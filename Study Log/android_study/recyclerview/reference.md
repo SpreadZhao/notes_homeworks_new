@@ -4,3 +4,4 @@
 * [Anatomy of RecyclerView: a Search for a ViewHolder | by Pavel Shmakov | AndroidPub | Medium](https://medium.com/android-news/anatomy-of-recyclerview-part-1-a-search-for-a-viewholder-404ba3453714#.smf5acu1n)
 * [RecyclerView Prefetch. Smoother Flings and Scrolls by Doing… | by Chet Haase | Google Developers | Medium](https://medium.com/google-developers/recyclerview-prefetch-c2f269075710)
 * [RecyclerView ins and outs - Google I/O 2016 (youtube.com)](https://www.youtube.com/watch?v=LqBlYJTfLP4)
+* [深入理解RecyclerView：布局管理器实现原理和使用方法 - 掘金 (juejin.cn)](https://juejin.cn/post/7317575725699366964)
