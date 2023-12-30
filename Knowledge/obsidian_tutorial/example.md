@@ -132,6 +132,14 @@ public static void main() {
 
 ## Colorful Background
 
+example: 
+
+~~~
+```note-orange-bg
+```
+~~~
+
+
 ```note-orange-bg
 note-orange-bg
 ```
@@ -169,6 +177,13 @@ note-brown-bg
 ```
 
 ## Colorful Text
+
+example:
+
+~~~
+```note-orange
+```
+~~~
 
 ```note-orange
 note-orange
@@ -210,6 +225,12 @@ note-brown
 
 ### note-cloze:
 
+~~~
+```note-cloze
+text to hide
+```
+~~~
+
 ```note-cloze
 text to hide
 ```
@@ -221,6 +242,12 @@ text to hide
 ```
 
 ### ad-hibox:
+
+~~~
+```ad-hibox
+text to hide
+```
+~~~
 
 ```ad-hibox
 text to hide
@@ -275,6 +302,7 @@ This is a theme.
 ```ad-lem
 This is a Lemma.
 ```
+
 ```ad-cor
 This is a Corollary.
 ```
@@ -295,23 +323,40 @@ This is four columns. This is four columns. This is four columns. This is four c
 
 ### Normal Image
 
+`![[Knowledge/resources/obsidian_image.png]]`
+
 ![[Knowledge/resources/obsidian_image.png]]
 
 ### Sized Image
+
+`![[Knowledge/resources/obsidian_image.png|300]]`
 
 ![[Knowledge/resources/obsidian_image.png|300]]
 
 ### Aligned Image
 
+`![[Knowledge/resources/obsidian_image.png|L|100]]`
+
 ![[Knowledge/resources/obsidian_image.png|L|100]]
+
+`![[Knowledge/resources/obsidian_image.png|R|100]]`
 
 ![[Knowledge/resources/obsidian_image.png|R|100]]
 
 ### Inlined Image
 
+* `![[Knowledge/resources/obsidian_image.png|inlineL|100]]`
+* `![[Knowledge/resources/obsidian_image.png|inlineR|100]]`
+* `![[Knowledge/resources/obsidian_image.png|inl|50]]`
+
 But I am not sure how to implement them, and I’ve spent too much time working on this than actually learning to code :v. I’ll figure those problems out eventually. ![[Knowledge/resources/obsidian_image.png|inlineL|100]] Regardless, you not only answered my question but did so in an way that was super instructive and pointed me in the direction of solving other problems and asking more questions. Thank you, again, so much!!! Thank you for your feedback [@den](https://forum.obsidian.md/u/den), glad you found it interesting and tried to install it! Did you transpile the typescript source with the respective commands? `yarn` and then `npm run dev`? If yes, please feel free to provide more information regarding runtime errors in the Developer Console. ![[Knowledge/resources/obsidian_image.png|inlineR|100]] Currently, no compiled version is provided since it’s an experimental plugin and I would like to get some feedback – ideally from other plugin developers or people with experience – before it is released. Thanks for your understanding! Each Admonition type has a matching CSS class. You could, therefore, create a custom Admonition type (let’s call it “blank”) and use a CSS snippet targeting that class.  ![[Knowledge/resources/obsidian_image.png|inl|50]]![[Knowledge/resources/obsidian_image.png|inl|50]] Some quick testing shows that this CSS snippet works to remove the icon from the title block, no matter which icon is chosen for the custom class:  .admonition-blank .admonition-title-icon {display: none !important;}
 
 ### Image with Description
+
+* `![[Knowledge/resources/obsidian_image.png#center|This is Obsidian|100]]`
+* `![[Knowledge/resources/obsidian_image.png#left|This is Obsidian|100]]`
+* `![[Knowledge/resources/obsidian_image.png#inl|This is Obsidian|50]]`
+* `![[Knowledge/resources/obsidian_image.png#right|This is Obsidian|100]]`
 
 ![[Knowledge/resources/obsidian_image.png#center|This is Obsidian|100]]
 
@@ -319,6 +364,10 @@ But I am not sure how to implement them, and I’ve spent too much time working 
 
 ## HTML
 
+* `<p class="stickies">What a <u>beautiful</u> story!</p>`
+* `<p class="to-recall">Will you remember me?</p>`
+* `<aside><h1>Important</h1></aside> `
+* `<aside><h2>Important</h2></aside>`
 
 <p class="stickies">What a <u>beautiful</u> story!</p>She opened her eyes and gasped. There was a man sitting next to her, smiling and whispering sweet words in her ear. He was handsome, with dark hair, blue eyes, and a charming smile. <p class="to-recall">Will you remember me?</p>He wore a black suit and a red tie. He looked like he had stepped out of a movie. "Hello, beautiful," he said. "I've been looking for you."
 

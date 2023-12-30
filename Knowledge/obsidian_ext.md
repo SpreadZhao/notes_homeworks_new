@@ -5,9 +5,7 @@ mtrace:
 ---
 # Legacy
 
-Notes from [[Knowledge/software_qa|software_qa]], I migrated the obsidian parts into this one.
-
-![[Knowledge/software_qa#3 Obsidian|software_qa]]
+Notes from [[Knowledge/software_qa#3 Obsidian|software_qa]], I migrated the obsidian parts into this one.
 
 # Templater
 
