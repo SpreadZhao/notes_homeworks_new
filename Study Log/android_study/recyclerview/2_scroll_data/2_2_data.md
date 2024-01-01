@@ -60,13 +60,13 @@ public void swapAdapter(@Nullable Adapter adapter, boolean removeAndRecycleExist
 
 首先看它是如何标记所有的View都已经被改变的。先来分析现状。根据我们之前的分析，现在屏幕上的情况应该是这样的：只有三个ViewHolder，并且它们都在屏幕上，其它的数据还并没有被布局到。
 
-而据我们有限的所知，RecyclerView中的View有如下几种状态：
+而据我们**有限**的所知，RecyclerView中的View有如下几种状态：
 
 * 可见；
 * 在Cache中（View的数据还在）；
 * 在Pool中（View只剩空壳）；
 
-而现在我们只有三个可见的View，并且之后数据会发生改变，显然它们是需要被放到Pool中的。接下来看看这个流程是什么样的。
+而现在我们只有三个可见的View，并且之后<label class="ob-comment" title="数据会发生改变" style=""> 数据会发生改变 <input type="checkbox"> <span style=""> 这里所说的数据改变，显然指的是notifyDataSetChanged()方法，而不是滑动之类的操作。如果我们往下滑，这些ViewHolder会被放到Cache中（前提是RV的Cache被设置为正常工作），而不是Pool中。 </span></label>，显然它们是需要被放到Pool中的。接下来看看这个流程是什么样的。
 
 进入processDataSetCompletelyChanged()方法：
 
@@ -91,7 +91,7 @@ void processDataSetCompletelyChanged(boolean dispatchItemsChanged) {
 }
 ```
 
-这里首先将dispatchItemsChanged亦或上去。意味着mDispatchItemsChangedEvent一旦被设置为true，通过这个方法是不会置回false的；然后设置mDataSetHasChangedAfterLayout为true。这两个变量我们之后都会再遇到（其实之前就遇到过了）。
+这里首先将dispatchItemsChanged亦或上去。意味着mDispatchItemsChangedEvent一旦被设置为true，通过这个方法是不会置回false的；然后设置mDataSetHasChangedAfterLayout为true。这两个变量我们之后都会再遇到（其实[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.3 Update Adapter|之前]]就遇到过了）。
 
 最后markKnownViewsInvalid()方法将所有已知的View全部置为失效。这也是为了刷新去考虑的。这里面涉及到非常多的调用，我将它们都拉出来梳理一遍：
 
@@ -231,7 +231,7 @@ OK，除此之外的逻辑和初次加载就没什么区别了。经过这样一
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20231229145429.png|300]]
 
-这里我又做了一个调整。将给ViewHolder添加了ViewType。制作的方法也非常简单，记住一句话：**数据驱动UI**。我先将数据集改成了一个类：
+这里我又做了一个调整。给ViewHolder添加了ViewType。制作的方法也非常简单，记住一句话：**数据驱动UI**。我先将数据集改成了一个类：
 
 ```kotlin
 private val dataSet = createListData(1..10, 11, 22)
@@ -282,14 +282,15 @@ final int type = mAdapter.getItemViewType(offsetPosition);
 
 所以，现在真实的情况是：只有2和3的ViewHolder在Cache中，Pool中什么也没有。4 5 6 7处于可见状态。因此，点击Reverse后，会出现这样的事情：
 
-1. 将4 5 6 7添加UPDATE | INVALID标记；
-2. 将4 5 6 7的mInsetsDirty设置为true；
-3. 将2 3的mInsetsDirty设置为true；
-4. 将2 3添加UPDATE | INVALID标记；
-5. **将4 5 6 7回收到Pool中**。
+1. 将4 5 6 7的VH添加UPDATE | INVALID标记；
+2. 将4 5 6 7的<label class="ob-comment" title="LP" style=""> LP <input type="checkbox"> <span style=""> RecyclerView.LayoutParams </span></label>的mInsetsDirty设置为true；
+3. 将2 3的LP的mInsetsDirty设置为true；
+4. 将2 3的VH添加UPDATE | INVALID标记；
+5. **将2 3的VH回收到Pool中**。
 
-这里的操作可以再看一遍这张图：
+这里的操作可以再看一遍这张图，都是一一对应的：
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Notepad_81d70sAv1I.png]]
 
-所以现在Pool里一共有6个ViewHolder，然后重新进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。
+所以现在Pool里一共有2个ViewHolder。<u>在onLayoutChildren()中的 #TODO/link 依然会调用detachAndScrapAttachedViews()方法回收可见的4 5 6 7的VH。</u>此时Pool中共有6个VH，按照type不同对半分。之后进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。
+
