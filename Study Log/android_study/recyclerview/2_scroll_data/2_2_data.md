@@ -294,3 +294,76 @@ final int type = mAdapter.getItemViewType(offsetPosition);
 
 所以现在Pool里一共有2个ViewHolder。<u>在onLayoutChildren()中的 #TODO/link 依然会调用detachAndScrapAttachedViews()方法回收可见的4 5 6 7的VH。</u>此时Pool中共有6个VH，按照type不同对半分。之后进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。
 
+接下来，我们展示一下最简单的局部更新。分别是：
+
+* 在末尾插入一个元素；
+* 删掉最末尾的元素。
+
+它们的实现也非常简单：
+
+```kotlin
+fun removeLast() {
+  val lastIndex = dataSet.lastIndex
+  dataSet.removeLast()
+  notifyItemRemoved(lastIndex)
+}
+
+fun append() {
+  val dataNum = dataSet.size + 1
+  val dataType = if (dataNum % 2 == 0) DATA_TYPE_EVEN else DATA_TYPE_ODD
+  dataSet.add(Data(dataNum, dataType))
+  notifyItemInserted(dataSet.lastIndex)
+}
+```
+
+接下来我们所描述的操作都会带上更新和删除操作。首先，和notifyDataSetChanged()一样，也是会经过一系列观察者模式回调到RecyclerViewDataObserver中：
+
+```java
+@Override
+public void onItemRangeRemoved(int positionStart, int itemCount) {
+	assertNotInLayoutOrScroll(null);
+	if (mAdapterHelper.onItemRangeRemoved(positionStart, itemCount)) {
+		triggerUpdateProcessor();
+	}
+}
+
+@Override
+public void onItemRangeInserted(int positionStart, int itemCount) {
+	assertNotInLayoutOrScroll(null);
+	if (mAdapterHelper.onItemRangeInserted(positionStart, itemCount)) {
+		triggerUpdateProcessor();
+	}
+}
+```
+
+除了全量更新，也就是onChanged()，其它的回调其实都差不多。都是先调用AdapterHelper对应的回调，然后再触发更新的流程。
+
+我们首先来看AdapterHelper都做了什么：
+
+```java
+/**
+ * @return True if updates should be processed.
+ */
+boolean onItemRangeInserted(int positionStart, int itemCount) {
+	if (itemCount < 1) {
+		return false;
+	}
+	mPendingUpdates.add(obtainUpdateOp(UpdateOp.ADD, positionStart, itemCount, null));
+	mExistingUpdateTypes |= UpdateOp.ADD;
+	return mPendingUpdates.size() == 1;
+}
+
+/**
+ * @return True if updates should be processed.
+ */
+boolean onItemRangeRemoved(int positionStart, int itemCount) {
+	if (itemCount < 1) {
+		return false;
+	}
+	mPendingUpdates.add(obtainUpdateOp(UpdateOp.REMOVE, positionStart, itemCount, null));
+	mExistingUpdateTypes |= UpdateOp.REMOVE;
+	return mPendingUpdates.size() == 1;
+}
+```
+
+这里面给
