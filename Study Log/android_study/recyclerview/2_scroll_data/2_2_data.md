@@ -294,7 +294,7 @@ final int type = mAdapter.getItemViewType(offsetPosition);
 
 所以现在Pool里一共有2个ViewHolder。<u>在onLayoutChildren()中的 #TODO/link 依然会调用detachAndScrapAttachedViews()方法回收可见的4 5 6 7的VH。</u>此时Pool中共有6个VH，按照type不同对半分。之后进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。
 
-接下来，我们展示一下最简单的局部更新。分别是：
+接下来，我们展示一下最简单的局部更新。一共有10个元素，RV初次加载依然只显示最上面3个。此时：
 
 * 在末尾插入一个元素；
 * 删掉最末尾的元素。
@@ -366,4 +366,192 @@ boolean onItemRangeRemoved(int positionStart, int itemCount) {
 }
 ```
 
-这里面给
+这里面也只是在mPendingUpdates()里加入了一个UpdateOp，用来表示一次对RV的插入/删除操作。
+
+> #question *为什么这里只有size为1的时候才是true？这玩意儿到底有啥用？*
+
+除此之外，接下来只是在triggerUpdateProcessor()中又进行了一次requestLayout()，就没什么事情了。接下来我们还是从布局开始说。
+
+来到step1。我们也说过，step1的主要工作就是进行预布局和动画。但是由于我们直接删掉了动画，所以这里的操作并不会影响什么。不过，我们还是要看看它到底做了什么，为之后介绍预布局和动画做铺垫。实际上，这里所作的事情就是消费刚才加入到mPendingUpdates中的更新操作。调用关系为dispatchLayoutStep1() -> processAdapterUpdatesAndSetAnimationFlags() -> consumeUpdatesInOnePass()：
+
+```java
+for (int i = 0; i < count; i++) {
+	UpdateOp op = mPendingUpdates.get(i);
+	switch (op.cmd) {
+		case UpdateOp.ADD:
+			mCallback.onDispatchSecondPass(op);
+			mCallback.offsetPositionsForAdd(op.positionStart, op.itemCount);
+			break;
+		case UpdateOp.REMOVE:
+			mCallback.onDispatchSecondPass(op);
+			mCallback.offsetPositionsForRemovingInvisible(op.positionStart, op.itemCount);
+			break;
+	}
+}
+```
+
+我只是截取了我们关心的部分。可以看到这里就是将pending的更新给取出来，然后调用callback，也就是RV自己的回调来处理这些事情。其中的这个SecondPass最终会回调到LayoutManger中，而LinearLayout并没有重写这个方法，所以这里是什么也不做；之后第二句是由RV来响应的，操作如下：
+
+```java
+void offsetPositionRecordsForInsert(int positionStart, int itemCount) {
+	final int childCount = mChildHelper.getUnfilteredChildCount();
+	for (int i = 0; i < childCount; i++) {
+		final ViewHolder holder = getChildViewHolderInt(mChildHelper.getUnfilteredChildAt(i));
+		if (holder != null && !holder.shouldIgnore() && holder.mPosition >= positionStart) {
+			holder.offsetPosition(itemCount, false);
+			mState.mStructureChanged = true;
+		}
+	}
+	mRecycler.offsetPositionRecordsForInsert(positionStart, itemCount);
+	requestLayout();
+}
+```
+
+这里首先将RV直接的孩子都拿出来，每一个进行比较：`mPosition >= positionStart`。这个比较意味着什么？我们举个例子。比如原来的列表是这样
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Drawing 2024-01-03 11.46.41.excalidraw.png]]
+
+这里模拟的是调用了`notifyItemInserted(3)`。也就是在原来的2号和3号之间新插入一个元素。那么带入到我们现在这个方法中，在布局之前，RV的孩子都是谁？1 2 3 4 5。那么对于这个`mPosition >= positionStart`条件，谁符合？3 4 5。插入了新元素之后，原来的3 4 5变成了什么？4 5 6。而原来的1 2并没有变。这里if块中的`holder.offsetPosition()`就是在做这样的操作。只不过，它考虑了不只是插入一个元素的情况，所以把插入元素的个数也传了进去。除了这里，该方法还考虑了Cache中的ViewHolder，这些VH虽然不在屏幕上，但是其中的数据是有效的，随时有可能回到屏幕内。比如还是上面的例子。如果我们没有停用RV的缓存，<label class="ob-comment" title="那么0号就应该是在Cache中的元素" style=""> 那么0号就应该是在Cache中的元素 <input type="checkbox"> <span style=""> 有个前提，就是我们是从上往下滑动的。如果是从下往上滑动，那么在Cache中的很可能是6号。 </span></label>。那么如果我们是在0号处插入一个元素的话，执行到这里时，Recycler也会在`mRecycler.offsetPositionRecordsForInsert()`这里将0号元素的位置更新为1号。
+
+对于删除的情况，可以看隔壁方法的实现。它们的目的是一样的，只不过由于是删除而不是增加，所以有一些改动会异于插入。
+
+现在离开这个例子，回到最一开始的例子中。由于我们插入或者删除的是最末尾的操作，offsetPositionRecordsForInsert/Remove方法其实什么也不会做！因为插入的位置在10号（第11个），删除的位置在9号（第10个），而屏幕上的元素还只有0 1 2号。所以它们并不需要修改位置。
+
+接下来，来到了最重要的step2，也就是布局的过程。在算完锚点，开始fill() + layoutChunk()之前，依然要回收一下屏幕上的View。上一次我们回收是在 #TODO/link notifyDataSetChanged()的时候，那个时候由于我们给View打上了INVALID标记，所以所有的View的数据都失效了，它们要被会受到Pool中。但是在本例中，并没有哪个操作标记了目前RV的子View中的哪个是无效的。因此我们要重新看一下回收的流程：
+
+```java
+if (viewHolder.isInvalid() && !viewHolder.isRemoved()
+		&& !mRecyclerView.mAdapter.hasStableIds()) {
+	removeViewAt(index);
+	recycler.recycleViewHolderInternal(viewHolder);
+} else {
+	detachViewAt(index);
+	recycler.scrapView(view);
+	mRecyclerView.mViewInfoStore.onViewDetached(viewHolder);
+}
+```
+
+if分支是我们之前介绍的回收流程。而在本次，我们走的是else分支。也就是仅仅将屏幕内的三个View给detach掉，然后scrap掉它们的ViewHolder。这里的Scrap依然不是Cache，不过我们这里依然不深入讨论，暂且可以把它当作一个和Cache不同的缓存，这里的VH的数据依然是有效的，复用的时候不用重新走bind流程。
+
+注意，这里的detachViewAt()方法并不会触发Adapter的onViewDetachedFromWindow()，因为这里的detach只是暂时的。只有移除View的时候才会触发onViewDetachedFromWindow()。
+
+剩下的流程，我们已经能猜出来了。因为0 1 2号元素都没有修改过，所以重新的布局会从Scrap中取出原来的三个ViewHolder直接布局，并不需要走onBindViewHolder流程。这里简单给一下从Scrap中取的逻辑：
+
+```java
+// 1) Find by position from scrap/hidden list/cache
+if (holder == null) {
+	holder = getScrapOrHiddenOrCachedHolderForPosition(position, dryRun);
+	if (holder != null) {
+		...
+	}
+	... ...
+}
+```
+
+接下来，我们将难度升级一些：在2号增加一个元素，或者删除2号元素。也就是下图中的3要么被删除，要么被挤下去：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20240103135759.png|300]]
+
+下面是实现：
+
+```kotlin
+fun insertAfter2() {
+  val newItem = Data("Spread", DATA_TYPE_OTHER)
+  dataSet.add(2, newItem)
+  notifyItemInserted(2)
+}
+
+fun remove3() {
+  dataSet.removeAt(2)
+  notifyItemRemoved(2)
+}
+```
+
+下面是效果：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/scrcpy_bbGusULcqF.gif|inl|300]] ![[Study Log/android_study/recyclerview/2_scroll_data/resources/scrcpy_gVURMcuZh7.gif|inl|300]]
+
+我们先从insert开始说。我们这次是在2后面插入了一个元素。在layout执行之前，依然是在mPendingUpdates里加入一个UpdateOp，并没有什么不同。而在布局的step1中，依然是进行`mPosition >= positionStart`的比较。现在屏幕上是0 1 2号，而2号（也就是3）满足这个条件（2 >= 2），所以2号ViewHolder的position会被从2更新到3，也就是插入元素之后的下标。
+
+之后在布局的过程中，对于0号和1号，都是按照原来的流程，通过getScrapOrHiddenOrCachedHolderForPosition()方法取出来，不用走bind。但是对于2号呢？由于之前的3的下标从2被改到了3，这里还能get出来吗？我们看看里面的源码：
+
+```java
+/**
+ * Returns a view for the position either from attach scrap, hidden children, or cache.
+ *
+ * @param position Item position
+ * @param dryRun  Does a dry run, finds the ViewHolder but does not remove
+ * @return a ViewHolder that can be re-used for this position.
+ */
+ViewHolder getScrapOrHiddenOrCachedHolderForPosition(int position, boolean dryRun) {
+	final int scrapCount = mAttachedScrap.size();
+
+	// Try first for an exact, non-invalid match from scrap.
+	for (int i = 0; i < scrapCount; i++) {
+		final ViewHolder holder = mAttachedScrap.get(i);
+		if (!holder.wasReturnedFromScrap() && holder.getLayoutPosition() == position
+				&& !holder.isInvalid() && (mState.mInPreLayout || !holder.isRemoved())) {
+			holder.addFlags(ViewHolder.FLAG_RETURNED_FROM_SCRAP);
+			return holder;
+		}
+	}
+	... ...
+}
+```
+
+注意if里面的这个条件：
+
+```java
+holder.getLayoutPosition() == position
+```
+
+对于3这个元素，它的VH还满足这个条件吗？position是啥？我们想要的位置。是几？是2；3的下标是几？**原来是2，现在是3**。就是在step1中被修改的。因此，这个条件对于3来说是false。所以，3对应的VH不满足需求，不要了。
+
+之后，还是会走到onCreateViewHolder去创建新的VH来绑定我们插入的元素。
+
+然后是删除。虽然我们没给出过删除的代码，但是举一反三。我们已经能猜到了。在step1中，依然是修改那些可能由于删除而下标改动的元素。在本例中，没有。因为4还在屏幕外呢。不过，其实还有个操作，就是将3标记为删除：
+
+```java
+else if (holder.mPosition >= positionStart) {
+	holder.flagRemovedAndOffsetPosition(positionStart - 1, -itemCount, applyToPreLayout);
+	mState.mStructureChanged = true;
+}
+
+void flagRemovedAndOffsetPosition(int mNewPosition, int offset, boolean applyToPreLayout) {
+	addFlags(ViewHolder.FLAG_REMOVED);
+	offsetPosition(offset, applyToPreLayout);
+	mPosition = mNewPosition;
+}
+```
+
+这里的FLAG_REMOVED是为了做删除动画用的：
+
+```java
+/**
+ * This ViewHolder points at data that represents an item previously removed from the
+ * data set. Its view may still be used for things like outgoing animations.
+ */
+static final int FLAG_REMOVED = 1 << 3;
+```
+
+接下来在step2布局的时候，到了position为2的时候，通过getScrapOrHiddenOrCachedHolderForPosition()依然拿不到VH，因为原来3的VH刚被修改过位置。所以还是走bind流程绑定Adapter中对应位置的元素，也就是4。
+
+这里你是否会有疑问：3的VH去哪儿了？当然是被回收到Scrap中了，和 #TODO/link 在step2中布局之前的流程一样。但是，我们在布局之后好像并没有用到3的VH呀！那这样就产生了一个问题：3的VH被temporarily detach之后，并没有再attach回来。然而View Group的注释是这么写的：
+
+> Detaches a view from its parent. Detaching a view should be followed either by a call to attachViewToParent(View, int, ViewGroup.LayoutParams) or a call to removeDetachedView(View, boolean). **Detachment should only be temporary**; reattachment **or removal** should happen within the same drawing cycle as detachment. When a view is detached, its parent is null and cannot be retrieved by a call to getChildAt(int).
+> * Params:
+> 	* index – the index of the child to detach
+
+啥意思？我们既然没有理由对3进行reattachment，那只能removal咯！所以，3之后是要被彻底干掉的。什么时候呢？就是我们一直没介绍的step3。
+
+在step3中，调用了LayoutManger的removeAndRecycleScrapInt()方法来回收scrapped views。首先，彻底remove掉这个view：
+
+```java
+if (vh.isTmpDetached()) {
+	mRecyclerView.removeDetachedView(scrap, false);
+}
+```
+
+然后，将这个ViewHolder放到Pool中。显然我们能放Pool，还是别直接销毁的好。调用栈如下：
+
+![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20240103171140.png]]
