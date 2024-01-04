@@ -246,7 +246,7 @@ int fill() {
 
 这里就引出了一个问题，*为什么布局之前和布局之后都要尝试进行回收*？我们先来看布局之后的这个回收。
 
-#### 2.1.3.1 Recycler After LayoutChunk
+#### 2.1.3.1 Recycle After LayoutChunk
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Drawing 2023-12-25 19.52.13.excalidraw.png]]
 
@@ -426,7 +426,7 @@ $$
 3. 滑动会拿到本次滑动的距离，通过这个距离计算出滑动的一些指标，根据这些指标进行滑动；[[#2.1.2 Calculate Info]]
 4. 和初次布局不同，滑动需要考虑回收的情况。所以走到了初次加载没有走到的recycle逻辑；
 5. 滑动时的回收逻辑都在fill()方法中，分为两个过程：
-	1. while循环之前的回收负责单次滑动**没有触发布局，但需要回收的情况**；
+	1. while循环之前的回收负责单次滑动~~**没有触发布局，但需要回收的情况**~~（这个有问题，之后会讨论）；
 		* 此时，mScrollingOffset，也就是limit是初始值——不需要布局的最长滑动距离。
 	2. while循环之内的回收负责单次滑动触发布局，**布局之后需要回收的情况**；
 		* 此时，mScrollingOffset，也就是limit是实际滑动的距离scroll。

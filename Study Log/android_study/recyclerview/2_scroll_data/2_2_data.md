@@ -1,3 +1,7 @@
+# 2.2 Data
+
+### 2.2.1 All Change
+
 数据的改动，我们从全量更新开始。为了最简化，我们只讨论下面的情况。现在Adapter中有10个item。首屏加载能显示三个：
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Pasted image 20231228190257.png|300]]
@@ -12,6 +16,8 @@ fun reverse() {
 ```
 
 反转Adapter的数据元素，并调用notifyDataSetChanged()对RV进行全量刷新。我们看一看这个过程中发生了什么。
+
+#### 2.2.1.1 Before Layout
 
 首先，通过一系列观察者模式的回调（这部分后面讲组件的架构设计的时候再聊，对现在叙述流程不影响），调用到了RecyclerViewDataObserver的onChanged()方法：
 
@@ -121,6 +127,8 @@ static final int FLAG_INVALID = 1 << 2;
 第二步，给RV下所有的View的mInsetsDirty设置为true。这个变量和子View周围的装饰有关，我们暂且不提。
 
 总结起来，其实就是给目前可见的三个View设置了一个标记而已。下一步就是requestLayout()了，接下来就来到了之前走过的布局环节。
+
+#### 2.2.1.2 In Layout
 
 processAdapterUpdatesAndSetAnimationFlags()这个方法，在[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.3 Update Adapter|1_2_1_step1#1.2.1.3 Update Adapter]]的一开始就介绍到了。它最一开始的逻辑是分发一个事件：
 
@@ -294,6 +302,10 @@ final int type = mAdapter.getItemViewType(offsetPosition);
 
 所以现在Pool里一共有2个ViewHolder。<u>在onLayoutChildren()中的 #TODO/link 依然会调用detachAndScrapAttachedViews()方法回收可见的4 5 6 7的VH。</u>此时Pool中共有6个VH，按照type不同对半分。之后进行fill() + layoutChunk()的时候就会重新从Pool里拿出4个ViewHolder重新进行bind。
 
+### 2.2.2 Partial Change
+
+#### 2.2.2.1 Off-screen Change
+
 接下来，我们展示一下最简单的局部更新。一共有10个元素，RV初次加载依然只显示最上面3个。此时：
 
 * 在末尾插入一个元素；
@@ -447,6 +459,8 @@ if (holder == null) {
 	... ...
 }
 ```
+
+#### 2.2.2.2 On-screen Change
 
 接下来，我们将难度升级一些：在2号增加一个元素，或者删除2号元素。也就是下图中的3要么被删除，要么被挤下去：
 
