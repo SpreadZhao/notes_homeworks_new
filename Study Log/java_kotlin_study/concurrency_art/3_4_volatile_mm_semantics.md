@@ -325,7 +325,7 @@ class VolatileExample2 {
 
 实际上，这个flag的例子举得并不是很恰当，它没法很直观地体现出volatile的作用。但是我也尽量解释到完美了。
 
-- [ ] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。
+- [x] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。 #date 2024-01-07 有了，看下面这个日期的补充。
 
 ```ad-summary
 title: 做一个总结
@@ -333,7 +333,7 @@ title: 做一个总结
 首先，是volatile到底能做到什么事情：
 
 1. 写的时候，一股脑儿从Cache到本地内存到主存一条龙刷新，并且这个过程是原子的（也就是对单个变量**写操作的原子性**）；
-2. 读的时候，让本地内存直接无效，就是要从主存中去读（也就是**读的原子性plus版**）。
+2. 读的时候，让**读它的线程的**本地内存直接无效，就是要从主存中去读（也就是**读的原子性plus版**）。
 
 然后，就是volatile的内存语义的总结：
 
@@ -475,3 +475,63 @@ volatileWrite3    |
 最后，给出一个使用volatile的正确姿势：[Java 理论与实践: 正确使用 Volatile 变量-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1340711)
 
 #TODO 原作者：Brian Goetz。但是我一直找不到原文在哪里。不过有时间可以读一读他写的书。
+
+#date 2024-01-07 补充一个使用volatile的例子。看下面的代码：
+
+```kotlin
+class VolatileExample3 {  
+  
+    var flag = false  
+  
+    var a = 0  
+  
+    fun write() {  
+        a = 1  
+        Thread.sleep(10)  
+        flag = true  
+    }  
+  
+    companion object {  
+        @JvmStatic  
+        fun test() {  
+            val example = VolatileExample3()  
+            val th = Thread {  
+                example.write()  
+            }  
+            th.start()  
+            while (!example.flag) {}  
+            println("a = ${example.a}")  
+            th.join()  
+        }  
+    }  
+}
+```
+
+其实和我们之前的例子几乎是一样的。开了一个子线程th负责执行write()，而主线程负责read。write的目的和我们真实场景中做的其实很接近了：**一些耗时的写入操作**。这里我稍微意思意思写了个变量a，将其置为1，然后sleep了10毫秒，来模拟一个耗时的写入操作。最后，将flag置为true，表示我已经写完了。
+
+而在主线程中，我使用while循环以busy waiting的方式来探测这个标记：只要flag还是false，那么就不能继续往下执行。而一旦跳出while循环，**我的希望是所有写入操作已经执行完毕，即a应该是1而不是0**。最后我打印出a的值来进行验证。
+
+好了。你认为，结果应该是什么？是1？还是0？哈哈，都TM错了！答案是主线程卡死了！
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/idea64_cKH9d1VWGC.gif]]
+
+<label class="ob-comment" title="单纯卡死我们可能看不出来啥，我们在while循环里打印点东西" style=""> ~~单纯卡死我们可能看不出来啥，我们在while循环里打印点东西~~ <input type="checkbox"> <span style=""> 这里不能打印，打印操作会刷新缓冲区，也就是线程本地内存可能会失效，所以这个问题直接给解决了。 </span></label>
+
+实际上，这里卡住就是卡在了这个while循环里。那你就会问了：10毫秒之后，write()执行完flag不就是true了吗？为啥还会卡？
+
+很显然，这就是多个线程在访问同一个变量的时候出现的问题：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-01-07 18.44.29.excalidraw.png]]
+
+在write()中，th确实把a和flag的值都更新并写到主存里了。但是，我们想一想：主线程在调用`th.start()`之后紧接着就走while循环。<label class="ob-comment" title="那么很可能在th还没来得及更新a和flag的时候" style=""> 那么很可能在th还没来得及更新a和flag的时候 <input type="checkbox"> <span style=""> 线程的切换也是需要时间滴！这个本书的开头就讲了。 </span></label>，**flag就已经被主线程读过一次了**。那么读到的是啥？false呗！所以，这个false就被留在了主线程的本地内存中。而程序员没有显式地通知主线程，说“*你这个本地内存里的东西早就过时了*”，所以自然它也不知道要去主存中去拿。
+
+答案就是，在flag上加volatile：
+
+```kotlin
+@Volatile  
+var flag = false
+```
+
+这样，当在writer()中将flag置为true的同时，由于Volatile引入的`#lock`指令，会让所有读这个值的线程的本地内存的块缓存行失效，所以上面×掉的箭头就恢复了，也就可以从主存中读了，也就能读到正确的true了。
+
+- [?] #TODO  为什么在while循环里打一个`print("")`也能实现一样的效果？为什么在while循环之前调用`th.join()`还能实现一样的效果？真的是因为刷新缓冲区啥的吗？需要好好研究一下。[java - print() make thread-local cache invalid? - Stack Overflow](https://stackoverflow.com/questions/77772954/print-make-thread-local-cache-invalid)

@@ -7,6 +7,10 @@ description: Java并发编程艺术的读书笔记。
 title: Concurrency Art Notes
 ---
 
+ref
+
+* [Java | Multithreading Part 1: Java Memory Model | by MrAndroid | Medium](https://medium.com/@MrAndroid/java-multithreading-part-1-java-memory-model-fb8e0cfab9d3)
+
 # Java并发编程的艺术
 
 ```dataviewjs

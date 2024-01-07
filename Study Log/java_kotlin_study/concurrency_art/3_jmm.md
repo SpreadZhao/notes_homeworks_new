@@ -10,9 +10,12 @@ for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
 	if (page.chapter == 3) {
 		const link = page.file.link
 		const title = page.title
-		res.push(link + ": " + title)
+		const order = page.order
+		const info = link + ": " + title
+		res.push({info, order})
 	}
 }
-dv.list(res)
+res.sort((a, b) => a.order - b.order)
+dv.list(res.map(x => x.info))
 ```
 
