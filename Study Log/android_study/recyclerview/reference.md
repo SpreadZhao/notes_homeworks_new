@@ -7,3 +7,4 @@
 * [深入理解RecyclerView：布局管理器实现原理和使用方法 - 掘金 (juejin.cn)](https://juejin.cn/post/7317575725699366964)
 * [Inside RecyclerView’s SnapHelper. What is SnapHelper and how you can… | by Jag Saund | ProAndroidDev](https://proandroiddev.com/android-recyclerview-snaphelper-19eaa9598da6)
 * [android - RecyclerView and Adapter data updates - Stack Overflow](https://stackoverflow.com/questions/40507844/recyclerview-and-adapter-data-updates)
+* [Android屏幕刷新机制—VSync、Choreographer 全面理解！ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/197861005)
