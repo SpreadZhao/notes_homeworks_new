@@ -52,7 +52,7 @@ private fun handleDetachedChildVisibility(itemView: View) {
 
 但是现在依然不完善，看下面的动图：
 
-![[Study Log/android_study/recyclerview/x_visibility_dispatch/resources/studio64_rrmvb7o2RR.gif]]
+![[Study Log/android_study/recyclerview/x_tricks/resources/studio64_rrmvb7o2RR.gif]]
 
 这里本来应该打印3的Invisible和Spread的Visible，但是结果是两个都没打印。所以还有我们没Cover到的时机。为了搞清楚这个时机是怎么回事，我们做这样一件事情：
 
@@ -68,7 +68,7 @@ val layoutManager = object : LinearLayoutManager(this) {
 
 现在我们删掉这个，重新来一遍，发现3的Invisible打印出来了：
 
-![[Study Log/android_study/recyclerview/x_visibility_dispatch/resources/studio64_levkz5Cj6L.gif]]
+![[Study Log/android_study/recyclerview/x_tricks/resources/studio64_levkz5Cj6L.gif]]
 
 为什么会有这样的区别？这次3的Invisible打印出来显然是因为离开了布局空间，被detach了；而上次没有打印出来就是因为虽然离开了屏幕，但是由于额外布局空间存在，所以依然在屏幕内。
 
