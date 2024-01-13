@@ -11,3 +11,4 @@
 * [系统跟踪概览  |  App quality  |  Android Developers (google.cn)](https://developer.android.google.cn/topic/performance/tracing?hl=zh-cn)
 * [Android 基于 Choreographer 的渲染机制详解 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/87954949)
 * [Android屏幕刷新机制—VSync、Choreographer 全面理解！ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/197861005)
+* [Create a basic media player app using Media3 ExoPlayer  |  Android media  |  Android Developers](https://developer.android.com/media/implement/playback-app)

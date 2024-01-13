@@ -159,7 +159,7 @@ Student()
 
 [A Guide to Java Initialization | Baeldung](https://www.baeldung.com/java-initialization)
 
-这篇文章有介绍这种单纯的代码块，~~其实我们几乎完全用不到这个特性。反而是kotlin里的init比较常用~~（为我的无知道歉。。。 #date 2023-11-28）。
+这篇文章有介绍这种单纯的代码块，~~其实我们几乎完全用不到这个特性。反而是kotlin里的init比较常用~~（<label class="ob-comment" title="为我的无知道歉" style=""> 为我的无知道歉 <input type="checkbox"> <span style=""> Initializer的作用是啥？很简单，就和它的名字一样，它是专门用来初始化静态成员的。因为静态成员的初始化逻辑可能很耗时，所以可以直接将这坨逻辑塞到里面用来初始化。自然，这里面是能调用静态方法的。 </span></label>。。。 #date 2023-11-28）。
 
 现在，我们来观察另一个特点。看看Student的无参构造：
 
@@ -234,6 +234,9 @@ Student(age, name)
 ```
 
 # 静态内部类
+
+> [!stickies]
+> 关于静态内部类最重要的一点：静态的内部类允许我们在外面直接new；非静态的内部类必须new出外部类才能new。
 
 在刚才的那篇文章中：
 
