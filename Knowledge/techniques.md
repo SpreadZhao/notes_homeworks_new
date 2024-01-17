@@ -272,7 +272,10 @@ forceStopPackage()
 	- [ ] Germen的编码日记
 	- [ ] OPPO安珀实验室
 	- [ ] Android系统攻城狮
-	- [ ] 
+	- [ ] AndroidPerformance
+	- [ ] 二进制磨剑
+	- [ ] ZZH的Android
+	- [ ] 梦兽编程
 2. bytetech关注（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）
