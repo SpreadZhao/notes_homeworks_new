@@ -1,3 +1,24 @@
+# New Diary
+
+```dataviewjs
+let res = []
+for (let page of dv.pages('"Knowledge/software_qa"')) {
+	const date = new Date(page.date)
+	console.log("date: " + page.date)
+	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
+	const title = page.title
+	res.push({link, date, title})
+}
+function getDateString(date) {
+	const year = date.getFullYear()
+	const month = date.getMonth() + 1
+	const day = date.getDate()
+	return year + "年" + month + "月" + day + "日"
+}
+res.sort((a, b) => a.date - b.date)
+dv.list(res.map((x) => x.link + ": " + x.title))
+```
+
 # 1 Apache服务器配置
 
 ## 1.1 修改配置文件
@@ -742,3 +763,4 @@ ssh://gitter@spreadzhao.synology.me:6677/volume1/repositories/notes_homeworks
 ![[Knowledge/resources/Pasted image 20231029172103.png]]
 
 由于是手动的代理，所以你如果使用HTTP模式，在关机之后没改回来，下次开机的时候不用clash就会出现连不上网的情况。所以当时我改成PAC了。不过不知道是什么原因，可能这个模式并不支持使用HTTP协议和GitHub传输数据（大概率是我无知。。。），所以还是用回HTTP模式吧。
+
