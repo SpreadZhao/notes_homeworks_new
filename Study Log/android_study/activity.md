@@ -1,4 +1,10 @@
+---
+mtrace:
+  - 2024-01-21
+---
 [[Article/android_articles/guolin_wechat_articles/Activity的五种启动模式.pdf|Activity的五种启动模式]]
+
+- [ ] #TODO #date 2024-01-21 启动模式前半部分不太行。需要给出每个例子具体的行为，画画图。
 
 # 以前的总结
 

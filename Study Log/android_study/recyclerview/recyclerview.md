@@ -34,3 +34,31 @@ function generateNestedList(level, content) {
 - [ ] 关于triggerUpdateProcessor()，看看什么情况下会走下面的分支。
 - [ ] ExtendLinearLayoutManger
 - [ ] decorate和自己设置margin，这两种的性能比较
+
+#### 基础
+
+- [x] RecyclerView首次加载的流程
+- [x] RV滑动时布局的流程
+- [ ] RV数据刷新时的流程
+	- [x] 全量刷新
+	- [ ] 局部刷新
+		- [ ] 单线程
+		- [ ] 多线程
+- [ ] RV缓存的设计、用途
+- [ ] RV离屏预渲染
+	- [ ] 基本原理
+	- [ ] 实现方法
+	- [ ] 卡片可见性
+	- [ ] bad case
+		- [x] 手动滑-下一张detach
+		- [x] 自动滑-下一张detach
+- [ ] RV滑动帧率检测
+- [ ] RV异步加载
+	- [ ] 学会使用AsyncLayoutInflater
+	- [ ] 自己实现异步预加载
+	- [ ] 子View的异步measure
+- [ ] Diff异步计算
+
+#### 开发
+
+- [ ] 改造视频起播UI

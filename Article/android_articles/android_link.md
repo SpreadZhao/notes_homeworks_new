@@ -15,3 +15,7 @@
 # Article
 
  * [ServiceManager 的工作原理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/158623349)
+
+# Official Guidance
+
+* NDK: [Android NDK  |  Android Developers](https://developer.android.com/ndk?hl=en)

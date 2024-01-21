@@ -111,7 +111,7 @@ JNIEXPORT void JNICALL Java_HelloClass_sayHello(JNIEnv *, jobject);
 Java_com_spreadzhao_jni_HelloClass_sayHello
 ```
 
-也就是以Java开头，后面跟上`包名+类名+方法名`，中间用下划线分割。
+也就是以Java开头，后面跟上`包名+类名+方法名`，中间用下划线分割。但是我的这个没有包名，所以直接就是Java\_类名\_方法名了。
 
 然后，这个函数有两个参数。我们Java的sayHello()方法里并没有这两个参数，而这两个参数就是刚才说的默认参数。关于参数，以及前面JNIEXPORT, JNICALL的作用，下面的文章都有介绍：
 
