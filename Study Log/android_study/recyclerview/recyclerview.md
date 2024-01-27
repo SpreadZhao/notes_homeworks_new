@@ -54,10 +54,12 @@ function generateNestedList(level, content) {
 		- [x] 自动滑-下一张detach
 - [ ] RV滑动帧率检测
 - [ ] RV异步加载
-	- [ ] 学会使用AsyncLayoutInflater
+	- [x] 学会使用AsyncLayoutInflater
+	- [x] 学会使用AsyncListUtil
 	- [ ] 自己实现异步预加载
 	- [ ] 子View的异步measure
 - [ ] Diff异步计算
+- [ ] 其实是RecyclerView包里的所有东西
 
 #### 开发
 
