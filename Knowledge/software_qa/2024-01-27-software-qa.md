@@ -2,7 +2,7 @@
 title: 备份windows驱动
 date: 2024-01-27
 tags:
-  - windows
+  - "#softwareqa/windows"
 ---
 
 # 备份Windows驱动

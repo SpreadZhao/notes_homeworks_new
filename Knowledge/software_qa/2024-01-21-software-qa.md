@@ -1,6 +1,9 @@
 ---
 title: ssh去clone仓库，失败？？？
 date: 2024-01-21
+tags:
+  - "#softwareqa/ssh"
+  - "#softwareqa/git"
 ---
 
 # ssh去clone仓库，失败？？？

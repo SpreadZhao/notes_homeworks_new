@@ -7,7 +7,8 @@ for (let page of dv.pages('"Knowledge/software_qa"')) {
 	console.log("date: " + page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
 	const title = page.title
-	res.push({link, date, title})
+	const tags = page.tags
+	res.push({link, date, title, tags})
 }
 function getDateString(date) {
 	const year = date.getFullYear()
@@ -15,8 +16,11 @@ function getDateString(date) {
 	const day = date.getDate()
 	return year + "年" + month + "月" + day + "日"
 }
-res.sort((a, b) => a.date - b.date)
-dv.list(res.map((x) => x.link + ": " + x.title))
+res.sort((a, b) => b.date - a.date)
+dv.table(
+	["Date&Link", "Title", "Tags"], 
+	res.map(x => [x.link, x.title, x.tags])
+)
 ```
 
 # 1 Apache服务器配置
@@ -543,6 +547,10 @@ Export-WindowsDriver -Online -Destination D:\DriverBackup
 视频：[(188) How To Fix Lenovo Couldn't Find Storage Driver Load Error in Windows Install - YouTube](https://www.youtube.com/watch?v=41C71-dvv-4)
 
 原因就是Intel VMD技术会将**固态介质**隐藏，因此我们加载不了分区。在BIOS中将Intel VMD功能关掉，之后就能够正常找到分区了。
+
+#date 2024-01-27
+
+补充一点，如果你关掉了VMD Controller然后重装系统。之后如果你再开开，那么开机就会蓝屏报INACCESSIBLE_BOOT_DEVICE。
 
 ## 5.4 恢复右键菜单
 
