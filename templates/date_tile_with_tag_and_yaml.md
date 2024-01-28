@@ -1,6 +1,9 @@
 ---
 title: 
 date: {{date}}
+tags: 
+mtrace: 
+  - {{date}}
 ---
 
 # 

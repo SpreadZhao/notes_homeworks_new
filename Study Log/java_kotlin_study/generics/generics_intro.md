@@ -309,7 +309,7 @@ Java的泛型就是不变的。因为`List<Number>`和`List<Integer>`没有任�
 
 ### 协变（Covariant）
 
-如果list1真的可以指向那个全是Integer的ArrayList的话，这种形式就是**协变**。协变的概念是：如果B是A的子类，那么$f(B)$也要是$f(A)$的子类。这个过程可以用Object的clone()方法来说明。在[[Study Log/java_kotlin_study/copy#浅拷贝和深拷贝|这篇文章]]中，我们重写了Object的clone()方法。而我们注意到，在Object中，clone()方法返回的是Object类型，而我们重写的方法返回的是User类型。而User是Object的子类，clone(User)返回的是User，clone(Object)返回的是Object，正好也是父子关系。所以这就是一种协变。
+如果list1真的可以指向那个全是Integer的ArrayList的话，这种形式就是**协变**。协变的概念是：如果B是A的子类，那么$f(B)$也要是$f(A)$的子类。这个过程可以用Object的clone()方法来说明。在[[Study Log/java_kotlin_study/java_kotlin_study_diary/copy#浅拷贝和深拷贝|这篇文章]]中，我们重写了Object的clone()方法。而我们注意到，在Object中，clone()方法返回的是Object类型，而我们重写的方法返回的是User类型。而User是Object的子类，clone(User)返回的是User，clone(Object)返回的是Object，正好也是父子关系。所以这就是一种协变。
 
 ```ad-tldr
 title: Q&A

@@ -4,11 +4,25 @@
 let res = []
 for (let page of dv.pages('"Knowledge/software_qa"')) {
 	const date = new Date(page.date)
-	console.log("date: " + page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
-	const title = page.title
+	const title = page.title.split("; ")
 	const tags = page.tags
-	res.push({link, date, title, tags})
+	let realtag = ""
+	if (tags != undefined) {
+		for (let i = 0; i < tags.length; i++) {
+			const tag = tags[i]
+			if (tag.indexOf("#") !== 0) {
+				tags[i] = "#" + tag
+			}
+			realtag = realtag + tags[i]
+			if (i != tags.length - 1) {
+				realtag += " "
+			}
+		}
+	} else {
+		realtag += "No tag"
+	}
+	res.push({link, date, title, realtag})
 }
 function getDateString(date) {
 	const year = date.getFullYear()
@@ -19,7 +33,7 @@ function getDateString(date) {
 res.sort((a, b) => b.date - a.date)
 dv.table(
 	["Date&Link", "Title", "Tags"], 
-	res.map(x => [x.link, x.title, x.tags])
+	res.map(x => [x.link, x.title, x.realtag])
 )
 ```
 
