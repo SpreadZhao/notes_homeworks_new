@@ -12,7 +12,7 @@ mtrace:
 #date 2024-01-31
 
 - [?] How to integrate AppImage into Ubuntu system and run it in Applicaions?
-- [>] https://github.com/TheAssassin/AppImageLauncher default path for AppImages is `~/Applications`
+- [>] [TheAssassin/AppImageLauncher: Helper application for Linux distributions serving as a kind of &quot;entry point&quot; for running and integrating AppImages](https://github.com/TheAssassin/AppImageLauncher) default path for AppImages is `~/Applications`
 
  ---
 
