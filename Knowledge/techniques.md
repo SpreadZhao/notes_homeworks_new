@@ -220,6 +220,26 @@ forceStopPackage()
 3. bytetech知识地图
 4. 本文档前面的那些
 
+努力的方向
+
+1. WebRTC
+	1. [Android WebRTC完整入门教程01: 使用相机 - 简书](https://www.jianshu.com/p/eb5fd116e6c8)
+	2. [GetStream/webrtc-android: 🛰️ A versatile WebRTC pre-compiled Android library that reflects the recent WebRTC updates to facilitate real-time video chat for Android and Compose.](https://github.com/GetStream/webrtc-android)
+2. 音视频
+	1. 安卓Native音视频介绍：Android系统攻城狮（公众号，这人要出书）
+	2. media3
+3. 稳定性：KOOM为主，matrix，知识地图里的课程
+4. hook
+	1. Lancet
+	2. codelocator
+	3. gradle插庄（jupiter之类的都算）
+5. 端智能
+6. 插件：mira
+7. 虚拟机
+	1. hotspot
+	2. GC
+8. 浏览器
+
 ## 其他方向
 
 1. 微信公众号
