@@ -199,6 +199,7 @@ forceStopPackage()
 - [ ] AndroidStudio官方教学
 - [ ] Quick架构-性能优势与异步开发范式
 - [ ] 开源阅读：[gedoor/legado: Legado 3.0 Book Reader with powerful controls & full functions❤️阅读3.0, 阅读是一款可以自定义来源阅读网络内容的工具，为广大网络文学爱好者提供一种方便、快捷舒适的试读体验。 (github.com)](https://github.com/gedoor/legado)
+- [ ] Github的star里面其实都可以算。
 
 # 学习计划
 
@@ -291,12 +292,17 @@ forceStopPackage()
 	- [ ] 大前端开发入门
 	- [ ] Germen的编码日记
 	- [ ] OPPO安珀实验室
-	- [ ] Android系统攻城狮
+	- [ ] **Android系统攻城狮**
 	- [ ] AndroidPerformance
 	- [ ] 二进制磨剑
 	- [ ] ZZH的Android
 	- [ ] 梦兽编程
-2. bytetech关注（主要看Client Infra团队的）
+	- [ ] 张可
+	- [ ] 程序员Android
+	- [ ] 腾讯音乐技术团队
+	- [ ] 日拱一题
+	- [ ] Android施行
+2. bytetech关注和**收藏**（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）
 5. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
@@ -305,7 +311,7 @@ forceStopPackage()
 8. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
 9. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
 10. #urgency/medium **bytetech新人培训**
-11. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章）
+11. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章） #date 2024-02-01 现在该名字叫西瓜视频Android技术交流会
 12. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
 13. 飞书文档的收藏
 14. #urgency/medium obsidian todo
