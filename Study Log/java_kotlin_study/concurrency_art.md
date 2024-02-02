@@ -25,3 +25,8 @@ for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
 res.sort(function(a, b) { return a.order - b.order })
 dv.list(res.map(x => x.order + ": " + x.info))
 ```
+
+```query
+tag: #TODO 
+path: "Study Log/java_kotlin_study/concurrency_art"
+```

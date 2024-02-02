@@ -476,7 +476,7 @@ volatileWrite3    |
 
 #TODO 原作者：Brian Goetz。但是我一直找不到原文在哪里。不过有时间可以读一读他写的书。
 
-#date 2024-01-07 补充一个使用volatile的例子。看下面的代码：
+#date 2024-01-07 补充一个使用volatile的例子。看下面的代码： ^d00fb6
 
 ```kotlin
 class VolatileExample3 {  
