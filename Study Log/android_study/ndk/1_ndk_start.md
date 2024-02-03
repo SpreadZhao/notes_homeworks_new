@@ -1,3 +1,8 @@
+---
+title: 初次NDK
+order: "1"
+---
+
 # 初次NDK
 
 首先，建议看一下jni的入门：[[Study Log/java_kotlin_study/jni_start|jni_start]]。本次初见和这个jni的初见其实难度是差不多的。
@@ -27,6 +32,8 @@ companion object {
 external fun stringFromJNI(): String
 ```
 
+> 关于`external`的作用：[Keywords and operators | Kotlin Documentation (kotlinlang.org)](https://kotlinlang.org/docs/keyword-reference.html#modifier-keywords)
+
 显然，这个方法的实现就在cpp中。还记得对应的cpp的函数名是啥吗？
 
 ```
@@ -53,7 +60,7 @@ Java_com_spread_nativestudy_MainActivity_stringFromJNI(
 
 之后我们观察一下，可以发现在cpp文件中，并没有include对应的.h文件，也就是我们之前用`javac -h`生成的那个。这是为什么呢？
 
-#TODO 我猜，是因为它把需要的include都放在这个cpp里面了。比如`extern "C"`。
+- [ ] #TODO 我猜，是因为它把需要的include都放在这个cpp里面了。比如`extern "C"`。
 
 另外，方法开头也没有了之前的`JNIEXPORT jstring`，也是放在了开头。
 
@@ -102,7 +109,7 @@ public final Class<?> getClass() {
 
 ~~而`env->GetObjectClass(thiz)`返回的就是这样的东西。也就是这个MainActivity的类本身。而MainActivity是一个Object，自然里面会有`getClass()`方法。~~
 
-#question `env->GetObjectClass(thiz)`相当于Java中的什么？我目前的感觉是，什么也不想当。网上说的相当于`getClass()`我觉得是**完全错误**的。jobject和jclass的关系本身就对应着Java中的Object和Class。而Object里面确实包含着Class，但是jobject里面却不包含jclass。所以这个`env->GetObjectClass`也不应该是将Object里的Class给返回。
+#question `env->GetObjectClass(thiz)`相当于Java中的什么？我目前的感觉是，什么也不相当。网上说的相当于`getClass()`我觉得是**完全错误**的。jobject和jclass的关系本身就对应着Java中的Object和Class。而Object里面确实包含着Class，但是jobject里面却不包含jclass。所以这个`env->GetObjectClass`也不应该是将Object里的Class给返回。
 
 这里还是画一个图会清晰些：
 
@@ -115,7 +122,7 @@ public final Class<?> getClass() {
 现在，让我们总结一下之前说过的一些东西：
 
 * 之前我们说，`GetObjectClass()`和`getClass()`本身没有任何关系。这是因为，前者返回的是jclass，它仅仅代表Java中一个类的信息。可以是People, Activity, Object等等，也可以是Class。<label class="ob-comment" title="只有是Class的时候，才能根据这个Class去找里面的Field，方法等" style=""> 只有是Class的时候，才能根据这个Class去找里面的Field，方法等 <input type="checkbox"> <span style=""> 为啥？我之前都说过了。没有`CallObjectMethod()` </span></label>；而后者直接是在Java中返回这个Object内部的Class的实例。
-* 之前我们说，~~可以做反射的操作~~：得到这个Object的Class，然后通过这个Class去寻找这个方法。那么问你，*`GetObjectClass()`是得到这个Object的Class吗*？傻逼当然不是啦！只是得到这个Object的jclass而已。如果你这个object本身还是一个Object，那么你得到的jclass也是一个Object，而不是Class。
+* 之前我们说，~~可以做反射的操作~~：得到这个Object的Class，然后通过这个Class去寻找这个方法。那么问你，*`GetObjectClass()`是得到这个jobject的Class吗*？傻逼当然不是啦！只是得到这个jobject的jclass而已。如果你这个jobject本身（在Java中）还是一个Object，那么你得到的jclass也是一个Object，而不是Class。当然，在我们这个例子中，`GetObjectClass`返回的jclass对应的应该是MainActivity。
 
 回过头来。既然它返回的是jclass而不是Class，那我咋拿到Class？别急。虽然Object不是Class，但Object里有Class。而Object这个jclass里面是能拿到`getClass()`这个方法的。所以：
 
