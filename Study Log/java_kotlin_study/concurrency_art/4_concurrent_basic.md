@@ -1,13 +1,14 @@
 ---
-title: Java内存模型
-order: "3"
+title: 并发编程基础
+order: "4"
 ---
-## 3 Java内存模型
+
+## 4 并发编程基础
 
 ```dataviewjs
 let res = []
 for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
-	if (page.chapter == 3) {
+	if (page.chapter == 4) {
 		const link = page.file.link
 		const title = page.title
 		const order = page.order
@@ -18,4 +19,3 @@ for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
 res.sort((a, b) => a.order - b.order)
 dv.list(res.map(x => x.info))
 ```
-
