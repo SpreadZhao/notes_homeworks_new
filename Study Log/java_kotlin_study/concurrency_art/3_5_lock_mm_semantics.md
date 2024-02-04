@@ -144,6 +144,8 @@ final boolean initialTryLock() {
 
 - [ ] #TODO 这里加上hotspot源码。
 
+[[Study Log/java_kotlin_study/concurrency_art/resources/why_cas_has_volatile_semantics|why_cas_has_volatile_semantics]]
+
 ```ad-summary
 title: 总结-公平锁和非公平锁
 
