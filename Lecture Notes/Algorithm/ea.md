@@ -329,9 +329,9 @@ And if we could give matrix $A$ a decomposition $A = Q \Lambda Q^T$, where:
 
 We have known that A is a constant matrix, whose number in itself does not change. Now we can define some numbers:
 
-* $\phi = \frac{1+\sqrt{5}}{2},\ \psi = \frac{1-\sqrt{5}}{2}$
+* $\phi = \dfrac{1+\sqrt{5}}{2},\ \psi = \dfrac{1-\sqrt{5}}{2}$
 * $\lambda_1 = \phi,\ \lambda_2 = \psi$
-* $Q = \left[ \begin{array}{l} \sqrt{\phi} & -\sqrt{-\psi} \\ \sqrt{-\psi} & \sqrt{\phi} \end{array} \right] \cdot \frac{1}{\sqrt[4]{5}}$
+* $Q = \left[ \begin{array}{l} \sqrt{\phi} & -\sqrt{-\psi} \\ \sqrt{-\psi} & \sqrt{\phi} \end{array} \right] \cdot \dfrac{1}{\sqrt[4]{5}}$
 
 With these numbers, we can calculate `Fib(n)` easily(hehe) by the **exact formula**:
 
