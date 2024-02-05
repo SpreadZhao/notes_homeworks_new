@@ -13,3 +13,5 @@
 * [Android屏幕刷新机制—VSync、Choreographer 全面理解！ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/197861005)
 * [Create a basic media player app using Media3 ExoPlayer  |  Android media  |  Android Developers](https://developer.android.com/media/implement/playback-app)
 * [RecyclerView性能优化之异步预加载 - 掘金 (juejin.cn)](https://juejin.cn/post/7248599585752793125)
+* [Using FrameMetrics to track UI performance - Part 1 | by Jitin Sharma | Medium](https://jitin-sharma.medium.com/using-framemetrics-to-track-ui-performance-part-1-9c5d514a239d)
+* [面试问帧率优化，看看matrix是怎么做的 - 掘金](https://juejin.cn/post/7076090037070200840)

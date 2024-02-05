@@ -44,3 +44,104 @@ activity.getWindow().addOnFrameMetricsAvailableListener(onFrameMetricsAvailableL
 ```
 
 Matrix自己实现了一个HandlerThread，将这些统计工作交给它来处理。所以，我们可以自己new一个线程出来，然后准备好自己的looper。这样就能够将这个任务运行在我们的线程里了。代码就不放了，太简单。
+
+---
+
+看看Android官方是怎么实现的。位于文件`frameworks/base/tests/JankBench/app/src/main/java/com/android/benchmark/results/UiBenchmarkResult.java`。这是一个官方提供的工具，用来存放和分析UI方面的性能指标。
+
+这个类去统计掉帧的方式和FrameMatrics的注释中写的是一样的：
+
+```java
+/**  
+* Metric identifier for the total duration that was available to the app to produce a frame.  
+* <p>  
+* Represents the total time in nanoseconds the system allocated for the app to produce its  
+* frame. If FrameMetrics.TOTAL_DURATION < FrameMetrics.DEADLINE, the app hit its intended  
+* deadline and there was no jank visible to the user.  
+* </p>  
+**/  
+public static final int DEADLINE = 13;
+```
+
+其实就是看TOTAL_DURATION和DEADLINE哪个更大。并不像matrix中那样还要加加减减去算一个新的值。具体的逻辑如下：
+
+```java
+public int[] getSortedJankFrameIndices() {
+	ArrayList<Integer> jankFrameIndices = new ArrayList<>();
+	boolean tripleBuffered = false;
+	int totalFrameCount = getTotalFrameCount();
+	int totalDurationPos = getMetricPosition(FrameMetrics.TOTAL_DURATION);
+
+	for (int i = 0; i < totalFrameCount; i++) {
+		double thisDuration = mStoredStatistics[totalDurationPos].getElement(i);
+		if (!tripleBuffered) {
+			if (thisDuration > FRAME_PERIOD_MS) {
+				tripleBuffered = true;
+				jankFrameIndices.add(i);
+			}
+		} else {
+			if (thisDuration > 2 * FRAME_PERIOD_MS) {
+				tripleBuffered = false;
+				jankFrameIndices.add(i);
+			}
+		}
+	}
+
+	int[] res = new int[jankFrameIndices.size()];
+	int i = 0;
+	for (Integer index : jankFrameIndices) {
+		res[i++] = index;
+	}
+	return res;
+}
+```
+
+这里唯一的一个for循环是在遍历一个FrameMetrices的list，每一次遍历是一个frame中的信息。可以看到，它只取出来了TOTAL_DURATION这个属性，并且和FRAME_PERIOID_MS作比较。其中FRAME_PERIOD_MS就是60hz的屏幕刷新率的间隔，也就是16。
+
+但是，在这个基础上还增加了三缓存的判断：
+
+* 如果没有采用三缓存机制，丢帧了之后下次就采用三缓存；
+* 如果已经采用了三缓存，丢帧之后就下次就不用三缓存。
+
+借用这个思想，我们写出一个自己版本的FpsListener：
+
+```kotlin
+private class OnFpsListener(private val activity: Activity) : OnFrameMetricsAvailableListener {
+
+	private var tripleBuffered = false
+	private var totalFrameCount = 0L
+	private var droppedFrameCount = 0L
+	private var frameLostRate = 0.0
+
+	override fun onFrameMetricsAvailable(
+		window: Window?,
+		frameMetrics: FrameMetrics?,
+		dropCountSinceLastInvocation: Int
+	) {
+		val fm = FrameMetrics(frameMetrics)
+		if (fm.isFirstFrame) {
+			Log.i(TAG, "First frame which we won't care for now.")
+			return
+		}
+		totalFrameCount++
+		val duration = fm.totalDuration.ms
+		val interval = fm.deadline.ms
+		if (!tripleBuffered) {
+			if (duration > interval) {
+				tripleBuffered = true
+				droppedFrameCount++
+			}
+		} else {
+			if (duration > 2 * interval) {
+				tripleBuffered = false
+				droppedFrameCount++
+			}
+		}
+		val newFrameLostRate = droppedFrameCount.toDouble() / totalFrameCount
+		if (frameLostRate != newFrameLostRate) {
+			Log.d(TAG, "frameLostRate: ${newFrameLostRate * 100}%, dropped: $droppedFrameCount, total: $totalFrameCount")
+			frameLostRate = newFrameLostRate
+		}
+	}
+}
+```
