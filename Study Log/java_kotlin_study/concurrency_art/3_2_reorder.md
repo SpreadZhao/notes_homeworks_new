@@ -102,3 +102,41 @@ JMM认为：诶呀，你这个线程A里面的代码，两句之间没啥关系�
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231104222240.png|500]]
 
 > <small>在程序中，操作 3 和操作 4 存在控制依赖关系。当代码中存在控制依赖性时，会影响指令序列执行的并行度。为此，编译器和处理器会采用猜测（Speculation）执行来克服控制相关性对并行度的影响。以处理器的猜测执行为例，执行线程 B 的处理器可以提前读取并计算 a\*a，然后把计算结果临时保存到一个名为重排序缓冲（Reorder Buffer，ROB）的硬件缓存中。当操作 3 的条件判断为真时，就把该计算结果写入变量 i 中。（这一坨不就是祭祖笔记里的东西吗？）</small>
+
+---
+
+```dataviewjs
+const pages = dv.pages('"Study Log/java_kotlin_study/concurrency_art"')
+let nextChapterHead = undefined
+let res = undefined
+const current = dv.current()
+for (let page of pages) {
+	if (page.chapter_root == true && page.order == Number(current.chapter) + 1) {
+		console.log("found next head: " + page.name)
+		nextChapterHead = page
+		continue
+	}
+	if (page.chapter == undefined || page.chapter != current.chapter) {
+		console.log("not current chapter: " + page.file.name)
+		continue
+	}
+	if (page.order == Number(current.order) + 1) {
+		res = page
+	}
+}
+console.log("res: " + res)
+console.log("next: " + nextChapterHead)
+if (res == undefined) {
+	res = nextChapterHead
+}
+let text = ""
+if (res != undefined) {
+	const path = res.file.path
+	const title = res.title
+	const decoLink = "[[" + path + "|" + title + "]]"
+	text = "Next Article: " + decoLink
+} else {
+	text = "旅途的终点！"
+}
+dv.el("p", text, { attr: { align: "right" } })
+```

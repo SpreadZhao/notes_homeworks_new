@@ -1,6 +1,7 @@
 ---
 title: Java内存模型
 order: "3"
+chapter_root: true
 ---
 ## 3 Java内存模型
 

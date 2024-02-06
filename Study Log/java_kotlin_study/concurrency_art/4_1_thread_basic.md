@@ -347,3 +347,77 @@ title: 注意图中的syncronized
 看，是等待进入syncronized方法或者块的时候，才是处于`BLOCKED`状态。这是啥意思？其它的锁不行吗？在java.util.concurrent包中有个Lock接口，它也能实现类似syncronized的并发模式。但是，获取这个Lock锁却并不会进入`BLOCKED`状态。那么是啥呢？答案是`WAITING`。因为Lock接口的实现利用了LockSupport中的方法。这里面并没有syncronized。
 ```
 
+### 4.1.3 Daemon Thread
+
+关于守护线程，知道这些事情：
+
+* 守护线程用做**后台调度**和一些**支持性任务**；
+* 当JVM中的所有线程都是守护线程时，程序会退出，同时**所有的守护线程也会终止**；
+* 可以使用`setDaemon()`方法来设置是否是守护线程；
+* `setDaemon()`方法必须在线程启动之前调用。
+
+基于这些，我们写一个例子：
+
+```kotlin
+class DaemonThread {  
+    class DaemonRunner : Runnable {  
+        override fun run() {  
+            try {  
+                SleepUtils.second(10)  
+            } finally {  
+                println("DaemonThread finally run.")  
+            }  
+        }  
+    }  
+}  
+  
+fun main() {  
+    val thread = Thread(DaemonThread.DaemonRunner(), "DaemonThread")  
+    thread.isDaemon = true  
+    thread.start()  
+}
+```
+
+main启动时，程序的行为是怎样的？答案是，程序会**立即结束**。但是我明明休眠了10秒呀？为啥直接就结束了？就是因为DaemonThread是一个守护线程，所以当main线程启动了DaemonThread之后，自己没事情干了，所以main线程就结束了。main线程一结束，那剩下的就一个DaemonThread和JVM里其它的守护线程了。所以程序也会立即结束，所有的线程都会停止。
+
+另一个重点是，我们也不会看到finally块中的语句输出。所以，***==在构建Daemon线程时，我们不能依赖finally块来做类似释放资源的操作==***。
+
+而如果将isDaemon设置为false，那么一切正常：10秒钟之后程序才结束，并且finally中的语句也能正常输出。
+
+---
+
+```dataviewjs
+const pages = dv.pages('"Study Log/java_kotlin_study/concurrency_art"')
+let nextChapterHead = undefined
+let res = undefined
+const current = dv.current()
+for (let page of pages) {
+	if (page.chapter_root == true && page.order == Number(current.chapter) + 1) {
+		console.log("found next head: " + page.name)
+		nextChapterHead = page
+		continue
+	}
+	if (page.chapter == undefined || page.chapter != current.chapter) {
+		console.log("not current chapter: " + page.file.name)
+		continue
+	}
+	if (page.order == Number(current.order) + 1) {
+		res = page
+	}
+}
+console.log("res: " + res)
+console.log("next: " + nextChapterHead)
+if (res == undefined) {
+	res = nextChapterHead
+}
+let text = ""
+if (res != undefined) {
+	const path = res.file.path
+	const title = res.title
+	const decoLink = "[[" + path + "|" + title + "]]"
+	text = "Next Article: " + decoLink
+} else {
+	text = "旅途的终点！"
+}
+dv.el("p", text, { attr: { align: "right" } })
+```

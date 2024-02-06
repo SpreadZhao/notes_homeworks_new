@@ -164,3 +164,41 @@ Load2
 happens-before是直接提供给程序员看的，也就是说，程序员用的就是happens-before规则，而这个规则具体的实现就来自JMM，也包括上面说的什么StoreLoad这种屏障指令（大概包括）。
 
 ![[Study Log/java_kotlin_study/resources/Pasted image 20231104185527.png|550]]
+
+---
+
+```dataviewjs
+const pages = dv.pages('"Study Log/java_kotlin_study/concurrency_art"')
+let nextChapterHead = undefined
+let res = undefined
+const current = dv.current()
+for (let page of pages) {
+	if (page.chapter_root == true && page.order == Number(current.chapter) + 1) {
+		console.log("found next head: " + page.name)
+		nextChapterHead = page
+		continue
+	}
+	if (page.chapter == undefined || page.chapter != current.chapter) {
+		console.log("not current chapter: " + page.file.name)
+		continue
+	}
+	if (page.order == Number(current.order) + 1) {
+		res = page
+	}
+}
+console.log("res: " + res)
+console.log("next: " + nextChapterHead)
+if (res == undefined) {
+	res = nextChapterHead
+}
+let text = ""
+if (res != undefined) {
+	const path = res.file.path
+	const title = res.title
+	const decoLink = "[[" + path + "|" + title + "]]"
+	text = "Next Article: " + decoLink
+} else {
+	text = "旅途的终点！"
+}
+dv.el("p", text, { attr: { align: "right" } })
+```

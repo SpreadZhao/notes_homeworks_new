@@ -1,6 +1,7 @@
 ---
 title: 并发编程基础
 order: "4"
+chapter_root: true
 ---
 
 ## 4 并发编程基础
