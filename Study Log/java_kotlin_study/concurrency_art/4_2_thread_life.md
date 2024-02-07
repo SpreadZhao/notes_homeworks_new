@@ -50,7 +50,10 @@ title: 休眠状态？
 > If this thread is blocked in an invocation of the wait(), wait(long), or wait(long, int) methods of the Object class, or of the join(), join(long), join(long, int), sleep(long), or sleep(long, int) methods of this class, then its interrupt status will be cleared and it will receive an InterruptedException.
 ```
 
-那么，我既然都抛出异常了，就证明我这个线程已经对中断做出了响应。所以，我是不是可以重置一下状态了？因此，在抛出InterruptedException之前，该线程的interrupted标志位会被清除，也就是置回false。
+> [!stickies]
+> 如果这段看不懂，可以看看后面我的看法。
+
+那么，我既然都抛出异常了，就证明我这个线程已经对中断做出了响应。<u>所以，我是不是可以重置一下状态了？</u>因此，在抛出InterruptedException之前，该线程的interrupted标志位会被清除，也就是置回false。
 
 我们通过一个例子来证明这件事。有两个线程。一个一直在睡大觉；一个一直在空转：
 
@@ -155,7 +158,77 @@ java.lang.InterruptedException: sleep interrupted
 	at java.base/java.lang.Thread.run(Thread.java:842)
 ```
 
-最后。我想谈一谈自己的看法，为什么要这么设计。如果一个线程当前正在忙着自己的事情，那么如果被别人打扰，应该去做别人的事情吗？我觉得是不应该的。因为这样反而效率大概率会因为线程切换任务而降低。所以，<u>如果一个繁忙的线程接收到了interrupt，最正确的做法就是仅仅记住我曾经被interrupt了</u>。这也是interrupted为true的原因；而如果是一个空闲的线程接收到了interrupt，那么是不是你该干点儿活儿了？不然要你干嘛？你出生之后就在这儿躺着啥也不干？所以，之所以抛出异常，就是希望<u>这个闲下来的线程正确对待这次interrupt，找点事情干</u>。而正因为这个线程找到了干的事情，也就意味着发出这个interrupt的一方的请求被【满足】了。从而这个interrupted标志位可以复位，以便接受新的interrupt请求。
+最后。我想谈一谈自己的看法，为什么要这么设计。如果一个线程当前正在忙着自己的事情，那么如果被别人打扰，应该去做别人的事情吗？我觉得应该把相应交给目标线程自己。因为这样反而效率大概率会因为线程切换任务而降低。所以，<u>如果一个繁忙的线程接收到了interrupt，最正确的做法就是仅仅记住我曾经被interrupt了</u>。这也是interrupted为true的原因；而如果是一个空闲的线程接收到了interrupt，那么是不是你该干点儿活儿了？不然要你干嘛？你出生之后就在这儿躺着啥也不干？所以，之所以抛出异常，就是希望<u>这个闲下来的线程正确对待这次interrupt，找点事情干</u>。而正因为这个线程找到了干的事情，也就意味着发出这个interrupt的一方的请求被【满足】了。从而这个interrupted标志位可以复位，以便接受新的interrupt请求。
+
+```ad-warning
+但是，在我的测试中，有很小的概率两个值都为true。也就是被睡眠的线程被interrupt之后，标志位并没有置回false。但是却也抛出了InterruptedException。
+```
+
+- [ ] #TODO 这个东西很奇怪。
+
+### 4.2.4 Deprecated suspend(), resume() and stop()
+
+这三个方法在Java17里已经是属于调用就报错了：
+
+```java
+@Deprecated(since="1.2", forRemoval=true)  
+public final void suspend() {  
+    checkAccess();  
+    suspend0();  
+}
+```
+
+官方的删除公告，以及该如何替代它们：[Java Thread Primitive Deprecation (oracle.com)](https://docs.oracle.com/javase/8/docs/technotes/guides/concurrency/threadPrimitiveDeprecation.html)
+
+### 4.2.5 安全地终止线程
+
+这个比较重要。如何优雅地结束一个线程？答案是要么通过interrupt，要么自己写一个标记位：
+
+```kotlin
+class Runner : Runnable {  
+  
+    private var i = 0L  
+  
+    @Volatile  
+    private var on = true  
+  
+    override fun run() {  
+        while (on && !Thread.currentThread().isInterrupted) {  
+            i++  
+        }  
+        println("i = $i")  
+    }  
+  
+    fun cancel() {  
+        on = false  
+    }  
+}
+```
+
+这样，当这个线程跑起来之后，我们调用`interrupt()`之后，isInterrupted就是true。这样while循环就会中止；或者，我们可以调用`cancel()`，这样on就变成了false，while循环也会终止。
+
+这两种方法都可以终止线程的运行，并可以自主选择在线程结束之后做一些收尾工作。优雅。下面是测试程序：
+
+```kotlin
+fun main() {  
+    val one = ElegantlyKillThread.Runner()  
+    var countThread = Thread(one, "CountThread")  
+    countThread.start()  
+    TimeUnit.SECONDS.sleep(1)  
+    countThread.interrupt()  
+    val two = ElegantlyKillThread.Runner()  
+    countThread = Thread(two, "CountThread")  
+    countThread.start()  
+    TimeUnit.SECONDS.sleep(1)  
+    two.cancel()  
+}
+```
+
+
+
+
+
+
 
 ---
 
