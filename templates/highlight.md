@@ -1,1 +1,0 @@
-<mark style="background-color:purple"></mark>
