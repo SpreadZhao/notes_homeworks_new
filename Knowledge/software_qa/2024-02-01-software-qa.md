@@ -1,5 +1,5 @@
 ---
-title: Ubuntu Things 2
+title: 增加/删除Launcher图标; 中文输入法; PATH; keyring; copy link with title; uninstall Firefox
 date: 2024-02-01
 tags:
   - softwareqa/linux
@@ -15,7 +15,7 @@ Firstly, let us call this as **Launcher**:
 
 ![[Knowledge/software_qa/resources/Pasted image 20240201111843.png]]
 
-How to add or remove icons in it? All of its icons are contained in path `/usr/share/applications` which contains `.desktop` files:
+How to add or remove icons in it? ~~All of its~~ icons are contained in path `/usr/share/applications` which contains `.desktop` files:
 
 ![[Knowledge/software_qa/resources/Pasted image 20240201112047.png]]
 

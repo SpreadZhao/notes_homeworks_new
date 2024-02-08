@@ -1,5 +1,5 @@
 ---
-title: Things in Ubuntu
+title: AppImage整合; 快捷键设置
 date: 2024-01-31
 tags:
   - "#softwareqa/linux"
