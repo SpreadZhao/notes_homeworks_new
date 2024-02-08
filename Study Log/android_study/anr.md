@@ -1,1 +1,0 @@
-[深入理解 Android ANR 触发原理以及信息收集过程 - huansky - 博客园 (cnblogs.com)](https://www.cnblogs.com/huansky/p/14954020.html)
