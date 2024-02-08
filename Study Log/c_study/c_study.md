@@ -1,15 +1,6 @@
-<%*
-	const folders = app.vault.getAllLoadedFiles().filter(x => x instanceof tp.obsidian.TFolder)
-	const selectedPath = (await tp.system.suggester(
-		item => item.path,
-		folders
-	)).path
-	console.log("selectedPath: " + selectedPath)
-%>
-
 ```dataviewjs
 let res = []
-for (let page of dv.pages('"<% selectedPath %>"')) {
+for (let page of dv.pages('"Study Log/c_study/c_study_diary"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
 	const title = page.title.split("; ")
