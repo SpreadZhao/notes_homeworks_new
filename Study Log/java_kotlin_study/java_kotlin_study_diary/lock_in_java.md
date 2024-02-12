@@ -335,7 +335,7 @@ class LockTest {
 ```ad-warning
 千万不要把curr的赋值语句移到外面！
 
-![[Study Log/java_study/resources/Pasted image 20230724000647.png|500]]
+![[Study Log/java_kotlin_study/resources/Pasted image 20230724000647.png|500]]
 ```
 
 但是，这样的作法其实和之前的Busy Waiting没啥区别。因为无法获得锁的线程依然是在不停进行while循环来尝试获得锁。所以，**我们需要让无法获得锁的线程休息一下**。
