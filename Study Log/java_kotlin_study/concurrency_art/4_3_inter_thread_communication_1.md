@@ -1,5 +1,5 @@
 ---
-title: 4.3 线程间通信
+title: 4.3 线程间通信 part 1
 order: "3"
 chapter: "4"
 ---
@@ -260,6 +260,8 @@ Thread[WaitThread,5,main] running @ 22:32:31
 - [>] 因为notifyThread在第一次获取lock之后睡眠了5s。它没释放，waitThread和notifyThread都是没法继续下去的。
 - [?] *最后两行输出可能交换吗？*
 - [>] 可能。就是取决于[[#^f936d3|之前]]的4.1和4.2哪个先执行。
+- [?] *为什么`needWait`不是volatile的？*
+- [>] 因为在synchronized中。synchronized本身就包括volatile所有的语义，所以不需要了。
 
 [[#^f936d3|之前]]的例子，图示如下：
 
@@ -275,6 +277,31 @@ title: 最后，书上的总结。重要的点如下：
 3. `notify()`或 `notifyAll()`方法调用后，等待线程依旧不会从`wait()`返回，需要调用`notify()`或`notifAll()`的线程**释放锁之后**，等待线程才有机会从 wait()返回；
 4. `notify()`方法将等待队列中的一个等待线程从等待队列中移到同步队列中，而`notifyAll()`方法则是将等待队列中所有的线程全部移到同步队列，被移动的线程状态由 **WAITING** 变为 **BLOCKED**；
 5. 从`wait()`方法返回的前提是获得了调用对象的锁。
+
+---
+
+**wait \& notify的经典范式：**
+
+- 等待方：
+
+~~~kotlin
+synchronized(object) {
+	while (needWait) {
+		object.wait()
+	}
+	doSomething()
+}
+~~~
+
+- 通知方：
+
+~~~kotlin
+synchronized(object) {
+	needWait = false
+	object.notifyAll()
+}
+~~~
+
 ```
 
 ```ad-note
@@ -336,6 +363,54 @@ class OneToHundred {
 ```
 
 这个例子中的任何一个地方去掉，都无法正常输出1-100或者无法正常结束。
+
+### 4.3.3 Piped IO
+
+主要的类如下：
+
+* 字节型
+	* PipedOutputStream
+	* PipedInputStream
+* 字符型
+	* PipedReader
+	* PipedWriter
+
+下面是一个例子：
+
+```kotlin
+class Piped {
+    class Print(private val reader: PipedReader) : Runnable {
+        override fun run() {
+            var receive = 0
+            try {
+                receive = reader.read()
+                while (receive != -1) {
+                    print(receive.toChar())
+                    receive = reader.read()
+                }
+            } catch (_: IOException) {}
+        }
+    }
+}
+
+fun main() {
+    val writer = PipedWriter()
+    val reader = PipedReader()
+    writer.connect(reader)
+    val printThread = Thread(Piped.Print(reader), "PrintThread")
+    printThread.start()
+    var ch = 0
+    writer.use {
+        ch = System.`in`.read()
+        while (ch != -1) {
+            it.write(ch)
+            ch = System.`in`.read()
+        }
+    }
+}
+```
+
+> `writer.connect(reader)`建立二者的连接。二者不处于连接状态时，***==reader处于阻塞状态==***；
 
 ---
 
