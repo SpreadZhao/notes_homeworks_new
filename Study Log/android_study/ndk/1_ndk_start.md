@@ -1,6 +1,5 @@
 ---
 title: 初次NDK
-order: "1"
 ---
 
 # 初次NDK

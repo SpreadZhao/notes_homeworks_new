@@ -10,10 +10,11 @@
 let res = []
 const pages = dv.pages('"Study Log/android_study/ndk"')
 for (let page of pages) {
-	if (page.title == undefined || page.order == undefined) {
+	if (page.title == undefined) {
 		continue
 	}
-	const order = page.order
+	const name = page.file.name
+	const order = Number(name.substring(0, name.indexOf("_")))
 	const title = page.title
 	const link = page.file.link
 	res.push({order, title, link})

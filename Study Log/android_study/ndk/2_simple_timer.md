@@ -1,6 +1,5 @@
 ---
 title: 简单计时器
-order: "2"
 ---
 [Java Native Interface Specification: 5 - The Invocation API](https://docs.oracle.com/en/java/javase/17/docs/specs/jni/invocation.html)
 
