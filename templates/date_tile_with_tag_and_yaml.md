@@ -6,6 +6,7 @@ mtrace:
   - {{date}}
 ---
 
+#date {{date}}
+
 # 
 
-#date {{date}}
