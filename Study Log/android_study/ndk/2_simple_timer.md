@@ -469,6 +469,26 @@ typedef struct tick_context {
 } TickContext;
 ```
 
+那么，这个JavaVM如何获得呢？答案是在`JNI_OnLoad`中：[Java Native Interface Specification: 5 - The Invocation API](https://docs.oracle.com/en/java/javase/17/docs/specs/jni/invocation.html#jni_onload)
+
+这个函数的定义是可选的。我们在内部能够得到当前程序的JavaVM，并通过`GetEnv()`来获得此时的JNIEnv来进行其它操作：
+
+```kotlin
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    JNIEnv *env;
+    memset(&context, 0, sizeof(context));
+    context.javaVm = vm;
+    if (vm->GetEnv((void **)&env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+    context.interrupted = false;
+    context.simpleTimerObj = nullptr;
+    return JNI_VERSION_1_6;
+}
+```
+
+有了JavaVM，之后就可以在线程中去通过它获取JNIEnv了。
+
 这里给出官方案例中获取JNIEnv的步骤：
 
 ```c
@@ -484,6 +504,10 @@ if (res != JNI_OK) {  // 如果没获取到，那就是还没ATTACH
 		return NULL;
 	}
 }
+```
+
+```ad-note
+在`JNI_OnLoad()`中`GetEnv()`能成功，是因为当前线程是main线程，已经是attach VM的状态了；而在`StartTimer()`中`GetEnv()`失败，是因为当前处于子线程。
 ```
 
 好了。现在我们已经可以给出完整的StartTimer的逻辑了！
@@ -534,3 +558,37 @@ Java_com_spread_nativestudy_fragments_SimpleTimerFragment_stopTimer(JNIEnv *env,
     context.interrupted = true;
 }
 ```
+
+# 4 Additional
+
+是不是觉得在c++里写一长串函数名来表示java中的函数很麻烦？还有别的方式！而且更好！
+
+[JNI tips | Android NDK | Android Developers](https://developer.android.com/training/articles/perf-jni#native-libraries)
+
+在Java层创建一个测试的native方法：
+
+```kotlin
+private external fun testRegister()
+```
+
+现在，在c++层也创建一个函数。名字其实叫什么都可以：
+
+```cpp
+void testRegister() {
+    LOGI("Hello World!");
+}
+```
+
+最后，在`JNI_OnLoad()`中写入如下逻辑：
+
+```cpp
+jclass clz = env->FindClass("com/spread/nativestudy/fragments/SimpleTimerFragment");
+if (clz == nullptr) return JNI_ERR;
+static const JNINativeMethod methods[] = {
+		{"testRegister", "()V", reinterpret_cast<void *>(testRegister)}
+};
+int rc = env->RegisterNatives(clz, methods, sizeof(methods) / sizeof(JNINativeMethod));
+if (rc != JNI_OK) return rc;
+```
+
+这一切都非常好理解。现在，即使不用那一长串逻辑，也可以通过编译了！
