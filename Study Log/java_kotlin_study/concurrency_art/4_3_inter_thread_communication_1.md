@@ -412,6 +412,125 @@ fun main() {
 
 > `writer.connect(reader)`建立二者的连接。二者不处于连接状态时，***==reader处于阻塞状态==***；
 
+### 4.3.4 Thread.join
+
+join的使用非常简单。**当前线程等待调用join的线程终止后，当前线程才能从join返回**。
+
+```kotlin
+class Domino(private val previous: Thread) : Runnable {
+	override fun run() {
+		try {
+			previous.join()
+		} catch (_: InterruptedException) {}
+		println("${Thread.currentThread().name} terminate.")
+	}
+}
+```
+
+在当前例子中，构建一个线程需要传入一个前驱线程。当前线程等待前驱线程结束之后，当前线程才能返回。我们制作这样一个等待链：
+
+```mermaid
+graph RL
+th0 --> main
+th1 --> th0
+th2 --> th1
+th3 --> th2
+... --> th3
+th9 --> ...
+```
+
+图中的箭头表示等待关系。th0会等待main结束，th1会等待th0结束，以此类推。
+
+因此，只有main结束之后，其它线程才有可能继续进行下去。所以，我们在main线程结束之前休眠5s，那么所有的线程也必须等到5s之后才能依次推出。
+
+```kotlin
+fun main() {
+    var previous = Thread.currentThread()
+    repeat(10) {
+        val th = Thread(Join.Domino(previous), "$it")
+        th.start()
+        previous = th
+    }
+    TimeUnit.SECONDS.sleep(5)
+    println("${Thread.currentThread().name} terminate.")
+}
+```
+
+输出如下：
+
+```shell
+main terminate.
+0 terminate.
+1 terminate.
+2 terminate.
+3 terminate.
+4 terminate.
+5 terminate.
+6 terminate.
+7 terminate.
+8 terminate.
+9 terminate.
+```
+
+下面是jdk源码中join的实现：
+
+```java 
+public final synchronized void join(final long millis)
+throws InterruptedException {
+	if (millis > 0) {
+		if (isAlive()) {
+			final long startTime = System.nanoTime();
+			long delay = millis;
+			do {
+				wait(delay);
+			} while (isAlive() && (delay = millis -
+					TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)) > 0);
+		}
+	} else if (millis == 0) {
+		while (isAlive()) {
+			wait(0);
+		}
+	} else {
+		throw new IllegalArgumentException("timeout value is negative");
+	}
+}
+```
+
+可以看到，最终调用的还是`wait()`，并且`join()`本身就是syncfhronized的。这和之前[[Study Log/java_kotlin_study/concurrency_art/4_3_inter_thread_communication_1#4.3.2 Wait & Notify|4_3_inter_thread_communication_1]]中介绍的Wait \& Notify机制是一样的。 
+
+当目标线程结束的时候，它会调用`notifyAll()`，来通知之前调用了join而导致wait的线程，然后唤醒它。
+
+- [ ] #TODO hotspot在这里注册wait的时候用了一堆非常炫酷的宏定义还有template。都在`jdk/src/hotspot/share/classfile/vmSymbols.hpp`中。有时间分析一下。
+
+### 4.3.5 ThreadLocal
+
+网上有很多各种介绍ThreadLocal的，但是我一直就是没弄明白到底什么时候才需要用到这个东西。另外，我自己查了一下，我工作的公司的项目中，几百万行代码里也根本没有ThreadLocal的影子。
+
+一个例子是这样的：[java - When and how should I use a ThreadLocal variable? - Stack Overflow](https://stackoverflow.com/questions/817856/when-and-how-should-i-use-a-threadlocal-variable)
+
+根据这里面的回答，我的感觉是：
+
+<font color="yellow">如果你发现，某些『每个线程都有自己的』的变量，如果你不方便定义在你自己的xxxThread里的话，那么ThreadLocal就派上用场了。</font>
+
+```kotlin
+class LocalThread : Thread() {
+	var value = 0
+	override fun run() {
+		value++
+		publicValue++
+	}
+}
+```
+
+就这个例子。这个value是每个Thread都有的。那么你改变了th1的value，th2的value肯定不会受到影响；但是，隔壁的这个publicValue因为不在Thread里面，所以自然会被多个线程访问到同一个东西。
+
+如果你说，这个publicValue它：
+
+* 不方便写在LocalThread类里面，因为我有其它的操作也会涉及到这个变量；
+* 这个变量每个线程都是有自己的一份的。每个线程<label class="ob-comment" title="有权利阻止" style=""> 有权利阻止 <input type="checkbox"> <span style=""> 我既然是说的『有权利』，那么肯定就是也可以不阻止 </span></label>其它线程干扰这个变量的状态。
+
+那么就可以定义成ThreadLocal。至于用法和内部实现，可以稍微看一看八股文：[Java并发常见面试题总结（下）](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html)
+
 ---
 
 ```dataviewjs
