@@ -1,5 +1,5 @@
 ---
-title: 4.3 线程间通信 part 1
+title: 4.3 线程间通信
 order: "3"
 chapter: "4"
 ---
