@@ -63,4 +63,8 @@ function generateNestedList(level, content) {
 
 #### 开发
 
-- [ ] 改造视频起播UI
+- [x] 改造视频起播UI
+- [ ] #date 2024-02-15 下一步：
+	- [ ] #urgency/high 分析视频prepare耗时；
+	- [ ] #urgency/high 看能不能同时装载两个视频，实现播放当前视频时，对下个视频进行prepare
+- [ ] 做出来播控
