@@ -1,6 +1,7 @@
 ---
 mtrace:
   - 2023-07-25
+  - 2024-02-17
 tags:
   - question/coding/android
   - language/coding/kotlin
@@ -9,23 +10,7 @@ tags:
 ---
 # 自定义QQ气泡View
 
-#date 2023-07-25
-
-```markmap
-
-- 自定义QQ气泡View
-	- 准备工作
-	- 移动的大圆
-	- 中心的小圆
-		- 修改小圆的半径
-	- 中间的路径
-	- 回弹动画
-	- 分离，消失
-	- 加入到Compose中
-
-```
-
-#question/coding/android #language/coding/kotlin #question/coding/practice #block_and_conquer 
+#date 2023-07-25 #question/coding/android #language/coding/kotlin #question/coding/practice #block_and_conquer 
 
 参考文章：[(47条消息) 自定义View完结篇--从实现QQ消息气泡去理解自定义View_Pingred_hjh的博客-CSDN博客](https://blog.csdn.net/qq_39867049/article/details/131539825?spm=1001.2014.3001.5501)
 
