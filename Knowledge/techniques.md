@@ -5,6 +5,8 @@ description: 要学的东西，都在这个里面。不管是安卓的，还是�
 
 - [ ] 这么多要学的技术，文档还没写呢！！！
 
+# Unclassified
+
 - [ ] ActivityResultLauncher
 
 [玩转ActivityResultLauncher领略设计之美 - 掘金 (juejin.cn)](https://juejin.cn/post/7181452064919126071)
@@ -205,7 +207,9 @@ forceStopPackage()
 - [ ] [ICU Documentation | ICU is a mature, widely used set of C/C++ and Java libraries providing Unicode and Globalization support for software applications. The ICU User Guide provides documentation on how to use ICU. (unicode-org.github.io)](https://unicode-org.github.io/icu/)
 - [ ] :TiPhoto: [[Knowledge/resources/20240131_193313.jpg|面试记录-校招-王重]]
 - [ ] :TiPhoto: [[Knowledge/resources/20231226_105816.jpg|面试记录-小红书高级IOS]]
-
+- [ ] mmkv
+	- [ ] [Tencent/MMKV: An efficient, small mobile key-value storage framework developed by WeChat. Works on Android, iOS, macOS, Windows, and POSIX. (github.com)](https://github.com/Tencent/MMKV)
+	- [ ] [【面试黑洞】Android 的键值对存储有没有最优解？哔哩哔哩bilibili](https://www.bilibili.com/video/BV1FU4y197dL/?spm_id_from=333.337.search-card.all.click) （这个视频12:38，说增量式更新是性能提升不重要的原因，和薛秋实说的正好是相反的；:BoBxsConfused: 另外，最后说什么dataStore用协程完全不卡，我觉得完全在扯蛋。[[Knowledge/resources/Pasted image 20240217215509.png|有个评论也是这么说的]]）
 # 学习计划
 
 原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
@@ -242,9 +246,13 @@ forceStopPackage()
 5. 端智能
 6. 插件：mira
 7. 虚拟机
-	1. hotspot
-	2. GC
+	1. [Crafting Interpreters](https://craftinginterpreters.com/)
+	2. hotspot
+	3. GC
 8. 浏览器
+	1. [How browsers work (taligarsiel.com)](https://taligarsiel.com/Projects/howbrowserswork1.htm)
+	2. webkit
+	3. chromium
 
 ## 其他方向
 
