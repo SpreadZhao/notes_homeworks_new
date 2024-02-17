@@ -153,7 +153,7 @@ Load2
 * **volatile**：对一个volatile的写，==happens-before==任意之后对它的读；
 * **传递性**：如果A happens-before B，B happens-before C，那么A happens-before C。
 
-```ad-cor
+```ad-question
 你可能会问，为什么要不说人话。比如volatile，我直接“先写后读”就行了呗！实际上，**还真不一定是先写后读**！
 
 两个操作之间具有 happens-before 关系，***==并不意味着前一个操作必须要在后一个操作之前执行==***！happens-before 仅仅要求前一个操作（执行的结果）对后一个操作可见，且前一个操作按顺序排在第二个操作之前（the first is visible to and ordered before thesecond）。happens-before 的定义很微妙，后文会具体说明 happens-before 为什么要这么定义。

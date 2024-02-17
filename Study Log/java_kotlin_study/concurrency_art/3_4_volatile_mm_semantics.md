@@ -11,10 +11,6 @@ order: "7"
 接下来我写一个代码。这个代码在之前也写过类似的：[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal#2.3.2 Java如何实现原子操作（CAS）|2_concurrency_internal]]。其实就是多个线程去增加一个数字的操作：
 
 ```kotlin
-package concurrency
-
-import kotlin.concurrent.thread
-
 class VolatileExample {
 
   private var _integer = 0
@@ -67,96 +63,7 @@ thread8 result: 500
 thread1 result: 200
 thread9 result: 600
 thread11 result: 700
-thread12 result: 800
-thread4 result: 900
-thread2 result: 1000
-thread6 result: 1100
-thread7 result: 1200
-thread13 result: 1300
-thread14 result: 1400
-thread10 result: 1500
-thread15 result: 1600
-thread20 result: 1700
-thread21 result: 1800
-thread22 result: 1900
-thread19 result: 2000
-thread16 result: 2100
-thread17 result: 2200
-thread28 result: 2300
-thread23 result: 2400
-thread24 result: 2500
-thread25 result: 2600
-thread27 result: 2800
-thread26 result: 2800
-thread18 result: 2900
-thread29 result: 3000
-thread30 result: 3100
-thread35 result: 3200
-thread32 result: 3300
-thread38 result: 3400
-thread34 result: 3500
-thread31 result: 3600
-thread36 result: 3700
-thread37 result: 3800
-thread39 result: 3900
-thread33 result: 4000
-thread40 result: 4100
-thread41 result: 4200
-thread42 result: 4300
-thread44 result: 4400
-thread43 result: 4500
-thread77 result: 7000
-thread71 result: 7100
-thread67 result: 7675
-thread76 result: 7914
-thread58 result: 7975
-thread63 result: 7975
-thread66 result: 7975
-thread49 result: 7000
-thread48 result: 7000
-thread81 result: 8175
-thread47 result: 7000
-thread46 result: 7000
-thread45 result: 7000
-thread83 result: 8375
-thread82 result: 8275
-thread84 result: 8475
-thread80 result: 8175
-thread68 result: 7975
-thread69 result: 7975
-thread85 result: 8575
-thread86 result: 8675
-thread65 result: 7975
-thread64 result: 7975
-thread88 result: 8875
-thread60 result: 7975
-thread75 result: 7975
-thread91 result: 9075
-thread59 result: 7975
-thread61 result: 7975
-thread94 result: 9275
-thread79 result: 7975
-thread62 result: 7699
-thread92 result: 9475
-thread95 result: 9575
-thread57 result: 7675
-thread56 result: 7675
-thread97 result: 9775
-thread72 result: 7675
-thread51 result: 7675
-thread78 result: 7591
-thread73 result: 7200
-thread52 result: 7496
-thread70 result: 7509
-thread50 result: 7000
-thread53 result: 7200
-thread74 result: 7300
-thread55 result: 7400
-thread54 result: 7200
-thread99 result: 9975
-thread98 result: 9875
-thread96 result: 9675
-thread93 result: 9375
+... ...
 thread90 result: 9175
 thread89 result: 8975
 thread87 result: 8775
