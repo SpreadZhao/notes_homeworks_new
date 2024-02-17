@@ -202,6 +202,9 @@ forceStopPackage()
 - [ ] Github的star里面其实都可以算。
 - [ ] #urgency/high inflater的第三个参数究竟有什么用？
 - [ ] plt hook, inline hook
+- [ ] [ICU Documentation | ICU is a mature, widely used set of C/C++ and Java libraries providing Unicode and Globalization support for software applications. The ICU User Guide provides documentation on how to use ICU. (unicode-org.github.io)](https://unicode-org.github.io/icu/)
+- [ ] :TiPhoto: [[Knowledge/resources/20240131_193313.jpg|面试记录-校招-王重]]
+- [ ] :TiPhoto: [[Knowledge/resources/20231226_105816.jpg|面试记录-小红书高级IOS]]
 
 # 学习计划
 
