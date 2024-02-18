@@ -34,7 +34,7 @@ Using Figure 2.2 as a model, illustrate the operation of INSERTION -SORT on the 
 ```ad-info
 title: 注意
 
-框里的是i指向的元素，红色的是被插回去的小数。
+框里的是i指向的元素，加粗的是被插回去的小数。
 ```
 
 1. After loop `i == 1`
