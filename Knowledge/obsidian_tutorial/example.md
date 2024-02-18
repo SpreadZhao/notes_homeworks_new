@@ -32,42 +32,29 @@
 * **`code` in Bold**
 * ***`code` in Italic Bold***
 * <u>Underlined</u>
+* [[Knowledge/obsidian_tutorial/example|internal_link]]
+* [external_link](https://obsidian.md/)
 * <font color="yellow">Custom color</font>
 * <mark style="background-color:purple">Custom Highlight</mark>
 - [ ] Unchecked `- [ ]`
 - [x] Checked `- [x]`
 - [>] Rescheduled `- [>]`
 - [<] Scheduled `- [<]`
-- [!] Important `- [!]`
 - [-] Cancelled `- [-]`
 - [/] In Progress `- [/]`
 - ["] Quote`- ["]`
 - [?] Question `- [?]`
 - [*] Star `- [*]`
-- [n] Note `- [n]`
-- [l] Location `- [l]`
-- [i] Information `- [i]`
+- [P] Pin `- [P]`
+- [t] Translate - `- [t]`
+- [+] Plus - `- [+]`
+- [.] Dot - `- [.]`
 - [I] Idea `- [I]`
-- [S] Amount `- [S]`
 - [p] Pro `- [p]`
 - [c] Con `- [c]`
 - [b] Bookmark `- [b]`
-- [f] Fire `- [ f ]`
-- [w] Win `- [w]`
-- [k] Key `- [k]`
 - [u] Up `- [u]`
 - [d] down `- [d]`
-- [F] Feature `- [F]`
-- [r] Rule `- [r]`
-- [m] Measurement `- [m]`
-- [M] Medical `- [M]`
-- [L] Language `- [L]`
-- [t] Clock `- [t]`
-- [T] Telephone `- [T]`
-- [P] Person `- [P]`
-- [#] Tags `- [#]`
-- [W] World `- [W]`
-- [U] Universe `- [U]`
 
 
 #tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9
