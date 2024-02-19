@@ -117,6 +117,4 @@ public object Unit {
 
 [[Article/story/2023-07-16#^94d033|2023-07-16]]
 
-#TODO 
-
-- [ ] Nothing, Any
+- [ ] #TODO Nothing, Any

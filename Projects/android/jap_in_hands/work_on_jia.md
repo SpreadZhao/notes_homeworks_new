@@ -190,9 +190,7 @@ FlowRow {
 
 我们能看到，**type的数据总是比用index获取的要慢一拍**。而我目前还不知道为什么，只是猜测和Compose的生命周期有关。因为我现在是在调用forEachIndexed，本质是一个for循环，不像单个变量那样迅速就能执行完毕。
 
-#TODO #question/coding/android/compose
-
-- [ ] 多选框的type为什么会慢一拍，原因要探究出来
+- [ ] #TODO #question/coding/android/compose 多选框的type为什么会慢一拍，原因要探究出来
 
 接下来，就是这个高阶函数onCheck的实现逻辑了。其实，如果只实现悬浮窗的话，我们直接写在这个lambda里就好了，因为逻辑很简单：
 
@@ -295,9 +293,8 @@ val inputFlow = remember {
 
 > 不需要关心MutableSharedFlow到底是什么。因为此时的我也不知道。之后我会在我的Kotlin Flow学习笔记中将它补全。
 > 
-> #TODO 
 > 
-> - [ ] Kotlin Flow笔记
+> - [ ] #TODO Kotlin Flow笔记
 
 这样，我们只需要关心两件事：
 

@@ -441,7 +441,7 @@ var flag = false
 
 这样，当在writer()中将flag置为true的同时，由于Volatile引入的`#lock`指令，会让所有读这个值的线程的本地内存的块缓存行失效，所以上面×掉的箭头就恢复了，也就可以从主存中读了，也就能读到正确的true了。
 
-- [?] #TODO  为什么在while循环里打一个`print("")`也能实现一样的效果？为什么在while循环之前调用`th.join()`还能实现一样的效果？真的是因为刷新缓冲区啥的吗？需要好好研究一下。[java - print() make thread-local cache invalid? - Stack Overflow](https://stackoverflow.com/questions/77772954/print-make-thread-local-cache-invalid)
+- [ ] #TODO  为什么在while循环里打一个`print("")`也能实现一样的效果？为什么在while循环之前调用`th.join()`还能实现一样的效果？真的是因为刷新缓冲区啥的吗？需要好好研究一下。[java - print() make thread-local cache invalid? - Stack Overflow](https://stackoverflow.com/questions/77772954/print-make-thread-local-cache-invalid)
 
 ---
 

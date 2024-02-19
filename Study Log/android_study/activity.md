@@ -4,7 +4,7 @@ mtrace:
 ---
 [[Article/android_articles/guolin_wechat_articles/Activity的五种启动模式.pdf|Activity的五种启动模式]]
 
-- [ ] #TODO #date 2024-01-21 启动模式前半部分不太行。需要给出每个例子具体的行为，画画图。
+- [ ] #TODO 启动模式前半部分不太行。需要给出每个例子具体的行为，画画图。 ➕ 2024-01-21
 
 # 以前的总结
 
@@ -193,9 +193,9 @@ fun Edit() {
 
 这个功能的实现就很多样了，可能是定时备份，也可能是在Activity退出的时候执行。
 
-> #TODO #question/coding/practice 
+ > #question/coding/practice 
 > 
-> - [ ] Activity退出的时候，哪一个阶段适合做这样的操作？
+> - [ ] #TODO Activity退出的时候，哪一个阶段适合做这样的操作？
 
 ```ad-info
 我没有用视频中短信和通讯录的例子，因为我的手机里短信和通讯录是合在一起的一个应用；相反，我的邮件倒是和他Standard的例子是一样的（视频中邮件被用作SingleTask的例子）。
@@ -816,9 +816,7 @@ Activity, Application, 整个APP以及Task本身都有taskAffinity属性。而
 为什么不会onDestroy呢？[[Article/android_articles/guolin_wechat_articles/Activity的五种启动模式.pdf#page=6|Activity的五种启动模式]]
 ```
 
-#TODO 
-
-- [ ] 这个设想，等有时间再证明吧。
+- [ ] #TODO 这个设想，等有时间再证明吧。
 
 ## 4.2 onNewIntent调用的时机
 
@@ -840,8 +838,6 @@ Activity, Application, 整个APP以及Task本身都有taskAffinity属性。而
 
 [Android 11源码分析：onSaveInstanceState到底做了什么？你知道的调用时机真的是正确的吗？ - 掘金 (juejin.cn)](https://juejin.cn/post/6995791487426363405)
 
-#TODO 
-
-- [ ] 这个配合着Window去学，把Activity外面的东西搞懂之后再弄会更轻松。
+- [ ] #TODO 这个配合着Window去学，把Activity外面的东西搞懂之后再弄会更轻松。
 
 [^错误的原因]: ComponentName和Action的方式，只是显式和隐式的区别。

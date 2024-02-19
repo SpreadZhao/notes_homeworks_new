@@ -42,7 +42,7 @@ try {
 不要将锁的获取写在try里面。如果获取时发生了异常，锁会被无故释放。
 ```
 
-- [ ] #TODO 举个例子？
+- [ ] #TODO 举个例子？ ➕ 2024-02-18 
 
 Lock提供了synchronized不具备的特性。在注释中有所描述：
 
@@ -275,7 +275,7 @@ override fun unlock() {
 ~~~
 ```
 
-- [ ] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。
+- [ ] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。 ➕ 2024-02-19
 
 下面，我们来看看默认的lock是否正常工作。这里我们用做过的[[Study Log/java_kotlin_study/java_kotlin_study_diary/lock_in_java|交替打印]]的例子来做：多个线程交替输出1-100。
 

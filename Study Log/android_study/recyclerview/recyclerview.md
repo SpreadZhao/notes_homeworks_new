@@ -26,14 +26,14 @@ function generateNestedList(level, content) {
 }
 ```
 
-#TODO 
 
-- [ ] UpdateOp Pool的设计（acquire）
-- [ ] 为什么更新队列要分为pending和postponed？这个问题要从op的**consume**过程入手。
-- [ ] adapter，adapterHelper，recyclerView的关系。mCallback就是adapterHelper需要的RecyclerView的能力。淦，感觉这个Callback的实现和ATMS里那个LifeCycle实在是太像了。
-- [ ] 关于triggerUpdateProcessor()，看看什么情况下会走下面的分支。
-- [ ] ExtendLinearLayoutManger
-- [ ] decorate和自己设置margin，这两种的性能比较
+
+- [ ] #TODO UpdateOp Pool的设计（acquire）
+- [ ] #TODO 为什么更新队列要分为pending和postponed？这个问题要从op的**consume**过程入手。
+- [ ] #TODO adapter，adapterHelper，recyclerView的关系。mCallback就是adapterHelper需要的RecyclerView的能力。淦，感觉这个Callback的实现和ATMS里那个LifeCycle实在是太像了。
+- [ ] #TODO 关于triggerUpdateProcessor()，看看什么情况下会走下面的分支。
+- [ ] #TODO ExtendLinearLayoutManger
+- [ ] #TODO decorate和自己设置margin，这两种的性能比较
 
 #### 基础
 

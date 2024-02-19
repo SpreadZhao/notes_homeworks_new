@@ -633,9 +633,7 @@ class LockTest4(
 
 为什么会有match()方法？如果去掉会怎么样？你可以试试，使用5个线程打印1到1000。如果去掉了match方法，会变成什么样子。
 
-#TODO 
-
-- [ ] 继续写Java的锁！
+- [ ] #TODO 继续写Java的锁！
 
 [volatile和synchronized到底啥区别？多图文讲解告诉你 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/111229417)
 

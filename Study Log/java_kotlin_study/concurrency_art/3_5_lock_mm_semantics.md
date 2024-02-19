@@ -92,7 +92,7 @@ class ReentrantLockExample {
 
 因此，非公平锁最大的一个特点就是，任何线程都可能『插队』。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
 
-- [?] #TODO why 提高吞吐率?
+- [ ] #TODO why 提高吞吐率?
 
 那ReentrantLock是咋实现锁的呢？我们稍微看看ReentrantLock的加锁和解锁过程。
 
