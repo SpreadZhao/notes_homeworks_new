@@ -425,6 +425,8 @@ class LockTest3 {
 }
 ```
 
+^legacy
+
 但是运行一下你就会发现，程序卡死了。因为这里产生了死锁，导致无法继续进行。另外，上一个abcd的程序，其实也有这样的情况！只是当时运气比较好，没有出现问题。解决方法就是，在会被修改的变量上面加上@Volatile，也就是currNum和curr。然而，加上之后虽然能按顺序输出，但是：
 
 ![[Study Log/java_kotlin_study/resources/Pasted image 20230724192915.png]]
