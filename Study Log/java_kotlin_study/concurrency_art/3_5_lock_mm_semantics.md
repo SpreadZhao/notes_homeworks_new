@@ -90,7 +90,7 @@ class ReentrantLockExample {
 * 公平锁就是剩下的两个线程以及后来的线程在A释放锁后只能**按照抢锁的顺序**排好队，一个个去获得锁；
 * 非公平锁就是剩下的两个线程以及后来的线程在A释放锁后还是有可能去**再抢一次**，谁牛逼谁来。
 
-因此，非公平锁最大的一个特点就是，任何线程都可能【插队】。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
+因此，非公平锁最大的一个特点就是，任何线程都可能『插队』。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
 
 - [?] #TODO why 提高吞吐率?
 
@@ -140,7 +140,7 @@ final boolean initialTryLock() {
 
 好么，CAS。也就是说，CAS会看看当前的state是不是0，如果是的话，就更新成1。其实，这个CAS操作就是非公平锁能够【插队】的关键。
 
-那么，为啥可以用CAS呢？因为CAS同时具有volatile的读内存语义和写内存语义。因此，它也可以放在方法的开头，和释放锁的那一段呼应。
+那么，为啥可以用CAS呢？因为<u>CAS同时具有volatile的读内存语义和写内存语义</u>。因此，它也可以放在方法的开头，和释放锁的那一段呼应。
 
 - [ ] #TODO 这里加上hotspot源码。
 
@@ -159,7 +159,7 @@ title: 总结-公平锁和非公平锁
 * 利用volatile的写后读的内存语义；
 * 利用CAS附带的volatile的读写内存语义。
 
-最后再说一句。现在我们只是最基础最基础的，没有大刀阔斧地去讲锁的什么什么东西。现在提到的只是实现一个锁会用到的很基础的东西。比如volatile。理论上，我们可以用很多个volatile还有CAS的拼接来弄出一个真正能用的锁。而这个就是concurrent包在做的事情。
+最后再说一句。现在我们只是最基础最基础的，没有大刀阔斧地去讲锁的什么什么东西，<u>也没提这个锁咋实现的公平和非公平</u>。现在提到的只是实现一个锁会用到的很基础的东西。比如volatile。理论上，我们可以用很多个volatile还有CAS的拼接来弄出一个真正能用的锁。而这个就是concurrent包在做的事情。
 
 分析一下concurrent包，我们就能看到一个非常通用的实现并发控制的模式：
 
@@ -169,12 +169,13 @@ title: 总结-公平锁和非公平锁
 
 而基于volatile + CAS的组合，concurrent包又定义了一些比较基础的模型：
 
-* **AQS**：AbstractQueuedSynchronizer。我们简单翻译一下这个类的第一段注释：这玩意儿提供了一个框架，用这个框架我们能实现一些**阻塞的锁**以及一些“同步器”，比如semaphore，events等等。这些同步器都依赖于一个FIFO（first-in-first-out）的<label class="ob-comment" title="等待队列" style=""> 等待队列 <input type="checkbox"> <span style=""> ReentrantLock不就是这样的吗？！ </span></label>。然后，这个同步器有啥特点呢？就是如果你这个同步器依赖于一个**int值**来表示<label class="ob-comment" title="当前同步的状态" style=""> 当前同步的状态 <input type="checkbox"> <span style=""> 这不就是ReentrantLock里的那个getState和setState吗？！ </span></label>，那么就很适合了。所以，如果你继承了AQS，那么子类就必须定义一些protected的方法来改变这个state。光改变还不算完，<u>你还得定义获取锁或者释放锁的时候，这个状态是啥意思</u>。
+* **AQS**：AbstractQueuedSynchronizer。我们简单翻译一下这个类的第一段注释：这玩意儿提供了一个框架，用这个框架我们能实现一些**阻塞的锁**以及一些“同步器”，比如semaphore，events等等。这些同步器都依赖于一个FIFO（first-in-first-out）的<label class="ob-comment" title="等待队列" style=""> 等待队列 <input type="checkbox"> <span style=""> ReentrantLock不就是这样的吗？！ </span></label>。然后，这个同步器有啥特点呢？就是如果你这个同步器依赖于一个**int值**来表示<label class="ob-comment" title="当前同步的状态" style=""> 当前同步的状态 <input type="checkbox"> <span style=""> 这不就是ReentrantLock里的那个getState和setState吗？！ </span></label>，那么就很适合了。所以，如果你继承了AQS，==那么子类就必须定义一些protected的方法来改变这个state==。光改变还不算完，<u>你还得定义获取锁或者释放锁的时候，这个状态是啥意思</u>。 ^b71a4e
 * **非阻塞数据结构**
 * **原子变量类**：也就是java.util.concurrent.atomic包中的类。也就是之前说CAS的时候用到的。
 
 - [ ] #TODO “你还得定义获取锁或者释放锁的时候，这个状态是啥意思”这句话tm是啥意思？结合后面对源码的分析解释一下。
 - [ ] #TODO 非阻塞数据结构到底是啥？这里要明确一下。
+- [x] #TODO “子类定义protected方法来改变state”的具体操作： [[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^c383c9|5_lock_in_java]]
 
 而在这三个东西的基础上，我们才实现了更加精细化的并发控制的工具。比如ReentrantLock就是基于AQS而产生的锁，它里面的FairSync和NonfairSync就是基于AQS产生的同步器。
 
