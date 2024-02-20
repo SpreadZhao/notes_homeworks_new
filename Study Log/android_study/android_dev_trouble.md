@@ -17,7 +17,7 @@ let res = []
 for (let page of dv.pages('"Study Log/android_study/android_dev_trouble"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
-	const title = page.title
+	const title = page.title.split("; ")
 	const tags = page.tags
 	let realtag = ""
 	if (tags != undefined) {
@@ -44,7 +44,7 @@ function getDateString(date) {
 }
 res.sort((a, b) => b.date - a.date)
 dv.table(
-	["Date&Link", "Title"], 
-	res.map(x => [x.link, x.title])
+	["Date&Link", "Title", "Tags"], 
+	res.map(x => [x.link, x.title, x.realtag])
 )
 ```
