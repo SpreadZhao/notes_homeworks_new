@@ -148,7 +148,7 @@ public final void bindApplication(参数太多了，不写了) {
 > 
 > 我的猜测是，AMS需要知道是哪个进程绑定了这个ApplicationThread。
 
-- [ ] #TODO 绑定Application之后，创建Application，Activity的逻辑。
+- [ ] #TODO 绑定Application之后，创建Application，Activity的逻辑。 ⏬
 
 接下来，就按照上面的逻辑，会走到ActivityThread的handleLaunchActivity方法：
 

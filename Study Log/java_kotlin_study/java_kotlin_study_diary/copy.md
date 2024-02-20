@@ -61,7 +61,7 @@ protected native Object clone() throws CloneNotSupportedException;
 
 所以我们需要在自类中将属性改成public才可以在外部调用。现在，我们将代码换一下再执行：
 
-- [ ] #TODO 为什么可以改成public？
+- [ ] #TODO 为什么可以改成public？ 🔺 🛫 2024-02-21
 
 ```kotlin
 fun main(args: Array<String>) {  

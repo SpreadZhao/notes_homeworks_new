@@ -500,7 +500,7 @@ throws InterruptedException {
 
 当目标线程结束的时候，它会调用`notifyAll()`，来通知之前调用了join而导致wait的线程，然后唤醒它。
 
-- [ ] #TODO hotspot在这里注册wait的时候用了一堆非常炫酷的宏定义还有template。都在`jdk/src/hotspot/share/classfile/vmSymbols.hpp`中。有时间分析一下。
+- [ ] #TODO hotspot在这里注册wait的时候用了一堆非常炫酷的宏定义还有template。都在`jdk/src/hotspot/share/classfile/vmSymbols.hpp`中。有时间分析一下。 ⏬
 
 ### 4.3.5 ThreadLocal
 
