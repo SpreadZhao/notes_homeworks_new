@@ -232,7 +232,13 @@ class VolatileExample2 {
 
 实际上，这个flag的例子举得并不是很恰当，它没法很直观地体现出volatile的作用。但是我也尽量解释到完美了。
 
-- [x] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。 #date 2024-01-07 有了，看下面这个日期的补充。
+- [x] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。
+
+```ad-note
+title: 如果之后有一个完美的volatile的使用例子，我会贴在这里。
+
+* #date 2024-01-07 有了，看下面这个日期的补充。
+```
 
 ```ad-summary
 title: 做一个总结
