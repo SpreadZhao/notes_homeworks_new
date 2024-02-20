@@ -92,7 +92,7 @@ class ReentrantLockExample {
 
 因此，非公平锁最大的一个特点就是，任何线程都可能『插队』。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
 
-- [ ] #TODO why 提高吞吐率?
+- [ ] #TODO why 提高吞吐率? ⏫
 
 那ReentrantLock是咋实现锁的呢？我们稍微看看ReentrantLock的加锁和解锁过程。
 
@@ -124,7 +124,7 @@ protected final boolean tryRelease(int releases) {
 
 我只能说，别急。现在我们只是看到了ReentrantLock的一小小部分，使用了volatile的内存语义。这个问题ReentrantLock，还有concurrent包里的各种Lock肯定都是能解决的。当然不可能只是一个volatile这么简单。不然还要你concurrent包干鸡毛？直接用volatile不就行了！
 
-- [ ] #TODO 这里我说的，之后要证明一下是正确的。
+- [ ] #TODO 这里我说的，之后要证明一下是正确的。 ⏫
 
 ---
 
@@ -142,7 +142,7 @@ final boolean initialTryLock() {
 
 那么，为啥可以用CAS呢？因为<u>CAS同时具有volatile的读内存语义和写内存语义</u>。因此，它也可以放在方法的开头，和释放锁的那一段呼应。
 
-- [ ] #TODO 这里加上hotspot源码。
+- [x] #TODO 这里加上hotspot源码。 ✅ 2024-02-20
 
 [[Study Log/java_kotlin_study/concurrency_art/resources/why_cas_has_volatile_semantics|why_cas_has_volatile_semantics]]
 
@@ -173,8 +173,8 @@ title: 总结-公平锁和非公平锁
 * **非阻塞数据结构**
 * **原子变量类**：也就是java.util.concurrent.atomic包中的类。也就是之前说CAS的时候用到的。
 
-- [ ] #TODO “你还得定义获取锁或者释放锁的时候，这个状态是啥意思”这句话tm是啥意思？结合后面对源码的分析解释一下。
-- [ ] #TODO 非阻塞数据结构到底是啥？这里要明确一下。
+- [ ] #TODO “你还得定义获取锁或者释放锁的时候，这个状态是啥意思”这句话tm是啥意思？结合后面对源码的分析和实例解释一下。 ⏫
+- [ ] #TODO 非阻塞数据结构到底是啥？这里要明确一下。 🔼
 - [x] #TODO “子类定义protected方法来改变state”的具体操作： [[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^c383c9|5_lock_in_java]]
 
 而在这三个东西的基础上，我们才实现了更加精细化的并发控制的工具。比如ReentrantLock就是基于AQS而产生的锁，它里面的FairSync和NonfairSync就是基于AQS产生的同步器。

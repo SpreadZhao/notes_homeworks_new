@@ -59,7 +59,7 @@ Java_com_spread_nativestudy_MainActivity_stringFromJNI(
 
 之后我们观察一下，可以发现在cpp文件中，并没有include对应的.h文件，也就是我们之前用`javac -h`生成的那个。这是为什么呢？
 
-- [ ] #TODO 我猜，是因为它把需要的include都放在这个cpp里面了。比如`extern "C"`。
+- [ ] #TODO 我猜，是因为它把需要的include都放在这个cpp里面了。比如`extern "C"`。🔽 
 
 另外，方法开头也没有了之前的`JNIEXPORT jstring`，也是放在了开头。
 

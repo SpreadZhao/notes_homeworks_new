@@ -381,7 +381,7 @@ volatileWrite3    |
 
 最后，给出一个使用volatile的正确姿势：[Java 理论与实践: 正确使用 Volatile 变量-腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1340711)
 
-- [ ] #TODO  原作者：Brian Goetz。但是我一直找不到原文在哪里。不过有时间可以读一读他写的书。
+- [ ] #TODO  原作者：Brian Goetz。但是我一直找不到原文在哪里。不过有时间可以读一读他写的书。 🔽
 
 #date 2024-01-07 补充一个使用volatile的例子。看下面的代码： ^d00fb6
 
@@ -441,7 +441,7 @@ var flag = false
 
 这样，当在writer()中将flag置为true的同时，由于Volatile引入的`#lock`指令，会让所有读这个值的线程的本地内存的块缓存行失效，所以上面×掉的箭头就恢复了，也就可以从主存中读了，也就能读到正确的true了。
 
-- [ ] #TODO  为什么在while循环里打一个`print("")`也能实现一样的效果？为什么在while循环之前调用`th.join()`还能实现一样的效果？真的是因为刷新缓冲区啥的吗？需要好好研究一下。[java - print() make thread-local cache invalid? - Stack Overflow](https://stackoverflow.com/questions/77772954/print-make-thread-local-cache-invalid)
+- [ ] #TODO  为什么在while循环里打一个`print("")`也能实现一样的效果？为什么在while循环之前调用`th.join()`还能实现一样的效果？真的是因为刷新缓冲区啥的吗？需要好好研究一下。[java - print() make thread-local cache invalid? - Stack Overflow](https://stackoverflow.com/questions/77772954/print-make-thread-local-cache-invalid) 🔼
 
 ---
 

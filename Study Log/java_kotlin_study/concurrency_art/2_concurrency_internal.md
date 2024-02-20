@@ -28,7 +28,7 @@ class Singleton {
 
 这里面的INSTANCE实例就是volatile的。那么它是什么意思呢？为什么Double Check要这么写呢？在本书中我们对这个问题来一个终极版的讲解。同时，这篇文章：[volatile和synchronized到底啥区别？多图文讲解告诉你 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/111229417)中的内存模型，也在本章中有很大的作用。
 
-- [ ] #TODO 别忘了Double Check
+- [ ] #TODO 别忘了Double Check ⏫
 
 [单例设计模式-Double Check - 阿叮339 - 博客园 (cnblogs.com)](https://www.cnblogs.com/DFX339/p/12531008.html#:~:text=%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-Double%20Check,%E5%8D%95%E4%BE%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%BB%E8%A6%81%E6%98%AF%E4%B8%BA%E4%BA%86%E4%BF%9D%E8%AF%81%E5%8F%AA%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%85%B6%E4%BD%99%E6%97%B6%E5%80%99%E9%9C%80%E8%A6%81%E5%A4%8D%E7%94%A8%E7%9A%84%E8%AF%9D%E5%B0%B1%E7%9B%B4%E6%8E%A5%E5%BC%95%E7%94%A8%E9%82%A3%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%8D%B3%E5%8F%AF%E3%80%82%20%E7%AE%80%E5%8D%95%E6%9D%A5%E8%AF%B4%EF%BC%8C%E5%B0%B1%E6%98%AF%E5%9C%A8%E6%95%B4%E4%B8%AA%E5%BA%94%E7%94%A8%E4%B8%AD%E4%BF%9D%E8%AF%81%E5%8F%AA%E6%9C%89%E4%B8%80%E4%B8%AA%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%AD%98%E5%9C%A8%E3%80%82)
 
@@ -68,7 +68,7 @@ INSTANCE = new Singleton();
 
 这就是lock指令的本质了：锁！锁啥？以前的处理器中，锁的是`总线`；而最近的处理器中，锁的只是缓存，也就是Cache。**如果一些Cache中存入了这些volatile的变量，那么就有可能被多个核或者线程去同时访问。因此锁的就是这些会被同时访问的Cache们**。另外，锁总线的开销比较大，这部分我们在[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal#2.3.1 处理器如何实现原子操作|后面的章节]]中会==介绍==。lock指令的第一个功能，就是把新值放到缓存里，并锁定这些会被同时访问的缓存**以及内存区域**，并将这个新值==在所有缓存中更新==，最终写回到内存里。 ^ce42bc
 
-- [ ] #TODO ↑介绍了吗？
+- [ ] #TODO ↑介绍了吗？ ⏫
 
 ```ad-note
 锁住了总线，其它CPU（核或线程）不能访问总线，不能访问也就意味着不能访问内存。
@@ -284,7 +284,7 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 
 其他资料：[难搞的偏向锁终于被 Java 移除了 - 掘金 (juejin.cn)](https://juejin.cn/post/7046921350065160206#heading-2)这篇资料介绍了为什么偏向锁被废弃，为什么偏向锁启用需要延迟4秒左右。以及还没有提到的epoch等等内容。
 
-- [ ] #TODO 偏向锁的这部分内容，之后有时间的话最好补充上去。
+- [ ] #TODO 偏向锁的这部分内容，之后有时间的话最好补充上去。 🔽
 
 ##### 轻量级锁
 

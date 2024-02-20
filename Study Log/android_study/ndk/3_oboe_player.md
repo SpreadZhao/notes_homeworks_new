@@ -30,7 +30,7 @@ static inline void registerJMethods(JNIEnv *env, std::string className, JNINativ
 }
 ```
 
-- [ ] #TODO 这里`methods_simple_timer`不应该是const，否则调用registerJMethods的时候数组名无法转换成指针。为啥？
+- [ ] #TODO 这里`methods_simple_timer`不应该是const，否则调用registerJMethods的时候数组名无法转换成指针。为啥？ ⏫
 
 使用方法：
 
@@ -247,5 +247,5 @@ override fun onTouch(v: View, event: MotionEvent): Boolean {
 }
 ```
 
-- [ ] #TODO 其实不应该算在oboe里面，但是恰好遇到了。为啥这里会警告必须实现performClick()?
+- [ ] #TODO 其实不应该算在oboe里面，但是恰好遇到了。为啥这里会警告必须实现performClick()? ⏫
 

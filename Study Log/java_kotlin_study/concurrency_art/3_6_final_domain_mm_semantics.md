@@ -34,7 +34,7 @@ public class FinalExample {
 
 **<center>对final域的写，禁止重排序到final域之外。</center>**
 
-- [ ] #TODO 第三章剩下的内容等学完代码再来补上吧。太tm难啃了。
+- [ ] #TODO 第三章剩下的内容等学完代码再来补上吧。太tm难啃了。 🔽
 
 ---
 
