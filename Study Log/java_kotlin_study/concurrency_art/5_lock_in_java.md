@@ -112,17 +112,8 @@ override fun tryLock(): Boolean
 
 override fun unlock()
 
-override fun lockInterruptibly() {
-	sync.acquireInterruptibly(1)
-}
+![[Study Log/java_kotlin_study/concurrency_art/resources/Recording 20240221233231.webm]]
 
-override fun tryLock(time: Long, unit: TimeUnit): Boolean {
-	return sync.tryAcquireNanos(1, unit.toNanos(time))
-}
-
-override fun newCondition(): Condition {
-	return sync.newCondition()
-}
 ```
 
 其中和本次无关的方法我们已经给出了简单的默认实现。重点关注lock, trylock, unlock这三个方法。
@@ -276,6 +267,12 @@ override fun unlock() {
 ```
 
 - [ ] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。 🔺 ➕ 2024-02-19
+
+```ad-note
+title: 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。
+
+* #date 2024-02-21 ![[Study Log/java_kotlin_study/concurrency_art/resources/Recording 20240221233231.webm|Recording 20240221233231]]
+```
 
 下面，我们来看看默认的lock是否正常工作。这里我们用做过的[[Study Log/java_kotlin_study/java_kotlin_study_diary/lock_in_java|交替打印]]的例子来做：多个线程交替输出1-100。
 
