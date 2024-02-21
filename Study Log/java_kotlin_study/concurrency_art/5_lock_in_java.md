@@ -266,7 +266,7 @@ override fun unlock() {
 ~~~
 ```
 
-- [ ] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。 🔺 ➕ 2024-02-19
+- [x] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。 🔺 ➕ 2024-02-19 ✅ 2024-02-21
 
 ```ad-note
 title: 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。
@@ -404,7 +404,7 @@ private class Sync : AbstractQueuedSynchronizer() {
 - [?] *为什么最后成功只能在`tryAcquire()`中成功？*
 - [>] 也是tryAcquire()的注释有提到。只要线程要获取锁，就是调用这个方法。其实也很好理解，即使我获取失败就休眠，那我总得先试试才行。
 - [?] *为什么`tryAcquire()`是protected的？*
-- [>] 我们发现tryAcquire()是protected的，代表在sync之外是不让使用的。所以，如果我们自己在我们的Mutex里调用`sync.tryAcquire()`是获取不到的。我们的做法是封装了一层`sync.tryLock()`，<label class="ob-comment" title="然后让`tryLock()`去调用最终的tryAcquire()" style=""> 然后让`tryLock()`去调用最终的tryAcquire() <input type="checkbox"> <span style=""> 注意，这也是建立在tryLock()的行为恰好和tryAcquire()一致的条件下的。比如ReentrantLock的tryLock()和tryAcquire()就有一些区别，所以不能直接调用 </span></label>；而书上的做法是在自己重写Sync的时候直接将tryAcquire()改成public的。这种做法我本人不太赞成。
+- [>] 我们发现tryAcquire()是protected的，代表在sync之外是不让使用的。所以，如果我们自己在我们的Mutex里调用`sync.tryAcquire()`是获取不到的。我们的做法是封装了一层`sync.tryLock()`，<label class="ob-comment" title="然后让`tryLock()`去调用最终的tryAcquire()" style=""> 然后让`tryLock()`去调用最终的tryAcquire() <input type="checkbox"> <span style=""> 注意，这也是建立在tryLock()的行为恰好和tryAcquire()一致的条件下的。比如ReentrantLock的tryLock()和tryAcquire()就有一些区别，所以不能直接调用 </span></label>；而书上的做法是在自己重写Sync的时候直接将tryAcquire()改成public的。这种做法我本人不太赞成。 ^817568
 - [?] *<font color="red">为什么要有lockXXX和XXXAcquire两套接口？</font>*
 - [>] 这是最重要的一个问题。明明我们实现了Lock接口，依赖了AQS中的能力，<label class="ob-comment" title="那么我直接在Lock里面去调用AQS的接口不好吗" style=""> 那么我直接在Lock里面去调用AQS的接口不好吗 <input type="checkbox"> <span style=""> 比如就是上个问题，我直接调用那个protected的tryAcquire()不香吗？ </span></label>？为啥还要再封装一层？这就谈到了AQS的设计模式了。我们接下来就要讨论这个问题。
 

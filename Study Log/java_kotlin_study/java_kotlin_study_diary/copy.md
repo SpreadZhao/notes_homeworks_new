@@ -61,7 +61,13 @@ protected native Object clone() throws CloneNotSupportedException;
 
 所以我们需要在自类中将属性改成public才可以在外部调用。现在，我们将代码换一下再执行：
 
-- [ ] #TODO 为什么可以改成public？ 🔺 🛫 2024-02-21
+- [/] #TODO 为什么可以改成public？ 🔺 🛫 2024-02-21
+
+```ad-note
+title: 为什么可以改成public？
+
+* #date 2024-02-21 这个问题我在学并发艺术的时候也遇到了：[[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^817568|5_lock_in_java]]。目前我的实验是，子类可以将访问权限“变宽松”，但是不能更紧。否则会报不能narrow的错误。也就是，父类的方法是protected，那么子类可以改成public，但是不能改成private。具体的原因需要后面再学习学习。
+```
 
 ```kotlin
 fun main(args: Array<String>) {  
