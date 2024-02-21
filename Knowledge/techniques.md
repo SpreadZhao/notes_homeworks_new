@@ -228,7 +228,7 @@ forceStopPackage()
 3. bytetech知识地图
 4. 本文档前面的那些
 
-努力的方向
+## 未来方向
 
 1. WebRTC
 	1. [Android WebRTC完整入门教程01: 使用相机 - 简书](https://www.jianshu.com/p/eb5fd116e6c8)
@@ -236,6 +236,8 @@ forceStopPackage()
 2. 音视频
 	1. 安卓Native音视频介绍：Android系统攻城狮（公众号，这人要出书）
 	2. media3
+	3. [音视频并不难学，保姆级别音视频就业路线详解，进来看看适不适合你_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1xi4y1Y7U2/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
+	4. Bytetech
 3. 稳定性：KOOM为主，matrix，知识地图里的课程
 4. hook
 	1. Lancet
@@ -313,6 +315,9 @@ forceStopPackage()
 	- [ ] 腾讯音乐技术团队
 	- [ ] 日拱一题
 	- [ ] Android施行
+	- [ ] 敲行代码再睡觉
+	- [ ] 老伯伯软件站
+	- [ ] 老蒋出马
 2. bytetech关注和**收藏**（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）

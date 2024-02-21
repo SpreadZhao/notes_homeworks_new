@@ -6,8 +6,5 @@
 * 2.2.2 attach的日志直接说最后的结论
 
 ```tasks
-tags include TODO
-not done
-sort by created
-sort by filename
+tags include #TODO/link
 ```
