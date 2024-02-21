@@ -15,7 +15,7 @@ mtrace:
 
 这篇文章写的有点晚了。因为我之前总觉得写过这个东西，但是今天排查tasks的时候发现居然没有。这篇文章也相当于回答了之前的那个问题：[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#^74d7f0|4_1_thread_basic]]
 
-我之前在写[[Study Log/android_study/ndk/2_simple_timer|2_simple_timer]]的时候，有这么一段代码：
+我之前在写[[Study Log/android_study/ndk/2_simple_timer#3.1.1 AttachCurrentThread|2_simple_timer]]的时候，有这么一段代码：
 
 ```cpp
 // 创建线程标识符
