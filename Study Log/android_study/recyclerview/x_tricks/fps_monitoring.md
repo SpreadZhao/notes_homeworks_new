@@ -1,4 +1,4 @@
-- [ ] #TODO 找到jitter逻辑中，一帧超过一个vsync interval之后，第二个vsync信号来的时候，发现第一帧的handler还在干活儿，延时发送第二帧的msg的逻辑在哪里。
+- [ ] #TODO 找到jitter逻辑中，一帧超过一个vsync interval之后，第二个vsync信号来的时候，发现第一帧的handler还在干活儿，延时发送第二帧的msg的逻辑在哪里。🔺 
 
 首先，是FPS监控目前最新的方式。这也是[腾讯matrix](https://github.com/Tencent/matrix)现在在使用的方法。
 
@@ -143,3 +143,25 @@ private class OnFpsListener(private val activity: Activity) : OnFrameMetricsAvai
 	}
 }
 ```
+
+补充一点。实际上上面的代码中的变量`droppedFrameCount`的名字是不贴切的。看官方的代码，这种帧应该叫`jankFrame`。区别在哪儿？我们画个图来描述一下：
+
+![[Study Log/android_study/recyclerview/x_tricks/resources/Drawing 2024-02-22 16.28.14.excalidraw.png]]
+
+图中是一个“很长”的Frame。可以看到，在我们的代码中，如果统计到了这个Frame，那么肯定会让`droppedFrameCount`+1。
+
+但是，如果下一帧的执行时间是这样的：
+
+![[Study Log/android_study/recyclerview/x_tricks/resources/Drawing 2024-02-22 16.31.08.excalidraw.png]]
+
+那么我们『掉』了几帧？答案是2帧。也就是下图中圈出来的两帧：
+
+![[Study Log/android_study/recyclerview/x_tricks/resources/Drawing 2024-02-22 16.32.18.excalidraw.png]]
+
+所以，如果是要统计**应该刷新的帧有多少没刷出来**，那么我们应该通过计算得出来这个2，而不是简单地加上了个1。
+
+因此，Matrix的做法我感觉是错误的。官方的统计工具中，算出这些信息后会根据所有的Frame来打一个分。也就是，你的Frame序列中的『长Frame』越多，得分就越低。
+
+我们的代码中的frameLostRate就是这个“得分”。但是，这并不是真正的“丢帧率”。丢帧率的计算需要结合那个2的计算。
+
+但是，我们的这个“得分”也确实能够反映应用的流畅性。
