@@ -1,5 +1,5 @@
 ---
-cssclass: dashboard
+cssclasses: []
 ---
 
 # TODO

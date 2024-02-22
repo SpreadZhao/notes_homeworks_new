@@ -24,9 +24,9 @@
 * *==Highlight inside Itali==*
 * ==**Bold indide Highlight**==
 * ==***Bold Italic inside Highlight***==
-* ***==Highlight inside Bold Italic 1==***
-* **==Highlight inside Bold Italic 2==**
-* *==Highlight inside Bold Italic 3==*
+* ***==Highlight inside Bold Italic 1==*** - `***==Highlight inside Bold Italic 1==***`
+* **==Highlight inside Bold Italic 2==** - `**==Highlight inside Bold Italic 2==**`
+* *==Highlight inside Bold Italic 3==* - `*==Highlight inside Bold Italic 3==*`
 * ==Highlight with `code`==
 * *`code` in Italic*
 * **`code` in Bold**

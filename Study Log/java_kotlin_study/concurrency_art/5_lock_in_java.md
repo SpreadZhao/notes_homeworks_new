@@ -112,8 +112,17 @@ override fun tryLock(): Boolean
 
 override fun unlock()
 
-![[Study Log/java_kotlin_study/concurrency_art/resources/Recording 20240221233231.webm]]
+override fun tryLock(time: Long, unit: TimeUnit): Boolean {
+	return sync.tryAcquireNanos(1, unit.toNanos(time))
+}
 
+override fun unlock() {
+	sync.release(1)
+}
+
+override fun newCondition(): Condition {
+	return sync.newCondition()
+}
 ```
 
 其中和本次无关的方法我们已经给出了简单的默认实现。重点关注lock, trylock, unlock这三个方法。
