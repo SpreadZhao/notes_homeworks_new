@@ -209,6 +209,10 @@ forceStopPackage()
 	- [ ] [Tencent/MMKV: An efficient, small mobile key-value storage framework developed by WeChat. Works on Android, iOS, macOS, Windows, and POSIX. (github.com)](https://github.com/Tencent/MMKV)
 	- [ ] [【面试黑洞】Android 的键值对存储有没有最优解？哔哩哔哩bilibili](https://www.bilibili.com/video/BV1FU4y197dL/?spm_id_from=333.337.search-card.all.click) （这个视频12:38，说增量式更新是性能提升不重要的原因，和薛秋实说的正好是相反的 :confused:； 另外，最后说什么dataStore用协程完全不卡，我觉得完全在扯蛋。[[Knowledge/resources/Pasted image 20240217215509.png|有个评论也是这么说的]]）
 - [ ] Gradle: [Gradle 教程 已完结 (基于Kotlin DSL讲解) 4K蓝光画质 超强的脚本式项目依赖和构建工具_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Fc411x7xF/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
+- [ ] An Android critical vulnerability:
+	- [ ]  [de53890aaca2ae08b3ee2d6e3fd25f702fdfa661 - platform/packages/modules/Bluetooth - Git at Google](https://android.googlesource.com/platform/packages/modules/Bluetooth/+/de53890aaca2ae08b3ee2d6e3fd25f702fdfa661)
+	- [ ]  [CVE-2024-0031: Google Android att_protocol.cc attp_build_read_by_type_value_cmd out-of-bounds write](https://vuldb.com/?id.253964)
+	- [ ] [In attp_build_read_by_type_value_cmd of att_protocol.cc ,... · CVE-2024-0031 · GitHub Advisory Database](https://github.com/advisories/GHSA-h32h-58mq-6fgc)
 
 # 学习计划
 
