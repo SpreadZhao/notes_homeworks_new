@@ -213,6 +213,7 @@ forceStopPackage()
 	- [ ]  [de53890aaca2ae08b3ee2d6e3fd25f702fdfa661 - platform/packages/modules/Bluetooth - Git at Google](https://android.googlesource.com/platform/packages/modules/Bluetooth/+/de53890aaca2ae08b3ee2d6e3fd25f702fdfa661)
 	- [ ]  [CVE-2024-0031: Google Android att_protocol.cc attp_build_read_by_type_value_cmd out-of-bounds write](https://vuldb.com/?id.253964)
 	- [ ] [In attp_build_read_by_type_value_cmd of att_protocol.cc ,... · CVE-2024-0031 · GitHub Advisory Database](https://github.com/advisories/GHSA-h32h-58mq-6fgc)
+- [ ] OSTEP：[computer-science/coursepages/ostep/README.md at master · ossu/computer-science](https://github.com/ossu/computer-science/blob/master/coursepages/ostep/README.md)
 
 # 学习计划
 
