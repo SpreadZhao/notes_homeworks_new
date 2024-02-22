@@ -23,8 +23,7 @@ sort by filename
 ```tasks
 tags include TODO
 not done
-sort by created
-sort by filename
+sort by created reverse
 priority is medium
 ```
 

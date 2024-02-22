@@ -45,7 +45,7 @@
 - ["] Quote`- ["]`
 - [?] Question `- [?]`
 - [*] Star `- [*]`
-- [P] Pin `- [P]`
+- [P] Pending `- [P]`
 - [t] Translate - `- [t]`
 - [+] Plus - `- [+]`
 - [.] Dot - `- [.]`
@@ -55,7 +55,6 @@
 - [b] Bookmark `- [b]`
 - [u] Up `- [u]`
 - [d] down `- [d]`
-
 
 #tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9
 
