@@ -666,7 +666,7 @@ modifier = Modifier.size(25.dp)
 
 #question/coding/practice #language/coding/kotlin #question/coding/android #question/interview #rating/high 
 
-- [ ] #TODO 三种架构模式
+- [ ] #TODO 三种架构模式 🔽
 
 [一文读懂MVC、MVP和MVVM架构 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/616953800)
 

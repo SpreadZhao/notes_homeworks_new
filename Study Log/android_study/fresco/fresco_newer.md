@@ -90,7 +90,7 @@ public ImageRequestBuilder setSource(Uri uri) {
 }
 ```
 
-- [ ] #TODO 这里说了如果是用的网络，会默认开启disk cache，看看这部分逻辑在哪里实现的。
+- [ ] #TODO 这里说了如果是用的网络，会默认开启disk cache，看看这部分逻辑在哪里实现的。 🔽
 
 这部分搞定之后，接下来它还给我们设置了一下旋转：
 

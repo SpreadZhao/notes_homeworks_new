@@ -28,12 +28,12 @@ function generateNestedList(level, content) {
 
 
 
-- [ ] #TODO UpdateOp Pool的设计（acquire）
-- [ ] #TODO 为什么更新队列要分为pending和postponed？这个问题要从op的**consume**过程入手。
-- [ ] #TODO adapter，adapterHelper，recyclerView的关系。mCallback就是adapterHelper需要的RecyclerView的能力。淦，感觉这个Callback的实现和ATMS里那个LifeCycle实在是太像了。
-- [ ] #TODO 关于triggerUpdateProcessor()，看看什么情况下会走下面的分支。
-- [ ] #TODO ExtendLinearLayoutManger
-- [ ] #TODO decorate和自己设置margin，这两种的性能比较
+- [ ] UpdateOp Pool的设计（acquire）
+- [ ] 为什么更新队列要分为pending和postponed？这个问题要从op的**consume**过程入手。
+- [ ] adapter，adapterHelper，recyclerView的关系。mCallback就是adapterHelper需要的RecyclerView的能力。淦，感觉这个Callback的实现和ATMS里那个LifeCycle实在是太像了。
+- [ ] 关于triggerUpdateProcessor()，看看什么情况下会走下面的分支。
+- [ ] ExtendLinearLayoutManger
+- [ ] decorate和自己设置margin，这两种的性能比较
 
 #### 基础
 
@@ -65,6 +65,20 @@ function generateNestedList(level, content) {
 
 - [x] 改造视频起播UI
 - [ ] #date 2024-02-15 下一步：
-	- [ ] #urgency/high 分析视频prepare耗时；
-	- [ ] #urgency/high 看能不能同时装载两个视频，实现播放当前视频时，对下个视频进行prepare
+	- [ ] #urgency/high ~~分析视频prepare耗时；~~
+	- [ ] #urgency/high ~~看能不能同时装载两个视频，实现播放当前视频时，对下个视频进行prepare~~
+	- [ ] 无法解决。prepare只能准备当前播放列表。并且对于本地视频作用不大。
 - [ ] 做出来播控
+- [ ] PreloadLinearLayoutManager逻辑数理
+- [ ] 异步加载实例：fakeserver+newsrv, cs
+
+### 论文
+
+简单总结一下论文里要写什么重点：
+
+* recyclerView刷新原理
+* rv滑动原理
+* fps监控 [[Study Log/android_study/recyclerview/x_tricks/fps_monitoring|fps_monitoring]]
+* 预渲染框架
+	* 可见性 [[Study Log/android_study/recyclerview/x_tricks/visibility_dispatch|visibility_dispatch]]
+	* 外部触发 [[Study Log/android_study/recyclerview/x_tricks/trigger_outside|trigger_outside]]

@@ -33,16 +33,24 @@ priority is medium
 ```tasks
 tags include TODO
 not done
-sort by created
-sort by filename
-priority is none
+priority is low
 ```
 
-## Low Priority
+
+## P4
 
 ```tasks
 tags include TODO
 not done
-priority below none
-sort by priority reverse
+priority is lowest
+```
+
+## No Priority
+
+```tasks
+tags include TODO
+not done
+sort by created
+sort by filename
+priority is none
 ```

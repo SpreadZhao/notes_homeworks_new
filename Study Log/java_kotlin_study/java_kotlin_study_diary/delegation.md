@@ -303,5 +303,5 @@ class MyLazyTest {
 最后做个总结。其实你可以看到，无论是类委托还是属性委托，出发点都是一样的：我想要一个更强大的，但是又不想实现一堆逻辑的类。而by其实也只是个语法糖，帮我们屏蔽了一些逻辑；而lazy方法只是属性委托的其中一个应用而已，它的使用只要涉及到了get()和set()，我们都是可以按照自己的需求进行更加强大的扩展的。
 ```
 
-- [ ] #TODO 这里有时间看一下by remember的逻辑，应该就是我说的更加强大的扩展。
-- [ ] #TODO by关键字的本质还没有弄清楚，给出更多例子（BaseBottomToolbarLayerNewUI还有LongMoreTier里的by fv()）
+- [ ] #TODO 这里有时间看一下by remember的逻辑，应该就是我说的更加强大的扩展。 🔽
+- [ ] #TODO by关键字的本质还没有弄清楚，给出更多例子（BaseBottomToolbarLayerNewUI还有LongMoreTier里的by fv()） 🔼

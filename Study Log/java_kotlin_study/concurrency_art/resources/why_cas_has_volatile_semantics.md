@@ -8,7 +8,7 @@ UNSAFE_ENTRY_SCOPED(jboolean, Unsafe_CompareAndSetLong(JNIEnv *env, jobject unsa
 } UNSAFE_END
 ```
 
-- [ ] #TODO 这个UNSAFE_ENTRY_SCOPED有什么用？怎么设计的？
+- [ ] #TODO 这个UNSAFE_ENTRY_SCOPED有什么用？怎么设计的？ 🔽
 
 可以看到调用的就是Atomic中的cmpxchg函数来进行转换。而这个的实现位于`jdk/src/hotspot/share/runtime/atomic.hpp`。在Atomic类中可以看到这个函数的声明：
 
