@@ -425,6 +425,26 @@ private class Sync : AbstractQueuedSynchronizer() {
 
 这也是我不赞成书上将Mutex中的AQS的tryAcquire()改成public的原因。因为这个方法本身就不应该暴露给Lock，Lock能调用的只应该是那些模板方法。
 
+最后，总结一下这个Mutex。最重要的加锁逻辑就是tryAcquire()中的这一句：
+
+```kotlin
+if (compareAndSetState(0, 1)) {
+	......
+}
+```
+
+其实就是CAS操作。我们调用了AQS的那三个protected且final中的一个，来更改内置的state，将0改成了1。如果成功了，那就表示锁被【当前线程】获取到了。因此，在if里面才会将exclusiveOwnerThread改为当前的Thread。
+
+通过这点，我们也能猜出来：咋知道当前Mutex是否被某个线程获取了？**state是1就得了**！
+
+```kotlin
+val heldExclusively: Boolean
+	get() = state == 1
+```
+
+### 5.2.2 AQS实现分析
+
+- [ ] #TODO 看jdk8的AQS源码。jdk17改了太多。以后有时间再分析。🔼 ➕ 2024-02-23 
 
 
 ---
