@@ -119,10 +119,6 @@ class VolatileExample {
 
 **给这个变量加上volatile，其实就等价于：**
 
-> [!stickies]
-> 
-> <bold>这是我们这一章最重要的东西！！！</bold>
-
 ```kotlin
 class VolatileExample {
 	var integer
@@ -135,6 +131,10 @@ class VolatileExample {
 		integer = i
 	}
 }
+```
+
+```ad-important
+:fas_up_long:这是我们这一章最重要的东西！！！
 ```
 
 因为太重要了，这里我再给出书上的Java版本：
