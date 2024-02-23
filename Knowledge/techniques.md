@@ -1,6 +1,10 @@
 ---
 description: 要学的东西，都在这个里面。不管是安卓的，还是其它乱七八糟的，只要能想到的，都在这里面。
 ---
+> [!warning] 写在前面
+> * 分类看看就行，乱写的。主要目的是 ***==全==*** 而不是分类；
+> * 只有正在进行的任务会放到[[#进行中]]
+
 - [ ] #TODO 这么多要学的技术，文档还没写呢！！！
 
 # Unclassified
@@ -214,6 +218,12 @@ forceStopPackage()
 	- [ ]  [CVE-2024-0031: Google Android att_protocol.cc attp_build_read_by_type_value_cmd out-of-bounds write](https://vuldb.com/?id.253964)
 	- [ ] [In attp_build_read_by_type_value_cmd of att_protocol.cc ,... · CVE-2024-0031 · GitHub Advisory Database](https://github.com/advisories/GHSA-h32h-58mq-6fgc)
 - [ ] OSTEP：[computer-science/coursepages/ostep/README.md at master · ossu/computer-science](https://github.com/ossu/computer-science/blob/master/coursepages/ostep/README.md)
+- [ ] Android 动态化
+- [ ] #urgency/medium :cow:逼人的博客：[[Article/person_link|person_link]]
+- [ ] fresco: [[Study Log/android_study/fresco|fresco]]
+- [ ] #urgency/high 飞书任务
+- [ ] #urgency/high 字节码
+- [ ] 西电搭子
 
 # 学习计划
 
@@ -221,12 +231,8 @@ forceStopPackage()
 
 ## 进行中
 
-1. 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]]
-2. fresco：[[Study Log/android_study/fresco|fresco]]
-3. 毕设
-4. 西电搭子
-5. #urgency/high 飞书任务
-6. #urgency/high 字节码
+- [ ] #TODO 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]] ➕ 2024-01-01
+- [ ] #TODO  毕设 ➕ 2023-12-01 
 
 ## 主要学的几个方向
 

@@ -7,4 +7,5 @@
 
 # Java
 
-[farmerjohngit/myblog: 有深度的Java技术博客 (github.com)](https://github.com/farmerjohngit/myblog)
+* [farmerjohngit/myblog: 有深度的Java技术博客 (github.com)](https://github.com/farmerjohngit/myblog)
+* [Mutou_ren-CSDN博客](https://blog.csdn.net/Mutou_ren?type=blog)
