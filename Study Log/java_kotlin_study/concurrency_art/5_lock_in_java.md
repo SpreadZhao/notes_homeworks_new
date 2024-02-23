@@ -444,7 +444,195 @@ val heldExclusively: Boolean
 
 ### 5.2.2 AQS实现分析
 
-- [ ] #TODO 看jdk8的AQS源码。jdk17改了太多。以后有时间再分析。🔼 ➕ 2024-02-23 
+- [/] #TODO 看jdk8的AQS源码。jdk17改了太多。以后有时间再分析。 🔼 ➕ 2024-02-23 🛫 2024-02-23
+- [ ] #TODO 这部分因为jdk17的源码改动太大了，所以我先从8开始。后面有机会把jdk17的解析补上。➕ 2024-02-23 🔽 
+- [ ] #TODO 这一节中说的锁是指state，也就是书中的同步状态，并不是外面那个lock。这点容易混淆，修改一下。➕ 2024-02-23 🔺 
+
+AQS的同步队列的实现，是一个由线程组成的双向链表。链表中的每一个元素都代表着一个想要**获得锁**的线程。而在jdk8中，锁有两种：
+
+* exclusive: 互斥锁，只有一个线程能获得。
+* shared: 共享锁，不只有一个线程能获得。
+
+- [ ] #TODO 共享锁，不只有一个线程能获得。真的吗？➕ 2024-02-23 🔺 
+
+我们现在只介绍互斥锁。之前的`acquire()`方法就是互斥锁获得的实现。下图是AQS中双向链表的结构：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-23 14.45.38.excalidraw.png]]
+
+非常好理解，一个head一个tail。那么现在如果我们想要新入队一个节点，应该怎么做？稍微思考一下，大致为以下几步：
+
+1. 构造新的节点`node`；
+2. `node`的前驱节点为现在的`tail`；
+3. 现在的`tail`的后继节点为`node`；
+4. 将`tail`指向`node`；
+5. 返回`node`，也就是新的`tail`。
+
+非常简单，就是在一个双向链表中插入尾节点的逻辑。我们试着将它写成代码：
+
+```java
+private Node addWaiter(Node mode) {
+	// 使用当前线程构造新的节点
+	Node node = new Node(Thread.currentThread(), mode);
+	// 当前的尾节点
+	Node pred = tail;
+	if (pred != null) {
+		// 设置新的尾节点
+		this.tail = node;
+		// 建立连接
+		node.prev = pred;
+		pred.next = node;
+	}
+	// 返回新的尾节点
+	return node;
+}
+```
+
+看起来很nice对吧！但是，别忘了这是AQS，一个用于多线程的场景。假设有10个线程同时调用`acquire()`，那么只有1个线程能获得锁，其它9个线程都要变成node进入这个队列。因此，addWaiter()方法会被多个线程同时调用。
+
+问题就出在这里。如果这段逻辑没有任何并发控制的话，后果不堪设想。整个链表的结构会在高并发场景下瞬间乱七八糟。因此，我们需要引入并发控制。
+
+第一个问题就是，谁在并发场景下会混乱？显而易见，就是`tail`。因为每个线程的`node`都是自己，不存在共享一说，但是每个线程读到的当前AQS的`tail`却是同一个。
+
+知道了这点，我们怎么入手？加锁？可以，但是性能就太差了。jdk8中选择的是CAS：
+
+```java
+private Node addWaiter(Node mode) {
+	Node node = new Node(Thread.currentThread(), mode);
+	// Try the fast path of enq; backup to full enq on failure
+	Node pred = tail;
+	if (pred != null) {
+		node.prev = pred;
+		if (compareAndSetTail(pred, node)) {
+			pred.next = node;
+			return node;
+		}
+	}
+	/* 获取失败了 */
+}
+```
+
+会引起混乱的代码乍一看主要是这两句：
+
+```java
+node.prev = pred;
+pred.next = node;
+```
+
+但是我们再乍一下就能发现，只有第二句是会导致并发异常的。为啥？**因为只有第二句涉及了对`tail`的写操作**。第一句中只是设置了一下新的node的前驱节点，这并不会让其它线程之后读到错误的结果，即使`node.prev`被设置之后出现了错误。
+
+因此，jdk的做法是仅将第二句用设置尾节点的CAS包裹起来：
+
+```java
+if (compareAndSetTail(pred, node)) {
+	pred.next = node;
+	return node;
+}
+```
+
+`compareAndSetTail()`是包装的方法，作用是以CAS的方式进行设置。
+
+* 第一个参数是我希望`AQS.tail`现在指向的是谁。pred是我刚刚读出来的尾节点。如果之后发现不是，那么就是有人在这个过程中将`AQS.tail`换成了其它node；
+* 第二个参数是如果是我希望的话，要将`AQS.tail`换成什么。我要换成的就是新的尾节点node。
+
+因此，以上操作就是在`this.tail = node;`的基础上增加了CAS，保证并发场景下的一致性。总体流程如下图：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-23 14.50.19.excalidraw.png]]
+
+还是刚刚10个线程的例子。显然那9个线程都无法通过这个操作将自己入队。但是我既然已经要去获得锁了，也失败了，就不能不入队。因此，后续的操作一定是一个『死循环』，直到入队成功为止。
+
+这部分的逻辑位于`enq()`方法。代码如下：
+
+```kotlin
+private Node enq(final Node node) {
+	for (;;) {
+		Node t = tail;
+		if (t == null) { // Must initialize
+			if (compareAndSetHead(new Node()))
+				tail = head;
+		} else {
+			node.prev = t;
+			if (compareAndSetTail(t, node)) {
+				t.next = node;
+				return t;
+			}
+		}
+	}
+}
+```
+
+我们先不看if分支，只看else。else分支里做的事情和我们刚刚说的一模一样：
+
+* 设置新节点node的前驱为现在的尾节点；
+* 使用CAS去尝试将新的tail指向自己；
+	* 如果成功了，那么让原来的尾节点的`next`指向自己并返回自己作为新的尾节点；
+	* 如果失败了，那就是有人改了tail。重新尝试。
+
+我们看到，这段操作被放到了一个无限循环中。也就是说，『不入队，不罢休』。
+
+> [!question]- 为什么这段逻辑会放到无限循环中，而不是使用sleep \& wakeup的模式？
+> 我的考量有两点：
+> 
+> 1. 因为链表的入队操作是一个非常快的过程；同时，即使并发量很高，因为获取**同一个锁**而入队并且掐架起来的概率比较低；
+> 2. 如果当前线程有其它重要工作要执行（比如Android UI线程），那么sleep的后果非常严重。
+
+- [ ] #TODO 为什么这段逻辑会放到无限循环中，而不是使用sleep & wakeup的模式？这个问题有必要补充一下？ ➕ 2024-02-23 ⏬ 
+
+最后，if里面的那个逻辑是什么？回到我们刚刚addWaiter()的逻辑：
+
+```java
+if (pred != null) {
+	... ...
+}
+```
+
+只有当前尾节点不为空的时候才去试。那如果一开始这个链表就是空的呢？显然jdk也将这个逻辑放到了`enq()`中。其实`enq()`的注释就有提到：
+
+```java
+/**
+ * Inserts node into queue, initializing if necessary. See picture above.
+ * @param node the node to insert
+ * @return node's predecessor
+ */
+private Node enq(final Node node)
+```
+
+初始化的逻辑如下：
+
+```java
+if (compareAndSetHead(new Node()))
+	tail = head;
+```
+
+可以看到，头节点永远是一个假的空Node，而我们主要关注的是tail。
+
+下一个问题。线程节点入队了之后干嘛？既然我们是因为没获得成功锁而入队的。那么入队之后肯定要<label class="ob-comment" title="不断" style=""> 不断 <input type="checkbox"> <span style=""> 真的是“不断”吗？接着往下看。 </span></label>尝试在队列中获取锁，获得了锁之后要出队。
+
+但是有一个问题，一个很关键的问题：如果**任何**一个线程进了队列之后都不断获取锁，谁获取了谁出队列，那么我要队列干嘛？AQS之所以要这么个队列，是为了维护『公平』。具体的思路如下：
+
+1. 每一个获取锁失败的线程都必须进入队列的尾部；
+2. “在运行过程中”，队列头部的线程是持有锁的线程；
+3. 当**队头**线程释放了锁之后，会通知队列的老二去抢锁；
+4. 队列的老二获得锁之后，才会变为队列的头节点；
+5. <font color="red">只有队列的老二能被队头节点唤醒去抢锁。其它的节点只要发现自己不是老二，就会park；</font>
+6. 队列遵循FIFO原则，即“只有队头元素能出队（释放锁），获取失败的锁都进入队尾”。
+
+- [ ] #TODO Wait vs Park 🔺 ➕ 2024-02-23
+
+通过以上的原则，这个双向链表才起到了它的作用：**只让老二抢锁**。那问题来了：只有老二抢锁，和谁抢？答案显而易见：和还没入队的线程抢。谁失败了谁去队尾。
+
+```ad-question
+说到这里，你可能发现了一个问题。反正我是发现了。之前在[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#3.5.2 锁内存语义的实现|3_5_lock_mm_semantics]]中我们就介绍过ReentrantLock中的公平锁和非公平锁。那你AQS既然维护的是『公平』，那么ReentrantLock中的公平和非公平又是啥？既然ReentrantLock依赖的AQS本身就是公平的FIFO队列，那么ReentrantLock的非公平从何而来？
+
+这个问题可以看一看这篇文章：[AQS的非公平锁与同步队列的FIFO冲突吗？_如果是非公平锁,是否还维持fifo队列-CSDN博客](https://blog.csdn.net/Mutou_ren/article/details/103883011)
+
+文章的主要内容是这样的。ReentrantLock的公平和非公平，与AQS所维护的『公平』是两个截然不同的概念：
+
+* ReentrantLock中的公平指的是，所有还没入队的线程<u>只要发现有线程在FIFO队列中等待（老二及以后）</u>，就要乖乖去排队；而非公平指的是所有还没入队的线程要<u>和FIFO队列的老二去竞争锁</u>，谁失败了谁去排队，谁成功了谁是队头。因此我们可以发现，这里的公平指的是==时间顺序==，已经在FIFO队列中的线程肯定到达的时间比新来的线程要早，所以为了公平，新来的线程没有资格和老一辈儿竞争，**遵守了时间顺序**；而非公平锁就**打破了这个时间顺序**。
+* 而FIFO队列所维护的『公平』是，所有已经在队列中的线程，必须按照时间顺序排好队，只有老二能去尝试获得锁。既然是尝试，那也会有失败的风险。但是**时间顺序这个根本不能被AQS自己打破**，只能被『锁的实现方』打破（比如ReentrantLock的非公平锁）。
+```
+
+- [ ] #TODO 在ReentrantLock的非公平锁中，如果一个新来的线程和老二抢锁，新的线程抢到了，会发生什么？原来的老二怎么办？ ➕ 2024-02-23 ⏫ 
+
 
 
 ---
