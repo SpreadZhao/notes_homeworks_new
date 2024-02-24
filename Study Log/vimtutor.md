@@ -12,9 +12,8 @@
 	1. `i` type inserted text `<ESC>` insert before the cursor;
 	2. `A` type appended text `<ESC>` append after the line;
 
-```ad-note
-Pressing `<ESC>` will place you in Normal mode or will cancel an unwanted and partially completed command.
-```
+> [!note]
+> Pressing `<ESC>` will place you in Normal mode or will cancel an unwanted and partially completed command.
 
 ## Lesson 2
 

@@ -34,6 +34,7 @@
 * <u>Underlined</u>
 * [[Knowledge/obsidian_tutorial/example|internal_link]]
 * [external_link](https://obsidian.md/)
+* [[unresolved_link]]
 * <font color="yellow">Custom color</font>
 * <mark style="background-color:purple">Custom Highlight</mark>
 - [ ] Unchecked `- [ ]`

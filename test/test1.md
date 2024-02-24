@@ -9,9 +9,6 @@ Marx was born in Prussia (now Germany) in 1818 and studied law, philosophy, and 
 Marx's most famous work is "Das Kapital," a multi-volume analysis of capitalism and its contradictions. In this work, Marx argued that capitalism is inherently exploitative and that the exploitation of the working class is necessary for the profit and accumulation of capital. He also argued that capitalism is inherently unstable and that it will eventually be replaced by socialism, in which the means of production are owned and controlled by the workers themselves.  
 Marx's ideas have had a significant impact on the development of socialist and communist movements around the world, and his work continues to be studied and debated by scholars and activists today.
 
-
-
-
 ```dataviewjs
 let res = []
 for (let page of dv.pages('"Knowledge/software_qa"')) {
@@ -43,8 +40,8 @@ function getDateString(date) {
 	return year + "年" + month + "月" + day + "日"
 }
 res.sort((a, b) => b.date - a.date)
-dv.table(
+dv.span(dv.markdownTable(
 	["Date&Link", "Title", "Tags"], 
 	res.map(x => [x.link, x.title, x.realtag])
-)
+))
 ```
