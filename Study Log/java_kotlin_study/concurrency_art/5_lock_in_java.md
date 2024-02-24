@@ -451,6 +451,10 @@ AQS的同步队列的实现，是一个由线程组成的双向链表。链表�
 
 - [ ] #TODO 共享锁，不只有一个线程能获得。真的吗？➕ 2024-02-23 🔺 
 
+#### 5.2.2.1 锁的获取 - acquire()
+
+##### 5.2.2.1.1 获取失败后 - 添加新节点 - addWaiter()
+
 我们现在只介绍互斥锁。之前的`acquire()`方法就是互斥锁获得的实现。下图是AQS中双向链表的结构：
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-23 14.45.38.excalidraw.png]]
@@ -534,6 +538,8 @@ if (compareAndSetTail(pred, node)) {
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-23 14.50.19.excalidraw.png]]
 
+##### 5.2.2.1.2 新节点入队失败后 - “不入队，不罢休” - enq()
+
 还是刚刚10个线程的例子。显然那9个线程都无法通过这个操作将自己入队。但是我既然已经要去获得锁了，也失败了，就不能不入队。因此，后续的操作一定是一个『死循环』，直到入队成功为止。
 
 这部分的逻辑位于`enq()`方法。代码如下：
@@ -555,6 +561,9 @@ private Node enq(final Node node) {
 	}
 }
 ```
+
+> [!note]
+> 大多数情况，`enq()`就是由`addWaiter()`调用的。
 
 我们先不看if分支，只看else。else分支里做的事情和我们刚刚说的一模一样：
 
@@ -601,6 +610,8 @@ if (compareAndSetHead(new Node()))
 
 可以看到，头节点~~永远~~在初始化的时候是一个假的空Node，而我们主要关注的是tail。
 
+##### 5.2.2.1.3 入队成功之后 - 尝试获得锁 - accquireQueued()
+
 下一个问题。线程节点入队了之后干嘛？既然我们是因为没获得成功锁而入队的。那么入队之后肯定要<label class="ob-comment" title="不断" style=""> 不断 <input type="checkbox"> <span style=""> 真的是“不断”吗？接着往下看。 </span></label>尝试在队列中获取锁，获得了锁之后要出队。
 
 但是有一个问题，一个很关键的问题：如果**任何**一个线程进了队列之后都不断获取锁，谁获取了谁出队列，那么我要队列干嘛？AQS之所以要这么个队列，是为了维护『公平』。具体的思路如下：
@@ -628,6 +639,104 @@ if (compareAndSetHead(new Node()))
 > 
 
 - [ ] #TODO 在ReentrantLock的非公平锁中，如果一个新来的线程和老二抢锁，新的线程抢到了，会发生什么？原来的老二怎么办？ ➕ 2024-02-23 ⏫ 
+
+#### 5.2.2.2 锁的释放 - release()
+
+接下来介绍FIFO队列的老大释放锁的过程。在简单的例子中，应该从锁（Lock接口）的使用者调用unlock()开始。在我们刚刚实现的Mutex中，是这样的：
+
+```kotlin
+override fun unlock() {
+	sync.release(1)
+}
+```
+
+显然，从我们之前给出的[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-19 21.00.37.excalidraw.png|AQS设计模式图]]就能看出，这个方法是模板方法，它最终会调用到AQS中，在本例中就是Mutex中的Sync里面实现的tryRelease()方法：
+
+```kotlin
+override fun tryRelease(release: Int): Boolean {
+	if (state == 0) {
+		throw IllegalMonitorStateException()
+	}
+	exclusiveOwnerThread = null
+	state = 0
+	return true
+}
+```
+
+> [!attention]
+> 需要注意的一点是，这里的`state = 0`是:dev_kotlin_original:中的语法糖。实际上调用的就是AQS那三个protected中的一个：`setState()`。
+
+由于释放锁没人会和他抢（互斥锁只有一个线程能持有），所以释放的过程并不需要加锁。正因为state是volatile的，所以所有线程只有在state设置为0之后才能读到这个新的值。
+
+仿照acquire()，我们来猜猜release()会做什么：
+
+1. 调用tryRelease()来释放锁；
+2. 如果释放成功，那么通知队列的老二去抢锁。
+
+好像就没了！释放就是这么简单！
+
+#### 5.2.2.3 总结
+
+现在，我们来总结一下AQS在获得锁和释放锁的逻辑（仅exclusive）：
+
+1. 锁的获取 - acquire()
+	1. 尝试获取锁 - tryAcquire()
+	2. 如果失败，将当前线程创建出新的节点并尝试入队 - addWaiter()
+	3. 如果尝试入队失败，不断循环，直到成功为止 - enq()
+	4. 每个入队成功的节点都遵循之前提到的『公平』原则 - acquireQueued()
+2. 锁的释放 - release()
+	1. 尝试释放锁 - tryRelease()
+	2. 如果释放成功，通知队列老二抢锁 - unparkSuccessor()
+
+> [!note]
+> 这里的unparkSuccessor()内部的实现用到了我们[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#^6e38f5|提过一嘴]]的LockSupport，后面会介绍。
+
+- [ ] #TODO :obs_up_arrow_with_tail:介绍了吗？➕ 2024-02-25 ⏫ 
+
+在这个过程中，1.4里的『公平』原则内部包含了你可能听说的AQS的“自旋”流程。这个过程在代码中主要是acquireQueued()中的实现。主要的逻辑如下：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240225021140.png]]
+
+只有前驱节点是头节点，并且尝试获取锁成功之后，才会变成新的队头；否则就会进入等待状态，等待被中断或者队头释放了锁。
+
+#### 5.2.2.4 共享式获取
+
+我记得os的时候介绍过一个读写者问题：[[Lecture Notes/Operating System/os#5.2 Readers and writers Problem|os]]。当一个文件被一个线程读的时候，其实其它线程是可以读的，但是不能写；但是如果文件被一个线程写的时候，那么其它线程啥都不能干。
+
+通过这个我们可以发现，一个文件的访问权限其实分成两种：
+
+* 读权限
+* 写权限
+
+~~这就是两把锁~~。而一个线程持有读权限~~锁~~和写权限~~锁~~时，权力是不一样的。写权限就是我们之前说的exclusive模式，即只能有一个人持有；而读权限这种也允许其它人获取锁的方式就是**Shared**的。
+
+> [!error] Deprecated
+> 这里读权限和写权限并不是两把锁，是同一把。只是获取这把锁的方式不同。我们可以这么理解，当一个线程想要获得锁时，就等于向被锁住的东西发送了一个请求：
+> 
+> * Exclusive模式就等于在说：兄弟，这把锁我要了，你一旦给我了，那其它人可就都别想要了:angry:！
+> * Shared模式就等于在说：兄弟，这把锁我想要，但是别人如果想要的话，我们俩都能进来:smiley:。
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240225022314.png]]
+
+共享式获取也遵循AQS那一套模板设计，加到之前那张图里就是这样：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-25 02.33.03.excalidraw.png]]
+
+需要注意，Lock接口并没有提供专门针对shared模式的方法，所以我们自己随便加上一个就可以。主要的逻辑是AQS里面这个模板设计。
+
+- [ ] #TODO 这样的模板设计有什么好处？➕ 2024-02-25 🔼 
+
+当一个线程请求共享式地访问锁的时候，会经历下面的流程（acquireShared()的实现）：
+
+1. 调用tryAcquireShared()来尝试获取锁；
+2. 如果获取成功，那么没啥好说；
+3. 如果获取失败，和acquire()一样，<label class="ob-comment" title="要进入队列中并不断尝试获取" style=""> 要进入队列中并不断尝试获取 <input type="checkbox"> <span style=""> 这部分的实现在doAcquireShared()中。 </span></label>；
+4. 进入队列的方式也是添加节点，入队，在队列里不断尝试获取锁。也会经历“自旋”的过程；
+5. 自旋的时候，先看前驱节点是不是头，如果是的话才尝试获取。成功之后我（老二）变新头，如果失败，那就park，直到被中断或者其它人释放了锁。
+
+显然，共享式的锁也需要释放。和独占式最主要的区别就是，由于共享式的锁可以被多个线程同时获取，所以释放的时候会出现竞争问题，不能被两个线程同时释放。所以，这里面通常加入了CAS操作。
+
+- [ ] #TODO 这么看来，共享式锁不只有队头才能获取。AQS是怎么把这两个模式给融合起来的呢？➕ 2024-02-25 🔼 
 
 
 

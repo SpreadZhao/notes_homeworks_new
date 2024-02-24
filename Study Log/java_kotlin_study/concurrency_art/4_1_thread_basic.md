@@ -347,6 +347,8 @@ PS C:\Users\SpreadZhao> jps
 > [!caution] 注意图中的syncronized
 > 看，是等待进入syncronized方法或者块的时候，才是处于`BLOCKED`状态。这是啥意思？其它的锁不行吗？在java.util.concurrent包中有个Lock接口，它也能实现类似syncronized的并发模式。但是，获取这个Lock锁却并不会进入`BLOCKED`状态。那么是啥呢？答案是`WAITING`。因为Lock接口的实现利用了LockSupport中的方法。这里面并没有syncronized。
 
+^6e38f5
+
 ### 4.1.3 Daemon Thread
 
 关于守护线程，知道这些事情：
