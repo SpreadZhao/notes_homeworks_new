@@ -133,9 +133,8 @@ class VolatileExample {
 }
 ```
 
-```ad-important
+> [!important]
 :fas_up_long:这是我们这一章最重要的东西！！！
-```
 
 因为太重要了，这里我再给出书上的Java版本：
 
@@ -149,9 +148,8 @@ temp += 1
 set(temp)
 ```
 
-```ad-hint
-这也是为什么CAS能做到这一点的原因。因为CAS自带的incrementAndGet()方法本身就是**对这三步操作整体的同步**。
-```
+> [!info]
+> 这也是为什么CAS能做到这一点的原因。因为CAS自带的incrementAndGet()方法本身就是**对这三步操作整体的同步**。
 
 也正是因为volatile对读写做了同步，我们才说volatile具有以下特性：
 
@@ -234,32 +232,27 @@ class VolatileExample2 {
 
 - [x] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。
 
-```ad-note
-title: 如果之后有一个完美的volatile的使用例子，我会贴在这里。
+> [!todo] 如果之后有一个完美的volatile的使用例子，我会贴在这里。
+> * #date 2024-01-07 有了，看下面这个日期的补充。
 
-* #date 2024-01-07 有了，看下面这个日期的补充。
-```
-
-```ad-summary
-title: 做一个总结
-
-首先，是volatile到底能做到什么事情：
-
-1. 写的时候，一股脑儿从Cache到本地内存到主存一条龙刷新，并且这个过程是原子的（也就是对单个变量**写操作的原子性**）；
-2. 读的时候，让**读它的线程的**本地内存直接无效，就是要从主存中去读（也就是**读的原子性plus版**）。
-
-然后，就是volatile的内存语义的总结：
-
-* 线程 A 写一个 volatile 变量，实质上是线程 A 向接下来将要读这个 volatile 变量的某个线程发出了（其对共享变量所做修改的）消息。
-* 线程 B 读一个 volatile 变量，实质上是线程 B 接收了之前某个线程发出的（在写这个 volatile 变量之前对共享变量所做修改的）消息。
-* 线程 A 写一个 volatile 变量，随后线程 B 读这个 volatile 变量，这个过程实质上是线程 A 通过主内存向线程 B 发送消息。
-```
+> [!summary] 做一个总结
+> 
+> 首先，是volatile到底能做到什么事情：
+> 
+> 1. 写的时候，一股脑儿从Cache到本地内存到主存一条龙刷新，并且这个过程是原子的（也就是对单个变量**写操作的原子性**）；
+> 2. 读的时候，让**读它的线程的**本地内存直接无效，就是要从主存中去读（也就是**读的原子性plus版**）。
+> 
+> 然后，就是volatile的内存语义的总结：
+> 
+> * 线程 A 写一个 volatile 变量，实质上是线程 A 向接下来将要读这个 volatile 变量的某个线程发出了（其对共享变量所做修改的）消息。
+> * 线程 B 读一个 volatile 变量，实质上是线程 B 接收了之前某个线程发出的（在写这个 volatile 变量之前对共享变量所做修改的）消息。
+> * 线程 A 写一个 volatile 变量，随后线程 B 读这个 volatile 变量，这个过程实质上是线程 A 通过主内存向线程 B 发送消息。
 
 另外，我遗漏了一个非常重要的点，这里补上。回到之前那张图，完整的图： ^61ac91
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2023-11-19 17.48.21.excalidraw.png]]
 
-> [!stickies]
+> [!question]
 > 我的猜测：volatile的使用，是否建立在代码的执行顺序是100%确定的前提下？又或者是我不关心代码执行顺序的前提下？因为只有这个情况下，单独使用volatile才能发挥出它对变量的可见性控制。
 
 虽然我们的volatile例子并不能保证这个图中描述的，但是姑且先当它能吧。毕竟书上也是假设writer()先于reader()执行。
@@ -267,7 +260,6 @@ title: 做一个总结
 我们一直看flag去了，这个a = 3还没看呢！它并不是volatile变量，但是依然随着我们的操作给刷新了上去。这意味着什么呢？
 
 之前我们也说了，在写volatile变量的时候，本地内存**所有**的改变都会一股脑儿flush到主存中去。这意味着，**A线程在写这个volatile之前对==所有共享变量==的改变，也是能传递到B线程那里去的**。 ^a3a78e
-
 
 这个过程，也像是发送了一个消息一样：
 
@@ -329,7 +321,7 @@ volatileWrite3    |
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20231119182058.png]]
 
-> [!stickies]
+> [!note]
 > 其实这一行和那一列，就是为了保证那个volatile的happens-before原则。
 
 这一行代表着，如果第一个操作是volatile的读，那么不管第二个操作是什么，都不能重排序。这个也很好理解，和之前是相对应的，volatile读之后的操作也不能逃逸到volatile读的前面。

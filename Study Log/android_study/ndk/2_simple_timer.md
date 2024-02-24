@@ -303,11 +303,8 @@ env->CallVoidMethod(thiz, setCurrTime, curr_time_j);
 
 首先，用子线程计时的操作如下：
 
-```ad-error
-title: Deprecated
-
+> [!error] Deprecated
 下面的代码是错的！！！见[[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]。之后有`pthread_join`的代码也都是错的。
-```
 
 - [ ] 有时间给出正确的代码，不着急。 🔽 ➕ 2024-02-21
 
@@ -458,9 +455,8 @@ res = jvm->AttachCurrentThread(&env, nullptr);
 
 [JNI tips | Android NDK | Android Developers](https://developer.android.com/training/articles/perf-jni#javavm-and-jnienv)
 
-```ad-note
-上面的文章也告诉我们，不能在线程之间共享JNIEnv。就和之前的jclass和jobject一样，是Local的。如果我们想在线程之间共享JNIEnv，那么就要先共享JavaVM，然后通过它去获得JNIEnv。
-```
+> [!note]
+> 上面的文章也告诉我们，不能在线程之间共享JNIEnv。就和之前的jclass和jobject一样，是Local的。如果我们想在线程之间共享JNIEnv，那么就要先共享JavaVM，然后通过它去获得JNIEnv。
 
 这里的jvm就是我们在全局变量中加入的：
 
@@ -513,9 +509,8 @@ if (res != JNI_OK) {  // 如果没获取到，那就是还没ATTACH
 }
 ```
 
-```ad-note
-在`JNI_OnLoad()`中`GetEnv()`能成功，是因为当前线程是main线程，已经是attach VM的状态了；而在`StartTimer()`中`GetEnv()`失败，是因为当前处于子线程。
-```
+> [!note]
+> 在`JNI_OnLoad()`中`GetEnv()`能成功，是因为当前线程是main线程，已经是attach VM的状态了；而在`StartTimer()`中`GetEnv()`失败，是因为当前处于子线程。
 
 好了。现在我们已经可以给出完整的StartTimer的逻辑了！
 

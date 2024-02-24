@@ -143,11 +143,8 @@ monitor的等待同步机制如下图：
 |   `wait(long)`    | 超时等待一段时间。这里的参数时间是毫秒，也就是等待长达n毫秒，如果没有通知就超时返回。                                        |
 | `wait(long, int)` | 对于超时时间更细粒度的控制，可以达到纳秒。                                                                                   |
 
-```ad-note
-title: PS
-
-线程的状态：[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#4.1.2 线程的状态|4_1_thread_basic]]
-```
+> [!info]
+> 线程的状态：[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#4.1.2 线程的状态|4_1_thread_basic]]
 
 我们将演示下面的例子，来说明这些方法的功能： ^f936d3
 
@@ -269,48 +266,43 @@ Thread[WaitThread,5,main] running @ 22:32:31
 
 这里面标了数字的地方都是和前面对应的。唯一需要解释的就是**红色的两个4**。这里在描述的是waitThread在同步队列中和notifyThread抢锁的情况。如果同步队列中的waitThread抢到了，那么notifyThread要走Enter failure，也要进入到同步队列中；如果notifyThread抢到了，那么waitThread会走Enter failure。
 
-```ad-summary
-title: 最后，书上的总结。重要的点如下：
+> [!summary] 最后，书上的总结。重要的点如下：
+> 1. `wait()` `notify()` `notifyAll()`的使用必须要先synchronized；
+> 2. 调用 `wait()`方法后，线程状态由 **RUNNING** 变为 **WAITING**，并将当前线程放置到对象的等待队列；
+> 3. `notify()`或 `notifyAll()`方法调用后，等待线程依旧不会从`wait()`返回，需要调用`notify()`或`notifAll()`的线程**释放锁之后**，等待线程才有机会从 wait()返回；
+> 4. `notify()`方法将等待队列中的一个等待线程从等待队列中移到同步队列中，而`notifyAll()`方法则是将等待队列中所有的线程全部移到同步队列，被移动的线程状态由 **WAITING** 变为 **BLOCKED**；
+> 5. 从`wait()`方法返回的前提是获得了调用对象的锁。
+> 
+> ---
+> 
+> **wait \& notify的经典范式：**
+> 
+> - 等待方：
+> 
+> ~~~kotlin
+> synchronized(object) {
+> 	while (needWait) {
+> 		object.wait()
+> 	}
+> 	doSomething()
+> }
+> ~~~
+> 
+> - 通知方：
+> 
+> ~~~kotlin
+> synchronized(object) {
+> 	needWait = false
+> 	object.notifyAll()
+> }
+> ~~~
 
-1. `wait()` `notify()` `notifyAll()`的使用必须要先synchronized；
-2. 调用 `wait()`方法后，线程状态由 **RUNNING** 变为 **WAITING**，并将当前线程放置到对象的等待队列；
-3. `notify()`或 `notifyAll()`方法调用后，等待线程依旧不会从`wait()`返回，需要调用`notify()`或`notifAll()`的线程**释放锁之后**，等待线程才有机会从 wait()返回；
-4. `notify()`方法将等待队列中的一个等待线程从等待队列中移到同步队列中，而`notifyAll()`方法则是将等待队列中所有的线程全部移到同步队列，被移动的线程状态由 **WAITING** 变为 **BLOCKED**；
-5. 从`wait()`方法返回的前提是获得了调用对象的锁。
-
----
-
-**wait \& notify的经典范式：**
-
-- 等待方：
-
-~~~kotlin
-synchronized(object) {
-	while (needWait) {
-		object.wait()
-	}
-	doSomething()
-}
-~~~
-
-- 通知方：
-
-~~~kotlin
-synchronized(object) {
-	needWait = false
-	object.notifyAll()
-}
-~~~
-
-```
-
-```ad-note
-我们可以发现，synchronized和wait \& notify的结合度是非常紧密的。实际上，它们俩在JVM中的实现本身也是在同一个类中去管理的。
-
-见`jdk/src/hotspot/share/runtime/objectMonitor.hpp`。类的开头也有一堆注释说明这套机制的作用。讲解：[synchronized底层实现monitor详解 - 朱子威 - 博客园](https://www.cnblogs.com/minikobe/p/12123065.html)
-
-里面的`_WaitSet`就是我们上面说的Wait Queue；`_EntryList`就是Synchronized Queue。
-```
+> [!note]
+> 我们可以发现，synchronized和wait \& notify的结合度是非常紧密的。实际上，它们俩在JVM中的实现本身也是在同一个类中去管理的。
+> 
+> 见`jdk/src/hotspot/share/runtime/objectMonitor.hpp`。类的开头也有一堆注释说明这套机制的作用。讲解：[synchronized底层实现monitor详解 - 朱子威 - 博客园](https://www.cnblogs.com/minikobe/p/12123065.html)
+> 
+> 里面的`_WaitSet`就是我们上面说的Wait Queue；`_EntryList`就是Synchronized Queue。
 
 ---
 

@@ -137,9 +137,8 @@ primer_wrong.c:28:9: warning: cast from pointer to integer of different size [-W
       |         ^
 ```
 
-```ad-note
-上面的文章中说`sizeof(void *)`是8个字节。这和Java中的long是一样的。所以也解释了为什么JNI中用long来表示c中的指针。
-```
+> [!note]
+> 上面的文章中说`sizeof(void *)`是8个字节。这和Java中的long是一样的。所以也解释了为什么JNI中用long来表示c中的指针。
 
 虽然不是很优雅，但是最终的结果是正确的。无论怎么执行，最终的行数都是18。
 

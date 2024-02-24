@@ -37,20 +37,17 @@ class MonitorExample {
 
 这和[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2023-11-19 17.12.19.excalidraw.png|volatile的那个图]]一模一样不是吗？那么我们需要思考一下：凭啥他能一样？之前我们说，这个图实际上是两个syncronized的版本，但是在假设writer()先于reader()执行时，这个图对于volatile也是对的。
 
-> [!stickies] 
+> [!question] 
 > 这里好好想想，“大大滴写”指得到底是什么？
 
 volatile只是对读和写进行了原子操作。而这里我们虽然用了锁，但锁里的代码**从外部看**，也只是读和写。对于writer()方法，我们不关心它的实现，只知道它写了a，但是因为用锁修饰了，所以是一个**大大滴写**。而volatile只能原子化普通的写，不能原子化这个**大大滴写**。所以，**当volatile只操作一个变量的读写时，锁只操作一个变量的读写时，它们的效果是等价的，否则，锁>volatile**。比如在本例中，`a++`属于大大滴写，因为涉及临时变量，所以锁能做到，而volatile做不到，但是在volatile也能做到的情况下，它们俩是等价的。
 
 现在可以直接总结锁的内存语义了，其实和volatile一模一样。当锁释放的时候，代表这个线程说：“==我搞定了！共享变量你们用吧！==”这就像在对volatile写的时候，写完了，也可以告诉其它线程“==我写完了，你们读吧==！”一样。所以：
 
-```ad-def
-title: 锁的内存语义
-
-* 线程 A 释放一个锁，实质上是线程 A 向接下来将要获取这个锁的某个线程发出了（线程 A 对共享变量所做修改的）消息。
-* 线程 B 获取一个锁，实质上是线程 B 接收了之前某个线程发出的（在释放这个锁之前对共享变量所做修改的）消息。
-* 线程 A 释放锁，随后线程 B 获取这个锁，这个过程实质上是线程 A 通过主内存向线程 B 发送消息。
-```
+> [!note] 锁的内存语义
+> * 线程 A 释放一个锁，实质上是线程 A 向接下来将要获取这个锁的某个线程发出了（线程 A 对共享变量所做修改的）消息。
+> * 线程 B 获取一个锁，实质上是线程 B 接收了之前某个线程发出的（在释放这个锁之前对共享变量所做修改的）消息。
+> * 线程 A 释放锁，随后线程 B 获取这个锁，这个过程实质上是线程 A 通过主内存向线程 B 发送消息。
 
 ### 3.5.2 锁内存语义的实现
 
@@ -141,19 +138,14 @@ final boolean initialTryLock() {
 
 好么，CAS。也就是说，CAS会看看当前的state是不是0，如果是的话，就更新成1。其实，这个CAS操作就是非公平锁能够【插队】的关键。
 
-那么，为啥可以用CAS呢？因为<u>CAS同时具有volatile的读内存语义和写内存语义</u>。因此，它也可以放在方法的开头，和释放锁的那一段呼应。
+那么，为啥可以用CAS呢？因为[[Study Log/java_kotlin_study/concurrency_art/resources/why_cas_has_volatile_semantics|CAS同时具有volatile的读内存语义和写内存语义]]。因此，它也可以放在方法的开头，和释放锁的那一段呼应。
 
 - [x] #TODO 这里加上hotspot源码。 ✅ 2024-02-20
 
-[[Study Log/java_kotlin_study/concurrency_art/resources/why_cas_has_volatile_semantics|why_cas_has_volatile_semantics]]
-
-```ad-summary
-title: 总结-公平锁和非公平锁
-
-* 公平锁和非公平锁释放时，最后都要写一个 volatile 变量 state。
-* 公平锁获取时，首先会去读 volatile 变量。
-* 非公平锁获取时，首先会用 CAS 更新 volatile 变量，这个操作同时具有 volatile 读 和 volatile 写的内存语义。
-```
+> [!summary] 总结-公平锁和非公平锁
+> * 公平锁和非公平锁释放时，最后都要写一个 volatile 变量 state。
+> * 公平锁获取时，首先会去读 volatile 变量。
+> * 非公平锁获取时，首先会用 CAS 更新 volatile 变量，这个操作同时具有 volatile 读 和 volatile 写的内存语义。
 
 通过这个分析，我们能猜出来，要想实现锁的内存语义，在纯Java层面有这么两种方式：
 

@@ -28,11 +28,8 @@ order: "2"
 
 - [/] #TODO 到底有啥用？我记得写过一个输出日志的那个线程。可以拿出来看看。 🔼 🛫 2024-02-21 ^219d41
 
-```ad-note
-title: 到底有啥用？我记得写过一个输出日志的那个线程。可以拿出来看看。
-
-* #date 2024-02-21 不能光拿那个输出日志就完了。什么AQS啥的里面很多都和这个有关系。本节中其实就已经给出了interrupt的一些作用了。
-```
+> [!todo] 到底有啥用？我记得写过一个输出日志的那个线程。可以拿出来看看。
+> * #date 2024-02-21 不能光拿那个输出日志就完了。什么AQS啥的里面很多都和这个有关系。本节中其实就已经给出了interrupt的一些作用了。
 
 线程是否被中断有一个标志位`interrupted`。一个线程在刚启动的时候这个标志位是false。而如果被中断了，这个标志位就会变成true。所以下面的代码：
 
@@ -48,15 +45,12 @@ println("after: ${th.isInterrupted}")
 
 但是，如果在调用`th.interrupt()`的时候，th处于休眠状态，那么th就会抛出InterruptedException异常。所以我们可以通过catch这个异常来处理被打断之后的操作。
 
-```ad-note
-title: 休眠状态？
-
-具体的状态参考注释：
-
+> [!quote] 休眠状态？
+> 具体的状态参考注释：
+> 
 > If this thread is blocked in an invocation of the wait(), wait(long), or wait(long, int) methods of the Object class, or of the join(), join(long), join(long, int), sleep(long), or sleep(long, int) methods of this class, then its interrupt status will be cleared and it will receive an InterruptedException.
-```
 
-> [!stickies]
+> [!note]
 > 如果这段看不懂，可以看看后面我的看法。
 
 那么，我既然都抛出异常了，就证明我这个线程已经对中断做出了响应。<u>所以，我是不是可以重置一下状态了？</u>因此，在抛出InterruptedException之前，该线程的interrupted标志位会被清除，也就是置回false。
@@ -166,9 +160,8 @@ java.lang.InterruptedException: sleep interrupted
 
 最后。我想谈一谈自己的看法，为什么要这么设计。如果一个线程当前正在忙着自己的事情，那么如果被别人打扰，应该去做别人的事情吗？我觉得应该把响应权利交给目标线程自己。因为如果去做别人的事情，效率有可能会因为线程切换任务而降低。所以，<u>如果一个繁忙的线程接收到了interrupt，最正确的做法就是仅仅记住我曾经被interrupt了</u>。这也是interrupted为true的原因；而如果是一个空闲的线程接收到了interrupt，那么是不是你该干点儿活儿了？不然要你干嘛？你出生之后就在这儿躺着啥也不干？所以，之所以抛出异常，就是希望<u>这个闲下来的线程正确对待这次interrupt，找点事情干</u>。而正因为这个线程找到了干的事情，也就意味着发出这个interrupt的一方的请求被【满足】了。从而这个interrupted标志位可以复位，以便接受新的interrupt请求。
 
-```ad-warning
-但是，在我的测试中，有很小的概率两个值都为true。也就是被睡眠的线程被interrupt之后，标志位并没有置回false。但是却也抛出了InterruptedException。
-```
+> [!warning]
+> 但是，在我的测试中，有很小的概率两个值都为true。也就是被睡眠的线程被interrupt之后，标志位并没有置回false。但是却也抛出了InterruptedException。
 
 - [ ] #TODO 这个东西很奇怪。 🔼
 

@@ -38,9 +38,8 @@ try {
 }
 ```
 
-```ad-warning
-不要将锁的获取写在try里面。如果获取时发生了异常，锁会被无故释放。
-```
+> [!warning]
+> 不要将锁的获取写在try里面。如果获取时发生了异常，锁会被无故释放。
 
 - [ ] #TODO 举个例子？ ⏫ ➕ 2024-02-18
 
@@ -70,25 +69,24 @@ Lock接口中的方法就先不介绍了（其实上面就已经说了一些了�
 * setState()
 * compareAndSetState()
 
-```ad-note
-这里要@一下之前说过的一段话：[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#^b71a4e|3_5_lock_mm_semantics]]。如果你继承了AQS，那么子类就必须定义一些protected的方法来改变这个state。这句话可能会引起一些歧义。上面的这三个方法其实就是protected的，它们也是用来修改同步状态（也就是那个volatile的int）的。那么，为啥注释里会这么说呢？
-
-根据我的猜测，比如你在AQS的子类里想要定义一个方法，将这个同步状态改变：
-
-~~~kotlin
-fun setSomeState(factor1: Int, factor2: Int) {
-	this.setState(factor1 shl 2 + factor1 / factor2)
-}
-~~~
-
-这里我写的比较复杂。就是说，如果你这个状态是通过某些复杂的因素算出来的一个值。那么这个方法也是和那三个一样是要修改状态的。因此，AQS建议这些方法也定义成protected：
-
-~~~kotlin
-protected fun setSomeState(factor1: Int, factor2: Int) {
-	this.setState(factor1 shl 2 + factor1 / factor2)
-}
-~~~
-```
+> [!note]
+> 这里要@一下之前说过的一段话：[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#^b71a4e|3_5_lock_mm_semantics]]。如果你继承了AQS，那么子类就必须定义一些protected的方法来改变这个state。这句话可能会引起一些歧义。上面的这三个方法其实就是protected的，它们也是用来修改同步状态（也就是那个volatile的int）的。那么，为啥注释里会这么说呢？
+> 
+> 根据我的猜测，比如你在AQS的子类里想要定义一个方法，将这个同步状态改变：
+> 
+> ~~~kotlin
+> fun setSomeState(factor1: Int, factor2: Int) {
+> 	this.setState(factor1 shl 2 + factor1 / factor2)
+> }
+> ~~~
+> 
+> 这里我写的比较复杂。就是说，如果你这个状态是通过某些复杂的因素算出来的一个值。那么这个方法也是和那三个一样是要修改状态的。因此，AQS建议这些方法也定义成protected：
+> 
+> ~~~kotlin
+> protected fun setSomeState(factor1: Int, factor2: Int) {
+> 	this.setState(factor1 shl 2 + factor1 / factor2)
+> }
+> ~~~
 
 ^c383c9
 
@@ -265,23 +263,21 @@ th2 exit
 
 但是，如果我们在th1终结前调用`mutex.unlock()`，就能让th2成功。
 
-```ad-info
-这里忘了，我们好像还没给unlock()的实现。这个不那么重要，随便实现一下就可以了：
-
-~~~kotlin
-override fun unlock() {
-	sync.release(1)
-}
-~~~
-```
+> [!tip]
+> 这里忘了，我们好像还没给unlock()的实现。这个不那么重要，随便实现一下就可以了：
+> 
+> ~~~kotlin
+> override fun unlock() {
+> 	sync.release(1)
+> }
+> ~~~
+> 
 
 - [x] #TODO 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。 🔺 ➕ 2024-02-19 ✅ 2024-02-21
 
-```ad-note
-title: 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。
-
-* #date 2024-02-21 ![[Study Log/java_kotlin_study/concurrency_art/resources/Recording 20240221233231.webm|Recording 20240221233231]]
-```
+> [!todo] 这里录个音解释一下吧。文字修改太多了，主要把tryRelease补上。
+> * #date 2024-02-21 ![[Study Log/java_kotlin_study/concurrency_art/resources/Recording 20240221233231.webm|Recording 20240221233231]]
+> 
 
 下面，我们来看看默认的lock是否正常工作。这里我们用做过的[[Study Log/java_kotlin_study/java_kotlin_study_diary/lock_in_java|交替打印]]的例子来做：多个线程交替输出1-100。
 
@@ -620,16 +616,16 @@ if (compareAndSetHead(new Node()))
 
 通过以上的原则，这个双向链表才起到了它的作用：**只让老二抢锁**。那问题来了：只有老二抢锁，和谁抢？答案显而易见：和还没入队的线程抢。谁失败了谁去队尾。
 
-```ad-question
-说到这里，你可能发现了一个问题。反正我是发现了。之前在[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#3.5.2 锁内存语义的实现|3_5_lock_mm_semantics]]中我们就介绍过ReentrantLock中的公平锁和非公平锁。那你AQS既然维护的是『公平』，那么ReentrantLock中的公平和非公平又是啥？既然ReentrantLock依赖的AQS本身就是公平的FIFO队列，那么ReentrantLock的非公平从何而来？
-
-这个问题可以看一看这篇文章：[AQS的非公平锁与同步队列的FIFO冲突吗？_如果是非公平锁,是否还维持fifo队列-CSDN博客](https://blog.csdn.net/Mutou_ren/article/details/103883011)
-
-文章的主要内容是这样的。ReentrantLock的公平和非公平，与AQS所维护的『公平』是两个截然不同的概念：
-
-* ReentrantLock中的公平指的是，所有还没入队的线程<u>只要发现有线程在FIFO队列中等待（老二及以后）</u>，就要乖乖去排队；而非公平指的是所有还没入队的线程要<u>和FIFO队列的老二去竞争锁</u>，谁失败了谁去排队，谁成功了谁是队头。因此我们可以发现，这里的公平指的是==时间顺序==，已经在FIFO队列中的线程肯定到达的时间比新来的线程要早，所以为了公平，新来的线程没有资格和老一辈儿竞争，**遵守了时间顺序**；而非公平锁就**打破了这个时间顺序**。
-* 而FIFO队列所维护的『公平』是，所有已经在队列中的线程，必须按照时间顺序排好队，只有老二能去尝试获得锁。既然是尝试，那也会有失败的风险。但是**时间顺序不能被AQS自己打破**，只能被『锁的实现方』打破（比如ReentrantLock的非公平锁）。
-```
+> [!question]
+> 说到这里，你可能发现了一个问题。反正我是发现了。之前在[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#3.5.2 锁内存语义的实现|3_5_lock_mm_semantics]]中我们就介绍过ReentrantLock中的公平锁和非公平锁。那你AQS既然维护的是『公平』，那么ReentrantLock中的公平和非公平又是啥？既然ReentrantLock依赖的AQS本身就是公平的FIFO队列，那么ReentrantLock的非公平从何而来？
+> 
+> 这个问题可以看一看这篇文章：[AQS的非公平锁与同步队列的FIFO冲突吗？_如果是非公平锁,是否还维持fifo队列-CSDN博客](https://blog.csdn.net/Mutou_ren/article/details/103883011)
+> 
+> 文章的主要内容是这样的。ReentrantLock的公平和非公平，与AQS所维护的『公平』是两个截然不同的概念：
+> 
+> * ReentrantLock中的公平指的是，所有还没入队的线程<u>只要发现有线程在FIFO队列中等待（老二及以后）</u>，就要乖乖去排队；而非公平指的是所有还没入队的线程要<u>和FIFO队列的老二去竞争锁</u>，谁失败了谁去排队，谁成功了谁是队头。因此我们可以发现，这里的公平指的是==时间顺序==，已经在FIFO队列中的线程肯定到达的时间比新来的线程要早，所以为了公平，新来的线程没有资格和老一辈儿竞争，**遵守了时间顺序**；而非公平锁就**打破了这个时间顺序**。
+> * 而FIFO队列所维护的『公平』是，所有已经在队列中的线程，必须按照时间顺序排好队，只有老二能去尝试获得锁。既然是尝试，那也会有失败的风险。但是**时间顺序不能被AQS自己打破**，只能被『锁的实现方』打破（比如ReentrantLock的非公平锁）。
+> 
 
 - [ ] #TODO 在ReentrantLock的非公平锁中，如果一个新来的线程和老二抢锁，新的线程抢到了，会发生什么？原来的老二怎么办？ ➕ 2024-02-23 ⏫ 
 

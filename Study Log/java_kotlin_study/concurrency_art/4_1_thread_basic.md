@@ -195,11 +195,8 @@ notEnd = false;
 
 - [/] #TODO 这部分**一定一定**要和pthread做一做对比。 ⏫ 🛫 2024-02-21 ^74d7f0
 
-```ad-note
-title: 这部分一定一定要和pthread做一做对比
-
-* #date 2024-02-21 [[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]
-```
+> [!todo] 这部分一定一定要和pthread做一做对比
+> * #date 2024-02-21 [[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]
 
 接下来我们通过一个例子来看看线程都有哪些状态。其实我们猜一猜，无非就是刚创建好，运行起来，阻塞住，被取消，终止之类的状态。我们来看看详细的状态：
 
@@ -347,11 +344,8 @@ PS C:\Users\SpreadZhao> jps
 
 当线程的Runnable的run()执行完成之后，线程也就终止了。
 
-```ad-caution
-title: 注意图中的syncronized
-
-看，是等待进入syncronized方法或者块的时候，才是处于`BLOCKED`状态。这是啥意思？其它的锁不行吗？在java.util.concurrent包中有个Lock接口，它也能实现类似syncronized的并发模式。但是，获取这个Lock锁却并不会进入`BLOCKED`状态。那么是啥呢？答案是`WAITING`。因为Lock接口的实现利用了LockSupport中的方法。这里面并没有syncronized。
-```
+> [!caution] 注意图中的syncronized
+> 看，是等待进入syncronized方法或者块的时候，才是处于`BLOCKED`状态。这是啥意思？其它的锁不行吗？在java.util.concurrent包中有个Lock接口，它也能实现类似syncronized的并发模式。但是，获取这个Lock锁却并不会进入`BLOCKED`状态。那么是啥呢？答案是`WAITING`。因为Lock接口的实现利用了LockSupport中的方法。这里面并没有syncronized。
 
 ### 4.1.3 Daemon Thread
 

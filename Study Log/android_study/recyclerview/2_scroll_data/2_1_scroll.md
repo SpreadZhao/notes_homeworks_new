@@ -213,9 +213,8 @@ updateLayoutStateToFillStart(mAnchorInfo);
 
 在每次layoutChunk()的时候，当然不能只做这些简单的工作：
 
-```ad-info
-这里之后，手机换了。高度为2199，等分三份是733。这里我每个item多加了10，就是743。
-```
+> [!info]
+> 这里之后，手机换了。高度为2199，等分三份是733。这里我每个item多加了10，就是743。
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Drawing 2023-12-25 14.42.16.excalidraw.png]]
 
@@ -385,13 +384,12 @@ $$
 
 而end < mScrollingOffset。所以我们可以得出结论：
 
-```ad-summary
-**在一次滑动的最开始：**
-
-* 如果scroll > mScrollingOffset，while循环之前的那个回收一定会回收Item 3，**Item 7会在while循环中布局之后显示出来**；
-* 如果end < scroll < mScrollingOffset，while循环之前的那个回收也会回收Item3，**Item7不会显示出来**；
-* 如果0 < scroll < end，不会回收Item3，**但是Item 7也不可能显示出来**。
-```
+> [!summary]
+> **在一次滑动的最开始：**
+> 
+> * 如果scroll > mScrollingOffset，while循环之前的那个回收一定会回收Item 3，**Item 7会在while循环中布局之后显示出来**；
+> * 如果end < scroll < mScrollingOffset，while循环之前的那个回收也会回收Item3，**Item7不会显示出来**；
+> * 如果0 < scroll < end，不会回收Item3，**但是Item 7也不可能显示出来**。
 
 除了加粗的那一段，剩下的都是之前就总结过的结论。问题是，会不会存在不回收Item3，但是Item7也能显示出来的情况呢？讨论这个问题，我们可以通过仅改变Item 6的高度入手。这个时候，mScrollingOffset就不是end + 30，而是一个随意的值（end是定值）。
 
@@ -408,11 +406,9 @@ $$
 
 我上面讨论这么复杂一堆，根本目的是什么？答案是：==***证明当回收和复用在一次滑动事件中发生时，回收一定先于复用发生***==。你可能会问，最后这个例子不是还说mScrollingOffset < end的时候Item3不会先回收吗？注意。这种情况下，和Item7就没啥关系了。因为这种情况下在这次滑动中，如果Item7显示出来而Item3没有被回收，**那根本就不算“回收和复用在一次滑动事件中发生”**。所以，只发生回收（Item6非常长），只发生复用，或者都没发生，这些情况不在我们讨论范围内。
 
-```ad-important
 现在回到这个例子。当scroll > mScrollingOffset的时候，这**一次**滑动会导致Item7显示，Item3回收。而Item3回收是一定先于Item7显示的。因为此时Item3回收位于while循环之前，Item7显示在while循环里面。
 
 上面所说的“==***当回收和复用在一次滑动事件中发生时，回收一定先于复用发生***==”其实不完善。真正完整的表述是：**最上面有个View快要被回收了，而下面有个View也快要被布局了。如果此时一次滑动同时导致了最上面的View回收和下面的View布局，则回收一定是先于布局的**。就像Item3和Item7一样。
-```
 
 我们可以随便改，改Item的高度，让每个Item都不一样。但是无论怎么改，只要在一次滑动中同时发生了回收和复用，都可以像这样讨论，答案一定是回收先于复用。
 
@@ -420,18 +416,17 @@ $$
 
 滑动时最值得我们注意的，就是对子View的布局以及回收流程。这里做一个总结：
 
-```ad-summary
-1. 滑动和初次加载一样，最终也是通过fill() + layoutChunk()来对子View进行布局和回收；
-2. 滑动和初次加载一样，通过layoutChunk()以及修改好的滑动状态对子View进行重新测量和布局。因此在滑动中依然会对子View的requestLayout()进行拦截；[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.2 Intercept|1_2_1_step1#1.2.1.2 Intercept]]
-3. 滑动会拿到本次滑动的距离，通过这个距离计算出滑动的一些指标，根据这些指标进行滑动；[[#2.1.2 Calculate Info]]
-4. 和初次布局不同，滑动需要考虑回收的情况。所以走到了初次加载没有走到的recycle逻辑；
-5. 滑动时的回收逻辑都在fill()方法中，分为两个过程：
-	1. while循环之前的回收负责单次滑动~~**没有触发布局，但需要回收的情况**~~（这个有问题，之后会讨论）；
-		* 此时，mScrollingOffset，也就是limit是初始值——不需要布局的最长滑动距离。
-	2. while循环之内的回收负责单次滑动触发布局，**布局之后需要回收的情况**；
-		* 此时，mScrollingOffset，也就是limit是实际滑动的距离scroll。
-	3. **以上两种情况并不互斥，他们触发的条件完全看当前的情况。可能都触发，也可能只触发一种**。
-```
+> [!summary]
+> 1. 滑动和初次加载一样，最终也是通过fill() + layoutChunk()来对子View进行布局和回收；
+> 2. 滑动和初次加载一样，通过layoutChunk()以及修改好的滑动状态对子View进行重新测量和布局。因此在滑动中依然会对子View的requestLayout()进行拦截；[[Study Log/android_study/recyclerview/1_start/1_2_1_step1#1.2.1.2 Intercept|1_2_1_step1#1.2.1.2 Intercept]]
+> 3. 滑动会拿到本次滑动的距离，通过这个距离计算出滑动的一些指标，根据这些指标进行滑动；[[#2.1.2 Calculate Info]]
+> 4. 和初次布局不同，滑动需要考虑回收的情况。所以走到了初次加载没有走到的recycle逻辑；
+> 5. 滑动时的回收逻辑都在fill()方法中，分为两个过程：
+> 	1. while循环之前的回收负责单次滑动~~**没有触发布局，但需要回收的情况**~~（这个有问题，之后会讨论）；
+> 		* 此时，mScrollingOffset，也就是limit是初始值——不需要布局的最长滑动距离。
+> 	2. while循环之内的回收负责单次滑动触发布局，**布局之后需要回收的情况**；
+> 		* 此时，mScrollingOffset，也就是limit是实际滑动的距离scroll。
+> 	3. **以上两种情况并不互斥，他们触发的条件完全看当前的情况。可能都触发，也可能只触发一种**。
 
 ---
 

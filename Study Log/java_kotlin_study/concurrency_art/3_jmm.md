@@ -19,4 +19,3 @@ for (let page of dv.pages('"Study Log/java_kotlin_study/concurrency_art"')) {
 res.sort((a, b) => a.order - b.order)
 dv.list(res.map(x => x.info))
 ```
-
