@@ -1,1 +1,1 @@
-<font color="yellow"></font>
+<font color="<% tp.system.prompt("color: ", "red") %>"></font>

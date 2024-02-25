@@ -449,7 +449,7 @@ AQS的同步队列的实现，是一个由线程组成的双向链表。链表�
 * exclusive: 互斥锁，只有一个线程能获得。
 * shared: 共享锁，不只有一个线程能获得。
 
-- [ ] #TODO 共享锁，不只有一个线程能获得。真的吗？➕ 2024-02-23 🔺 
+- [x] #TODO 共享锁，不只有一个线程能获得。真的吗？==真的==。 🔺 ➕ 2024-02-23 ✅ 2024-02-26
 
 #### 5.2.2.1 锁的获取 - acquire()
 
@@ -638,6 +638,8 @@ if (compareAndSetHead(new Node()))
 > * 而FIFO队列所维护的『公平』是，所有已经在队列中的线程，必须按照时间顺序排好队，只有老二能去尝试获得锁。既然是尝试，那也会有失败的风险。但是**时间顺序不能被AQS自己打破**，只能被『锁的实现方』打破（比如ReentrantLock的非公平锁）。
 > 
 
+^fb346a
+
 - [ ] #TODO 在ReentrantLock的非公平锁中，如果一个新来的线程和老二抢锁，新的线程抢到了，会发生什么？原来的老二怎么办？ ➕ 2024-02-23 ⏫ 
 
 #### 5.2.2.2 锁的释放 - release()
@@ -703,6 +705,8 @@ override fun tryRelease(release: Int): Boolean {
 
 我记得os的时候介绍过一个读写者问题：[[Lecture Notes/Operating System/os#5.2 Readers and writers Problem|os]]。当一个文件被一个线程读的时候，其实其它线程是可以读的，但是不能写；但是如果文件被一个线程写的时候，那么其它线程啥都不能干。
 
+- [ ] #TODO 试着实现[[#5.2.2.4 共享式获取]]里面说的文件锁。➕ 2024-02-26 ⏫ 
+
 通过这个我们可以发现，一个文件的访问权限其实分成两种：
 
 * 读权限
@@ -738,7 +742,234 @@ override fun tryRelease(release: Int): Boolean {
 
 - [ ] #TODO 这么看来，共享式锁不只有队头才能获取。AQS是怎么把这两个模式给融合起来的呢？➕ 2024-02-25 🔼 
 
+#### 5.2.2.5 中断式获取
 
+中断式的特点就是，如果在获取锁失败后阻塞的时候（在FIFO队列里面）被中断了，那么就会直接返回不获取了，而不是继续在那儿排着。
+
+实现方式也是通过抛出InterruptedException。
+
+在独占式和共享式的基础上都有：
+
+* 独占式：acquireInterruptibly()
+* 共享式：acquireSharedInterruptibly()
+
+具体到代码上，非中断式的获取在被中断的时候只会<u>记录一下我被中断了</u>；而中断式获取在检查到被中断的时候会抛出InterruptedException。
+
+> [!note]- 记录一下我被中断了
+> 这可不是置中断位！看acquireQueued()的实现，里面只是一个临时变量interrupted，并不是线程的interrupted标志位。这个临时变量用作返回值，来告诉调用方：当前线程在等待的时候被中断了吗？
+
+#### 5.2.2.6 超时获取
+
+字面意思，也是获取。也在独占式和共享式上都有。如果过了规定的时间还没获得锁，那么直接返回：
+
+* 独占式：tryAcquireNanos()
+* 共享式：tryAcquireSharedNanos()
+
+> [!note] 
+> 可以发现，这两个是try，也就是那个AQS的模板设计结构图的右半边。AQS没专门给这种方式提供模板方法。所以你可以直接用它来实现Lock接口。比如上面这两个任意一个方法都能用来实现Lock接口的tryLock()方法。
+
+超时获取是**建立在中断式获取**上的。也就是说，只要是超时获取，被中断的时候都会直接返回。
+
+- [ ] #TODO 为什么超时一定是中断的？为啥这样设计？➕ 2024-02-25 🔼 
+
+### 5.2.3 实战 - TwinsLock
+
+我们来写一个自己的Lock回顾一下本章的内容。一个TwinsLock，同时允许两个线程获得。调用lock()获取锁，调用unlock()释放锁。
+
+分析一下。既然允许两个线程同时获得，那么一定是共享式。所以，我们需要实现：
+
+* tryAcquireShared()
+* tryReleaseShared()
+
+那么我们稍微回顾一下之前的模板设计，就知道我们应该在lock()里调用对应的acquireShared()，在unlock()里调用对应的releaseShared()。AQS会自动帮我们去实现内部的尝试、等待、中断等逻辑。
+
+```kotlin
+override fun lock() {
+	sync.acquireShared(1)
+}
+
+override fun unlock() {
+	sync.releaseShared(1)
+}
+```
+
+需要注意的点是这里传入的1。通常，一个线程获得一把锁，相当于把资源数-1。而对于独占式的锁，通常资源只有1个。
+
+而我们是TwinsLock，所以资源数应该是2。因此，我们可以做如下定义：AQS里面那个state表示资源数量。资源数量的合法值为2, 1, 0。当：
+
+* `state == 2`：表示目前没有线程可以获得锁；
+* `state == 1`：表示目前有一个线程获得了锁；
+* `state == 0`：表示两个线程获得了锁，无法再被获取。
+
+那么，我们联系一下之前实现Mutex中的AQS的tryAcquire()时的情况：tryAcquire()返回的是一个布尔。为true就是获取成功，false就是获取失败。但是现在的情况是虽然获取的结果还是只有成功和失败。
+
+这个时候，你可能会萌生和我一样的想法：*<label class="ob-comment" title="用tryAcquire()难道不也能实现共享式访问吗" style=""> 用tryAcquire()难道不也能实现共享式访问吗 <input type="checkbox"> <span style=""> 然后lock()里面就不调acquireShared()了，直接调acquire()。 </span></label>*？比如我们可以这样实现：
+
+```kotlin
+override fun tryAcquire(acquired: Int): Boolean {
+	val curr = state    // getState()
+	val after = curr - acquired
+	if (after >= 0 && compareAndSetState(curr, after)) {
+		return true
+	} else {
+		return false
+	}
+}
+```
+
+传入的acquired是需要的资源数量，在我们这个例子中永远是1，即每一个线程一次获取只获取一个资源。state的初始值是2，当小于0的时候，不允许其它的线程再获取了。
+
+上面的实现看起来既简单又正确。首先，得到当前的资源状态，然后将资源减去。如果结果还是>=0，就表示『我理论上是能获取成功的』，因此，只要CAS成功，我就可以返回true了；而如果这两者的任意一个不成立，那么都是尝试获取失败，应该去排队。
+
+然而，上面的做法是**完全错误**的！并且，错的不是一点半点。下面我们来逐个问题去分析。
+
+首先，我们要知道为什么AQS要设计成模板的模式，并且严格区分开了acquire()和acquireShared()这两个方法。用:chicken::chicken:想都知道，这两个模式的内部实现肯定是不同的。无论是处理中断的时候，还是队列中的老大释放锁之后的通知行为，这两种模式的节点的处理方式肯定是不一样的。而在模板的设计模式中，**acquire()永远只会调用tryAcquire()；acquireShared()永远只会调用tryAcquireShared()**。因此，如果我们用tryAcquire()实现共享式的访问，那么就违背了AQS的根本意愿，并且我们这个线程在**获取失败之后会被AQS按照独占式的节点去对待**，后面的行为就全乱了。因此，我们就是要实现tryAcquireShared()，并且在lock()中调用acquireShared()。
+
+第二点，我们哪怕实现的就是tryAcquireShared()，这里面的实现就是对的吗？我试了试下面的版本：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	val curr = state
+	val after = curr - acquired
+	if (!compareAndSetState(curr, after)) {
+		return -1   // 如果失败了，直接返回-1表示获取锁失败
+	}
+	return after
+}
+```
+
+> [!attention]
+> tryAcquireShared()的返回值是int，>=0表示成功，<0表示是失败。如果是>=0的话，这个返回值还表示获取之后剩余的资源数量。
+
+这个版本是会产生死锁的！为啥？其实，在之前的笔记中，我也有提到过，但是我当时说的也有不严谨的地方，就是：『CAS』和『循环CAS』。
+
+显然，单次CAS是会失败的。就像加锁的代码一样，直到我获得了锁才能继续下去。那么，我们是否问过这样的问题：*CAS等于锁吗*？
+
+**答案当然是否定的**！我们就拿synchronized来举例子。如果进入synchronized时失败了，会一直阻塞到能进去为止；但是CAS只要失败了就返回了！所以，真正的情况应该是，如果我们想要实现类似锁的功能，应该用的是**循环CAS**。也就是一次CAS失败了，我还不能不管了，要一直尝试下去，直到CAS成功执行为止。
+
+有了这个概念，我们再回头看这个问题。我注释里说的那句话对吗？*如果CAS失败，难道真的表示【共享式的锁】的【尝试获取】失败了吗*？
+
+我们再来回顾一下共享式的锁什么时候获取失败：。。。好吧，其实谈不上回顾，因为我之前好像没提过。其实，这个锁的获取成功还是失败，是由开发者自己定义的。比如我们的TwinsLock，获取失败的条件应该是：
+
+<font color="red">当一个线程修改完状态之后，发现状态不是0, 1, 2中的一个时，表示当前线程获取锁失败。</font>
+
+这段话很好理解，就是我们一开始的分析。那么，问题就在于此：**必须要修改完状态**。那么CAS失败等价于修改完状态且发现它不是0 1 2吗？显然不是。这是两个截然不同的概念，==CAS失败，仅仅代表有人在跟我抢这个状态的修改，而不是我修改完之后状态就不是0 1 2了==。
+
+下面我们举一个例子。假设<u>有且只有</u>ABC三个线程几乎同时去修改这个值。那么如果我们的TwinsLock正确工作的话，肯定是他们仨中的两个能获取成功，另一个失败。
+
+> [!hint]- 有且只有
+> 不是因为这个情况特殊，只是因为三个线程足以复现问题。
+
+但是，在我们当前的设计下，是啥样的？假设A先成功用CAS修改了值，B和C紧接着同时也去做CAS。那么这个时候B和C都会发现state已经变化，然后，，，就都失败了？！？！
+
+对吧！现在这个结果，和我们理论上的结果是不一样的。这就完美地证明了：**CAS失败并不代表获取TwinsLock失败**。
+
+既然CAS失败不代表，那啥代表呢？聪明的你应该猜到了：为啥我之前介绍循环CAS和CAS的区别？我们给CAS加上一个循环，不就是了！但是，在继续写之前，我们需要明确一个问题：*这个循环应该加在哪儿*？
+
+我们可以用goto来模拟一下：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	val curr = state
+	val after = curr - acquired
+	val success = compareAndSetState(curr, after)
+	if (success) {
+		return after
+	} else {
+		goto ???
+	}
+}
+```
+
+正确的实现就应该是这样的：**只有CAS成功了**，新的值after才能表示是否成功获得TwinsLock。而如果失败了，就应该从前面的某个时刻重试。那么，从哪里？我们想想：既然CAS失败了，就代表**肯定有其它人在这个空挡修改了state**。那么我下次如果还用原来的state的话，那就没有时效性了。
+
+因此，正确的做法就是从整个方法的开头重来，重新读一遍新的state，重新减去，重新CAS。所以，简化成这样：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	while (true) {
+		val curr = state
+		val after = curr - acquired
+		val success = compareAndSetState(curr, after)
+		if (success) {
+			return after
+		}
+	}
+}
+```
+
+看起来总算正确了吧！只有CAS成功了，我们返回的after才代表着最后获取成功与否；否则就要不断尝试，直到CAS成功为止。
+
+我也是这么想的。但是，又死锁了。。。这个问题困扰了我好久。后来我才发现，我是真的蠢。之前在os里面讲信号量的时候，就提到过这里：[[Lecture Notes/Operating System/os#3.3 How to avoid race conditions?|os]]。当时我们讲的是信号量Sempahore的例子。如果信号量已经<0，那么我们就不能再继续减下去了。因为从-1开始（包括-1），后面的值都已经是非法的了。由于在释放锁的时候，操作就是将state+1，所以如果你有一堆线程疯狂地去down这个state，并且还只有两个最终获得锁，那么这两个线程即使释放了锁，加的state也不够恢复成正数。结果就是所有的线程都休眠了。
+
+所以，正确的方法应该是：
+
+```kotlin
+val curr = state
+val after = curr - acquired
+```
+
+在这一步之后，after表示的是『理论上我获得了锁之后的state状态』。如果这个值已经<0了，那我**连CAS操作都不能做**！因为只要做了CAS就修改了state，就已经违反了这个TwinsLock的意愿了。
+
+所以，下面的实现：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {  
+    while (true) {  
+        val curr = state  
+        val after = curr - acquired  
+        val success = compareAndSetState(curr, after)  
+        if (after < 0 || success) {  
+            return after  
+        }  
+    }  
+}
+```
+
+**是错误的**。因为`after < 0`的比较在CAS之后，所以你虽然“意识”到这个CAS不该做，但是你已经做了。正确的做法是在CAS之前就判断after：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	while (true) {
+		val curr = state
+		val after = curr - acquired
+		if (after < 0) {
+			return after
+		}
+		val success = compareAndSetState(curr, after)
+		if (success) {
+			return after
+		}
+	}
+}
+```
+
+或者像书上一样简化：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	while (true) {
+		val curr = state
+		val after = curr - acquired
+		if (after < 0 || compareAndSetState(curr, after)) {
+			return after
+		}
+	}
+}
+```
+
+> [!note]
+> 这里我突然发现，和[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-02-19-java-kotlin-study#^b08f74|互斥锁的获取过程]]正好是反的。在互斥锁的获取的时候，通常都是先只管抢锁，抢到了发现不该抢我再退出来；而操作Semaphore这种类似的结构的时候，就要先试探，只要我发现我不该抢，就完全不能做操作。我目前怀疑这就是『互斥』和『共享』的一个很大的区别：xxxx
+> 
+> 操操操，我上面感觉也像在放屁。我们就对比一下那篇日记里的tryLock()版本和上面的tryAcquireShared()。日记里的那个是先tryLock()，如果失败直接重来，如果成功进入临界区；而上面的共享获取，**整个方法都是临界区**。因为第一句`curr = state`其实已经是在读共享变量state了。所以，在我们判断`after < 0`的时候，就已经要退出临界区重来了。
+> 
+> 那这样你可能又会问，日记里不是说，==我在临界区里面判断我是不是该进临界区==这样的做法是错误的吗？其实这句话说的不准确，应该是：**如果我在临界区里发现我不应该进入临界区，那么在这个时间点上到进入临界区，下到立刻，都不能有**。日记里面那个错误版本的实现是，当`got == false`的时候，
+
+^5a197f
+
+- [ ] #TODO 难道互斥不等于资源数为1的共享吗？同时我对上面的Note正确与否表示怀疑。➕ 2024-02-26 🔺 
+
+为什么tryAcquire的cas没包？为什么shared就要包？[【锁思想】自旋 or CAS 它俩真的一样吗？一文搞懂 - 掘金 (juejin.cn)](https://juejin.cn/post/7252889628376842297)
 
 ---
 
