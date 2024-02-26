@@ -133,7 +133,7 @@ class Deadlock {
 
 然而，我们要注意。这里其实是一个假的死锁。而真正的死锁还是要满足上面**环路等待**的情况。也就是说，在这个环中，至少有两个线程，并且每个线程都在等着下一个线程的资源。所以，现在我们来写一个真正的死锁：
 
-![[Study Log/java_kotlin_study/resources/Drawing 2023-09-19 11.40.49.excalidraw.png]]
+![[Study Log/java_kotlin_study/resources/Drawing 2023-09-19 11.40.49.excalidraw.svg]]
 
 在这个例子中，t1持有锁A，t2持有锁B。然而此时t1想要t2的B，同时t2又想要t1的A。这种才是一个环路等待的过程。下面我们来大致写一下代码：
 

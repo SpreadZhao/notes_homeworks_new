@@ -2997,7 +2997,7 @@ readarray
 
 将文法按照这个规则写出分析树(好大一棵)：
 
-![[Lecture Notes/Compile/resources/Drawing 2023-01-03 11.05.48.excalidraw.png]]
+![[Lecture Notes/Compile/resources/Drawing 2023-01-03 11.05.48.excalidraw.svg]]
 
 首先我们要规约谁？按照以前的说法，我们要规约的是最右下角的那个int。但是在我[[#^2ac2d6|之前的修正]]中说过了，这是不准确的。句柄其实就是最左边的能规约的东西，所以我们要先搞这个M。那么此时就会调用第二条产生式的语义规则，创建一个新表并压入栈中：
 
@@ -3011,7 +3011,7 @@ readarray
 
 接下来的三步规约，我们放到一起说，因为最后这步才设计到本节的内容：
 
-![[Lecture Notes/Compile/resources/Drawing 2023-01-03 11.58.37.excalidraw.png]]
+![[Lecture Notes/Compile/resources/Drawing 2023-01-03 11.58.37.excalidraw.svg]]
 
 在规约第三步的时候，我们就会调用第四条产生式的语义规则，自然就是填写符号表了。因为此时栈顶的符号表是t2，所以我们填的就是t2。非常神奇！t2正好就是`sort()`函数的符号表。因此干就完了！别忘了，填完表之后`offset`这个全局变量也要改。改哪个？当然是栈顶的了！
 
