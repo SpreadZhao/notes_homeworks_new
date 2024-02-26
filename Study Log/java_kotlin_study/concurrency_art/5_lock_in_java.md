@@ -845,7 +845,7 @@ override fun tryAcquireShared(acquired: Int): Int {
 
 显然，单次CAS是会失败的。就像加锁的代码一样，直到我获得了锁才能继续下去。那么，我们是否问过这样的问题：*CAS等于锁吗*？
 
-**答案当然是否定的**！我们就拿synchronized来举例子。如果进入synchronized时失败了，会一直阻塞到能进去为止；但是CAS只要失败了就返回了！所以，真正的情况应该是，如果我们想要实现类似锁的功能，应该用的是**循环CAS**。也就是一次CAS失败了，我还不能不管了，要一直尝试下去，直到CAS成功执行为止。
+**答案当然是否定的**！我们就拿synchronized来举例子。如果进入synchronized时失败了，会一直阻塞到能进去为止；但是CAS只要失败了就返回了！所以，真正的情况应该是，如果我们想要实现类似锁的功能，应该用的是**循环CAS**。也就是一次CAS失败了，我还不能不管了，要一直尝试下去，直到CAS成功执行为止。可以看看这篇文章，虽然我感觉没啥水平：[【锁思想】自旋 or CAS 它俩真的一样吗？一文搞懂 - 掘金 (juejin.cn)](https://juejin.cn/post/7252889628376842297)
 
 有了这个概念，我们再回头看这个问题。我注释里说的那句话对吗？*如果CAS失败，难道真的表示【共享式的锁】的【尝试获取】失败了吗*？
 
@@ -881,7 +881,7 @@ override fun tryAcquireShared(acquired: Int): Int {
 }
 ```
 
-正确的实现就应该是这样的：**只有CAS成功了**，新的值after才能表示是否成功获得TwinsLock。而如果失败了，就应该从前面的某个时刻重试。那么，从哪里？我们想想：既然CAS失败了，就代表**肯定有其它人在这个空挡修改了state**。那么我下次如果还用原来的state的话，那就没有时效性了。
+~~正确的实现就应该是这样的~~：**只有CAS成功了**，新的值after才能表示是否成功获得TwinsLock。而如果失败了，就应该从前面的某个时刻重试。那么，从哪里？我们想想：既然CAS失败了，就代表**肯定有其它人在这个空挡修改了state**。那么我下次如果还用原来的state的话，那就没有时效性了。
 
 因此，正确的做法就是从整个方法的开头重来，重新读一遍新的state，重新减去，重新CAS。所以，简化成这样：
 
@@ -958,18 +958,98 @@ override fun tryAcquireShared(acquired: Int): Int {
 }
 ```
 
-> [!note]
-> 这里我突然发现，和[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-02-19-java-kotlin-study#^b08f74|互斥锁的获取过程]]正好是反的。在互斥锁的获取的时候，通常都是先只管抢锁，抢到了发现不该抢我再退出来；而操作Semaphore这种类似的结构的时候，就要先试探，只要我发现我不该抢，就完全不能做操作。我目前怀疑这就是『互斥』和『共享』的一个很大的区别：xxxx
+> [!note]- 小问题
+> > [!error] Deprecated
+> > ~~这里我突然发现，和[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-02-19-java-kotlin-study#^b08f74|互斥锁的获取过程]]正好是反的。在互斥锁的获取的时候，通常都是先只管抢锁，抢到了发现不该抢我再退出来；而操作Semaphore这种类似的结构的时候，就要先试探，只要我发现我不该抢，就完全不能做操作。我目前怀疑这就是『互斥』和『共享』的一个很大的区别：xxxx~~
+> >
+> >~~操操操，我上面感觉也像在放屁。我们就对比一下那篇日记里的tryLock()版本和上面的tryAcquireShared()。日记里的那个是先tryLock()，如果失败直接重来，如果成功进入临界区；而上面的共享获取，**整个方法都是临界区**。因为第一句`curr = state`其实已经是在读共享变量state了。所以，在我们判断`after < 0`的时候，就已经要退出临界区重来了。~~
+> >
+> >~~那这样你可能又会问，日记里不是说，==我在临界区里面判断我是不是该进临界区==这样的做法是错误的吗？其实这句话说的不准确，应该是：**如果我在临界区里发现我不应该进入临界区，那么在这个时间点上到进入临界区，下到立刻，都不能有**。日记里面那个错误版本的实现是，当`got == false`的时候，~~
 > 
-> 操操操，我上面感觉也像在放屁。我们就对比一下那篇日记里的tryLock()版本和上面的tryAcquireShared()。日记里的那个是先tryLock()，如果失败直接重来，如果成功进入临界区；而上面的共享获取，**整个方法都是临界区**。因为第一句`curr = state`其实已经是在读共享变量state了。所以，在我们判断`after < 0`的时候，就已经要退出临界区重来了。
+> 行吧，这里重新和Mutex的问题对比。看的是这一段：[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-02-19-java-kotlin-study#^39f670|2024-02-19-java-kotlin-study]]
 > 
-> 那这样你可能又会问，日记里不是说，==我在临界区里面判断我是不是该进临界区==这样的做法是错误的吗？其实这句话说的不准确，应该是：**如果我在临界区里发现我不应该进入临界区，那么在这个时间点上到进入临界区，下到立刻，都不能有**。日记里面那个错误版本的实现是，当`got == false`的时候，
+> 这个TwinsLock相信看到这里也能看出来了，就是一个资源为2的信号量。信号量和锁在概念上就是不同的，信号量的操作是down和up，而互斥锁只有被获得和没被获得两种状态。所以，compareAndSetState这个方法虽然也是类似于获取锁的状态，但是我们不能用对待锁的方式去对待它。
+> 
+> 另外，我感觉，资源数为1的共享就是互斥。
 
 ^5a197f
 
 - [ ] #TODO 难道互斥不等于资源数为1的共享吗？同时我对上面的Note正确与否表示怀疑。➕ 2024-02-26 🔺 
 
-为什么tryAcquire的cas没包？为什么shared就要包？[【锁思想】自旋 or CAS 它俩真的一样吗？一文搞懂 - 掘金 (juejin.cn)](https://juejin.cn/post/7252889628376842297)
+这个时候你可能也会问这样的问题：*为什么实现Mutex的时候tryAcquire()的CAS就没用循环包起来，而tryAcquireShared()就需要*？我们可以看看jdk的源码，发现Semaphore这样的同步组件，在实现tryAcquireShared()的时候也是用一个无限循环包起来。其实，包不包起来，或者任何其它的行为，都是为了“锁的成功获取”服务的。我们这里包起来只是为了，当真正将这个值减掉之后，它的结果对我们判断锁状态才有意义。如果是其它锁的话，也可以不包。
+
+最后是释放锁。也很简单，就是+1。但是，这个时候会有其它的线程和它抢着，无论是想-1还是+1都会影响到。所以这里的CAS也会失败，所以也需要套上循环；另外，这里就不存在类似那个<0的判断了。因为==获得了锁的线程个数==是确定的，这就导致我们不管怎么加这个state，都不可能让它超过2。
+
+```kotlin
+// 持有锁的线程是不可能释放失败的。所以最终只有返回true
+override fun tryReleaseShared(released: Int): Boolean {
+	while (true) {
+		val curr = state
+		val after = curr + released
+		if (compareAndSetState(curr, after)) {
+			return true
+		}
+	}
+}
+```
+
+这样就结束了。我们写个例子来验证一下。
+
+```kotlin
+class Worker(val lock: TwinsLock) : Thread() {
+	override fun run() {
+		while (true) {
+			lock.lock()
+			try {
+				println(currentThread().name)
+				SleepUtils.second(1)
+			} finally {
+				lock.unlock()
+			}
+		}
+	}
+}
+```
+
+一个线程，抢到锁之后休眠一秒钟之后输出自己名字。这样的情况下，如果10个线程同时启动，那么首先只有2个线程能抢到并输出。这俩线程释放锁之后又会重新来抢。所以，结果应该是每1秒输出两个线程：
+
+```kotlin
+val lock = TwinsLock()
+repeat(10) {
+	val w = Worker(lock)
+	w.isDaemon = true
+	w.start()
+}
+SleepUtils.second(100)
+```
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Peek 2024-02-26 20-43.gif|300]]
+
+## 5.3 重入锁
+
+在[[#5.2.2.1.3 入队成功之后 - 尝试获得锁 - accquireQueued()]]中我们正式介绍了什么情况锁才是公平的。简单来说：
+
+<font color="red">在绝对时间上，先对锁进行获取的请求一定先被满足，这就是公平；只要不满足，就是不公平。</font>
+
+ReentrantLock自己本身就在『可重入』的基础上又支持公平锁和非公平锁。
+
+### 5.3.1 可重入
+
+我们首先来研究可重入。字面意思，就是如果这个锁已经被自己获得了，还能再被自己获得（有啥用？）。我们之前实现的Mutex是可重入的吗？试一试，下面的代码：
+
+```kotlin
+val mutex = Mutex()
+mutex.lock()
+mutex.lock()
+```
+
+执行完之后，卡住了。我们用jstack看一下就发现，它确实在『重入』的时候阻塞住了：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240226204822.png]]
+
+也就是说，目前这个Mutex是不支持重入的。原因也很简单，我们回顾一下lock()：
+
+1. 调用的就是
 
 ---
 
