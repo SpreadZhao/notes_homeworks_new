@@ -225,6 +225,7 @@ forceStopPackage()
 - [ ] #urgency/high 飞书任务
 - [ ] #urgency/high 字节码
 - [ ] 西电搭子
+- [ ] 透明Activity？
 
 # 学习计划
 
