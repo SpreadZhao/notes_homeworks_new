@@ -1,10 +1,7 @@
----
-cssclasses: []
----
 
 # TODO
 
-* by **<big>Priority</big>**: [[resources/tasks_by_priority|tasks_by_priority]]
+* by **Priority (only unchecked)**: [[resources/tasks_by_priority|tasks_by_priority]]
 * by **<big>Progress</big>**: [[resources/tasks_by_progress|tasks_by_progress]]
 * **<big>Finished</big>**: [[resources/tasks_finished|tasks_finished]]
 
