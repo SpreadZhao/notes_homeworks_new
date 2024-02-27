@@ -400,6 +400,8 @@ private class Sync : AbstractQueuedSynchronizer() {
 }
 ```
 
+^mutextryacquire
+
 现在，这个例子已经可以工作了。这个例子涉及的东西比较多，后续关于这个Mutex相关的内容我会更新到日记中：[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-02-19-java-kotlin-study|2024-02-19-java-kotlin-study]]
 
 回答一下这个过程中可能会遇到的问题：
@@ -1049,7 +1051,148 @@ mutex.lock()
 
 也就是说，目前这个Mutex是不支持重入的。原因也很简单，我们回顾一下lock()：
 
-1. 调用的就是
+1. 调用的就是默认的acquire()方法；
+2. acquire()首先会调用tryAcquire()。在我们这个例子中肯定会成功，所以直接返回；
+3. 之后又调用了acquire() -> tryAcquire()。由于已经被获得了，所以tryAcquire()返回false，导致主线程被送进队列。
+
+不难发现，问题出在tryAcquire()上。我们应该在这里面加入『自己和获得锁线程的比较』。如果发现获得锁的线程就是自己，那么应该返回true。
+
+但是还有一个问题：如果线程连续两次获取同一个锁，那算一次还是两次呢？我们认为，一个线程不可能平白无故地获取两遍一样的锁，那就肯定是有它的理由。所以，如果一个线程获取了两次锁，就得解锁两次之后其它线程才能获取（前提是互斥锁）。
+
+> [!summary] 重入的实现需要注意两个问题：
+> * **线程再次获取锁**：锁需要去识别获取锁的线程是否为当前占据锁的线程，如果是，则再次成功获取。
+> * **锁的最终释放**：线程重复 n 次获取了锁，随后在第 n 次释放该锁后，其他线程能够获取到该锁。锁的最终释放要求锁对于获取进行计数自增，计数表示当前锁被重复获取的次数，而锁被释放时，计数自减，当计数等于 0 时表示锁已经成功释放。
+
+下面，我们来分析一下代码来看看可重入是怎么实现的。
+
+- [ ] #TODO 这里也是jdk8，之后升级一下。➕ 2024-02-27 🔽 
+
+首先，我们从tryLock()入手。毕竟无论是公平还是非公平，都是**可能**要调用这个方法才能获得锁：
+
+```kotlin
+public boolean tryLock() {
+	return sync.nonfairTryAcquire(1);
+}
+```
+
+我们发现，是nonfair的。为啥公平的锁在尝试获得的时候也会调用nonFair的呢？我们看看注释：
+
+> Even when this lock has been set to use a fair ordering policy, a call to `tryLock()` *will* immediately acquire the lock if it is available, whether or not other threads are currently waiting for the lock. This barging behavior can be useful in certain circumstances, <u>even though it breaks fairness</u>. If you want to honor the fairness setting for this lock, then use `tryLock(0, TimeUnit.SECONDS)` which is almost equivalent (it also detects interruption).
+
+也就是说，公平锁在尝试获得锁的时候也是不公平的。如果真想公平，那就用两个参数的版本。
+
+- [ ] #TODO 为啥允许公平锁打破公平？➕ 2024-02-27 ⏫ 
+
+现在看看nonfairTryAcquire()的实现：
+
+```java
+final boolean nonfairTryAcquire(int acquires) {
+	final Thread current = Thread.currentThread();
+	int c = getState();
+	if (c == 0) {
+		if (compareAndSetState(0, acquires)) {
+			setExclusiveOwnerThread(current);
+			return true;
+		}
+	}
+	else if (current == getExclusiveOwnerThread()) {
+		int nextc = c + acquires;
+		if (nextc < 0) // overflow
+			throw new Error("Maximum lock count exceeded");
+		setState(nextc);
+		return true;
+	}
+	return false;
+}
+```
+
+可以发现，就是在原来[[#^mutextryacquire|Mutex版本]]的基础上增加了当前线程的判断（else分支）。这样当一个线程重复获得同一个锁的时候，就会走到这里，并增加锁的计数（用state表示）。另一点是，由于走到else分支的时候，其它的线程不可能获得锁，所以这里使用的是`setState()`而不是`compareAndSetState()`。
+
+既然如此，当释放锁的时候肯定也不是简单的赋值，而是做减法：
+
+```java
+protected final boolean tryRelease(int releases) {
+	int c = getState() - releases;
+	if (Thread.currentThread() != getExclusiveOwnerThread())
+		throw new IllegalMonitorStateException();
+	boolean free = false;
+	if (c == 0) {
+		free = true;
+		setExclusiveOwnerThread(null);
+	}
+	setState(c);
+	return free;
+}
+```
+
+首先，这个方法定义在FairSync和NonfairSync的公共父类Sync中，并且是final。代表公平锁和非公平锁的释放操作都 走的是这里。
+
+剩下的，就是将当前的state减去传进来的参数releases。最后的结果如果是0，那么就释放成功了。如果不是，那么就还是我的锁。这里因为不可能有其它线程来抢，所以也不需要CAS。
+
+### 5.3.2 公平 & 非公平
+
+在继续之前，我觉得有必要对ReentrantLock()的结构来一张图。不然绕起来非常乱：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-27 14.44.54.excalidraw.svg]]
+
+通过这张图我们发现，就像我们之前说的那样，tryLock()只会走非公平的实现nonfairTryAcquire()。**想要调用到公平锁的tryAcquire()**，只能用lock()。而[[#^fb346a|之前]]我们说过，公平锁在发现没有竞争的时候要进去排队。所以tryLock()调用的就是非公平的实现了。理论上，如果是公平锁的tryLock()，应该是只要发现有人在排队，或者CAS失败就返回false。但是不知道为什么jdk8没提供这样的实现，而是打破了这个规则，转而让用另一个版本的tryLock()来做这件事。
+
+- [ ] #TODO 看看jdk17又没有修改这段逻辑 ➕ 2024-02-27 ⏫ 
+
+现在来看看具体是咋实现的，很简单：
+
+```java
+protected final boolean tryAcquire(int acquires) {
+	final Thread current = Thread.currentThread();
+	int c = getState();
+	if (c == 0) {
+		if (!hasQueuedPredecessors() &&
+			compareAndSetState(0, acquires)) {
+			setExclusiveOwnerThread(current);
+			return true;
+		}
+	}
+	else if (current == getExclusiveOwnerThread()) {
+		int nextc = c + acquires;
+		if (nextc < 0)
+			throw new Error("Maximum lock count exceeded");
+		setState(nextc);
+		return true;
+	}
+	return false;
+}
+```
+
+我们发现，这里的else分支和非公平是一样的。原因是无论是公平还是非公平，在一个线程已经获得了锁的状态下，其它线程都是没资格抢的，也就不存在公平非公平的问题了。
+
+而在if分支中，如果这个锁还没被任何一个线程获得，那么就是在非公平的判断条件基础上再加了一个`!hasQueuedPredecessors()`。也就是说，如果我前面还有人排着，那我也不能排队，返回false。
+
+由于只有lock()会调用到这里，返回false的结果就是我要去FIFO队列中排着。
+
+我们来写一个例子来验证一下。让一个线程先获取锁，然后打印一下自己，也就是获取锁的线程；然后再看看当前队列里有谁在排着：
+
+```kotlin
+private fun lockAndLook() {
+	lock.lock()
+	try {
+		println("locked by: ${currentThread().name}, wait queue: ${lock.queuedThreads.map { it.name }}")
+	} finally {
+		lock.unlock()
+	}
+}
+```
+
+然而，getQueuedThreads()在ReentrantLock中是protected，所以我们要自己重写一个，把它public出来：
+
+```kotlin
+class ReentrantLock2(fair: Boolean) : ReentrantLock(fair) {
+	public override fun getQueuedThreads(): MutableCollection<Thread> {
+		return super.getQueuedThreads().reversed().toMutableList()
+	}
+}
+```
+
+
 
 ---
 
