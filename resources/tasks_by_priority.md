@@ -2,7 +2,7 @@
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 sort by created
 sort by filename
 priority is highest
@@ -12,7 +12,7 @@ priority is highest
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 priority is high
 sort by created
 sort by filename
@@ -22,7 +22,7 @@ sort by filename
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 sort by created reverse
 priority is medium
 ```
@@ -31,7 +31,7 @@ priority is medium
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 priority is low
 ```
 
@@ -40,7 +40,7 @@ priority is low
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 priority is lowest
 ```
 
@@ -48,7 +48,7 @@ priority is lowest
 
 ```tasks
 tags include TODO
-not done
+filter by function task.status.type === "TODO"
 sort by created
 sort by filename
 priority is none
