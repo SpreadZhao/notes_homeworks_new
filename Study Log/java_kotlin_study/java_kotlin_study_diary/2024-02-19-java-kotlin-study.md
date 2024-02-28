@@ -190,3 +190,5 @@ if (currThNum != thNum && mutex.isLocked) {
 ```
 
 后面的`mutex.isLocked`是多余的。因为在阻塞的情况下，程序如果不阻塞唯一的可能就是已经获得了锁。所以这句话永远是true。
+
+- [ ] #TODO 交替打印四把锁的实现 ➕ 2024-02-28 ⏫ 

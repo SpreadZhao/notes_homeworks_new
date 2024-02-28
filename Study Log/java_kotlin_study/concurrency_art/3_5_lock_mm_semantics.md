@@ -89,7 +89,7 @@ class ReentrantLockExample {
 
 因此，非公平锁最大的一个特点就是，任何线程都可能『插队』。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
 
-- [/] #TODO why 提高吞吐率? ⏫ 🛫 2024-02-26
+- [x] #TODO [[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^e43b0b|why 提高吞吐率]]? ⏫ ➕ 2024-02-20 🛫 2024-02-26 ✅ 2024-02-29
 - [x] #TODO 公平和非公平锁并不是这样的。 🔺 ➕ 2024-02-23 ✅ 2024-02-26
 
 > [!todo]- 公平和非公平锁并不是这样的
