@@ -8,7 +8,5 @@ mtrace:
   - {{date}}
 ---
 
-#date {{date}}
-
 # <% title %>
 
