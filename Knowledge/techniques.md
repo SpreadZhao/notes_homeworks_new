@@ -226,6 +226,8 @@ forceStopPackage()
 - [ ] #urgency/high 字节码
 - [ ] 西电搭子
 - [ ] 透明Activity？
+- [ ] FrameLayout, LinearLayout, RelativeLayout绘制子View的流程
+- [ ] LayoutInflater源码解析
 
 # 学习计划
 
