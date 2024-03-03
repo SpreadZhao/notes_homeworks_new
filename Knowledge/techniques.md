@@ -308,6 +308,8 @@ forceStopPackage()
 	1. [How browsers work (taligarsiel.com)](https://taligarsiel.com/Projects/howbrowserswork1.htm)
 	2. webkit
 	3. chromium
+9. gaming
+	1. [Game Programming Patterns](https://gameprogrammingpatterns.com/)
 
 ## 其他方向
 
@@ -373,6 +375,7 @@ forceStopPackage()
 	- [ ] 敲行代码再睡觉
 	- [ ] 老伯伯软件站
 	- [ ] 老蒋出马
+	- [ ] 虎哥LoveOpenSource
 2. bytetech关注和**收藏**（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）
