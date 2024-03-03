@@ -3,8 +3,7 @@
 ```tasks
 tags include TODO
 filter by function task.status.name === "In Progress"
-sort by created
-sort by filename
+sort by start reverse
 ```
 
 ## Pending

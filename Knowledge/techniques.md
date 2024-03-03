@@ -2,6 +2,8 @@
 description: 要学的东西，都在这个里面。不管是安卓的，还是其它乱七八糟的，只要能想到的，都在这里面。
 ---
 > [!warning] 写在前面
+> 原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo。后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
+> 
 > * 分类看看就行，乱写的。主要目的是 ***==全==*** 而不是分类；
 > * 只有正在进行的任务会放到[[#进行中]]
 
@@ -171,7 +173,7 @@ forceStopPackage()
 
 [让你明明白白的使用RecyclerView——SnapHelper详解 - 简书 (jianshu.com)](https://www.jianshu.com/p/e54db232df62)
 
-- [ ] 看下图，kotlin泛型的一些东西还需要完善。还是不全捏。
+- [ ] 看下图，[[Study Log/java_kotlin_study/generics/generics_intro|kotlin泛型]]的一些东西还需要完善。还是不全捏。
 
 ![[Knowledge/resources/Pasted image 20231024152138.png]]
 
@@ -210,7 +212,7 @@ forceStopPackage()
 - [ ] [ICU Documentation | ICU is a mature, widely used set of C/C++ and Java libraries providing Unicode and Globalization support for software applications. The ICU User Guide provides documentation on how to use ICU. (unicode-org.github.io)](https://unicode-org.github.io/icu/)
 - [ ] :luc_camera: [[Knowledge/resources/20240131_193313.jpg|面试记录-校招-王重]]
 - [ ] :luc_camera: [[Knowledge/resources/20231226_105816.jpg|面试记录-小红书高级IOS]]
-- [ ] mmkv
+- [ ] mmkv ^mmkv
 	- [ ] [Tencent/MMKV: An efficient, small mobile key-value storage framework developed by WeChat. Works on Android, iOS, macOS, Windows, and POSIX. (github.com)](https://github.com/Tencent/MMKV)
 	- [ ] [【面试黑洞】Android 的键值对存储有没有最优解？哔哩哔哩bilibili](https://www.bilibili.com/video/BV1FU4y197dL/?spm_id_from=333.337.search-card.all.click) （这个视频12:38，说增量式更新是性能提升不重要的原因，和薛秋实说的正好是相反的 :confused:； 另外，最后说什么dataStore用协程完全不卡，我觉得完全在扯蛋。[[Knowledge/resources/Pasted image 20240217215509.png|有个评论也是这么说的]]）
 - [ ] Gradle: [Gradle 教程 已完结 (基于Kotlin DSL讲解) 4K蓝光画质 超强的脚本式项目依赖和构建工具_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Fc411x7xF/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
@@ -229,15 +231,37 @@ forceStopPackage()
 - [ ] FrameLayout, LinearLayout, RelativeLayout绘制子View的流程
 - [ ] LayoutInflater源码解析，vs View.inflate
 - [ ] **什么时候需要用WeakReference？**
+- [ ] Modern C++: [federico-busato/Modern-CPP-Programming: Modern C++ Programming Course (C++11/14/17/20/23) (github.com)](https://github.com/federico-busato/Modern-CPP-Programming)
+- [ ] **互联网上的免费书**：[ruanyf/free-books: 互联网上的免费书籍 (github.com)](https://github.com/ruanyf/free-books?tab=readme-ov-file)
+- [ ] Android学习路线（韩国的GDE）：[skydoves/android-developer-roadmap: 🗺 The Android Developer Roadmap offers comprehensive learning paths to help you understand Android ecosystems. (github.com)](https://github.com/skydoves/android-developer-roadmap)
+- [ ] [zhanghai/ComposePreference: Preference implementation for Jetpack Compose Material 3 (github.com)](https://github.com/zhanghai/ComposePreference?tab=readme-ov-file)
+- [ ] My Github stars：[Your Stars (github.com)](https://github.com/SpreadZhao?tab=stars)
 
-# 学习计划
-
-原本，我想在obsidian里记录要学的具体知识点，在三星笔记里记我的todo，后来我发现，这两者的内容经常会冲突，并且有时候我也不知道我现在看到的我想学的这个东西应该记在哪里好。所以，索性我直接把完整版全部放在这里了！
+# Classified
 
 ## 进行中
 
-- [ ] #TODO 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]] ➕ 2024-01-01
-- [ ] #TODO  毕设 ➕ 2023-12-01 
+- [/] #TODO 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]] ➕ 2024-01-01 🛫 2024-01-01
+- [/] #TODO  毕设 ➕ 2023-12-01 🛫 2023-12-01
+
+## 字节跳动
+
+* 包大小：PK150
+* Slardar
+* Lancet
+* quality和apm两个质量保证的库
+* 插件化：mira
+* 基础技术
+	* milo
+	* Tiktok基础技术
+* ABLock in Xigua
+* keva vs [[#^mmkv|mmkv]]
+* 西瓜ServiceManager
+* 抓包工机具使用
+	* Charles
+	* Wireshark
+	* 任意门原理（bytetech视频）
+* Handler消息屏障，在onCreate中能获得View宽高？
 
 ## 主要学的几个方向
 
@@ -246,22 +270,28 @@ forceStopPackage()
 3. bytetech知识地图
 4. 本文档前面的那些
 
-# Pieces
+## Pieces
 
 - [ ] [Android源码之为什么onResume方法中不可以获取View宽高 (qq.com)](https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650282000&idx=1&sn=308009a6837b2b56499ff24efd05c65f&chksm=8967c946a6dcea987c7461ac8378014a40d62ed51911ca5f7281bd90a00a7db43c55f1215d82&sessionid=1709048662&scene=126&subscene=91&clicktime=1709048669&enterid=1709048669&ascene=3&fasttmpl_type=0&fasttmpl_fullversion=7094201-zh_CN-zip&fasttmpl_flag=0&realreporttime=1709048669826&devicetype=android-34&version=28002c51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&session_us=gh_15d5aef889d8&countrycode=TT&exportkey=n_ChQIAhIQoisFznaI817TKOrbESls%2BRLrAQIE97dBBAEAAAAAAL9vE2tkl2AAAAAOpnltbLcz9gKNyK89dVj0JFP4t%2FkbU2PJ%2FFwmb0kzLhFk7sxxw%2Fdyrzrc0tRlDCorTCGYWANY2qAFhCvDxToCADWucM5K26F%2FzWphGuby34Dyqgq5hY236kcfK4WgPsW8DA2xQsUoZe%2BKXg2MP3SUMBVtpsRPiSaunvoFaI5WJ6hxB0eeHxRgSmZunizu%2F38IyLtNhRy7BqZidLdaYuH7GRN4WU7QeVXO%2BMKjyYNTd4zbUckAizpfCdzSMBamiQfaW62lGhZ1KPH%2FJtDl52GRucZcf7c%3D&pass_ticket=YVI%2F84rfE0k1efSZNZiWSLrVH8an0ObiTSckHWfnmCUzQQjHnD0%2FUTbyV4XqyBSR1wH2kfHgy5daCKSmROiIoQ%3D%3D&wx_header=3)
 - [ ] [一个 App 会创建多少个 Application 对象](https://mp.weixin.qq.com/s?__biz=MzUxMTUwOTcyMA==&mid=2247491484&idx=2&sn=f318575a3c151dc790badac33b288b3b&chksm=f973ca2bce04433df8d6615a22ffa302fdedbdfcb09781c2b4ab086bbf959832a3d86196fe55&mpshare=1&scene=23&srcid=02295oDc1i2zLY884k7ZpklY&sharer_shareinfo=5a96ec99a3e2311d5e735a4d4cae324a&sharer_shareinfo_first=5a96ec99a3e2311d5e735a4d4cae324a#rd)
 - [ ] [大揭秘，Android Flow面试官最爱问的7个问题](https://mp.weixin.qq.com/s?__biz=MzAxMTI4MTkwNQ==&mid=2650852124&idx=1&sn=13eaab494b373697e1adc99aeeb4302c&chksm=80b71f82b7c09694176341c11e3254f7328eec8a49cf37698c20954417a9f9420a8002c6c9d8&mpshare=1&scene=23&srcid=0229xdLd4bBtsVaUaUvPXpyU&sharer_shareinfo=17c881531700d528267d4b2f9fae9b16&sharer_shareinfo_first=17c881531700d528267d4b2f9fae9b16#rd)
+- [ ] [万字解析Android Handler实现原理 - 掘金 (juejin.cn)](https://juejin.cn/post/7326080299943280680)
+- [ ] [why kotlin by lazy can cause memory leak in android? - Stack Overflow](https://stackoverflow.com/questions/51718733/why-kotlin-by-lazy-can-cause-memory-leak-in-android)
 
 ## 未来方向
 
 1. WebRTC
 	1. [Android WebRTC完整入门教程01: 使用相机 - 简书](https://www.jianshu.com/p/eb5fd116e6c8)
 	2. [GetStream/webrtc-android: 🛰️ A versatile WebRTC pre-compiled Android library that reflects the recent WebRTC updates to facilitate real-time video chat for Android and Compose.](https://github.com/GetStream/webrtc-android)
+	3. [ddssingsong/webrtc_android: webrtc VideoCall VideoConference 视频通话 视频会议 (github.com)](https://github.com/ddssingsong/webrtc_android)
 2. 音视频
 	1. 安卓Native音视频介绍：Android系统攻城狮（公众号，这人要出书）
 	2. media3
 	3. [音视频并不难学，保姆级别音视频就业路线详解，进来看看适不适合你_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1xi4y1Y7U2/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
 	4. Bytetech
+	5. [0voice/audio_video_streaming: 音视频流媒体权威资料整理，500+份文章，论文，视频，实践项目，协议，业界大神名单。 (github.com)](https://github.com/0voice/audio_video_streaming)
+	6. Android系统攻城狮出的书
+	7. RTC程序设计 - 实时音视频权威指南
 3. 稳定性：KOOM为主，matrix，知识地图里的课程
 4. hook
 	1. Lancet
@@ -271,6 +301,7 @@ forceStopPackage()
 6. 插件：mira
 7. 虚拟机
 	1. [Crafting Interpreters](https://craftinginterpreters.com/)
+		1. [munificent/craftinginterpreters: Repository for the book "Crafting Interpreters" (github.com)](https://github.com/munificent/craftinginterpreters)
 	2. hotspot
 	3. GC
 8. 浏览器
@@ -281,7 +312,7 @@ forceStopPackage()
 ## 其他方向
 
 1. 微信公众号
-	- [/] #TODO 要看看具体有哪些公众号，别放过！
+	- [/] #TODO 要看看具体有哪些公众号，别放过！ 🛫 1999-01-01
 	- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
 	- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
 	- [ ] **Kotlin社区**：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
@@ -362,7 +393,7 @@ forceStopPackage()
 19. #urgency/high bytetech机器人
 20. #urgency/high ==***想进Infra，狠狠学字节码***==！
 
-# 其它学习
+# Others
 
 * [[Study Log/android_study/aa_android_study_outline|aa_android_study_outline]]
 * [[Study Log/java_kotlin_study/aa_java_study|aa_java_study]]
