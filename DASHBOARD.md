@@ -9,7 +9,7 @@
 
 ![[resources/every_week|every_week]]
 
-# Recent Modified
+# Recently Modified
 
 ```dataviewjs
 await dv.list(dv.pages('').sort(f=>f.file.mtime.ts,"desc").limit(10).file.link)
