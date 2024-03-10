@@ -93,7 +93,7 @@ class ReentrantLockExample {
 - [x] #TODO 公平和非公平锁并不是这样的。 🔺 ➕ 2024-02-23 ✅ 2024-02-26
 
 > [!todo]- 公平和非公平锁并不是这样的
-> #date 2024-02-26 [[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^fb346a|5_lock_in_java]]
+> #date 2024-02-26 [[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#^fb346a|5_2_aqs]]
 
 那ReentrantLock是咋实现锁的呢？我们稍微看看ReentrantLock的加锁和解锁过程。
 

@@ -11,7 +11,7 @@ mtrace:
 
 # 自定义Mutex的并发问题
 
-起因是我写《并发编程艺术》笔记的时候，在[[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java|5_lock_in_java]]自己实现的一个Mutex：
+起因是我写《并发编程艺术》笔记的时候，在[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs|5_2_aqs]]自己实现的一个Mutex：
 
 ```kotlin
 class LockTest {
