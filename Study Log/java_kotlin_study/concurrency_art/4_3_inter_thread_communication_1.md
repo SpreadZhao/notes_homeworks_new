@@ -519,7 +519,10 @@ class LocalThread : Thread() {
 如果你说，这个publicValue它：
 
 * 不方便写在LocalThread类里面，因为我有其它的操作也会涉及到这个变量；
-* 这个变量每个线程都是有自己的一份的。每个线程<label class="ob-comment" title="有权利阻止" style=""> 有权利阻止 <input type="checkbox"> <span style=""> 我既然是说的『有权利』，那么肯定就是也可以不阻止 </span></label>其它线程干扰这个变量的状态。
+* 这个变量每个线程都是有自己的一份的。每个线程<u>有权利阻止</u>其它线程干扰这个变量的状态。
+
+> [!comment] 有权利阻止
+> 我既然是说的『有权利』，那么肯定就是也可以不阻止
 
 那么就可以定义成ThreadLocal。至于用法和内部实现，可以稍微看一看八股文：[Java并发常见面试题总结（下）](https://javaguide.cn/java/concurrent/java-concurrent-questions-03.html)
 

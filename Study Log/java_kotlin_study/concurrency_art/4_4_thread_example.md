@@ -46,7 +46,7 @@ override fun run() {
 }
 ```
 
-只要jobs为空，那么就应该wait；反之就从jobs中取出一个job来运行。这里 :SiKotlin: `job.run()`的执行是写在一个线程里，所以就是这个线程在执行。
+只要jobs为空，那么就应该wait；反之就从jobs中取出一个job来运行。这里 :dev_kotlin_plain: `job.run()`的执行是写在一个线程里，所以就是这个线程在执行。
 
 下一个问题：*什么时候notify*？显然，需要等到有job的时候才能notify，得让线程被唤醒之后能拿到job。所以：
 

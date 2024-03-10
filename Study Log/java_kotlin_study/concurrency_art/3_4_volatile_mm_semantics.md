@@ -84,9 +84,8 @@ final result: 9975
 
 但是为什么volatile没有完全解决这个问题呢？在第二章中（[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal|2_concurrency_internal]]），我们已经介绍过volatile的一些特性。比如它是怎么增加那个lock指令的，那个指令又有什么用；在第三章中（[[Study Log/java_kotlin_study/concurrency_art/3_1_JMM_basic#3.1.3 happens-before|3.1.3 happens-before]]），我们又介绍了一些happens-before规则，其中就提到了volatile的这个规则：
 
-```note-imp
-对一个volatile的写，happens-before任意之后对它的读。
-```
+> [!note]
+> 对一个volatile的写，happens-before任意之后对它的读。
 
 一定要注意，这里说的仅仅是“写”和“读”！！！而你想一想，`integer++`这样的指令，真的仅仅是写和读吗？
 
@@ -233,7 +232,7 @@ class VolatileExample2 {
 - [x] #TODO #urgency/high 如果之后有一个完美的volatile的使用例子，我会贴在这里。
 
 > [!todo] 如果之后有一个完美的volatile的使用例子，我会贴在这里。
-> * #date 2024-01-07 有了，看下面这个日期的补充。
+> * #date 2024-01-07 有了，看下面这个日期的补充。[[#^d00fb6]]
 
 > [!summary] 做一个总结
 > 
@@ -420,7 +419,10 @@ class VolatileExample3 {
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/idea64_cKH9d1VWGC.gif]]
 
-<label class="ob-comment" title="单纯卡死我们可能看不出来啥，我们在while循环里打印点东西" style=""> ~~单纯卡死我们可能看不出来啥，我们在while循环里打印点东西~~ <input type="checkbox"> <span style=""> 这里不能打印，打印操作会刷新缓冲区，也就是线程本地内存可能会失效，所以这个问题直接给解决了。 </span></label>
+~~单纯卡死我们可能看不出来啥，我们在while循环里打印点东西~~
+
+> [!comment] 单纯卡死我们可能看不出来啥，我们在while循环里打印点东西
+> 这里不能打印，打印操作会刷新缓冲区，也就是线程本地内存可能会失效，所以这个问题直接给解决了。
 
 实际上，这里卡住就是卡在了这个while循环里。那你就会问了：10毫秒之后，write()执行完flag不就是true了吗？为啥还会卡？
 
@@ -428,7 +430,10 @@ class VolatileExample3 {
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-01-07 18.44.29.excalidraw.png]]
 
-在write()中，th确实把a和flag的值都更新并写到主存里了。但是，我们想一想：主线程在调用`th.start()`之后紧接着就走while循环。<label class="ob-comment" title="那么很可能在th还没来得及更新a和flag的时候" style=""> 那么很可能在th还没来得及更新a和flag的时候 <input type="checkbox"> <span style=""> 线程的切换也是需要时间滴！这个本书的开头就讲了。 </span></label>，**flag就已经被主线程读过一次了**。那么读到的是啥？false呗！所以，这个false就被留在了主线程的本地内存中。而程序员没有显式地通知主线程，说“*你这个本地内存里的东西早就过时了*”，所以自然它也不知道要去主存中去拿。
+在write()中，th确实把a和flag的值都更新并写到主存里了。但是，我们想一想：主线程在调用`th.start()`之后紧接着就走while循环。<u>那么很可能在th还没来得及更新a和flag的时候</u>，**flag就已经被主线程读过一次了**。那么读到的是啥？false呗！所以，这个false就被留在了主线程的本地内存中。而程序员没有显式地通知主线程，说“*你这个本地内存里的东西早就过时了*”，所以自然它也不知道要去主存中去拿。
+
+> [!comment] 那么很可能在th还没来得及更新a和flag的时候
+> 线程的切换也是需要时间滴！这个本书的开头就讲了。
 
 答案就是，在flag上加volatile：
 

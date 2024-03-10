@@ -53,7 +53,10 @@ volatile只是对读和写进行了原子操作。而这里我们虽然用了锁
 
 好吧，我觉得有必要先明确一个事情，就是：*我们现在说的锁，是不是syncronized*？
 
-答案是，syncronized确实<label class="ob-comment" title="和锁有关系" style=""> 和锁有关系 <input type="checkbox"> <span style=""> 为什么要说和锁有关系？因为syncronized本身不是锁，而是syncronized在使用锁。在2.2我们介绍过，syncronized使用的真正的锁其实就是Object，或者说是存在Object对象头里面的东西。 </span></label>，但是我们这里所说的锁，并不局限于syncronized。在3.5.1中我们通过锁的释放和获取的过程推出来了锁的内存语义。syncronized是可以实现这样的语义的。然而，syncronized实现的方式是通过monitor，也就是监视器锁（管程），通过加monitorenter和monitorexit指令来实现这样的语义；而我们现在所说的锁，比如ReentrantLock，是在**纯**Java层面的锁，而不是在字节码层面的锁。它没有手段去在字节码中增加什么东西来实现并发控制。所以，我们现在考虑的是==怎么用java提供给我们的手段去实现锁的内存语义==，从而让我们写的玩意儿能被称为一个锁。
+答案是，synchronized确实<u>和锁有关系</u>，但是我们这里所说的锁，并不局限于synchronized。在3.5.1中我们通过锁的释放和获取的过程推出来了锁的内存语义。synchronized是可以实现这样的语义的。然而，synchronized实现的方式是通过monitor，也就是监视器锁（管程），通过加monitorenter和monitorexit指令以及Java的对象头来实现这样的语义；而我们现在所说的锁，比如ReentrantLock，是在**纯**Java层面的锁，而不是在字节码层面的锁。它没有手段去在字节码中增加什么东西来实现并发控制。所以，我们现在考虑的是==怎么用java提供给我们的手段去实现锁的内存语义==，从而让我们写的玩意儿能被称为一个锁。
+
+> [!comment] 和锁有关系
+> 为什么要说“和锁有关系”而不是“synchronized就是锁”？因为syncronized本身不是锁，而是syncronized在使用锁。在2.2我们介绍过，syncronized使用的真正的锁其实就是Object，或者说是存在Object对象头里面的东西。
 
 我们借助ReentrantLock（可重入锁）来看一看锁内存语义有哪些实现方式。
 
@@ -89,7 +92,7 @@ class ReentrantLockExample {
 
 因此，非公平锁最大的一个特点就是，任何线程都可能『插队』。这样就导致某些线程可能因为运气不好被饿死。<u>但是这样可以提高吞吐率</u>。 
 
-- [x] #TODO [[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^e43b0b|why 提高吞吐率]]? ⏫ ➕ 2024-02-20 🛫 2024-02-26 ✅ 2024-02-29
+- [x] #TODO [[Study Log/java_kotlin_study/concurrency_art/5_3_reentrant_lock#^e43b0b|Why提高吞吐率]]? ⏫ ➕ 2024-02-20 🛫 2024-02-26 ✅ 2024-02-29
 - [x] #TODO 公平和非公平锁并不是这样的。 🔺 ➕ 2024-02-23 ✅ 2024-02-26
 
 > [!todo]- 公平和非公平锁并不是这样的
@@ -165,9 +168,15 @@ final boolean initialTryLock() {
 
 而基于volatile + CAS的组合，concurrent包又定义了一些比较基础的模型：
 
-* **AQS**：AbstractQueuedSynchronizer。我们简单翻译一下这个类的第一段注释：这玩意儿提供了一个框架，用这个框架我们能实现一些**阻塞的锁**以及一些“同步器”，比如semaphore，events等等。这些同步器都依赖于一个FIFO（first-in-first-out）的<label class="ob-comment" title="等待队列" style=""> 等待队列 <input type="checkbox"> <span style=""> ReentrantLock不就是这样的吗？！ </span></label>。然后，这个同步器有啥特点呢？就是如果你这个同步器依赖于一个**int值**来表示<label class="ob-comment" title="当前同步的状态" style=""> 当前同步的状态 <input type="checkbox"> <span style=""> 这不就是ReentrantLock里的那个getState和setState吗？！ </span></label>，那么就很适合了。所以，如果你继承了AQS，==那么子类就必须定义一些protected的方法来改变这个state==。光改变还不算完，<u>你还得定义获取锁或者释放锁的时候，这个状态是啥意思</u>。 ^b71a4e
+* **AQS**：AbstractQueuedSynchronizer。我们简单翻译一下这个类的第一段注释：这玩意儿提供了一个框架，用这个框架我们能实现一些**阻塞的锁**以及一些“同步器”，比如semaphore，events等等。这些同步器都依赖于一个FIFO（first-in-first-out）的<u>等待队列</u>。然后，这个同步器有啥特点呢？就是如果你这个同步器依赖于一个**int值**来表示<u>当前同步的状态</u>，那么就很适合了。所以，如果你继承了AQS，==那么子类就必须定义一些protected的方法来改变这个state==。光改变还不算完，<u>你还得定义获取锁或者释放锁的时候，这个状态是啥意思</u>。 ^b71a4e
 * **非阻塞数据结构**
 * **原子变量类**：也就是java.util.concurrent.atomic包中的类。也就是之前说CAS的时候用到的。
+
+> [!comment] 等待队列
+> ReentrantLock不就是这样的吗？！
+
+> [!comment] 当前同步的状态
+> 这不就是ReentrantLock里的那个getState和setState吗？！
 
 - [ ] #TODO “你还得定义获取锁或者释放锁的时候，这个状态是啥意思”这句话tm是啥意思？结合后面对源码的分析和实例解释一下。 ⏫
 - [ ] #TODO 非阻塞数据结构到底是啥？这里要明确一下。 🔼

@@ -30,9 +30,12 @@ public class FinalExample {
 }
 ```
 
-<label class="ob-comment" title="还是假设writer先执行，随后reader才执行" style=""> 还是假设writer先执行，随后reader才执行 <input type="checkbox"> <span style=""> 我觉得这里有必要把这个条件说得更详细一些。writer先执行，reader后执行的意思并不是等writer执行完毕之后reader才开始执行。不然我们也不用讨论并发了。这里说的就是只要writer执行了，reader随时可以执行。具体的时许还得看java的编译器和CPU是怎么决定的了。 </span></label>。首先，Java的任何变量都只能存在于类里对吧！那这样的话，final修饰的一定是一个类的一个成员。就比如上面的`j`。那么，final域的重排序规则是这样的：
+<u>还是假设writer先执行，随后reader才执行</u>。首先，Java的任何变量都只能存在于类里对吧！那这样的话，final修饰的一定是一个类的一个成员。就比如上面的`j`。那么，final域的重排序规则是这样的：
 
 **<center>对final域的写，禁止重排序到final域之外。</center>**
+
+> [!comment] 还是假设writer先执行，随后reader才执行
+> 我觉得这里有必要把这个条件说得更详细一些。writer先执行，reader后执行的意思并不是等writer执行完毕之后reader才开始执行。不然我们也不用讨论并发了。这里说的就是只要writer执行了，reader随时可以执行。具体的时许还得看java的编译器和CPU是怎么决定的了。
 
 - [ ] #TODO 第三章剩下的内容等学完代码再来补上吧。太tm难啃了。 🔽
 

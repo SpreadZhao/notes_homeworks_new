@@ -67,7 +67,7 @@ INSTANCE = new Singleton();
 
 这就是lock指令的本质了：锁！锁啥？以前的处理器中，锁的是`总线`；而最近的处理器中，锁的只是缓存，也就是Cache。**如果一些Cache中存入了这些volatile的变量，那么就有可能被多个核或者线程去同时访问。因此锁的就是这些会被同时访问的Cache们**。另外，锁总线的开销比较大，这部分我们在[[Study Log/java_kotlin_study/concurrency_art/2_concurrency_internal#2.3.1 处理器如何实现原子操作|后面的章节]]中会==介绍==。lock指令的第一个功能，就是把新值放到缓存里，并锁定这些会被同时访问的缓存**以及内存区域**，并将这个新值==在所有缓存中更新==，最终写回到内存里。 ^ce42bc
 
-- [ ] #TODO ↑介绍了吗？ ⏫
+- [x] #TODO ↑介绍了吗？ ⏫ ✅ 2024-03-10
 
 > [!info]
 > 锁住了总线，其它CPU（核或线程）不能访问总线，不能访问也就意味着不能访问内存。
@@ -220,7 +220,10 @@ class LockTest() {
 }
 ```
 
-执行`LockTest.test()`就可以了。然而，如果你使用的是jdk15+的版本，应该不会看到有关偏向锁的信息。因为在这之后偏向锁已经被默认移除了：[java偏向锁默认开启还是关闭,JDK15 默认关闭偏向锁优化原因-CSDN博客](https://blog.csdn.net/weixin_39764379/article/details/116055860)
+执行`LockTest.test()`就可以了。然而，如果你使用的是jdk15+的版本，应该不会看到有关偏向锁的信息。因为在这之后偏向锁已经被默认移除了：
+
+* [java偏向锁默认开启还是关闭,JDK15 默认关闭偏向锁优化原因-CSDN博客](https://blog.csdn.net/weixin_39764379/article/details/116055860)
+* [JEP 374: Deprecate and Disable Biased Locking (openjdk.org)](https://openjdk.org/jeps/374)
 
 为了重新开启偏向锁，我们需要配置虚拟机参数：
 
@@ -419,7 +422,7 @@ ok，现在可以介绍轻量级锁的加锁过程了。其实非常简单：
 
 #### 2.3.2 Java如何实现原子操作（CAS）
 
-其实就是AtomicXXX。我们写一个计数器来比较一下线程安全和非线程安全的区别。
+Java中CAS主要的逻辑位于AtomicXXX。我们写一个计数器来比较一下线程安全和非线程安全的区别。
 
 首先，需要两个变量。一个是线程安全的整数，一个是非线程安全的整数：
 
