@@ -12,6 +12,7 @@
 * [辰之猫 - 简书 (jianshu.com)](https://www.jianshu.com/u/6b147fcd94e6)
 * [Tristan的博客 | Tristan Blog (tristanzeng.github.io)](https://tristanzeng.github.io/)
 * [ZZH的Android 的个人主页 - 动态 - 掘金 (juejin.cn)](https://juejin.cn/user/1328667904451502)
+* [Weishu's Notes - 为数不多的维术](https://weishu.me/)
 
 # Article
 

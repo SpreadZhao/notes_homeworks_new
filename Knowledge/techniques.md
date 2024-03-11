@@ -284,6 +284,8 @@ forceStopPackage()
 - [ ] [大揭秘，Android Flow面试官最爱问的7个问题](https://mp.weixin.qq.com/s?__biz=MzAxMTI4MTkwNQ==&mid=2650852124&idx=1&sn=13eaab494b373697e1adc99aeeb4302c&chksm=80b71f82b7c09694176341c11e3254f7328eec8a49cf37698c20954417a9f9420a8002c6c9d8&mpshare=1&scene=23&srcid=0229xdLd4bBtsVaUaUvPXpyU&sharer_shareinfo=17c881531700d528267d4b2f9fae9b16&sharer_shareinfo_first=17c881531700d528267d4b2f9fae9b16#rd)
 - [ ] [万字解析Android Handler实现原理 - 掘金 (juejin.cn)](https://juejin.cn/post/7326080299943280680)
 - [ ] [why kotlin by lazy can cause memory leak in android? - Stack Overflow](https://stackoverflow.com/questions/51718733/why-kotlin-by-lazy-can-cause-memory-leak-in-android)
+- [ ] [另一种绕过 Android P以上非公开API限制的办法 | Weishu's Notes](https://weishu.me/2019/03/16/another-free-reflection-above-android-p/)
+- [ ] [LoveSyKun - 一个通用的纯 Java 安卓隐藏 API 限制绕过方案](https://lovesykun.cn/archives/android-hidden-api-bypass.html)
 
 ## 未来方向
 
