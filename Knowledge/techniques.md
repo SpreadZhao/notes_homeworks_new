@@ -243,6 +243,9 @@ forceStopPackage()
 - [ ] TTNet
 - [ ] [MIT 6.S081: Operating System Engineering - CS自学指南 (csdiy.wiki)](https://csdiy.wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/MIT6.S081/)
 - [ ] 有栈协程 & 无栈协程
+- [ ] SharedPreference源码要研究一下
+- [ ] 强软若虚引用，深入看一看
+- [ ] 图片库不能执着于fresco，还要多调研一下其它的。（最好看看字节的）
 
 # Classified
 
@@ -250,6 +253,8 @@ forceStopPackage()
 
 - [/] #TODO 并发艺术：[[Study Log/java_kotlin_study/concurrency_art|concurrency_art]] ➕ 2024-01-01 🛫 2024-01-01
 - [/] #TODO  毕设 ➕ 2023-12-01 🛫 2023-12-01
+- [/] #TODO keva ➕ 2024-03-20 🛫 2024-03-20
+- [/] #TODO RTC程序设计 ➕ 2024-03-20 🛫 2024-03-20 
 
 ## 字节跳动
 
@@ -385,6 +390,7 @@ forceStopPackage()
 	- [ ] 老伯伯软件站
 	- [ ] 老蒋出马
 	- [ ] 虎哥LoveOpenSource
+	- [ ] 字节忍者
 2. bytetech关注和**收藏**（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）
