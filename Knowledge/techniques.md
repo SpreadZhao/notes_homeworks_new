@@ -246,6 +246,7 @@ forceStopPackage()
 - [ ] SharedPreference源码要研究一下
 - [ ] 强软若虚引用，深入看一看
 - [ ] 图片库不能执着于fresco，还要多调研一下其它的。（最好看看字节的）
+- [ ] [facebook/folly: An open-source C++ library developed and used at Facebook.](https://github.com/facebook/folly) 无锁环形队列
 
 # Classified
 
@@ -284,6 +285,8 @@ forceStopPackage()
 
 ## Pieces
 
+- [ ] #TODO Pieces中的东西需要尽快开始！ ➕ 2024-03-20 🔺 
+
 - [ ] [Android源码之为什么onResume方法中不可以获取View宽高 (qq.com)](https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650282000&idx=1&sn=308009a6837b2b56499ff24efd05c65f&chksm=8967c946a6dcea987c7461ac8378014a40d62ed51911ca5f7281bd90a00a7db43c55f1215d82&sessionid=1709048662&scene=126&subscene=91&clicktime=1709048669&enterid=1709048669&ascene=3&fasttmpl_type=0&fasttmpl_fullversion=7094201-zh_CN-zip&fasttmpl_flag=0&realreporttime=1709048669826&devicetype=android-34&version=28002c51&nettype=WIFI&abtest_cookie=AAACAA%3D%3D&lang=zh_CN&session_us=gh_15d5aef889d8&countrycode=TT&exportkey=n_ChQIAhIQoisFznaI817TKOrbESls%2BRLrAQIE97dBBAEAAAAAAL9vE2tkl2AAAAAOpnltbLcz9gKNyK89dVj0JFP4t%2FkbU2PJ%2FFwmb0kzLhFk7sxxw%2Fdyrzrc0tRlDCorTCGYWANY2qAFhCvDxToCADWucM5K26F%2FzWphGuby34Dyqgq5hY236kcfK4WgPsW8DA2xQsUoZe%2BKXg2MP3SUMBVtpsRPiSaunvoFaI5WJ6hxB0eeHxRgSmZunizu%2F38IyLtNhRy7BqZidLdaYuH7GRN4WU7QeVXO%2BMKjyYNTd4zbUckAizpfCdzSMBamiQfaW62lGhZ1KPH%2FJtDl52GRucZcf7c%3D&pass_ticket=YVI%2F84rfE0k1efSZNZiWSLrVH8an0ObiTSckHWfnmCUzQQjHnD0%2FUTbyV4XqyBSR1wH2kfHgy5daCKSmROiIoQ%3D%3D&wx_header=3)
 - [ ] [一个 App 会创建多少个 Application 对象](https://mp.weixin.qq.com/s?__biz=MzUxMTUwOTcyMA==&mid=2247491484&idx=2&sn=f318575a3c151dc790badac33b288b3b&chksm=f973ca2bce04433df8d6615a22ffa302fdedbdfcb09781c2b4ab086bbf959832a3d86196fe55&mpshare=1&scene=23&srcid=02295oDc1i2zLY884k7ZpklY&sharer_shareinfo=5a96ec99a3e2311d5e735a4d4cae324a&sharer_shareinfo_first=5a96ec99a3e2311d5e735a4d4cae324a#rd)
 - [ ] [大揭秘，Android Flow面试官最爱问的7个问题](https://mp.weixin.qq.com/s?__biz=MzAxMTI4MTkwNQ==&mid=2650852124&idx=1&sn=13eaab494b373697e1adc99aeeb4302c&chksm=80b71f82b7c09694176341c11e3254f7328eec8a49cf37698c20954417a9f9420a8002c6c9d8&mpshare=1&scene=23&srcid=0229xdLd4bBtsVaUaUvPXpyU&sharer_shareinfo=17c881531700d528267d4b2f9fae9b16&sharer_shareinfo_first=17c881531700d528267d4b2f9fae9b16#rd)
@@ -291,6 +294,7 @@ forceStopPackage()
 - [ ] [why kotlin by lazy can cause memory leak in android? - Stack Overflow](https://stackoverflow.com/questions/51718733/why-kotlin-by-lazy-can-cause-memory-leak-in-android)
 - [ ] [另一种绕过 Android P以上非公开API限制的办法 | Weishu's Notes](https://weishu.me/2019/03/16/another-free-reflection-above-android-p/)
 - [ ] [LoveSyKun - 一个通用的纯 Java 安卓隐藏 API 限制绕过方案](https://lovesykun.cn/archives/android-hidden-api-bypass.html)
+- [ ] [c++ - What's the difference between constexpr and const? - Stack Overflow](https://stackoverflow.com/questions/14116003/whats-the-difference-between-constexpr-and-const)
 
 ## 未来方向
 
