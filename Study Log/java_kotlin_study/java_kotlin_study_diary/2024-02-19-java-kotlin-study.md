@@ -82,7 +82,7 @@ while (i < 100) {
 ~~而那个错误的实现，它把退出临界区的操作`if (got) mutex.unlock()`用一个临界区外的`got`变量来标识，这样的写法从设计角度上就是存在问题的。更致命的错误是，**如果got为false，那么本身你就没有权利进入临界区**！但是那个错误的实现并不是这样的。它在临界区里面才读got变量，就相当于==我在临界区里面判断我是不是该进临界区==，这么写不出问题才怪。~~
 
 > [!important] 我在临界区里面判断我是不是该进临界区
-> 这一段也是错误的！！！之后把这里的实现给补上。并且联系[[Study Log/java_kotlin_study/concurrency_art/5_lock_in_java#^5a197f|5_lock_in_java]]
+> 这一段也是错误的！！！之后把这里的实现给补上。并且联系[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#^5a197f|5_2_aqs]]
 
 - [ ] #TODO 那个错误的实现，th1进入了临界区，刚刚把currThNum改成2还没等释放锁的时候，th2开始判断`if (currThNum != thNum)`，那么导致th2也能进入临界区并输出。这样临界区里有两个线程，肯定不是我们想要的。 🔼 ➕ 2024-02-26
 
