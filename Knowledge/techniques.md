@@ -247,6 +247,7 @@ forceStopPackage()
 - [ ] 强软若虚引用，深入看一看
 - [ ] 图片库不能执着于fresco，还要多调研一下其它的。（最好看看字节的）
 - [ ] [facebook/folly: An open-source C++ library developed and used at Facebook.](https://github.com/facebook/folly) 无锁环形队列
+- [ ] litho拍平视图：[facebook/litho: A declarative framework for building efficient UIs on Android.](https://github.com/facebook/litho)
 
 # Classified
 
@@ -295,6 +296,7 @@ forceStopPackage()
 - [ ] [另一种绕过 Android P以上非公开API限制的办法 | Weishu's Notes](https://weishu.me/2019/03/16/another-free-reflection-above-android-p/)
 - [ ] [LoveSyKun - 一个通用的纯 Java 安卓隐藏 API 限制绕过方案](https://lovesykun.cn/archives/android-hidden-api-bypass.html)
 - [ ] [c++ - What's the difference between constexpr and const? - Stack Overflow](https://stackoverflow.com/questions/14116003/whats-the-difference-between-constexpr-and-const)
+- [ ] [破解 Android P 对隐藏Api访问的限制 - 灰色飘零 - 博客园](https://www.cnblogs.com/renhui/p/14214996.html)
 
 ## 未来方向
 
