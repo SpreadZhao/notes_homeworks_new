@@ -18,6 +18,7 @@ mtrace:
 * AppImage：[TheAssassin/AppImageLauncher: Helper application for Linux distributions serving as a kind of &quot;entry point&quot; for running and integrating AppImages](https://github.com/TheAssassin/AppImageLauncher)
 * 邮件：Thunderbird：[Thunderbird — Free Your Inbox. — Thunderbird](https://www.thunderbird.net/en-GB/)
 * #date 2024-02-13 历史剪切板：[CopyQ](https://hluk.github.io/CopyQ/)
+* #date 2024-03-22 img to PDF: [gscan2pdf-2.13.2](https://gscan2pdf.sourceforge.net/)
 
 # Git仓库统计
 
