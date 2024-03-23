@@ -41,7 +41,7 @@ synchronized(lock) {
 
 也就是说，当需要判断我应不应该wait的时候，**已经进入synchronized了**。但是当发现我需要wait的时候，又立刻会释放这个锁。等到被notify之后，又要尝试重新获取这个锁。等获得了之后，才会从wait()方法返回并继续。在上面的例子中，返回之后又会判断我是否需要wait，如果失败了还是会继续wait。。。
 
-不难看出，好像里面有些操作是比较低效的。其中大头就是synchronized的底层，monitor本身。而Java后续推出的一系列并发策略都是基于volatile和CAS的。这些操作的底层实现交由Unsafe来管理，而将这些能力封装起来，就能形成一些很轻量的锁。其中最典型的就是我们本章讨论的AQS。
+不难看出，好像里面有些操作是比较低效的。其中大头就是synchronized的底层，monitor本身。而Java后续推出的一系列并发策略都是基于volatile和CAS的。这些操作的底层实现交由Unsafe来管理，而将这些能力封装起来，就能形成一些很轻量的锁。其中最典型的就是我们本章讨论的AQS。 ^8eeacb
 
 而如果不使用synchronized，那显然也不能使用wait \& notify了。那么，我们使用什么呢？emm，应该是，concurrent包的发明者应该使用什么呢？答案就是LockSupport。LockSupport中的等待和唤醒机制也是交给Unsafe来管理，不对上层暴露。而其中的park和unpark就是最核心的功能。这里我也简单贴几个：
 
