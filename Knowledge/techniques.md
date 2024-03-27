@@ -401,6 +401,8 @@ forceStopPackage()
 	- [ ] 虎哥LoveOpenSource
 	- [ ] 字节忍者
 	- [ ] java小白翻身
+	- [ ] BennuCTech
+	- [ ] 逆向与采集
 2. bytetech关注和**收藏**（主要看Client Infra团队的）
 3. 深入理解kotlin协程
 4. 深入探索Android热修复技术原理（sophix）
