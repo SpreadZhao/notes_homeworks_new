@@ -17,7 +17,8 @@ mtrace:
  ---
 
 - [?] How to key binding **flameshot** and **peek** for screenshot and gif recording?
-- [>] ![[Knowledge/software_qa/resources/Pasted image 20240131112314.png]]
+
+![[Knowledge/software_qa/resources/Pasted image 20240131112314.png]]
   Add your own custom shortcuts here. "Command" is the most important. Just do as what you would do in terminal:
 
   ![[Knowledge/software_qa/resources/Pasted image 20240131112445.png]]
