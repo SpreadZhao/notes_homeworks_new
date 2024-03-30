@@ -161,6 +161,116 @@ override fun isHeldExclusively(): Boolean {
 
 这就是我们“满的时候也会等”的原因。那么问题来了：空的时候等，和满的时候等，他俩等的锁是啥？**其实都是这个队列**。因为你加任务的时候别人不能拿，你拿任务的时候别人也不能加。而我要等，还要分为两种不同的情况去等。这就是Condition起作用的时候了。
 
+现在来看看代码。我们用一个100个元素的数组表示队列，但是做的更加巧妙。我们来看看图示：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-03-31 00.36.57.excalidraw.svg]]
+
+`put_ptr`表示队尾，也就是入队的位置；而`take_ptr`就是出队的位置，自然就是队头。那么：
+
+* 每当入队时，`put_ptr++`。如果走到了头，就回到头；
+* 每当出队时，`take_ptr++`。如果走到了头，就回到头。
+
+看起来很不合理，但实际上合理得很。在某个时刻，这个队列可能是这样的：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-03-31 00.42.05.excalidraw.svg]]
+
+此时。队尾走过了一圈又绕了回来。这样很好地利用了这个数组。此时，如果按编号从队头数到队尾，就应该是：50, 51, 52, ..., 98, 99, 0, 1。
+
+显然，队列里最多只能有100个元素。那么，如果我一直往里加任务，没人去消费的话，等到加满了，就不会再加了。这也是之前我们没实现的逻辑；另外，和之前一样，如果一个线程发现队列里没东西了，那也会等，不再去取了。
+
+结合之前的Condition，我们来统计一下这个案例需要的东西：
+
+* 一个队列，就是个数组，100个元素；
+* 两个指针，分别指向队头（要拿走的元素位置）和队尾（要放入元素的**空格**）；
+* 一把锁，锁的就是队列。因为无论是加还是拿，都是不能有其它人干预的；
+- [*] 两个Condition，一个是队列中空的时候等它有东西；一个是队列满的时候等它被消费。这两个Condition都是和队列挂钩的，所以对应的都是同一把锁。
+
+现在来准备一下吧：
+
+```kotlin
+private val lock: Lock = ReentrantLock()
+// 两个Condition，对应同一把锁
+private val notFull: Condition = lock.newCondition()
+private val notEmpty: Condition = lock.newCondition()
+
+val items: Array<Any> = Array(100) {}
+
+// put item pointer, take item pointer, actual item count
+private var putptr = 0
+private var takeptr = 0
+private var count = 0
+```
+
+相信通过解释，我不需要说明代码的意义了，除了那两个Condition的名字和作用。接下来就是代码细节了。首先，我们需要弄懂，*这两个Condition到底能实现什么*？现在，假设干活儿的线程有2个，那么情况应该是这样的：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-03-31 01.16.08.excalidraw.svg]]
+
+上面图的编号看一下，0号线程通常是主线程，也就是提交任务的线程。而1号和2号就是线程池里干活儿的线程。中间的队列就是我们实现的这个有界队列。那么：
+
+* 当1和2从队列中取任务时，发现没任务了，需要等；
+* 当0往队列里放任务时，发现任务满了，需要等。
+
+这两种等的情况一样吗？不一样。一个是空了一个是满了。那么，如果我没有Condition的话，如果我等了，那么**谁**该用**什么**唤醒我？我们发现，『谁』和『什么』这两个东西我们都无法确定。
+
+比如还是之前的synchronized版本，当0发现满了，就等了。那么如果0刚刚休息，队列里的任务立马就被干活儿的线程给清空了（可能比较卷，就像我现在这段文字是凌晨1:23写的），这个时候1又要取任务，那么发现已经没了，所以也等了。这个时候，如果任意一个线程（可能是线程池里的线程，也可能是另一个新的提交任务的0.5号线程，whoever）调用了notifyAll()或者notify()，那唤醒的是谁？
+
+我们发现，**好像都被唤醒了**！如果是notify()，那么就可能唤醒了0号或者1号或者2号（取决于之前0和1，2谁在队列的前面）；如果是notifyAll()，那么就把所有线程都给唤醒了。这显然不是我们希望的。如果调用notify()的是一个新的提交任务的线程，那么我希望唤醒的是干活儿的线程；如果调用notify()的是一个干活儿的线程，那么就应该是**现在队列还不是满的**，我希望有人再提交一点儿。
+
+上面的问题总结起来就是：<u>我没有一个手段能准确地通知到我想通知的线程</u>。显然，Condition就是这个手段。每个线程由于某个原因，在等待着某个Condition。在本例中：
+
+* 提交任务的线程，在队列**满了**（原因）之后，等待着队列**不满**（notFull, Conditioin）；
+* 干活儿的线程，在队列**空了**（原因）之后，等待着队列**不空**（notEmpty, Condition）。
+
+所以，我们直接用Condition的通知能力，就能**精准定位**到我想通知的线程，唤醒他们。
+
+首先是提交任务的方法：
+
+```kotlin
+@Throws(InterruptedException::class)
+fun put(x: E) {
+	lock.lock()
+	try {
+		while (count == items.size) {
+			notFull.await()
+		}
+		items[putptr] = x
+		if (++putptr == items.size) {
+			putptr = 0
+		}
+		++count
+		notEmpty.signal()
+	} finally {
+		lock.unlock()
+	}
+}
+```
+
+首先锁住队列，当发现队列已经满了，那么我等着它什么时候不满。**如果被唤醒了，那么就是真不满了**。所以我现在可以放入一个元素，然后将指针挪到下一位。同时，因为我已经放入了一个元素，所以现在是不空的，所以我通知一下**等着不空**的那些线程。
+
+举一反三，干活儿的方法也很简单：
+
+```kotlin
+@Suppress("UNCHECKED_CAST")
+@Throws(InterruptedException::class)
+fun take(): E {
+	lock.lock()
+	try {
+		while (count == 0) {
+			notEmpty.await()
+		}
+		val item = items[takeptr] as E
+		if (++takeptr == items.size) {
+			takeptr = 0
+		}
+		--count
+		notFull.signal()
+		return item
+	} finally {
+		lock.unlock()
+	}
+}
+```
+
 #### 5.6.1.3 Mutex再次改造
 
 4个condition
