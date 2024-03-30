@@ -251,6 +251,9 @@ System.out.println(list1.getClass() == list2.getClass());
 
 左边的写法编译报错，右边的写法会运行时错误。根本原因都是我试图构造一个**类型为泛型**的实例。
 
+> [!attention]
+> 虽然无法实例化，但是是可以强转的。你可能会问：右边这个不就是强转吗？是，但是我说的是不实例化的强转。非常常见的一个情况可以看[[Study Log/java_kotlin_study/concurrency_art/5_6_condition#5.6.1.2 有界队列|5_6_condition]]。这里面我做了一个有界队列，里面涉及到了从里面拿出来一个元素。那么既然是用泛型拿，就涉及到用`something as E`这样的语法。如果`something`本身就是已经实例化的变量的话，那么强转是没问题的。这里只是不能从无到有而已。
+
 ## 变形
 
 > [!attention]
