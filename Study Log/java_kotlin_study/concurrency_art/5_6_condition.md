@@ -10,7 +10,7 @@ order: "6"
 
 ### 5.6.1 Condition的使用
 
-#### 5.6.1.1 Mutex改造
+#### 5.6.1.1 交替打印
 
 在使用Mutex的时候，我们又进行了1-100的交替打印，最后实现的源码是这样的：
 
@@ -273,9 +273,46 @@ fun take(): E {
 
 - [ ] #TODO 补一个这玩意儿使用的例子 ➕ 2024-03-31 🔽 
 
-#### 5.6.1.3 Mutex再次改造
+#### 5.6.1.3 再次交替打印
 
-4个condition
+- [ ] #TODO 梳理一下交替打印到底有多少方式？根据语言，实现方式区分。 ➕ 2024-04-02 ⏫ 
+
+通过有界队列，我们发现，利用好这个等待队列，可以实现非常高效的程序。就比如再升级一下交替打印。我自己以前实现的所有版本的交替打印，都有这么一个问题：**当被唤醒的时候，可能还是没轮到我，所以又进行等待/解锁**。这就导致了，以前的版本在里面都有一个『while + 等待』的逻辑，无论是使用synchronized还是Lock还是Condition。
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240402234739.png|400]] ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240402234800.png|400]]
+
+写法是其次，问题是这样做确实会让一些线程做无用功。那么，有没有一种可能，**我唤醒的线程就是下一个要打印的线程呢**？
+
+[8.线程-互斥量_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV18p4y167Md?p=209&vd_source=64798edb37a6df5a2f8713039c334afb) 这个视频里介绍了C语言中实现的一种思路，用的是4个Mutex。显然，我们也可以使用4个Mutex（或者ReentrantLock）来实现，不过这里介绍的是4个Condition。
+
+4个Condition其实更合理。Condition的意思是“我要等待一个『我可以做』的时机”，因此『轮到我打印』就是一个很好的时机。
+
+给每个线程指定一个Condition，没轮到自己就等待，自己打印完之后通知下一个线程继续：
+
+```kotlin
+while (i < 100) {
+	mutex.lock()
+	try {
+		if (thNum != currThNum) {
+			// 自己等待
+			conditions[thNum - 1].await()
+		}
+		if (i <= 100) {
+			println("${name}: $i")
+		}
+		i++
+		currThNum = otherNum
+		// 唤醒下一个
+		conditions[otherNum - 1].signal()
+	} finally {
+		mutex.unlock()
+	}
+}
+```
+
+注意，我们不需要while了，直接用if就行。因为**只要我们被唤醒了，那么现在一定是轮到我打印了**。
+
+
 
 ---
 
