@@ -279,6 +279,8 @@ forceStopPackage()
 	* Wireshark
 	* 任意门原理（bytetech视频）
 * Handler消息屏障，在onCreate中能获得View宽高？
+* PriorityLinearLayout
+* 把Spread-All in One搬过来
 
 ## 主要学的几个方向
 
@@ -300,6 +302,8 @@ forceStopPackage()
 - [ ] [LoveSyKun - 一个通用的纯 Java 安卓隐藏 API 限制绕过方案](https://lovesykun.cn/archives/android-hidden-api-bypass.html)
 - [ ] [c++ - What's the difference between constexpr and const? - Stack Overflow](https://stackoverflow.com/questions/14116003/whats-the-difference-between-constexpr-and-const)
 - [ ] [破解 Android P 对隐藏Api访问的限制 - 灰色飘零 - 博客园](https://www.cnblogs.com/renhui/p/14214996.html)
+- [ ] 所有仓库里注释里的todo
+- [ ] 日记：分析横屏请求请求数据降低，修改snap分发逻辑。
 
 ## 未来方向
 
