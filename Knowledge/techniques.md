@@ -281,6 +281,8 @@ forceStopPackage()
 * Handler消息屏障，在onCreate中能获得View宽高？
 * PriorityLinearLayout
 * 把Spread-All in One搬过来
+* TaskInfo怎么存的
+* xg_library
 
 ## 主要学的几个方向
 
@@ -304,6 +306,7 @@ forceStopPackage()
 - [ ] [破解 Android P 对隐藏Api访问的限制 - 灰色飘零 - 博客园](https://www.cnblogs.com/renhui/p/14214996.html)
 - [ ] 所有仓库里注释里的todo
 - [ ] 日记：分析横屏请求请求数据降低，修改snap分发逻辑。
+- [ ] SpreadAndroidStudy之后全部归档
 
 ## 未来方向
 
