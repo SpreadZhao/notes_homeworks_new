@@ -1,7 +1,7 @@
 # (Almost) All Things About SpreadZhao
 
-* Introduction: [INTRODUCTION](INTRODUCTION)
-* DashBoard: [DASHBOARD](DASHBOARD)
+* Introduction: [INTRODUCTION](INTRODUCTION.md)
+* DashBoard: [DASHBOARD](DASHBOARD.md)
 
 ## How to Use ?
 
