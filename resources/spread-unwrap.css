@@ -1,0 +1,11 @@
+/*un-wrap code*/
+.HyperMD-codeblock {
+    white-space: nowrap;
+}
+
+/*scroll codeblock in read mode*/
+.markdown-reading-view code[class*="language-"] {
+    overflow-x: scroll;
+    white-space: pre;
+    padding: 15px 0px;
+}

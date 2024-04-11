@@ -1,0 +1,23 @@
+.square-solid {
+	border-style: solid;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-red {
+	border-style: solid;
+	border-color: red;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-yellow {
+	border-style: solid;
+	border-color: yellow;
+	background-color: transparent !important;
+	color: inherit !important;
+}
+.square-solid-blue {
+	border-style: solid;
+	border-color: blue;
+	background-color: transparent !important;
+	color: inherit !important;
+}

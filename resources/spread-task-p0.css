@@ -1,0 +1,7 @@
+li[data-task-priority='highest'].task-list-item.plugin-tasks-list-item {
+    --tag-color: red;
+    --tag-border-color: red;
+    color: red;
+    font-weight: 900;
+    font-size: 1.1em;
+}

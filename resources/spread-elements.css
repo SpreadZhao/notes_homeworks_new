@@ -1,0 +1,121 @@
+body {
+    /* headings */  
+    --h1-size: 2.5em;
+    --h2-size: 2.0em;
+    --h3-size: 1.5em;
+    --h4-size: 1.3em;
+    --h5-size: 1.2em;
+    --h6-size: 1.1em;
+    /* table */
+    --table-border-width: 1px;
+    --table-border-color: rgb(158, 158, 158);
+    /* embed */
+    --embed-max-height: 600px;
+    /* code */
+    --code-size: 1em;
+    /* highlight background */
+    --text-highlight-bg: rgba(238, 255, 0, 0.523);
+    /* link */
+    --link-unresolved-color: rgb(151, 151, 151);
+}
+
+.theme-dark {
+    /* block quote */
+    --blockquote-color: #ffffffad;
+    /* selected text */
+    --text-selection: rgba(160, 17, 17, 0.578);
+    /* tags */
+    --tag-color: white;
+    --tag-color-hover: white;
+    --tag-background: transparent;
+    --tag-background-hover: transparent;
+    --tag-border-color: white;
+    --tag-border-color-hover: white;
+    --tag-border-width: 2px;
+    --tag-radius: 0px;
+    --tag-padding-x: 5px;
+    --tag-padding-y: 3px;
+    /* --tag-radius: 50% 20% / 10% 40%; */
+    /* link */
+    --link-color: rgba(184, 201, 0, 0.7);
+    --link-color-hover: rgb(184, 201, 0);
+    --link-external-color: rgba(157, 176, 201, 0.5);
+    --link-external-color-hover: rgb(157, 176, 201);
+}
+
+.theme-light {
+    /* block quote */
+    --blockquote-color: #4f4c4ca2;
+    /* tags */
+    --tag-color: black;
+    --tag-color-hover: black;
+    --tag-background: transparent;
+    --tag-background-hover: transparent;
+    --tag-border-color: black;
+    --tag-border-color-hover: black;
+    --tag-border-width: 3px;
+    --tag-radius: 0px;
+    --tag-padding-x: 5px;
+    --tag-padding-y: 3px;
+    /* --tag-radius: 50% 20% / 10% 40%; */
+    /* link */
+    --link-color: rgba(119, 130, 0, 0.619);
+    --link-color-hover: rgb(119, 130, 0);
+    --link-external-color: rgba(0, 2, 108, 0.537);
+    --link-external-color-hover: rgb(0, 2, 108);
+}
+
+
+/* hover animation */
+a.tag {
+    display: inline-block;
+}
+
+a.tag:hover,
+a.tag:focus {
+    transform: translateY(-.25em);
+}
+
+/* 加粗-reading模式 */
+strong {
+    font-weight: 900;
+    font-size: 1.1em;
+    /* color: yellow; */
+}
+
+/* 加粗-editing模式 */
+.cm-strong {
+    font-weight: 900;
+    font-size: 1.1em;
+    /* color: red; */
+}
+
+/* 下滑线偏移5像素 */
+u, a.internal-link, a.external-link, span.cm-underline {
+    text-underline-offset: 5px;
+}
+
+/* 高亮文本黑色 */
+.markdown-rendered mark {
+    color: black;
+}
+
+/* ***==这样的文本==***会加边框 */
+.markdown-rendered strong>em>mark {
+    border-style: solid;
+	background-color: transparent;
+    color: var(--text-normal);
+    font-style: normal;
+}
+
+/* code background in reading mode */
+.theme-dark :not(pre) > code[class*="language-"], 
+.theme-dark [class*="language-"] {
+    --code-background: rgba(34, 0, 52, 0.237);
+}
+
+.theme-light :not(pre) > code[class*="language-"], 
+.theme-light [class*="language-"] {
+    --code-function: rgb(8, 0, 113);
+}
+
