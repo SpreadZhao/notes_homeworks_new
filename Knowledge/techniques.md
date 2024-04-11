@@ -307,6 +307,7 @@ forceStopPackage()
 - [ ] 所有仓库里注释里的todo
 - [ ] 日记：分析横屏请求请求数据降低，修改snap分发逻辑。
 - [ ] SpreadAndroidStudy之后全部归档
+- [ ] #TODO 到底为什么不能在子线程更新UI？ ➕ 2024-04-10 🔺 
 
 ## 未来方向
 
