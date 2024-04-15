@@ -79,14 +79,14 @@ a.tag:focus {
 /* 加粗-reading模式 */
 strong {
     font-weight: 900;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     /* color: yellow; */
 }
 
 /* 加粗-editing模式 */
 .cm-strong {
     font-weight: 900;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     /* color: red; */
 }
 

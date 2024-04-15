@@ -9,10 +9,9 @@ input[type=checkbox]:checked:after {
 }
 
 /* 通用设置：透明背景+居中铺满 */
-input:checked,
-li>input:checked {
-  background-color: transparent !important;
-  background-size: contain !important;
+input[type=checkbox]:checked {
+  background-color: transparent;
+  background-size: contain;
 }
 
 /* 前者是edit mode, 后者是reading mode, 默认的对勾 */
