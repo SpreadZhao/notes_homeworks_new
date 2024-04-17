@@ -263,6 +263,8 @@ forceStopPackage()
 
 ## 字节跳动
 
+### 杂项
+
 * 包大小：PK150
 * Slardar
 * Lancet
@@ -283,6 +285,15 @@ forceStopPackage()
 * 把Spread-All in One搬过来
 * TaskInfo怎么存的
 * xg_library
+* 置顶的所有
+	* 西瓜视频Android技术交流会
+	* ByteTech
+	* 视频会议
+	* 抖音客户端技术论坛
+
+### Spread - All in One
+
+
 
 ## 主要学的几个方向
 
@@ -411,25 +422,27 @@ forceStopPackage()
 	- [ ] java小白翻身
 	- [ ] BennuCTech
 	- [ ] 逆向与采集
-2. bytetech关注和**收藏**（主要看Client Infra团队的）
-3. 深入理解kotlin协程
-4. 深入探索Android热修复技术原理（sophix）
-5. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
-6. #urgency/low Clash for Android代码分析
-7. #urgency/medium **vim usage**
-8. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
-9. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
-10. #urgency/medium **bytetech新人培训**
-11. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章） #date 2024-02-01 现在该名字叫西瓜视频Android技术交流会
-12. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
-13. 飞书文档的收藏
-14. #urgency/medium obsidian todo
-15. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
-16. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
-17. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
-18. #urgency/low 当时NIO的那些录屏。
-19. #urgency/high bytetech机器人
-20. #urgency/high ==***想进Infra，狠狠学字节码***==！
+	- [ ] 三翼鸟数字化科技
+	- [ ] JavaBuild888
+1. bytetech关注和**收藏**（主要看Client Infra团队的）
+2. 深入理解kotlin协程
+3. 深入探索Android热修复技术原理（sophix）
+4. AndroidStudy仓库：[axjlxm/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/axjlxm/AndroidStudy)
+5. #urgency/low Clash for Android代码分析
+6. #urgency/medium **vim usage**
+7. AndroidStudy仓库：[crazyqiang/AndroidStudy: 🔥 Android学习知识点总结 Jetpack、MVVM、MVI、Kotlin、ViewPager2、JUC多线程等，欢迎star！ (github.com)](https://github.com/crazyqiang/AndroidStudy)
+8. AndroidStudy仓库：[lwjobs/AndroidStudy: just for android studio (github.com)](https://github.com/lwjobs/AndroidStudy) 这个主要是蓝牙，嵌入式的安卓方向。
+9. #urgency/medium **bytetech新人培训**
+10. #urgency/high 飞书群：西瓜安卓业务技术分享交流会（里面有很多分享文章） #date 2024-02-01 现在该名字叫西瓜视频Android技术交流会
+11. Ehviewer：[Ehviewer-Overhauled/Ehviewer: EhViewer overhauled with Material Design 3, Jetpack Compose and more (github.com)](https://github.com/Ehviewer-Overhauled/Ehviewer)
+12. 飞书文档的收藏
+13. #urgency/medium obsidian todo
+14. [JetBrains/compose-multiplatform-ios-android-template: Compose Multiplatform iOS+Android Application project template (github.com)](https://github.com/JetBrains/compose-multiplatform-ios-android-template)
+15. [running-libo/Tiktok: 高仿抖音APP (github.com)](https://github.com/running-libo/Tiktok)
+16. #urgency/high Rust：[欢迎来到 Comprehensive Rust 🦀 - Comprehensive Rust 🦀 (google.github.io)](https://google.github.io/comprehensive-rust/zh-CN/)
+17. #urgency/low 当时NIO的那些录屏。
+18. #urgency/high bytetech机器人
+19. #urgency/high ==***想进Infra，狠狠学字节码***==！
 
 # Others
 
