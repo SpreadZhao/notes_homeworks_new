@@ -17,7 +17,7 @@ You will find some file content seems like broken. Don't worry, install below pl
 
 * DataView: https://github.com/blacksmithgu/obsidian-dataview
 * Tasks: https://github.com/obsidian-tasks-group/obsidian-tasks
-* Image Toolkit: https://github.com/sissilab/obsidian-image-toolkit
+* Icon Shortcodes: https://github.com/aidenlx/obsidian-icon-shortcodes
 
 ## CSS Snippets
 

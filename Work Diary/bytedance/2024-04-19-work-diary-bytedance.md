@@ -1,8 +1,9 @@
 ---
 title: Always Record Your Reward
 date: 2024-04-19
-tags: 
-mtrace: 
+tags:
+  - "#diary/work/thoughts"
+mtrace:
   - 2024-04-19
 ---
 
