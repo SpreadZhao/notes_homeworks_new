@@ -8,6 +8,7 @@
 - [ ] #TODO work diary 回滚 经常记录产出 工作日记同步 ➕ 2024-04-18 🔼 
 - [ ] #TODO 组合优于继承，有时候你加一个方法，只能在接口里加，导致很多子类有很多空实现。 ➕ 2024-04-18 🔼 
 - [ ] #TODO viewtreeobserver的scroll在首刷的时候会触发吗？ ➕ 2024-04-19 🔼 
+- [ ] #TODO View.post do what? ➕ 2024-04-22 ⏫ 
 
 # Week progress
 
