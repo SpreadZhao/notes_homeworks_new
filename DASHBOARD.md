@@ -9,6 +9,7 @@
 - [ ] #TODO 组合优于继承，有时候你加一个方法，只能在接口里加，导致很多子类有很多空实现。 ➕ 2024-04-18 🔼 
 - [ ] #TODO viewtreeobserver的scroll在首刷的时候会触发吗？ ➕ 2024-04-19 🔼 
 - [ ] #TODO View.post do what? ➕ 2024-04-22 ⏫ 
+- [ ] #TODO [从一次实际经历来说说IdleHandler的坑 - 掘金 (juejin.cn)](https://juejin.cn/post/6936440588635996173) ➕ 2024-04-24 ⏫ 
 
 # Week progress
 
