@@ -19,3 +19,5 @@
 * [Window, ViewRootImpl, Surface, Canvas, View, DecorView, ViewTreeObserver, TouchEvent, SurfaceView | Medium](https://medium.com/@MrAndroid/android-window-basic-concepts-a11d6fcaaf3f)
 * [VSYNC | Android Open Source Project](https://source.android.com/docs/core/graphics/implement-vsync)
 * [Graphics | Android Open Source Project](https://source.android.com/docs/core/graphics)
+* [一文理解 onMeasure -- 从 MeasureSpec 说起 - 掘金 (juejin.cn)](https://juejin.cn/post/6962438735426224136#comment)
+* [在 ViewGroup 中管理触摸事件  |  Views  |  Android Developers](https://developer.android.com/develop/ui/views/touch-and-input/gestures/viewgroup?hl=zh-cn)
