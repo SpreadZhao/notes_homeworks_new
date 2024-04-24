@@ -423,7 +423,10 @@ void offsetPositionRecordsForInsert(int positionStart, int itemCount) {
 
 ![[Study Log/android_study/recyclerview/2_scroll_data/resources/Drawing 2024-01-03 11.46.41.excalidraw.png]]
 
-这里模拟的是调用了`notifyItemInserted(3)`。也就是在原来的2号和3号之间新插入一个元素。那么带入到我们现在这个方法中，在布局之前，RV的孩子都是谁？1 2 3 4 5。那么对于这个`mPosition >= positionStart`条件，谁符合？3 4 5。插入了新元素之后，原来的3 4 5变成了什么？4 5 6。而原来的1 2并没有变。这里if块中的`holder.offsetPosition()`就是在做这样的操作。只不过，它考虑了不只是插入一个元素的情况，所以把插入元素的个数也传了进去。除了这里，该方法还考虑了Cache中的ViewHolder，这些VH虽然不在屏幕上，但是其中的数据是有效的，随时有可能回到屏幕内。比如还是上面的例子。如果我们没有停用RV的缓存，<label class="ob-comment" title="那么0号就应该是在Cache中的元素" style=""> 那么0号就应该是在Cache中的元素 <input type="checkbox"> <span style=""> 有个前提，就是我们是从上往下滑动的。如果是从下往上滑动，那么在Cache中的很可能是6号。 </span></label>。那么如果我们是在0号处插入一个元素的话，执行到这里时，Recycler也会在`mRecycler.offsetPositionRecordsForInsert()`这里将0号元素的位置更新为1号。
+这里模拟的是调用了`notifyItemInserted(3)`。也就是在原来的2号和3号之间新插入一个元素。那么带入到我们现在这个方法中，在布局之前，RV的孩子都是谁？1 2 3 4 5。那么对于这个`mPosition >= positionStart`条件，谁符合？3 4 5。插入了新元素之后，原来的3 4 5变成了什么？4 5 6。而原来的1 2并没有变。这里if块中的`holder.offsetPosition()`就是在做这样的操作。只不过，它考虑了不只是插入一个元素的情况，所以把插入元素的个数也传了进去。除了这里，该方法还考虑了Cache中的ViewHolder，这些VH虽然不在屏幕上，但是其中的数据是有效的，随时有可能回到屏幕内。比如还是上面的例子。如果我们没有停用RV的缓存，<u>那么0号就应该是在Cache中的元素</u>。那么如果我们是在0号处插入一个元素的话，执行到这里时，Recycler也会在`mRecycler.offsetPositionRecordsForInsert()`这里将0号元素的位置更新为1号。
+
+> [!comment] 那么0号就应该是在Cache中的元素
+> 有个前提，就是我们是从上往下滑动的。如果是从下往上滑动，那么在Cache中的很可能是6号。
 
 对于删除的情况，可以看隔壁方法的实现。它们的目的是一样的，只不过由于是删除而不是增加，所以有一些改动会异于插入。
 
