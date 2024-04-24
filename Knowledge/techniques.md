@@ -319,6 +319,8 @@ forceStopPackage()
 - [ ] 日记：分析横屏请求请求数据降低，修改snap分发逻辑。
 - [ ] SpreadAndroidStudy之后全部归档
 - [ ] #TODO 到底为什么不能在子线程更新UI？ ➕ 2024-04-10 🔺 
+- [ ] [wurensen/TaskScheduler: 基于Kotlin协程以及DAG（有向无环图）实现的Android任务调度框架，可以根据任务间的依赖关系进行调度。 (github.com)](https://github.com/wurensen/TaskScheduler)
+- [ ] [kpali/wolf-flow: wolf-flow是一个简单的、支持有向无环图（DAG）的轻量级作业调度引擎 (github.com)](https://github.com/kpali/wolf-flow)
 
 ## 未来方向
 
