@@ -16,6 +16,5 @@ for (let page of pages) {
 dv.list(res)
 ```
 
-# Current Progress
+# 
 
-![[resources/every_week|every_week]]
