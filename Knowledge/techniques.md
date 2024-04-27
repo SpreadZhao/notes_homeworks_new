@@ -357,75 +357,86 @@ forceStopPackage()
 
 ## 其他方向
 
-1. 微信公众号
-	- [/] #TODO 要看看具体有哪些公众号，别放过！ 🛫 1999-01-01
-	- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
-	- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
-	- [ ] **Kotlin社区**：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
-	- [ ] 码上加油站：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/SyX-HtPxECICFFnu3J_XSw)
-	- [ ] 鸿洋：[Google对于开发者的一些架构建议 (qq.com)](https://mp.weixin.qq.com/s/d9Xjnr2NzM1QjWH5WpeQjw)
-	- [ ] 虎哥Lovedroid：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/Bdjet69579KCEbaYhK-k3g)
-	- [ ] 原点技术：[mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg](https://mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg)
-	- [ ] 沐雨花飞蝶：[mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA](https://mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA)
-	- [ ] **勤奋的oyoung**：[mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ](https://mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ)
-		- [ ] 每日面试题非常好
-	- [ ] **彬sir哥**：[mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w](https://mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w)
-		- [ ] 有很多比如自定义View的编程实战
-	- [ ] 黄大官AOSP：[mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg](https://mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg)
-	- [ ] **Android 开发者**：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
-		- [ ] 开发者说DTalk
-	- [ ] Android老皮：[Android开源框架面试题：谈谈Glide框架的缓存机制设计 (qq.com)](https://mp.weixin.qq.com/s/OUlP4ghB2CCC4vJe6ia6cw)
-	- [ ] 群英传：[真•文本环绕问题的探究和分享 (qq.com)](https://mp.weixin.qq.com/s/6IHsfp9SiG1tVgyFwCccIw)
-	- [ ] 混沌致知
-	- [ ] 技术基本功修炼
-	- [ ] 字节流动
-	- [ ] 北院的牛顿
-	- [ ] DFIR
-	- [ ] 硬核物理
-	- [ ] 稀有猿诉
-	- [ ] 徐公
-	- [ ] 千里马学框架
-	- [ ] 网易云音乐技术团队
-	- [ ] 鸿洋
-	- [ ] 古哥E下
-	- [ ] 千里马学框架
-	- [ ] GSYTech
-	- [ ] 我怀里的猫
-	- [ ] 代码说
-	- [ ] TechMerger
-	- [ ] 悖论的技术小屋
-	- [ ] AndroidPub
-	- [ ] 稀土掘金技术社区
-	- [ ] Android茶话会
-	- [ ] Android补给站
-	- [ ] 51CTO技术栈
-	- [ ] 阿豪讲framework
-	- [ ] Rust学习日记
-	- [ ] **牛晓伟**：Framework
-	- [ ] 网易传媒技术团队
-	- [ ] 大前端开发入门
-	- [ ] Germen的编码日记
-	- [ ] OPPO安珀实验室
-	- [ ] **Android系统攻城狮**
-	- [ ] AndroidPerformance
-	- [ ] 二进制磨剑
-	- [ ] ZZH的Android
-	- [ ] 梦兽编程
-	- [ ] 张可
-	- [ ] 程序员Android
-	- [ ] 腾讯音乐技术团队
-	- [ ] 日拱一题
-	- [ ] Android施行
-	- [ ] 敲行代码再睡觉
-	- [ ] 老伯伯软件站
-	- [ ] 老蒋出马
-	- [ ] 虎哥LoveOpenSource
-	- [ ] 字节忍者
-	- [ ] java小白翻身
-	- [ ] BennuCTech
-	- [ ] 逆向与采集
-	- [ ] 三翼鸟数字化科技
-	- [ ] JavaBuild888
+### 微信公众号
+
+- [/] #TODO 要看看具体有哪些公众号，别放过！ 🛫 1999-01-01
+- [ ] *注意：这里的个人链接只是ta发过的一篇文章的链接*
+- [ ] Android架构师成长之路：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/393u9BdmhtYKKA-PjNKX3w)
+- [ ] **Kotlin社区**：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/b7oD937xZpwcWJePAVw2qQ)
+- [ ] 码上加油站：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/SyX-HtPxECICFFnu3J_XSw)
+- [ ] 鸿洋：[Google对于开发者的一些架构建议 (qq.com)](https://mp.weixin.qq.com/s/d9Xjnr2NzM1QjWH5WpeQjw)
+- [ ] 虎哥Lovedroid：[Weixin Official Accounts Platform (qq.com)](https://mp.weixin.qq.com/s/Bdjet69579KCEbaYhK-k3g)
+- [ ] 原点技术：[mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg](https://mp.weixin.qq.com/s/Mm8PqPM1vULK9Yr8tOnOgg)
+- [ ] 沐雨花飞蝶：[mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA](https://mp.weixin.qq.com/s/6DcNIp1LL8wKBx1iQXgNpA)
+- [ ] **勤奋的oyoung**：[mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ](https://mp.weixin.qq.com/s/SzZm7jbRN_A1KoYjSHPbaQ)
+- [ ] 每日面试题非常好
+- [ ] **彬sir哥**：[mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w](https://mp.weixin.qq.com/s/n49eZwtVYGeopzlkWjZB4w)
+- [ ] 有很多比如自定义View的编程实战
+- [ ] 黄大官AOSP：[mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg](https://mp.weixin.qq.com/s/59oEs4v8jwbozV6Gf0WiQg)
+- [ ] **Android 开发者**：[mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ](https://mp.weixin.qq.com/s/W7UsoDbayGHz_Eb-rlOIMQ)
+- [ ] 开发者说DTalk
+- [ ] Android老皮：[Android开源框架面试题：谈谈Glide框架的缓存机制设计 (qq.com)](https://mp.weixin.qq.com/s/OUlP4ghB2CCC4vJe6ia6cw)
+- [ ] 群英传：[真•文本环绕问题的探究和分享 (qq.com)](https://mp.weixin.qq.com/s/6IHsfp9SiG1tVgyFwCccIw)
+- [ ] 混沌致知
+- [ ] 技术基本功修炼
+- [ ] 字节流动
+- [ ] 北院的牛顿
+- [ ] DFIR
+- [ ] 硬核物理
+- [ ] 稀有猿诉
+- [ ] 徐公
+- [ ] 千里马学框架
+- [ ] 网易云音乐技术团队
+- [ ] 鸿洋
+- [ ] 古哥E下
+- [ ] 千里马学框架
+- [ ] GSYTech
+- [ ] 我怀里的猫
+- [ ] 代码说
+- [ ] TechMerger
+- [ ] 悖论的技术小屋
+- [ ] AndroidPub
+- [ ] 稀土掘金技术社区
+- [ ] Android茶话会
+- [ ] Android补给站
+- [ ] 51CTO技术栈
+- [ ] 阿豪讲framework
+- [ ] Rust学习日记
+- [ ] **牛晓伟**：Framework
+- [ ] 网易传媒技术团队
+- [ ] 大前端开发入门
+- [ ] Germen的编码日记
+- [ ] OPPO安珀实验室
+- [ ] **Android系统攻城狮**
+- [ ] AndroidPerformance
+- [ ] 二进制磨剑
+- [ ] ZZH的Android
+- [ ] 梦兽编程
+- [ ] 张可
+- [ ] 程序员Android
+- [ ] 腾讯音乐技术团队
+- [ ] 日拱一题
+- [ ] Android施行
+- [ ] 敲行代码再睡觉
+- [ ] 老伯伯软件站
+- [ ] 老蒋出马
+- [ ] 虎哥LoveOpenSource
+- [ ] 字节忍者
+- [ ] java小白翻身
+- [ ] BennuCTech
+- [ ] 逆向与采集
+- [ ] 三翼鸟数字化科技
+- [ ] JavaBuild888
+- [ ] 终码一生
+- [ ] 雨乐聊编程
+- [ ] 王小二的技术栈
+- [ ] 三翼鸟数字化科技
+- [ ] 程序员陆业聪
+- [ ] 11来了
+- [ ] Android技术之家
+
+- [ ] #TODO 最近微信收藏的文章都要看看！ ⏫
+
 1. bytetech关注和**收藏**（主要看Client Infra团队的）
 2. 深入理解kotlin协程
 3. 深入探索Android热修复技术原理（sophix）
