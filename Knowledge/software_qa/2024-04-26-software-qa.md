@@ -13,11 +13,13 @@ mtrace:
 
 [Installation guide - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/installation_guide)
 
+## 开启网卡
+
 ```shell
 ip link set _<设备名>_ up
 ```
 
----
+## 中文
 
 中文显示：`/etc/locale.gen`里面把中文加上重启就行，其它的不要搞。然后，需要`locale-gen`，并且是已经安装了中文字体的前提。
 
@@ -32,7 +34,7 @@ ip link set _<设备名>_ up
 
 ![[Knowledge/software_qa/resources/Pasted image 20240427183710.png]]
 
----
+## 安装流程
 
 大致安装流程：
 
@@ -45,7 +47,7 @@ ip link set _<设备名>_ up
 - 进入，再次联网， **ip link set ... up**
 - 安装plasma sddm
 
----
+## 终端代理
 
 终端需要设置代理，在随便一个脚本比如`.zshrc`里
 
@@ -61,6 +63,27 @@ export no_proxy="localhost,127.0.0.1"
 
 [代理服务器 - Arch Linux 中文维基 (archlinuxcn.org)](https://wiki.archlinuxcn.org/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8)
 
----
+## copyq, flameshot 不支持 wayland
 
 copyq的快捷键和tray，flameshot的pin，都不支持wayland。所以最后用的x11。
+
+## 显示器白屏还闪
+
+连接显示器会白屏还会闪。用的 AMD 的 GPU，参考 [AMDGPU - ArchWiki](https://wiki.archlinux.org/title/AMDGPU#Screen_flickering_white_when_using_KDE) ，我用的是 grub。所以在`/etc/default/grub`的`GRUB_CMDLINE_LINUX_DEFAULT`加入`amdgpu.sg_display=0`。加完就像下面这样：
+
+```config
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet amdgpu.sg_display=0"
+```
+
+然后 `grub-mkconfig -o /boot/grub/grub.cfg`，重启。验证的话，重启之后输入：
+
+```shell
+cat /proc/cmdline
+```
+
+结果样例：
+
+```shell
+BOOT_IMAGE=/vmlinuz-linux-lts root=UUID=c117dfc0-be87-46b6-b5fd-95995e77fda3 
+rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
+```
