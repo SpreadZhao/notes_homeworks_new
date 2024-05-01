@@ -222,7 +222,7 @@ forceStopPackage()
 	- [ ] [In attp_build_read_by_type_value_cmd of att_protocol.cc ,... · CVE-2024-0031 · GitHub Advisory Database](https://github.com/advisories/GHSA-h32h-58mq-6fgc)
 - [ ] OSTEP：[computer-science/coursepages/ostep/README.md at master · ossu/computer-science](https://github.com/ossu/computer-science/blob/master/coursepages/ostep/README.md)
 - [ ] Android 动态化
-- [ ] #urgency/medium :cow:逼人的博客：[[Article/person_link|person_link]]
+- [ ] #TODO :cow:逼人的博客：[[Article/person_link|person_link]] ⏫ ➕ 2024-05-01
 - [ ] fresco: [[Study Log/android_study/fresco|fresco]]
 - [ ] #urgency/high 飞书任务
 - [ ] #urgency/high 字节码
@@ -435,6 +435,8 @@ forceStopPackage()
 - [ ] 程序员陆业聪
 - [ ] 11来了
 - [ ] Android技术之家
+- [ ] 神兽小白
+- [ ] 深度Linux
 
 - [ ] #TODO 最近微信收藏的文章都要看看！ ⏫
 
