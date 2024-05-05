@@ -191,4 +191,7 @@ if (currThNum != thNum && mutex.isLocked) {
 
 后面的`mutex.isLocked`是多余的。因为在阻塞的情况下，程序如果不阻塞唯一的可能就是已经获得了锁。所以这句话永远是true。
 
-- [ ] #TODO 交替打印四把锁的实现 ➕ 2024-02-28 ⏫ 
+- [x] #TODO 交替打印四把锁的实现 ⏫ ➕ 2024-02-28 ✅ 2024-05-05
+
+> [!todo] 交替打印四把锁的实现
+> [[Study Log/java_kotlin_study/concurrency_art/5_6_condition#5.6.1.3 再次交替打印|5_6_condition]]

@@ -237,7 +237,11 @@ forceStopPackage()
 - [ ] [zhanghai/ComposePreference: Preference implementation for Jetpack Compose Material 3 (github.com)](https://github.com/zhanghai/ComposePreference?tab=readme-ov-file)
 - [ ] My Github stars：[Your Stars (github.com)](https://github.com/SpreadZhao?tab=stars)
 - [ ] v8引擎内存申请，申请一大块，用系统的profiler看不出内存泄漏。
-- [ ] #TODO ConcurrentModificationException: [how to avoid ConcurrentModificationException kotlin - Stack Overflow](https://stackoverflow.com/questions/50032000/how-to-avoid-concurrentmodificationexception-kotlin) [java - ArrayList.addAll() ConcurrentModificationException - Stack Overflow](https://stackoverflow.com/questions/28088085/arraylist-addall-concurrentmodificationexception) 复现这个问题，然后说明白为什么。很重要的！！！！！ 🔺 ➕ 2024-03-06
+- [/] #TODO ConcurrentModificationException: [how to avoid ConcurrentModificationException kotlin - Stack Overflow](https://stackoverflow.com/questions/50032000/how-to-avoid-concurrentmodificationexception-kotlin) [java - ArrayList.addAll() ConcurrentModificationException - Stack Overflow](https://stackoverflow.com/questions/28088085/arraylist-addall-concurrentmodificationexception) 复现这个问题，然后说明白为什么。很重要的！！！！！ 🔺 ➕ 2024-03-06 🛫 2024-05-05
+
+> [!todo] ConcurrentModificationException
+> [[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-05-05-java-kotlin-study|2024-05-05-java-kotlin-study]]
+
 - [ ] binder：[Android系统Binder驱动分析（第5课就是第1课）_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1tW411i7aB/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
 - [ ] [Tinder/Scarlet: A Retrofit inspired WebSocket client for Kotlin, Java, and Android (github.com)](https://github.com/Tinder/Scarlet)
 - [ ] TTNet
