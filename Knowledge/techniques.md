@@ -341,6 +341,7 @@ forceStopPackage()
 	5. [0voice/audio_video_streaming: 音视频流媒体权威资料整理，500+份文章，论文，视频，实践项目，协议，业界大神名单。 (github.com)](https://github.com/0voice/audio_video_streaming)
 	6. Android系统攻城狮出的书
 	7. RTC程序设计 - 实时音视频权威指南
+	8. [FFmpeg原理介绍 · FFmpeg原理](https://ffmpeg.xianwaizhiyin.net/)
 3. 稳定性：KOOM为主，matrix，知识地图里的课程
 4. hook
 	1. Lancet

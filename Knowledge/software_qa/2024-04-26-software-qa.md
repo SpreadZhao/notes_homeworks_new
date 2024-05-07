@@ -1,5 +1,5 @@
 ---
-title: ArchLinux Installation
+title: Arch Linux
 date: 2024-04-26
 tags:
   - softwareqa/linux
@@ -7,7 +7,7 @@ mtrace:
   - 2024-04-26
 ---
 
-# ArchLinux Installation
+# Arch Linux
 
 安装archlinux + kde遇到的傻逼事情。
 
@@ -87,3 +87,9 @@ cat /proc/cmdline
 BOOT_IMAGE=/vmlinuz-linux-lts root=UUID=c117dfc0-be87-46b6-b5fd-95995e77fda3 
 rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 ```
+
+## pacman \& yay tips
+
+- [pacman/Tips and tricks - ArchWiki](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Removing_unused_packages_(orphans))
+- [pacman - ArchWiki](https://wiki.archlinux.org/title/Pacman)
+- [Jguer/yay: Yet another Yogurt - An AUR Helper written in Go](https://github.com/Jguer/yay)
