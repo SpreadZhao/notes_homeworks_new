@@ -326,6 +326,13 @@ forceStopPackage()
 - [ ] [wurensen/TaskScheduler: 基于Kotlin协程以及DAG（有向无环图）实现的Android任务调度框架，可以根据任务间的依赖关系进行调度。 (github.com)](https://github.com/wurensen/TaskScheduler)
 - [ ] [kpali/wolf-flow: wolf-flow是一个简单的、支持有向无环图（DAG）的轻量级作业调度引擎 (github.com)](https://github.com/kpali/wolf-flow)
 - [ ] 为什么 Interface 里的方法必须是 public 的？
+- [ ] 日记：谁的职责就写在谁的类里。FeedFpsSettings.sampleForVideoPlay判断，是block中了实验才加listener而不是director通过实验判断是否应该加listener
+- [ ] pdd攻击分享总结一下
+- [ ] #TODO work diary 回滚 经常记录产出 工作日记同步 ➕ 2024-04-18 🔼 
+- [ ] #TODO 组合优于继承，有时候你加一个方法，只能在接口里加，导致很多子类有很多空实现。 ➕ 2024-04-18 🔼 
+- [ ] #TODO viewtreeobserver的scroll在首刷的时候会触发吗？ ➕ 2024-04-19 🔼 
+- [ ] #TODO View.post do what? ➕ 2024-04-22 ⏫ 
+- [ ] #TODO [从一次实际经历来说说IdleHandler的坑 - 掘金 (juejin.cn)](https://juejin.cn/post/6936440588635996173) ➕ 2024-04-24 ⏫ 
 
 ## 未来方向
 
