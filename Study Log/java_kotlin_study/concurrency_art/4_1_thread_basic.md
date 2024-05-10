@@ -189,11 +189,14 @@ notEnd = false;
 
 最后的结果我就不写在这儿了，不过确实是5个优先级为1；5个优先级为10。不像书上说的那样还都是5。但是不排除是有这样的操作的，也就是**操作系统忽略了我们对线程优先级的设置**，我行我素。
 
-- [ ] #TODO 用Linux试试改天。 🔽
+- [P] #TODO 用Linux试试改天。 🔽 🛫 2024-05-10
+
+> [!todo] 用Linux试试改天
+> #date 2024-05-10 用Arch Linux试了一下，结果是一样的。按理来说，这个优先级应该是JVM控制的，和OS关系应该不大。。不过倒是我这两次试的JVM应该都是openjdk-17
 
 ### 4.1.2 线程的状态
 
-- [/] #TODO 这部分**一定一定**要和pthread做一做对比。 ⏫ 🛫 2024-02-21 ^74d7f0
+- [P] #TODO 这部分**一定一定**要和pthread做一做对比。 ⏫ 🛫 2024-02-21 ^74d7f0
 
 > [!todo] 这部分一定一定要和pthread做一做对比
 > * #date 2024-02-21 [[Study Log/android_study/android_dev_trouble/2024-02-21-android-dev-trouble|2024-02-21-android-dev-trouble]]
@@ -348,6 +351,8 @@ PS C:\Users\SpreadZhao> jps
 > 看，是等待进入syncronized方法或者块的时候，才是处于`BLOCKED`状态。这是啥意思？其它的锁不行吗？在java.util.concurrent包中有个Lock接口，它也能实现类似syncronized的并发模式。但是，获取这个Lock锁却并不会进入`BLOCKED`状态。那么是啥呢？答案是`WAITING`。因为Lock接口的实现利用了LockSupport中的方法。这里面并没有syncronized。
 
 ^6e38f5
+
+- [ ] #TODO tasktodo1715339796060 不是`BLOCKED`状态，那是什么？猜想+实践。 ⏫ ➕ 2024-05-10
 
 ### 4.1.3 Daemon Thread
 

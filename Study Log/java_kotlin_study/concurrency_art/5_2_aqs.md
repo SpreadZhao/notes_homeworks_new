@@ -367,7 +367,7 @@ private class Sync : AbstractQueuedSynchronizer() {
 - [?] *为什么`tryAcquire()`是protected的？*
 - [>] 我们发现tryAcquire()是protected的，代表在sync之外是不让使用的。所以，如果我们自己在我们的Mutex里调用`sync.tryAcquire()`是获取不到的。我们的做法是封装了一层`sync.tryLock()`，<u>然后让`tryLock()`去调用最终的tryAcquire()</u>；而书上的做法是在自己重写Sync的时候直接将tryAcquire()改成public的。这种做法我本人不太赞成。 ^817568
 - [?] *<font color="red">为什么要有lockXXX和XXXAcquire两套接口？</font>*
-- [ ] 这是最重要的一个问题。明明我们实现了Lock接口，依赖了AQS中的能力，<u>那么我直接在Lock里面去调用AQS的接口不好吗</u>？为啥还要再封装一层？这就谈到了AQS的设计模式了。我们接下来就要讨论这个问题。
+- [>] 这是最重要的一个问题。明明我们实现了Lock接口，依赖了AQS中的能力，<u>那么我直接在Lock里面去调用AQS的接口不好吗</u>？为啥还要再封装一层？这就谈到了AQS的设计模式了。我们接下来就要讨论这个问题。
 
 > [!comment] 然后让`tryLock()`去调用最终的tryAcquire()
 > 注意，这也是建立在tryLock()的行为恰好和tryAcquire()一致的条件下的。比如ReentrantLock的tryLock()和tryAcquire()就有一些区别，所以不能直接调用。具体的区别我们之后就会分析到。

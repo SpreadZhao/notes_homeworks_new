@@ -149,8 +149,8 @@ monitor的等待同步机制如下图：
 我们将演示下面的例子，来说明这些方法的功能： ^f936d3
 
 1. 线程waitThread获取了锁lock，并在获取锁之后**不断**执行wait。这会导致waitThread进入WATIING状态并**释放lock**；
-2. 随后线程notifyThead也获取了lock，并获取成功。因为waitThread由于wait已经释放了lock。之后，它会通知waitThread可以获取lock，同时**不需要再不断**执行wait了；
-3. 但是由于此时notifyThread还霸占着lock，所以waitThread并不会从wait返回；
+2. 随后线程notifyThread也获取了lock，并获取成功。因为waitThread由于wait已经释放了lock。之后，notifyThread会通知waitThread可以获取lock，同时**不需要再不断**执行wait了；
+3. 但是由于此时notifyThread还霸占着lock（为什么呢？因为我乐意！就是故意霸占不释放。具体的行为看最后的图，按着序号来理解就很容易了），所以waitThread并不会从wait返回；
 4. 之后，notifyThread会短暂释放lock并快速再次获取lock。在短暂释放之后，waitThread就有机会去抢lock了。但是，由于notifyThread又会快速重新获取lock，所以此时存在竞争：
 	1. 如果notifyThread重新获取又成功了，那么此时waitThread还是无法返回。只有等notifyThread再次释放lock之后才能获取；
 	2. 如果waitThread抢到了lock，那么由于2中notifyThread通知我不要再不断执行wait了，我将会不再等待，继续进行下去；
@@ -303,6 +303,8 @@ Thread[WaitThread,5,main] running @ 22:32:31
 > 见`jdk/src/hotspot/share/runtime/objectMonitor.hpp`。类的开头也有一堆注释说明这套机制的作用。讲解：[synchronized底层实现monitor详解 - 朱子威 - 博客园](https://www.cnblogs.com/minikobe/p/12123065.html)
 > 
 > 里面的`_WaitSet`就是我们上面说的Wait Queue；`_EntryList`就是Synchronized Queue。
+
+> - [ ] #TODO tasktodo1715341210942 搞个低优任务，把hotspot里这块搞明白。 🔽 ➕ 2024-05-10
 
 ---
 

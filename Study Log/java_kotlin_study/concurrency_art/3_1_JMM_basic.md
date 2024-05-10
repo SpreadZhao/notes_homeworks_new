@@ -152,7 +152,7 @@ Load2
 > [!question]
 > 你可能会问，为什么要不说人话。比如volatile，我直接“先写后读”就行了呗！实际上，**还真不一定是先写后读**！
 > 
-> 两个操作之间具有 happens-before 关系，***==并不意味着前一个操作必须要在后一个操作之前执行==***！happens-before 仅仅要求前一个操作（执行的结果）对后一个操作可见，且前一个操作按顺序排在第二个操作之前（the first is visible to and ordered before thesecond）。happens-before 的定义很微妙，后文会具体说明 happens-before 为什么要这么定义。
+> 两个操作之间具有 happens-before 关系，***==并不意味着前一个操作必须要在后一个操作之前执行==***！happens-before 仅仅要求前一个操作（执行的结果）对后一个操作可见，且前一个操作按顺序排在第二个操作之前（the first is visible to and ordered before the second）。happens-before 的定义很微妙，后文会具体说明 happens-before 为什么要这么定义。
 > 
 > 为什么呢？看这里：[[Study Log/java_kotlin_study/concurrency_art/3_2_reorder#3.2.3 程序顺序规则|3_2_reorder]]
 
