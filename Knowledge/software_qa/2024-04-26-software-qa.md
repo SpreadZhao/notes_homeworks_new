@@ -125,3 +125,9 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 ## Grub Font Size
 
 [HiDPI - ArchWiki](https://wiki.archlinux.org/title/HiDPI#Change_GRUB_font_size)
+
+## SysRq
+
+- [Keyboard shortcuts - ArchWiki](https://wiki.archlinux.org/title/Keyboard_shortcuts#Enabling)
+- [Linux Magic System Request Key Hacks — The Linux Kernel documentation](https://docs.kernel.org/admin-guide/sysrq.html)
+- [Magic SysRq key - Wikipedia](https://en.wikipedia.org/wiki/Magic_SysRq_key)
