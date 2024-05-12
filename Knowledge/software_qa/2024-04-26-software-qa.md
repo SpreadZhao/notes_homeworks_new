@@ -47,6 +47,30 @@ ip link set _<设备名>_ up
 - 进入，再次联网， **ip link set ... up**
 - 安装plasma sddm
 
+具体的安装流程：
+
+进入镜像之后，先联网：
+
+> 进入镜像失败，我遇到了这个：[############### INIT NOT FOUND ############### : r/linuxmint (reddit.com)](https://www.reddit.com/r/linuxmint/comments/18eohux/init_not_found/)使用GRUB2模式启动就好了。
+
+```shell
+iwctl
+```
+
+使用iwctl进行链接。使用说明：[iwd - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Iwd#iwctl)
+
+直接连：
+
+```shell
+station <name> connnect <SSID>
+```
+
+比如，name通常是wlan0，ssid就是wifi的名字。也可以扫描一下。具体的使用wiki里都有。
+
+然后archinstall，选自己喜欢的就好。我这里不知道为什么linux内核不能换，只能用默认的内核。
+
+我没加任何额外的包，因为我装了NetworkManager，之后用这个联网就啥都能装了。
+
 ## 终端代理
 
 终端需要设置代理，在随便一个脚本比如`.zshrc`里
