@@ -131,3 +131,7 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 - [Keyboard shortcuts - ArchWiki](https://wiki.archlinux.org/title/Keyboard_shortcuts#Enabling)
 - [Linux Magic System Request Key Hacks — The Linux Kernel documentation](https://docs.kernel.org/admin-guide/sysrq.html)
 - [Magic SysRq key - Wikipedia](https://en.wikipedia.org/wiki/Magic_SysRq_key)
+
+## Arch Font
+
+Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archlinux.org/title/Linux_console#Fonts)，名字叫`CONFIG_FONT_TER16x32`。字体的官网：[Terminus Font Home Page](https://terminus-font.sourceforge.net/)，字体的ttf版本：[Terminus Font](http://terminus-font.sf.net/)
