@@ -135,3 +135,11 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 ## Arch Font
 
 Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archlinux.org/title/Linux_console#Fonts)，名字叫`CONFIG_FONT_TER16x32`。字体的官网：[Terminus Font Home Page](https://terminus-font.sourceforge.net/)，字体的ttf版本：[Terminus Font](http://terminus-font.sf.net/)
+
+## Mate Shortcut
+
+我发现，按照之前 Ubuntu 的设置，把那两个导航快捷键干掉之后还是不行。所以我当时就怀疑还有其它的快捷键给拦截了。看一下 gsettings，可以发现它有查询的功能，按照下图查找：
+
+![[Knowledge/software_qa/resources/Pasted image 20240513143038.png]]
+
+发现果然有。把这两个也干掉之后，log out一下再回来就没问题了。
