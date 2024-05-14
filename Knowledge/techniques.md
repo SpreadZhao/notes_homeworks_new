@@ -265,6 +265,41 @@ forceStopPackage()
 - [/] #TODO keva ➕ 2024-03-20 🛫 2024-03-20
 - [/] #TODO RTC程序设计 ➕ 2024-03-20 🛫 2024-03-20 
 
+## 计划
+
+1. WebRTC
+	1. [Android WebRTC完整入门教程01: 使用相机 - 简书](https://www.jianshu.com/p/eb5fd116e6c8)
+	2. [GetStream/webrtc-android: 🛰️ A versatile WebRTC pre-compiled Android library that reflects the recent WebRTC updates to facilitate real-time video chat for Android and Compose.](https://github.com/GetStream/webrtc-android)
+	3. [ddssingsong/webrtc_android: webrtc VideoCall VideoConference 视频通话 视频会议 (github.com)](https://github.com/ddssingsong/webrtc_android)
+2. 音视频
+	1. 安卓Native音视频介绍：Android系统攻城狮（公众号，这人要出书）
+	2. media3
+	3. [音视频并不难学，保姆级别音视频就业路线详解，进来看看适不适合你_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1xi4y1Y7U2/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
+	4. Bytetech
+	5. [0voice/audio_video_streaming: 音视频流媒体权威资料整理，500+份文章，论文，视频，实践项目，协议，业界大神名单。 (github.com)](https://github.com/0voice/audio_video_streaming)
+	6. Android系统攻城狮出的书
+	7. RTC程序设计 - 实时音视频权威指南
+	8. [FFmpeg原理介绍 · FFmpeg原理](https://ffmpeg.xianwaizhiyin.net/)
+3. 稳定性：KOOM为主，matrix，知识地图里的课程
+4. hook
+	1. Lancet
+	2. codelocator
+	3. gradle插庄（jupiter之类的都算）
+5. 端智能
+6. 插件：mira
+7. 虚拟机
+	1. [Crafting Interpreters](https://craftinginterpreters.com/)
+		1. [munificent/craftinginterpreters: Repository for the book "Crafting Interpreters" (github.com)](https://github.com/munificent/craftinginterpreters)
+	2. hotspot
+	3. GC
+8. 浏览器
+	1. [How browsers work (taligarsiel.com)](https://taligarsiel.com/Projects/howbrowserswork1.htm)
+	2. webkit
+	3. chromium
+	4. [Servo, the embeddable, independent, memory-safe, modular, parallel web rendering engine](https://servo.org/)
+9. gaming
+	1. [Game Programming Patterns](https://gameprogrammingpatterns.com/)
+
 ## 字节跳动
 
 ### 杂项
@@ -297,7 +332,7 @@ forceStopPackage()
 
 ### Spread - All in One
 
-
+- [ ] #TODO tasktodo1715588821510 Spread - All in One!!! 🔼 ➕ 2024-05-13
 
 ## 主要学的几个方向
 
@@ -333,40 +368,6 @@ forceStopPackage()
 - [ ] #TODO viewtreeobserver的scroll在首刷的时候会触发吗？ ➕ 2024-04-19 🔼 
 - [ ] #TODO View.post do what? ➕ 2024-04-22 ⏫ 
 - [ ] #TODO [从一次实际经历来说说IdleHandler的坑 - 掘金 (juejin.cn)](https://juejin.cn/post/6936440588635996173) ➕ 2024-04-24 ⏫ 
-
-## 未来方向
-
-1. WebRTC
-	1. [Android WebRTC完整入门教程01: 使用相机 - 简书](https://www.jianshu.com/p/eb5fd116e6c8)
-	2. [GetStream/webrtc-android: 🛰️ A versatile WebRTC pre-compiled Android library that reflects the recent WebRTC updates to facilitate real-time video chat for Android and Compose.](https://github.com/GetStream/webrtc-android)
-	3. [ddssingsong/webrtc_android: webrtc VideoCall VideoConference 视频通话 视频会议 (github.com)](https://github.com/ddssingsong/webrtc_android)
-2. 音视频
-	1. 安卓Native音视频介绍：Android系统攻城狮（公众号，这人要出书）
-	2. media3
-	3. [音视频并不难学，保姆级别音视频就业路线详解，进来看看适不适合你_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1xi4y1Y7U2/?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click&vd_source=64798edb37a6df5a2f8713039c334afb)
-	4. Bytetech
-	5. [0voice/audio_video_streaming: 音视频流媒体权威资料整理，500+份文章，论文，视频，实践项目，协议，业界大神名单。 (github.com)](https://github.com/0voice/audio_video_streaming)
-	6. Android系统攻城狮出的书
-	7. RTC程序设计 - 实时音视频权威指南
-	8. [FFmpeg原理介绍 · FFmpeg原理](https://ffmpeg.xianwaizhiyin.net/)
-3. 稳定性：KOOM为主，matrix，知识地图里的课程
-4. hook
-	1. Lancet
-	2. codelocator
-	3. gradle插庄（jupiter之类的都算）
-5. 端智能
-6. 插件：mira
-7. 虚拟机
-	1. [Crafting Interpreters](https://craftinginterpreters.com/)
-		1. [munificent/craftinginterpreters: Repository for the book "Crafting Interpreters" (github.com)](https://github.com/munificent/craftinginterpreters)
-	2. hotspot
-	3. GC
-8. 浏览器
-	1. [How browsers work (taligarsiel.com)](https://taligarsiel.com/Projects/howbrowserswork1.htm)
-	2. webkit
-	3. chromium
-9. gaming
-	1. [Game Programming Patterns](https://gameprogrammingpatterns.com/)
 
 ## 其他方向
 
