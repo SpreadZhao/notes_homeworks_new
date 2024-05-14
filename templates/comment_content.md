@@ -1,0 +1,1 @@
+<fieldset class="inline"><legend class="small">💬</legend><%tp.system.prompt("Your comment:")%></fieldset>
