@@ -365,9 +365,9 @@ private class Sync : AbstractQueuedSynchronizer() {
 - [?] *为什么最后成功只能在`tryAcquire()`中成功？*
 - [>] 也是tryAcquire()的注释有提到。只要线程要获取锁，就是调用这个方法。其实也很好理解，即使我获取失败就休眠，那我总得先试试才行。
 - [?] *为什么`tryAcquire()`是protected的？*
-- [>] 我们发现tryAcquire()是protected的，代表在sync之外是不让使用的。所以，如果我们自己在我们的Mutex里调用`sync.tryAcquire()`是获取不到的。我们的做法是封装了一层`sync.tryLock()`，<u>然后让`tryLock()`去调用最终的tryAcquire()</u>；而书上的做法是在自己重写Sync的时候直接将tryAcquire()改成public的。这种做法我本人不太赞成。 ^817568
+- [>] 我们发现tryAcquire()是protected的，代表在sync之外是不让使用的。所以，如果我们自己在我们的Mutex里调用`sync.tryAcquire()`是获取不到的。我们的做法是封装了一层`sync.tryLock()`，<fieldset class="inline"><legend class="small">💬</legend><div>然后让`tryLock()`去调用最终的tryAcquire()</div></fieldset>；而书上的做法是在自己重写Sync的时候直接将tryAcquire()改成public的。这种做法我本人不太赞成。 ^817568
 - [?] *<font color="red">为什么要有lockXXX和XXXAcquire两套接口？</font>*
-- [>] 这是最重要的一个问题。明明我们实现了Lock接口，依赖了AQS中的能力，<u>那么我直接在Lock里面去调用AQS的接口不好吗</u>？为啥还要再封装一层？这就谈到了AQS的设计模式了。我们接下来就要讨论这个问题。
+- [>] 这是最重要的一个问题。明明我们实现了Lock接口，依赖了AQS中的能力，<fieldset class="inline"><legend class="small">💬</legend>那么我直接在Lock里面去调用AQS的接口不好吗</fieldset>？为啥还要再封装一层？这就谈到了AQS的设计模式了。我们接下来就要讨论这个问题。
 
 > [!comment] 然后让`tryLock()`去调用最终的tryAcquire()
 > 注意，这也是建立在tryLock()的行为恰好和tryAcquire()一致的条件下的。比如ReentrantLock的tryLock()和tryAcquire()就有一些区别，所以不能直接调用。具体的区别我们之后就会分析到。
@@ -544,7 +544,7 @@ private Node enq(final Node node) {
 
 - [ ] #TODO 为什么这段逻辑会放到无限循环中，而不是使用sleep & wakeup的模式？这个问题有必要补充一下？ ➕ 2024-02-23 ⏬ 
 
-最后，if里面的那个逻辑是什么？回到我们刚刚addWaiter()的逻辑：
+最后，if分支里面的那个逻辑是什么？回到我们刚刚addWaiter()的逻辑：
 
 ```java
 if (pred != null) {
@@ -574,7 +574,7 @@ if (compareAndSetHead(new Node()))
 
 ##### 5.2.2.1.3 入队成功之后 - 尝试获得锁 - accquireQueued()
 
-下一个问题。线程节点入队了之后干嘛？既然我们是因为没获得成功锁而入队的。那么入队之后肯定要<u>不断</u>尝试在队列中获取锁，获得了锁之后要出队。
+下一个问题。线程节点入队了之后干嘛？既然我们是因为没获得成功锁而入队的。那么入队之后肯定要<fieldset class="inline"><legend class="small">💬</legend>不断</fieldset>尝试在队列中获取锁，获得了锁之后要出队。
 
 > [!comment] 不断
 > 真的是“不断”吗？接着往下看。 
@@ -599,7 +599,7 @@ if (compareAndSetHead(new Node()))
 > 
 > 文章的主要内容是这样的。ReentrantLock的公平和非公平，与AQS所维护的『公平』是两个截然不同的概念：
 > 
-> * ReentrantLock中的公平指的是，所有还没入队的线程<u>只要发现有线程在FIFO队列中等待（老二及以后）</u>，就要乖乖去排队；而非公平指的是所有还没入队的线程要<u>和FIFO队列的老二去竞争锁</u>，谁失败了谁去排队，谁成功了谁是队头。因此我们可以发现，这里的公平指的是==时间顺序==，已经在FIFO队列中的线程肯定到达的时间比新来的线程要早，所以为了公平，新来的线程没有资格和老一辈儿竞争，**遵守了时间顺序**；而非公平锁就**打破了这个时间顺序**。
+> * ReentrantLock中的公平指的是，所有还没入队的线程[[Study Log/java_kotlin_study/concurrency_art/5_3_reentrant_lock#^d7044c|只要发现有线程在FIFO队列中等待（老二及以后）]]，就要乖乖去排队；而非公平指的是所有还没入队的线程要<u>和FIFO队列的老二去竞争锁</u>，谁失败了谁去排队，谁成功了谁是队头。因此我们可以发现，这里的公平指的是==时间顺序==，已经在FIFO队列中的线程肯定到达的时间比新来的线程要早，所以为了公平，新来的线程没有资格和老一辈儿竞争，**遵守了时间顺序**；而非公平锁就**打破了这个时间顺序**。
 > * 而FIFO队列所维护的『公平』是，所有已经在队列中的线程，必须按照时间顺序排好队，只有老二能去尝试获得锁。既然是尝试，那也会有失败的风险。但是**时间顺序不能被AQS自己打破**，只能被『锁的实现方』打破（比如ReentrantLock的非公平锁）。
 > 
 
@@ -635,7 +635,7 @@ override fun tryRelease(release: Int): Boolean {
 
 由于释放锁没人会和他抢（互斥锁只有一个线程能持有），所以释放的过程并不需要加锁。正因为state是volatile的，所以所有线程只有在state设置为0之后才能读到这个新的值。
 
-- [ ] #TODO 上面的就是一个state是volatile的原因。之后总结一下，为什么AQS中的state必须是volatile？我不是已经有CAS了吗？为啥这个值还必须是volatile呢？首先从volatile能保证什么说起。 ➕ 2024-03-10 ⏫  ^7548dc
+- [ ] #TODO 上面的就是一个state是volatile的原因。之后总结一下，***为什么AQS中的state必须是volatile***？我不是已经有CAS了吗？为啥这个值还必须是volatile呢？首先从volatile能保证什么说起。 ➕ 2024-03-10 ⏫  ^7548dc
 
 仿照acquire()，我们来猜猜release()会做什么：
 
@@ -701,7 +701,7 @@ override fun tryRelease(release: Int): Boolean {
 
 1. 调用tryAcquireShared()来尝试获取锁；
 2. 如果获取成功，那么没啥好说；
-3. 如果获取失败，和acquire()一样，<u>要进入队列中并不断尝试获取</u>；
+3. 如果获取失败，和acquire()一样，<fieldset class="inline"><legend class="small">💬</legend>要进入队列中并不断尝试获取</fieldset>；
 4. 进入队列的方式也是添加节点，入队，在队列里不断尝试获取锁。也会经历“自旋”的过程；
 5. 自旋的时候，先看前驱节点是不是头，如果是的话才尝试获取。成功之后我（老二）变新头，如果失败，那就park，直到被中断或者其它人释放了锁。
 
@@ -723,10 +723,12 @@ override fun tryRelease(release: Int): Boolean {
 * 独占式：acquireInterruptibly()
 * 共享式：acquireSharedInterruptibly()
 
-具体到代码上，非中断式的获取在被中断的时候只会<u>记录一下我被中断了</u>；而中断式获取在检查到被中断的时候会抛出InterruptedException。
+具体到代码上，非中断式的获取在被中断的时候只会<fieldset class="inline"><legend class="small">💬</legend>记录一下我被中断了</fieldset>；而中断式获取在检查到被中断的时候会抛出InterruptedException。
 
 > [!comment]- 记录一下我被中断了
 > 这可不是置中断位！看acquireQueued()的实现，里面只是一个临时变量interrupted，并不是线程的interrupted标志位。这个临时变量用作返回值，来告诉调用方：当前线程在等待的时候被中断了吗？
+> 
+> - [ ] #TODO tasktodo1715689703175 所以它设置中断位了吗到底？ 🔽 ➕ 2024-05-14
 
 #### 5.2.2.6 超时获取
 
@@ -771,9 +773,9 @@ override fun unlock() {
 * `state == 1`：表示目前有一个线程获得了锁；
 * `state == 0`：表示两个线程获得了锁，无法再被获取。
 
-那么，我们联系一下之前实现Mutex中的AQS的tryAcquire()时的情况：tryAcquire()返回的是一个布尔。为true就是获取成功，false就是获取失败。但是现在的情况是虽然获取的结果还是只有成功和失败。
+那么，我们联系一下之前实现Mutex中的AQS的tryAcquire()时的情况：tryAcquire()返回的是一个布尔。为true就是获取成功，false就是获取失败。但是现在的情况是虽然获取的结果还是只有成功和失败，但是状态多了，需要判断的情况就多了。
 
-这个时候，你可能会萌生和我一样的想法：*<u>用tryAcquire()难道不也能实现共享式访问吗</u>*？比如我们可以这样实现：
+这个时候，你可能会萌生和我一样的想法：<fieldset class="inline"><legend class="small">💬</legend>用tryAcquire()难道不也能实现共享式访问吗？</fieldset>比如我们可以这样实现：
 
 ```kotlin
 override fun tryAcquire(acquired: Int): Boolean {
@@ -816,9 +818,12 @@ override fun tryAcquireShared(acquired: Int): Int {
 
 这个版本是会产生死锁的！为啥？其实，在之前的笔记中，我也有提到过，但是我当时说的也有不严谨的地方，就是：『CAS』和『循环CAS』。
 
-显然，单次CAS是会失败的。就像加锁的代码一样，直到我获得了锁才能继续下去。那么，我们是否问过这样的问题：*CAS等于锁吗*？
+显然，单次CAS是有可能会失败的。就像加锁的代码一样，直到我获得了锁才能继续下去。那么，我们是否问过这样的问题：*CAS等于锁吗*？
 
-**答案当然是否定的**！我们就拿synchronized来举例子。如果进入synchronized时失败了，会一直阻塞到能进去为止；但是CAS只要失败了就返回了！所以，真正的情况应该是，如果我们想要实现类似锁的功能，应该用的是**循环CAS**。也就是一次CAS失败了，我还不能不管了，要一直尝试下去，直到CAS成功执行为止。可以看看这篇文章，虽然我感觉没啥水平：[【锁思想】自旋 or CAS 它俩真的一样吗？一文搞懂 - 掘金 (juejin.cn)](https://juejin.cn/post/7252889628376842297)
+**答案当然是否定的**！我们就拿synchronized来举例子。如果进入synchronized时失败了，会一直阻塞到能进去为止；但是CAS只要失败了就返回了！所以，真正的情况应该是，如果我们想要实现类似锁的功能，应该用的是**循环CAS**。也就是一次CAS失败了，我还不能不管了，要一直尝试下去，直到CAS成功执行为止。可以看看这篇文章，<fieldset class="inline"><legend class="small">💬</legend>虽然我感觉没啥水平</fieldset>：[【锁思想】自旋 or CAS 它俩真的一样吗？一文搞懂 - 掘金 (juejin.cn)](https://juejin.cn/post/7252889628376842297) ^ab3289
+
+> [!comment] 虽然我感觉没啥水平
+> 这个评论还是挺有水平的：[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-05-14-java-kotlin-study|2024-05-14-java-kotlin-study]]
 
 有了这个概念，我们再回头看这个问题。我注释里说的那句话对吗？*如果CAS失败，难道真的表示【共享式的锁】的【尝试获取】失败了吗*？
 
@@ -828,7 +833,7 @@ override fun tryAcquireShared(acquired: Int): Int {
 
 这段话很好理解，就是我们一开始的分析。那么，问题就在于此：**必须要修改完状态**。那么CAS失败等价于修改完状态且发现它不是0 1 2吗？显然不是。这是两个截然不同的概念，==CAS失败，仅仅代表有人在跟我抢这个状态的修改，而不是我修改完之后状态就不是0 1 2了==。
 
-下面我们举一个例子。假设<u>有且只有</u>ABC三个线程几乎同时去修改这个值。那么如果我们的TwinsLock正确工作的话，肯定是他们仨中的两个能获取成功，另一个失败。 ^4dc7b7
+下面我们举一个例子。假设ABC三个线程几乎同时去修改这个值。那么如果我们的TwinsLock正确工作的话，肯定是他们仨中的两个能获取成功，另一个失败。 ^4dc7b7
 
 > [!comment]- 有且只有
 > 不是因为这个情况特殊，只是因为三个线程足以复现问题。
