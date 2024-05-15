@@ -34,7 +34,7 @@ class MutexPrintThread(private val thNum: Int, private val otherNum: Int) : Thre
 
 一个线程先尝试获得锁。获得了之后只要发现轮不到我打印，那么就立刻要释放锁并出来。
 
-这就好像：一个房间里只能呆一个指定的人。现在屋子外面有3个人。那么这三个人只能有一个人进入房间，其它两人发现那个人进去之后就不能再动了。进入房间的人还要判断这个时候房间里允许呆的人是不是自己。如果不是，那么他还要从房间里出来，然后这三个人再抢一次。
+这就好像：一个房间里只能呆一个**指定**的人。现在屋子外面有3个人。那么这三个人只能有一个人进入房间，其它两人发现那个人进去之后就不能再动了。进入房间的人还要判断这个时候房间里允许呆的人是不是自己。如果不是，那么他还要从房间里出来，然后这三个人再抢一次。
 
 看起来可以实现，也不错。但是从中我们能发现一些问题。在synchronized版本的实现中，当一个线程进入synchronized块中时，如果发现轮不到自己打印，就需要进行wait()；当一个线程输出完，并修改了下一个人是谁之后，在释放锁之前就会通知一下所有人，也就是notifyAll()。
 
@@ -43,7 +43,7 @@ class MutexPrintThread(private val thNum: Int, private val otherNum: Int) : Thre
 既然如此，问题来了：*wait()在concurrent包中对应的是啥*？这东西还是很有必要的：操作系统中本身就有Conditional Variables这种东西，**让线程根据不同的情况等待在不同的队列中，虽然竞争的还是同一把锁**。而看名字也知道，本节的主角Condition就是这个东西。并且，它的使用语义和wait() \& notify()也是一致的。
 
 > [!comment]-
-> 你可能会想起上一节我们提到的东西：[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary#5.5 锁的总结|5_5_lock_summary]]。我们说过concurrent包中，使用LockSupport提供的park()和unpark()来实现一个**更轻量的wait() \& notify()**操作。但是，为啥这里又说是Condition呢？其实很容易想到，park()和unpark()是非常不安全的操作，非常底层。所以想要像使用wait和notify那样使用它们，必须好好封装一下。我们可以看看Condition中接口的实现，其实底层也都是park()和unpark()。比如下面的await() \& signal()就是这样。
+> 你可能会想起上一节我们提到的东西：[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary#^7a8a69|5_5_lock_summary]]。我们说过concurrent包中，使用LockSupport提供的park()和unpark()来实现一个**更轻量的wait() \& notify()**操作。但是，为啥这里又说是Condition呢？其实很容易想到，park()和unpark()是非常不安全的操作，非常底层。所以想要像使用wait和notify那样使用它们，必须好好封装一下。我们可以看看Condition中接口的实现，其实底层也都是park()和unpark()。比如下面的await() \& signal()就是这样。
 
 下面我们来改造一下上面交替打印的例子，使用Condition来实现。首先，Condition的创建必须使用Lock接口的newCondition()方法：
 
@@ -138,7 +138,7 @@ override fun isHeldExclusively(): Boolean {
 }
 ```
 
-这样就完成了！<u>和synchronized版本一致的Lock版本</u>。这就是Condition的作用。能让**Lock的持有者**拥有和**监视器锁的持有者**类似的行为。同时，由于一个Lock可以有多个Condition，所以也可以<u>让不同的线程由于不同的原因等待在不同的队列上</u>。
+这样就完成了！<fieldset class="inline"><legend class="small">💬</legend>和synchronized版本一致的Lock版本</fieldset>。这就是Condition的作用。能让**Lock的持有者**拥有和**监视器锁的持有者**类似的行为。同时，由于一个Lock可以有多个Condition，所以也可以<u>让不同的线程由于不同的原因等待在不同的队列上</u>。
 
 > [!comment] 和synchronized版本一致的Lock版本
 > 我们在上一节介绍LockSupport的时候说过，park和unpark比wait和notify要轻量。当时我们还举了那个例子：[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary#^8eeacb|5_5_lock_summary]]。我们使用Lock接口时的这些操作（比如Condition）和synchronized是一致的，但是由于concurrent包中的操作基于volatile和CAS操作，相对于管程更加轻量，所以一致的行为效率会更高一些。

@@ -1,12 +1,12 @@
 ---
-title: 5.5 锁的总结 & LockSupport
+title: 5.5 LockSupport
 chapter: "5"
 order: "5"
 ---
 
-## 5.5 锁的总结
+## 5.5 LockSupport
 
-本来书上讲的是LockSupport，而且篇幅很短。我的想法是在这里做一个和锁有关的总结。但是在这之前还是把这一部分给补上。
+~~本来书上讲的是LockSupport，而且篇幅很短。我的想法是在这里做一个和锁有关的总结。但是在这之前还是把这一部分给补上。~~
 
 LockSupport提供了另一种阻塞线程+唤醒线程的能力：park和unpark。
 
@@ -43,7 +43,7 @@ synchronized(lock) {
 
 不难看出，好像里面有些操作是比较低效的。其中大头就是synchronized的底层，monitor本身。而Java后续推出的一系列并发策略都是基于volatile和CAS的。这些操作的底层实现交由Unsafe来管理，而将这些能力封装起来，就能形成一些很轻量的锁。其中最典型的就是我们本章讨论的AQS。 ^8eeacb
 
-而如果不使用synchronized，那显然也不能使用wait \& notify了。那么，我们使用什么呢？emm，应该是，concurrent包的发明者应该使用什么呢？答案就是LockSupport。LockSupport中的等待和唤醒机制也是交给Unsafe来管理，不对上层暴露。而其中的park和unpark就是最核心的功能。这里我也简单贴几个：
+而如果不使用synchronized，那显然也不能使用wait \& notify了。那么，我们使用什么呢？emm，应该是，concurrent包的发明者应该使用什么呢？答案就是LockSupport。LockSupport中的等待和唤醒机制也是交给Unsafe来管理，不对上层暴露。而其中的park和unpark就是最核心的功能。这里我也简单贴几个： ^7a8a69
 
 > [!info]- LockSupport类
 > This class associates, with each thread that uses it, a **permit** (in the sense of the `Semaphore` class). A call to park will return immediately if the permit is available, consuming it in the process; otherwise it may block. A call to unpark makes the permit available, if it was not already available. (Unlike with Semaphores though, <u>permits do not accumulate. There is at most one</u>.) ==Reliable usage requires the use of volatile (or atomic) variables to control when to park or unpark==. Orderings of calls to these methods are maintained with respect to volatile variable accesses, but not necessarily non-volatile variable accesses.
