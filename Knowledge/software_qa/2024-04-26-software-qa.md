@@ -204,6 +204,72 @@ exec dwm
 
 多显示器：[xrandr - ArchWiki](https://wiki.archlinux.org/title/xrandr)。我用的前端是arandr。
 
+#### 状态栏
+
+参考[suckless](https://dwm.suckless.org/tutorial/)，状态栏可以用xsetroot修改，所以需要安装`xorg-xsetroot`。显示电量并且修改的话参考[Advanced Linux Sound Architecture - ArchWiki](https://wiki.archlinux.org/title/Advanced_Linux_Sound_Architecture)，安装`alsa-utils`工具。在`~/.xinitrc`里加入这个脚本，这样在startx之后会执行：
+
+```shell
+#!/bin/bash
+# Taken from:
+#	https://raw.github.com/kaihendry/Kai-s--HOME/master/.xinitrc
+#
+
+xrdb -merge $HOME/.Xresources
+
+while true
+do
+	VOL=$(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*%\)\].*/\1/')
+	LOCALTIME=$(date "%H:%M +%Y-%m-%d")
+	OTHERTIME=$(TZ=Europe/London date +%Z\=%H:%M)
+	IP=$(for i in `ip r`; do echo $i; done | grep -A 1 src | tail -n1) # can get confused if you use vmware
+	TEMP="$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))C"
+
+	if acpi -a | grep off-line > /dev/null
+	then
+		BAT="Bat. $(acpi -b | awk '{ print $4 " " $5 }' | tr -d ',')"
+		xsetroot -name "$BAT $VOL $TEMP $LOCALTIME"
+	else
+		xsetroot -name "$VOL $TEMP $LOCALTIME"
+	fi
+	sleep 20s
+done &
+
+exec dwm
+```
+
+> 该脚本改编自[suckless tutorial最后的Status](https://dwm.suckless.org/tutorial/)里面的[xinitrc](https://dwm.suckless.org/tutorial/xinitrc.example)。
+
+当然，上面只是一个实例，我自己优化之后的版本：
+
+```shell
+#!/bin/bash
+# Taken from:
+#	https://raw.github.com/kaihendry/Kai-s--HOME/master/.xinitrc
+#
+
+xrdb -merge $HOME/.Xresources
+
+while true
+do
+	VOL="🔈 $(amixer get Master | tail -1 | sed 's/.*\[\([0-9]*%\)\].*/\1/')"
+	LOCALTIME=$(date "+%H:%M %Y-%m-%d") 
+	OTHERTIME=$(TZ=Europe/London date +%Z\=%H:%M)
+	IP=$(for i in `ip r`; do echo $i; done | grep -A 1 src | tail -n1) # can get confused if you use vmware
+	TEMP="$(($(cat /sys/class/thermal/thermal_zone0/temp) / 1000))C"
+
+	if [[ $(acpi -a | awk '{ print $3 }') = "on-line" ]]; then
+		BATPRE="🔌"
+	else
+		BATPRE="🔋"
+	fi
+	BAT="$BATPRE $(acpi -b | awk '{ print $4 }' | tr -d ',')"
+	xsetroot -name "$BAT | $VOL | $LOCALTIME"
+	sleep 20s
+done &
+
+exec dwm
+```
+
 ### DWM 源码修改
 
 字体，在`config.h`里修改：
