@@ -143,3 +143,83 @@ Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archli
 ![[Knowledge/software_qa/resources/Pasted image 20240513143038.png]]
 
 发现果然有。把这两个也干掉之后，log out一下再回来就没问题了。
+
+## DWM
+
+彻底配置一遍 Arch Linux + DWM。
+
+### DWM 准备工作
+
+首先，dwm最好用xinit启动，同时一些资源需要读取x的数据库。所以安装：
+
+```
+xorg-xinit xorg-xrdb
+```
+
+#### 缩放
+
+整体的缩放也要调，就是 100\%, 200\% 之类的。dwm 读取的也是 X Resources 的内容，所以参考：
+
+- [X resources - ArchWiki](https://wiki.archlinux.org/title/X_resources#xinitrc)
+- [HiDPI - ArchWiki](https://wiki.archlinux.org/title/HiDPI#X_Resources)
+
+在`~/.Xresources`里加入：
+
+```Xresources
+Xft.dpi: 192
+```
+
+然后在`~/.xinitrc`里：
+
+```shell
+[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
+```
+
+#### 自启动
+
+[xinit - ArchWiki](https://wiki.archlinux.org/title/xinit#Autostart_X_at_login)
+
+对于zsh，有一个profile：
+
+- `/etc/zsh/zprofile` Used for executing commands at start for all users, will be read when starting as a _**login shell**_. Please note that on Arch Linux, by default it contains [one line](https://gitlab.archlinux.org/archlinux/packaging/packages/zsh/-/blob/main/zprofile) which sources `/etc/profile`. See warning below before wanting to remove that!
+    - `/etc/profile` This file should be sourced by all POSIX sh-compatible shells upon login: it sets up `$PATH` and other environment variables and application-specific (`/etc/profile.d/*.sh`) settings upon login.
+
+在`~/.zprofile`中加入：
+
+```shell
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+  exec startx
+fi
+```
+
+> 空格不能省，不然报语法错误；`-z` 表示字符串判空，这里的意思是，环境变量`$DISPLAY`没有定义的时候为true。
+
+设置到这里，还是差一步，我们在login的时候zsh会执行`.zprofile`的内容，从而调用`startx`，这个时候就会执行`.xinitrc`里的内容，导入rdb的资源。最后还差的就是真正启动dwm：
+
+```shell
+exec dwm
+```
+
+#### 多显示器
+
+多显示器：[xrandr - ArchWiki](https://wiki.archlinux.org/title/xrandr)。我用的前端是arandr。
+
+### DWM 源码修改
+
+字体，在`config.h`里修改：
+
+```c
+static const char *fonts[] = { "Terminus (TTF):size=18" };
+static const char dmenufont[] = "Terminus (TTF):size=18";
+```
+
+st的字体也需要单独设置，默认给的pixelsize，改成size才是跟随缩放的：
+
+```c
+/*
+ * appearance
+ *
+ * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
+ */
+static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
+```
