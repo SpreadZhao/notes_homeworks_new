@@ -312,4 +312,5 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 9. 安装zsh，并设置默认shell为zsh
 10. 执行`oh-my-zsh.sh`，配置终端
 11. 执行`yay-script-dwm-software.sh`，安装常用软件
-12. 
+12. `udisk2`提供的命令用来挂载硬盘比较好
+13. 安装`davfs2`，按照wiki里去配置fstab，这个配置了每次登录都会自动mount
