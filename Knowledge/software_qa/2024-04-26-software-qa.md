@@ -71,7 +71,7 @@ station <name> connnect <SSID>
 
 我没加任何额外的包，因为我装了NetworkManager，之后用这个联网就啥都能装了。
 
-## 终端代理
+## Proxy代理
 
 终端需要设置代理，在随便一个脚本比如`.zshrc`里
 
@@ -86,6 +86,13 @@ export no_proxy="localhost,127.0.0.1"
 后面的7897是clash端口。
 
 [代理服务器 - Arch Linux 中文维基 (archlinuxcn.org)](https://wiki.archlinuxcn.org/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8)
+
+后面我换了v2ray + v2raya来代理。注意到了这个问题：
+
+- 不加export情况下，如果v2raya里Transparent Proxy/SystemProxy为Off，那么就是不开梯子上网的情况，即使是Running的状态。这种状态类似于打开了Clash，但是没开启System Proxy选项；
+- 不加export情况下，如果v2raya里Transparent Proxy/SystemProxy为On的某一个，那么就是开梯子了，不加export也能翻墙；
+- 所以我怀疑加了export的意思就是允许终端等其它读这个配置的程序走代理。
+- 有些应用开了梯子没法下载了，比如linuxqq。所以按照第一条进行配置，就能下载了。
 
 ## copyq, flameshot 不支持 wayland
 
@@ -289,3 +296,20 @@ st的字体也需要单独设置，默认给的pixelsize，改成size才是跟�
  */
 static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 ```
+
+### Trouble Shooting
+
+flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598 · flameshot-org/flameshot (github.com)](https://github.com/flameshot-org/flameshot/issues/2598)。这是因为flameshot需要先启动，然后才能gui。看这个：[Flameshot - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Flameshot#Sub-commands_exit_immediately_with_no_output)。另外，issues里开发者说，不会为了这些用户去做这个case的适配（emm，很现实。。。）。
+
+1. 安装archlinux
+2. 执行安装yay
+3. 执行`yay-script-dwm-base.sh`
+4. 安装dwm, st, dmenu
+5. 设置.xinitrc, .Xresources保证启动和dpi缩放
+6. 执行`yay-script-dwm-font.sh`，安装字体
+7. 安装`microsoft-edge-stable-bin`
+8. 安装`v2raya`, `v2ray`，开梯子
+9. 安装zsh，并设置默认shell为zsh
+10. 执行`oh-my-zsh.sh`，配置终端
+11. 执行`yay-script-dwm-software.sh`，安装常用软件
+12. 
