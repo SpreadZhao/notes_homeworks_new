@@ -34,6 +34,12 @@ ip link set _<设备名>_ up
 
 ![[Knowledge/software_qa/resources/Pasted image 20240427183710.png]]
 
+之后使用了dwm，首先按[集成](https://wiki.archlinuxcn.org/wiki/Fcitx5#%E9%9B%86%E6%88%90)写环境变量，由于我用的xinit，所以根据[随桌面环境自动启动](https://wiki.archlinuxcn.org/wiki/Fcitx5#%E9%9A%8F%E6%A1%8C%E9%9D%A2%E7%8E%AF%E5%A2%83%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8)在.xinit里加上
+
+```shell
+fcitx5 &
+```
+
 ## 安装流程
 
 大致安装流程：
@@ -308,9 +314,14 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
-8. 安装`v2raya`, `v2ray`，开梯子
+8. 安装`v2raya`, `v2ray`，[[#Proxy代理|开梯子]]
 9. 安装zsh，并设置默认shell为zsh
 10. 执行`oh-my-zsh.sh`，配置终端
 11. 执行`yay-script-dwm-software.sh`，安装常用软件
 12. `udisk2`提供的命令用来挂载硬盘比较好
-13. 安装`davfs2`，按照wiki里去配置fstab，这个配置了每次登录都会自动mount
+13. 安装`davfs2`，按照[wiki](https://wiki.archlinux.org/title/Davfs2#Using_fstab)里去配置fstab，这个配置了每次登录都会自动mount
+14. 设置状态栏
+15. 执行`yay-script-fcitx.sh`安装输入法并配置（参考[[#中文]]）
+16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
+
+不小心把`/etc/alsa/conf.d`给删了，最后用[how to reinstall all packages in the system? / Pacman & Package Upgrade Issues / Arch Linux Forums](https://bbs.archlinux.org/viewtopic.php?id=34832)里的方法给找回来了。这里记录一下，这个文件是`pipewire-alsa`和`pipewire-audio`拥有的。
