@@ -325,3 +325,11 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
 
 不小心把`/etc/alsa/conf.d`给删了，最后用[how to reinstall all packages in the system? / Pacman & Package Upgrade Issues / Arch Linux Forums](https://bbs.archlinux.org/viewtopic.php?id=34832)里的方法给找回来了。这里记录一下，这个文件是`pipewire-alsa`和`pipewire-audio`拥有的。
+
+记录一下键盘。之前本来想设置按键调节音量，根据acpid的wiki和一大堆东西好不容易搞好了，这个过程中不小心动了`~/.Xmodmap`。之后左右键被搞没了。然后我本来想用`sudo showkey`来检测，后来发现，`showkey`展示的keycode根本就是错的！`xev`才是对的。这才排查出来之前的左右键已经被当成音量控制按键设置为空了。最后，根据[keyboard - How do I clear xmodmap settings? - Ask Ubuntu](https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings)的说法，执行：
+
+```shell
+setxkbmap -layout us
+```
+
+就设置会默认的US布局了。
