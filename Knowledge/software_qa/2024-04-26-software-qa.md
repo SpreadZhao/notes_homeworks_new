@@ -157,6 +157,13 @@ Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archli
 
 发现果然有。把这两个也干掉之后，log out一下再回来就没问题了。
 
+## Alacritty
+
+- [Alacritty (github.com)](https://github.com/alacritty)
+- [Alacritty - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Alacritty)
+
+我的习惯是，配置文件放在`~/.config/alacritty/alacritty.toml`，配色使用的是[gruvbox_dark](https://github.com/alacritty/alacritty-theme/blob/master/themes/gruvbox_dark.toml)
+
 ## DWM
 
 彻底配置一遍 Arch Linux + DWM。
@@ -310,7 +317,7 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 1. 安装archlinux
 2. 执行安装yay
 3. 执行`yay-script-dwm-base.sh`
-4. 安装dwm, st, dmenu
+4. 安装dwm（现在是spreadwm）, st（现在是alacritty）, dmenu
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
@@ -318,11 +325,12 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 9. 安装zsh，并设置默认shell为zsh
 10. 执行`oh-my-zsh.sh`，配置终端
 11. 执行`yay-script-dwm-software.sh`，安装常用软件
-12. `udisk2`提供的命令用来挂载硬盘比较好
+12. `udisk2`提供的命令（udiskctl）用来挂载硬盘比较好
 13. 安装`davfs2`，按照[wiki](https://wiki.archlinux.org/title/Davfs2#Using_fstab)里去配置fstab，这个配置了每次登录都会自动mount
 14. 设置状态栏
 15. 执行`yay-script-fcitx.sh`安装输入法并配置（参考[[#中文]]）
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
+17. 
 
 不小心把`/etc/alsa/conf.d`给删了，最后用[how to reinstall all packages in the system? / Pacman & Package Upgrade Issues / Arch Linux Forums](https://bbs.archlinux.org/viewtopic.php?id=34832)里的方法给找回来了。这里记录一下，这个文件是`pipewire-alsa`和`pipewire-audio`拥有的。
 
