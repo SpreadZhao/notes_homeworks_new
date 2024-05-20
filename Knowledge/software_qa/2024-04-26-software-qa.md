@@ -310,14 +310,12 @@ st的字体也需要单独设置，默认给的pixelsize，改成size才是跟�
 static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 ```
 
-### Trouble Shooting
-
-flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598 · flameshot-org/flameshot (github.com)](https://github.com/flameshot-org/flameshot/issues/2598)。这是因为flameshot需要先启动，然后才能gui。看这个：[Flameshot - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Flameshot#Sub-commands_exit_immediately_with_no_output)。另外，issues里开发者说，不会为了这些用户去做这个case的适配（emm，很现实。。。）。
+### My Steps
 
 1. 安装archlinux
 2. 执行安装yay
 3. 执行`yay-script-dwm-base.sh`
-4. 安装dwm（现在是spreadwm）, st（现在是alacritty）, dmenu
+4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
@@ -332,7 +330,17 @@ flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
 17. 
 
+### Trouble Shooting
+
+#### Flameshot pin
+
+flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598 · flameshot-org/flameshot (github.com)](https://github.com/flameshot-org/flameshot/issues/2598)。这是因为flameshot需要先启动，然后才能gui。看这个：[Flameshot - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Flameshot#Sub-commands_exit_immediately_with_no_output)。另外，issues里开发者说，不会为了这些用户去做这个case的适配（emm，很现实。。。）。
+
+#### Accidentally delete /etc/ files
+
 不小心把`/etc/alsa/conf.d`给删了，最后用[how to reinstall all packages in the system? / Pacman & Package Upgrade Issues / Arch Linux Forums](https://bbs.archlinux.org/viewtopic.php?id=34832)里的方法给找回来了。这里记录一下，这个文件是`pipewire-alsa`和`pipewire-audio`拥有的。
+
+#### Restore xmodmap
 
 记录一下键盘。之前本来想设置按键调节音量，根据acpid的wiki和一大堆东西好不容易搞好了，这个过程中不小心动了`~/.Xmodmap`。之后左右键被搞没了。然后我本来想用`sudo showkey`来检测，后来发现，`showkey`展示的keycode根本就是错的！`xev`才是对的。这才排查出来之前的左右键已经被当成音量控制按键设置为空了。最后，根据[keyboard - How do I clear xmodmap settings? - Ask Ubuntu](https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings)的说法，执行：
 
@@ -341,3 +349,23 @@ setxkbmap -layout us
 ```
 
 就设置会默认的US布局了。
+
+#### Cannot mount WebDAV
+
+很傻逼的一个东西，我使用：
+
+```shell
+sudo mount -t davfs http://path/to/my/synology/nas:<port>
+```
+
+去挂载我的群晖，用的http协议，然后挂载失败了。但是如果用https协议去挂载就可以。错误显示：
+
+```shell
+❯ sudo mount -t davfs http://spreadzhao.synology.me:10114
+mount.davfs: Mounting failed.
+Could not read status line: connection was closed by server
+```
+
+后来偶然间发现，只要我把代理关了，就可以挂载了。所以弄了一下，发现v2raya设置成这样就能开代理挂载了：
+
+![[Knowledge/software_qa/resources/Pasted image 20240520233700.png]]
