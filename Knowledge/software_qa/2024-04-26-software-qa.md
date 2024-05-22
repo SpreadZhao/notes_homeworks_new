@@ -131,6 +131,20 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 - [pacman - ArchWiki](https://wiki.archlinux.org/title/Pacman)
 - [Jguer/yay: Yet another Yogurt - An AUR Helper written in Go](https://github.com/Jguer/yay)
 
+列出一个包里的文件（当然包括可执行程序）
+
+```shell
+yay -Ql <package_name>
+```
+
+> 这里可以用`| grep <xxx>`来过滤`bin`来过滤可执行文件
+
+查找一个命令属于哪个包：
+
+```shell
+yay -Qo <command>
+```
+
 ## 稳定内核
 
 [Arch Linux 更换到稳定版LTS内核 – 寻](https://poemdear.com/2019/03/27/arch-linux-%E6%9B%B4%E6%8D%A2%E5%88%B0%E7%A8%B3%E5%AE%9A%E7%89%88lts%E5%86%85%E6%A0%B8/)
@@ -147,7 +161,11 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 
 ## Arch Font
 
-Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archlinux.org/title/Linux_console#Fonts)，名字叫`CONFIG_FONT_TER16x32`。字体的官网：[Terminus Font Home Page](https://terminus-font.sourceforge.net/)，字体的ttf版本：[Terminus Font](http://terminus-font.sf.net/)
+Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archlinux.org/title/Linux_console#Fonts)，名字叫`CONFIG_FONT_TER16x32`。字体的官网：[Terminus Font Home Page](https://terminus-font.sourceforge.net/)，字体的ttf版本：[Terminus Font](http://terminus-font.sf.net/)。
+
+安装字体：[Fonts - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/fonts#Manual_installation)
+
+查找字体的准确名称：`fc-scan -b`，来自包`fontconfig`。
 
 ## Mate Shortcut
 
@@ -163,6 +181,12 @@ Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archli
 - [Alacritty - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Alacritty)
 
 我的习惯是，配置文件放在`~/.config/alacritty/alacritty.toml`，配色使用的是[gruvbox_dark](https://github.com/alacritty/alacritty-theme/blob/master/themes/gruvbox_dark.toml)
+
+## Dunst
+
+[Dunst - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Dunst)
+
+我找到的比较好的配置：[dunstrc (github.com)](https://gist.github.com/h3ndry/f490f0f5bff6256d8f97d8047babe611)
 
 ## DWM
 
@@ -315,7 +339,7 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 1. 安装archlinux
 2. 执行安装yay
 3. 执行`yay-script-dwm-base.sh`
-4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu
+4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu，slstatus
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
@@ -325,10 +349,10 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 11. 执行`yay-script-dwm-software.sh`，安装常用软件
 12. `udisk2`提供的命令（udiskctl）用来挂载硬盘比较好
 13. 安装`davfs2`，按照[wiki](https://wiki.archlinux.org/title/Davfs2#Using_fstab)里去配置fstab，这个配置了每次登录都会自动mount
-14. 设置状态栏
+14. ~~设置状态栏~~（slstatus已经取代之）
 15. 执行`yay-script-fcitx.sh`安装输入法并配置（参考[[#中文]]）
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
-17. 
+17. 安装[Dunst - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Dunst)，接收通知，并加入`~/.xinitrc`中。
 
 ### Trouble Shooting
 
@@ -369,3 +393,15 @@ Could not read status line: connection was closed by server
 后来偶然间发现，只要我把代理关了，就可以挂载了。所以弄了一下，发现v2raya设置成这样就能开代理挂载了：
 
 ![[Knowledge/software_qa/resources/Pasted image 20240520233700.png]]
+
+#### idea on dwm
+
+[idea-dwm_sudo pacman -s wmname-CSDN博客](https://blog.csdn.net/u010563350/article/details/104948256)
+
+- 安装wmname
+
+```shell
+export _JAVA_AWT_WM_NONREPARENTING=1
+export AWT_TOOLKIT=MToolkit
+wmname LG3D
+```
