@@ -38,15 +38,14 @@
 9. To undo all the changes on a line, type `U`(capital);
 10. To undo the undo's, type: `CTRL-R`.
 
-```ad-note
-`dw` delete the current word **with the space after it**; while `de` don't do that.
-
-![[Study Log/resources/Peek 2024-02-09 15-04.gif]] ![[Study Log/resources/Peek 2024-02-09 15-042.gif]]
-```
+> [!note]
+> `dw` delete the current word **with the space after it**; while `de` don't do that.
+> 
+> ![[Study Log/resources/Peek 2024-02-09 15-04.gif]] ![[Study Log/resources/Peek 2024-02-09 15-042.gif]]
 
 ## Lesson 3
 
-1. To put back text that has just been deleted, type `p`. This puts the deleted text AFTER the cursor (if a line was deleted it will go on the line below the cursor);
+1. To put back text that has just been deleted, type `p`. This puts the deleted text AFTER the cursor (if a line was deleted it will go on the line below the cursor); `P`(capital) to put things before the cursor.
 2. To replace the character under the cursor, type `r` and then the character you want to have there;
 3. The change operator allows you to change from the cursor to where the motion takes you. eg. Type `ce` to change from the cursor to the end of the word, `c$` to change to the end of a line;
 4. The format for change is:
