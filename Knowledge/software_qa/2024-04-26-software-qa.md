@@ -200,6 +200,8 @@ set preview_max_size 1000000
 
 这样所有大于1M的文件就都不会预览了。
 
+> see also: [set preview_max_size 1000000](https://github.com/ranger/ranger/issues/966)
+
 ## DWM
 
 彻底配置一遍 Arch Linux + DWM。
