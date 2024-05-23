@@ -70,3 +70,27 @@
 	* To substitute all occurrences in the line file type `:%s/old/new/g`;
 	* To ask for confirmation each time add 'c' `:%s/old/new/gc`.
 
+## Lesson 5
+
+1. `:!command` executes an external command.
+2. `:w FILENAME` writes the current to file FILENAME. If no FILENAME, write to the opened file.
+3. `v motion  :w FILENAME` saves the Visually selected lines in file FILENAME.
+4. `:r FILENAME` retrieves disk file FILENAME and puts it below the cursor position.
+5. `:r !ls` reads the output of the ls command and puts it below the cursor position.
+
+## Lesson 6
+
+1. `o` to open a line below cursor; `O` above the cursor.
+2. `a` to insert text after the cursor; `A` after the end of the line.
+3. `e` moves to the end of a word.
+4. `y` copy text, `p` pastes it (remember `P` do what?).
+	1. `y 3` will yankk 3 words, `y $` will yank to the end of the line.
+5. `R` replaces more than one ch, until `ESC`.
+6. Typing `:set xxx` sets the option "xxx". Some options are:
+	1. 'ic' 'ignorecase' ignore upper/lower case when searching;
+	2. 'is' 'incsearch' show partial matches for a search phrase
+	3. 'hls' 'hlsearch' highlight all matching phrases
+7. Prepend "no" to switch an option off:
+	1. `:set noic`;
+8. Prepend "inv" to invert an option:
+	1. `:set invic`
