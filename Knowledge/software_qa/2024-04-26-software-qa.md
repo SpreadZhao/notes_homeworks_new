@@ -190,6 +190,16 @@ Arch Linux 用的字体就是 Linux 内核的字体：[term](https://wiki.archli
 
 我找到的比较好的配置：[dunstrc (github.com)](https://gist.github.com/h3ndry/f490f0f5bff6256d8f97d8047babe611)
 
+## Ranger
+
+[ranger.github.io/ranger.1.html](https://ranger.github.io/ranger.1.html) 这里提到了，如果不想预览大文件，可以这样设置：
+
+```shell
+set preview_max_size 1000000
+```
+
+这样所有大于1M的文件就都不会预览了。
+
 ## DWM
 
 彻底配置一遍 Arch Linux + DWM。
