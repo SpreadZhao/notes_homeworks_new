@@ -202,6 +202,57 @@ set preview_max_size 1000000
 
 > see also: [set preview_max_size 1000000](https://github.com/ranger/ranger/issues/966)
 
+## Audio
+
+音频配置的问题。
+
+使用pipewire，不要直接用alsa进行音量控制（比如amixer）。安装：
+
+- pipewire
+- pipewire-alsa
+- pipewire-pulse
+
+pipewire兼容alsa和pulseaudio。后面的两个就是为了兼容用的。当用了这些之后，所有的声音就工作正常了。下面说怎么控制音量。
+
+pipewire我看它官网的描述，它的特色不是为了控制音频输出的，而是midi其它一些乱七八糟的。不过，它确实能控制音频，**因为它对pulseaudio兼容**。所以，控制音量其实还是在用pulseaudio的能力。不过，我们用的不是[pulseaudio包](https://wiki.archlinux.org/title/PulseAudio#Installation)里面的东西，而是libpulse。
+
+libpulse是最底层的库，只是个库。所以pipewire必然会依赖它。我们可以直接使用libpulse提供的pactl命令：[PipeWire - ArchWiki](https://wiki.archlinux.org/title/PipeWire#PulseAudio_clients)。
+
+比如`pactl info`会输出当前的audio server信息：
+
+```shell
+❯ pactl info
+... ...
+Server Name: PulseAudio (on PipeWire 1.0.7)
+... ...
+Default Sink: alsa_output.usb-Apple__Inc._EarPods_N6CPX970D3-00.analog-stereo
+Default Source: alsa_input.pci-0000_64_00.6.HiFi__hw_acp63__source
+... ...
+```
+
+其它的自己看wiki吧，都非常简单。我这里要强调一下，千万不要把pipewire和pulseaudio一起装，它们两个是会打架的：
+
+- pipewire-alsa和pulseaudio-alsa冲突；
+- pipewire-pulse和pulseaudio  pulseaudio-bluetooth冲突。
+
+只装`pipewire-`开头的，不要装其它的。我之前就都装了。出现了很多奇怪的问题。比如所有的在线视频和音乐都无法播放，但是网页浏览快得飞起（我没试本地视频，估计也一样）。一开始还以为是网络的问题，后来我无意中更新了一下pulseaudio，居然就好了。这才让我意识到是这里的问题，但是当时也没意识到是冲突的问题，后来研究了半天才发现。
+
+另外，pactl的用法，看man。下面这段就是复制下来的：
+
+```shell
+set-sink-volume SINK VOLUME [VOLUME ...]
+	Set the volume of the specified sink (identified by its symbolic name or numerical index). VOL‐
+	UME  can  be  specified  as an integer (e.g. 2000, 16384), a linear factor (e.g. 0.4, 1.100), a
+	percentage (e.g. 10%, 100%) or a decibel value (e.g. 0dB, 20dB). If  the  volume  specification
+	start with a + or - the volume adjustment will be relative to the current sink volume. A single
+	volume  value  affects  all  channels;  if multiple volume values are given their number has to
+	match the sink's number of channels.
+```
+
+或者，我们可以用pamixer，这个需要装一下。注意，我们查一下可以知道，这个东西不依赖pulseaudio，只依赖libpulse，所以是没问题的。
+
+> PS：原来，pipewire-pulse是支持动态切换sink的，是支持耳机线控的，是支持实时查询Default Sink的音量的。就是因为之前一直冲突，所以这些功能都用不了。。。
+
 ## DWM
 
 彻底配置一遍 Arch Linux + DWM。
