@@ -251,7 +251,7 @@ set-sink-volume SINK VOLUME [VOLUME ...]
 
 或者，我们可以用pamixer，这个需要装一下。注意，我们查一下可以知道，这个东西不依赖pulseaudio，只依赖libpulse，所以是没问题的。
 
-> PS：原来，pipewire-pulse是支持动态切换sink的，是支持耳机线控的，是支持实时查询Default Sink的音量的。就是因为之前一直冲突，所以这些功能都用不了。。。
+> PS：原来，pipewire-pulse是支持动态切换sink的，是支持耳机线控的，是支持实时查询Default Sink的音量的。就是因为之前一直冲突，所以这些功能都用不了。。。**还有，尼玛蓝牙也是因为这个用不了。😅**
 
 ## DWM
 
