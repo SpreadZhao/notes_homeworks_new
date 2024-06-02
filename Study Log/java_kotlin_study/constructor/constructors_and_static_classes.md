@@ -251,20 +251,17 @@ Student(age, name)
 * 静态内部类在构造的时候不需要构造外部类的实例；
 * 内部类可以访问到外部类的静态和非静态成员；而静态内部类只能访问外部类的静态成员。
 
-```ad-warning
-title: Kotlin中的静态内部类
-
-[kotlin静态内部类和java静态内部类的区别_kotlin 静态内部类_沙漠一只雕得儿得儿的博客-CSDN博客](https://blog.csdn.net/cpcpcp123/article/details/110825084)
-
-千万要注意：Kotlin中的静态内部类就是class，而非静态内部类是inner class。看下面的例子，加上了inner之后，在静态方法中无法创建。这正对应了上面的第一条。不报错的时候，就是构造静态内部类的时候。
-
-![[Study Log/java_kotlin_study/resources/idea64_o91GamPVcq.gif]]
-
-而如果我们想要构造出内部类，需要先构造出外部的类的实例：
-
-![[Study Log/java_kotlin_study/resources/idea64_hINz9VwptT.gif]]
-
-#date 2023-11-29
-
-可以这样理解：`inner`关键字的作用就是，构造的时候必须从外到内全部有实例才行，这其实就像一个成员属性一样，必须有外部类的实例才能访问，所以不是静态的。而不带`inner`的class就相当于java的`static class`。
-```
+> [!warning] Kotlin中的静态内部类
+> [kotlin静态内部类和java静态内部类的区别_kotlin 静态内部类_沙漠一只雕得儿得儿的博客-CSDN博客](https://blog.csdn.net/cpcpcp123/article/details/110825084)
+> 
+> 千万要注意：Kotlin中的静态内部类就是class，而非静态内部类是inner class。看下面的例子，加上了inner之后，在静态方法中无法创建。这正对应了上面的第一条。不报错的时候，就是构造静态内部类的时候。
+> 
+> ![[Study Log/java_kotlin_study/resources/idea64_o91GamPVcq.gif]]
+> 
+> 而如果我们想要构造出内部类，需要先构造出外部的类的实例：
+> 
+> ![[Study Log/java_kotlin_study/resources/idea64_hINz9VwptT.gif]]
+> 
+> #date 2023-11-29
+> 
+> 可以这样理解：`inner`关键字的作用就是，构造的时候必须从外到内全部有实例才行，这其实就像一个成员属性一样，必须有外部类的实例才能访问，所以不是静态的。而不带`inner`的class就相当于java的`static class`。
