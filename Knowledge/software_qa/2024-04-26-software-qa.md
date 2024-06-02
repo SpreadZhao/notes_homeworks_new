@@ -9,7 +9,7 @@ mtrace:
 
 # Arch Linux
 
-安装archlinux + kde遇到的傻逼事情。
+安装archlinux + kde/gnome/dwm/mate 遇到的傻逼事情。
 
 [Installation guide - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/installation_guide)
 
@@ -253,6 +253,33 @@ set-sink-volume SINK VOLUME [VOLUME ...]
 
 > PS：原来，pipewire-pulse是支持动态切换sink的，是支持耳机线控的，是支持实时查询Default Sink的音量的。就是因为之前一直冲突，所以这些功能都用不了。。。**还有，尼玛蓝牙也是因为这个用不了。😅**
 
+## Lock Screen
+
+首先，锁屏用的是slock，很轻量。重要的不是锁屏，是触发锁屏的东西。一开始是xautolock，但是后来发现它太简单了，只能定时锁屏，所以换成了xss-lock。
+
+[Session lock - ArchWiki](https://wiki.archlinux.org/title/Session_lock#systemd_events)看这个，xss-lock默认会订阅suspend事件和lock-session事件。所以，我们什么配置都不加，就可以做出响应。
+
+[Session lock - ArchWiki](https://wiki.archlinux.org/title/Session_lock#D-Bus_notification)再看这里，loginctl这种工具会发送锁屏事件，也就是相当于执行：
+
+```shell
+loginctl lock-session
+```
+
+然后，看修改电源按钮的方法：[Power management - ArchWiki](https://wiki.archlinux.org/title/Power_management#ACPI_events)。这里介绍了HandlePowerKey就是电源键按下之后的事情。所以我们找到`/etc/systemd/logind.conf`，这样修改：
+
+```conf
+[Login]
+HandlePowerKey=lock
+```
+
+这样你按下电源键，就等于执行了`loginctl lock-session`。接下来，需要处理这个事件，处理就是靠xss-lock了。我们在`~/.xsessionrc`里这么写：
+
+```shell
+xss-lock -- slock &
+```
+
+这样就是相当于订阅了之前说的那些事件。这样，就可以在盒盖（suspend）和按下电源键（lock）之后都执行slock去锁定屏幕了。
+
 ## DWM
 
 彻底配置一遍 Arch Linux + DWM。
@@ -404,7 +431,7 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 1. 安装archlinux
 2. 执行安装yay
 3. 执行`yay-script-dwm-base.sh`
-4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu，slstatus
+4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu，slstatus，slock
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
@@ -419,17 +446,17 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
 17. 安装[Dunst - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Dunst)，接收通知，并加入`~/.xinitrc`中。
 
-### Trouble Shooting
+## Trouble Shooting
 
-#### Flameshot pin
+### Flameshot pin
 
 flameshot 的 pin 不工作：[Flameshot PIN feature doesn't work · Issue #2598 · flameshot-org/flameshot (github.com)](https://github.com/flameshot-org/flameshot/issues/2598)。这是因为flameshot需要先启动，然后才能gui。看这个：[Flameshot - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Flameshot#Sub-commands_exit_immediately_with_no_output)。另外，issues里开发者说，不会为了这些用户去做这个case的适配（emm，很现实。。。）。
 
-#### Accidentally delete /etc/ files
+### Accidentally delete /etc/ files
 
 不小心把`/etc/alsa/conf.d`给删了，最后用[how to reinstall all packages in the system? / Pacman & Package Upgrade Issues / Arch Linux Forums](https://bbs.archlinux.org/viewtopic.php?id=34832)里的方法给找回来了。这里记录一下，这个文件是`pipewire-alsa`和`pipewire-audio`拥有的。
 
-#### Restore xmodmap
+### Restore xmodmap
 
 记录一下键盘。之前本来想设置按键调节音量，根据acpid的wiki和一大堆东西好不容易搞好了，这个过程中不小心动了`~/.Xmodmap`。之后左右键被搞没了。然后我本来想用`sudo showkey`来检测，后来发现，`showkey`展示的keycode根本就是错的！`xev`才是对的。这才排查出来之前的左右键已经被当成音量控制按键设置为空了。最后，根据[keyboard - How do I clear xmodmap settings? - Ask Ubuntu](https://askubuntu.com/questions/29603/how-do-i-clear-xmodmap-settings)的说法，执行：
 
@@ -439,7 +466,7 @@ setxkbmap -layout us
 
 就设置会默认的US布局了。
 
-#### Cannot mount WebDAV
+### Cannot mount WebDAV
 
 很傻逼的一个东西，我使用：
 
@@ -459,7 +486,7 @@ Could not read status line: connection was closed by server
 
 ![[Knowledge/software_qa/resources/Pasted image 20240520233700.png]]
 
-#### idea on dwm
+### idea on dwm
 
 [idea-dwm_sudo pacman -s wmname-CSDN博客](https://blog.csdn.net/u010563350/article/details/104948256)
 
