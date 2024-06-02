@@ -754,11 +754,8 @@ UsePAM yes
 
 ![[Knowledge/resources/Pasted image 20231024104853.png]]
 
-```ad-note
-title: 为啥要配置免密登录？
-
-如果不配置，那么提交git的时候每次都要输入密码，很烦。
-```
+> [!question] 为啥要配置免密登录？
+> 如果不配置，那么提交git的时候每次都要输入密码，很烦。
 
 然后，是git仓库。我的思路是，直接新建一个共享文件夹，用来存所有的git仓库：
 
