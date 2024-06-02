@@ -42,8 +42,8 @@ class MutexPrintThread(private val thNum: Int, private val otherNum: Int) : Thre
 
 既然如此，问题来了：*wait()在concurrent包中对应的是啥*？这东西还是很有必要的：操作系统中本身就有Conditional Variables这种东西，**让线程根据不同的情况等待在不同的队列中，虽然竞争的还是同一把锁**。而看名字也知道，本节的主角Condition就是这个东西。并且，它的使用语义和wait() \& notify()也是一致的。
 
-> [!comment]-
-> 你可能会想起上一节我们提到的东西：[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary#^7a8a69|5_5_lock_summary]]。我们说过concurrent包中，使用LockSupport提供的park()和unpark()来实现一个**更轻量的wait() \& notify()**操作。但是，为啥这里又说是Condition呢？其实很容易想到，park()和unpark()是非常不安全的操作，非常底层。所以想要像使用wait和notify那样使用它们，必须好好封装一下。我们可以看看Condition中接口的实现，其实底层也都是park()和unpark()。比如下面的await() \& signal()就是这样。
+> [!note]-
+> 你可能会想起上一节我们提到的东西：[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary#^7a8a69|5_5_lock_summary]]。我们说过concurrent包中，使用LockSupport提供的park()和unpark()来实现一个**更轻量的wait() \& notify()**操作。所以你会觉得synchronized中使用wait()相当于Concurernt包中的park()。但是，为啥这里又说是Condition呢？其实很容易想到，park()和unpark()是非常不安全的操作，非常底层。所以想要像使用wait和notify那样使用它们，必须好好封装一下。我们可以看看Condition中接口的实现，其实底层也都是park()和unpark()。比如下面的await() \& signal()就是这样。
 
 下面我们来改造一下上面交替打印的例子，使用Condition来实现。首先，Condition的创建必须使用Lock接口的newCondition()方法：
 
@@ -85,6 +85,8 @@ try {
 	lock.unlock();
 }
 ```
+
+^89ef65
 
 现在看看我们的交替打印怎么改。其实很简单，原来是发现不是自己打印就释放锁并重来，那么现在就是发现不是自己打印就要await：
 
@@ -312,8 +314,49 @@ while (i < 100) {
 
 注意，我们不需要while了，直接用if就行。因为**只要我们被唤醒了，那么现在一定是轮到我打印了**。
 
+> [!note]
+> 这里再次强调一下Condition和Lock之间的关系：Condition是和Lock打配合的组件，并且只能由Lock进行创建。在Lock接口中有个newCondition()方法，这个方法就是用来创建Condition的。而Lock的实现方（比如ReentrantLock）需要实现这个方法。这个方法的实现基本上就是靠AQS的默认实现。而这个默认实现实际上就是创建一个ConditionObject。
+
 ### 5.6.2 Condition 的实现分析
 
+首先，来对比一下Condition和Synchronized的区别：
+
+| 对比项                            | Object Monitor Methods  | Condition                                              |
+| ------------------------------ | ----------------------- | ------------------------------------------------------ |
+| 前置条件                           | 获取对象的锁                  | 调用Lock.lock()获取锁<br>调用Lock.newCondition()获取Condition对象 |
+| 调用方式                           | 直接调用<br>如：object.wait() | 直接调用<br>如：condition.wait()                             |
+| 等待队列个数                         | 一个                      | 多个                                                     |
+| 当前线程释放锁并进入等待状态                 | 支持                      | 支持                                                     |
+| 当前线程释放锁并进入等待状态，在等待状态中**不**响应中断 | 不支持                     | 支持                                                     |
+| 当前线程释放锁并进入超时等待状态               | 支持                      | 支持                                                     |
+| 当前线程释放锁并进入等待状态到将来的某个时间         | 不支持                     | 支持                                                     |
+| 唤醒等待队列中的一个线程                   | 支持                      | 支持                                                     |
+| 唤醒等待队列中的全部线程                   | 支持                      | 支持                                                     |
+
+然后看一眼Condition的这张图：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240321183108.png]]
+
+~~说实话，我对上面这张图从Condition指向同步器的箭头的正确性存疑。因为我翻遍了代码，也没看到Condition和AQS是用什么方式绑定起来的。诚然，ConditionObject确实是AQS的内部类，但是~~
+
+> [!note]
+> 草，刚写一半，就知道了。这个箭头确实是对的，因为ConditionObject是内部类，而不是静态内部类。他俩的区别见[[Study Log/java_kotlin_study/constructor/constructors_and_static_classes#静态内部类|constructors_and_static_classes]]。所以，必须构造出一个AQS的实例，才能继续构造ConditionObject。因此，他俩确实是一对多的关系。
+
+接下来我们介绍的Condition的功能都是默认是ConditionObject的。
+
+从之前的图就能看出来。结构如下：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240529202953.png]]
+
+ConditionObject有两个最重要的成员：firstWaiter和lastWaiter。其实就是链表的头指针和尾指针。而每一个结点都有指向下一个结点的指针。你可以看[[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240321183108.png|上面Condition的图]]，或者[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#5.2.2.1.1 获取失败后 - 添加新节点 - addWaiter()|之前我们对AQS同步队列的描述]]，来对比一下两者之间的区别。
+
+- [ ] #TODO tasktodo1716987186900 下面的部分也是jdk8的，之后看看jdk17是什么样子的。
+
+我们可以猜一下，一个线程什么时候才会进入这个队列：当然是调用await()方法！所以，我们需要从await()调用的地方谈起。什么时候才会调用await()方法？我们说过：[[#^89ef65]]。必须是在已经获得了锁的情况下，才能调用await()。这个和进入了synchronized闭包之后，再调用Object.wait()的效果是一样的，都是要**释放已经获得的锁**，并且等待其它人唤醒它，等再次获得了锁之后才会从这里继续。因此，
+
+默认情况下，ConditionObject的await()是可以处理中断的。具体的流程如下：
+
+1. 如果当前线程已经被中断了（通过标记位判断），抛出InterruptedException；
 
 
 ---
