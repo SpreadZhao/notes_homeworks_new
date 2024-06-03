@@ -348,16 +348,101 @@ while (i < 100) {
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240529202953.png]]
 
-ConditionObject有两个最重要的成员：firstWaiter和lastWaiter。其实就是链表的头指针和尾指针。而每一个结点都有指向下一个结点的指针。你可以看[[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240321183108.png|上面Condition的图]]，或者[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#5.2.2.1.1 获取失败后 - 添加新节点 - addWaiter()|之前我们对AQS同步队列的描述]]，来对比一下两者之间的区别。
+ConditionObject有两个最重要的成员：firstWaiter和lastWaiter。其实就是链表的头指针和尾指针。而每一个结点都有指向下一个结点的指针。你可以看[[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240321183108.png|上面Condition的图]]，或者[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#5.2.2.1.1 获取失败后 - 添加新节点 - addWaiter()|之前我们对AQS同步队列的描述]]，来对比一下两者（Lock的同步队列和Condition的等待队列）之间的区别。
 
 - [ ] #TODO tasktodo1716987186900 下面的部分也是jdk8的，之后看看jdk17是什么样子的。
+
+#### 5.6.2.1 await()的实现
 
 我们可以猜一下，一个线程什么时候才会进入这个队列：当然是调用await()方法！所以，我们需要从await()调用的地方谈起。什么时候才会调用await()方法？我们说过：[[#^89ef65]]。必须是在已经获得了锁的情况下，才能调用await()。这个和进入了synchronized闭包之后，再调用Object.wait()的效果是一样的，都是要**释放已经获得的锁**，并且等待其它人唤醒它，等再次获得了锁之后才会从这里继续。因此，
 
 默认情况下，ConditionObject的await()是可以处理中断的。具体的流程如下：
 
 1. 如果当前线程已经被中断了（通过标记位判断），抛出InterruptedException；
+2. 保存当前AQS的状态（因为当前线程就是已经获得了锁的线程，所以理应记录状态。通过getState()方法。）；
+3. 调用[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#5.2.2.2 锁的释放 - release()|release()]]来释放锁，如果失败了会抛出IllegalMonitorStateException异常。这个异常就是那种你要释放锁，但是却连锁都没获得的情况；
+4. 接下来一直在队列里等，直到被**通知**或者被**中断**（中断了会抛出InterruptedException）；
+5. 重新尝试获得锁，需要改的状态就是之前存的状态，也就是要恢复到之前的状态。另外获得锁的方式取决于这个本来是啥锁，是互斥，重入，读写等；
 
+- [ ] #TODO tasktodo1717400910299 以上的流程来自jdk8的ConditionObject的await()方法的注释。之后看看jdk17+的版本的注释还一不一样。如果还是一样的话，那感觉没啥细看的必要。也可以搜搜jdk在迭代的过程中有关AQS的变化。 ➕ 2024-06-03 🔼 
+
+以上过程如下图。就是从同步队列的牢大（获得了锁的线程）变成了调用await()的ConditionObject的队列的一个小小节点。
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240603155150.png]]
+
+> [!attention]
+> 这里需要注意，是用当前线程构造一个新节点，不是原封不动加进去。加的实现看addConditionWaiter()方法。不过，同步队列中的节点和等待队列中的节点都是Node，至少jdk8是这样的。
+
+最后看一眼代码：
+
+```java
+/**
+ * Implements interruptible condition wait.
+ * <ol>
+ * <li> If current thread is interrupted, throw InterruptedException.
+ * <li> Save lock state returned by {@link #getState}.
+ * <li> Invoke {@link #release} with saved state as argument,
+ *      throwing IllegalMonitorStateException if it fails.
+ * <li> Block until signalled or interrupted.
+ * <li> Reacquire by invoking specialized version of
+ *      {@link #acquire} with saved state as argument.
+ * <li> If interrupted while blocked in step 4, throw InterruptedException.
+ * </ol>
+ */
+public final void await() throws InterruptedException {
+	if (Thread.interrupted())
+		throw new InterruptedException();
+	Node node = addConditionWaiter();
+	int savedState = fullyRelease(node);
+	int interruptMode = 0;
+	while (!isOnSyncQueue(node)) {
+		LockSupport.park(this);
+		if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
+			break;
+	}
+	if (acquireQueued(node, savedState) && interruptMode != THROW_IE)
+		interruptMode = REINTERRUPT;
+	if (node.nextWaiter != null) // clean up if cancelled
+		unlinkCancelledWaiters();
+	if (interruptMode != 0)
+		reportInterruptAfterWait(interruptMode);
+}
+```
+
+#### 5.6.2.2 signal()的实现
+
+下一步，这些节点怎么粗去？当然是调用signal()啦！还是之前使用Condition的范式：[[#^89ef65]]。调用signal()的线程也需要是获得了Lock的线程，<fieldset class="inline"><legend class="small">💬</legend>因为只有这些线程才知道这个锁马上就要被释放了</fieldset>。调用了signal()，会通知等待队列中的**老大**，也就是**等待了最久的线程**。通知它尝试获取锁。
+
+> [!comment] 因为只有这些线程才知道这个锁马上就要被释放了
+> 避免看不懂，这里就是因为，通常是先调用signal()，然后立马释放lock。所以才说这些线程知道什么时候锁释放，因为只有占有，才知道什么时候会主动失去。
+
+```java
+/**
+ * Moves the longest-waiting thread, if one exists, from the
+ * wait queue for this condition to the wait queue for the
+ * owning lock.
+ *
+ * @throws IllegalMonitorStateException if {@link #isHeldExclusively}
+ *         returns {@code false}
+ */
+public final void signal() {
+	if (!isHeldExclusively())
+		throw new IllegalMonitorStateException();
+	Node first = firstWaiter;
+	if (first != null)
+		doSignal(first);
+}
+```
+
+- [ ] #TODO tasktodo1717402132180 具体的实现在doSignal()方法里，后面有时间补上。
+
+> 通过调用同步器的 enq(Node node)方法，等待队列中的头节点线程安全地移动到同步队列。当节点移动到同步队列后，当前线程再使用 LockSupport 唤醒该节点的线程。
+> 
+> 被唤醒后的线程，将从 await()方法中的 while 循环中退出（isOnSyncQueue(Node node)方法返回 true，节点已经在同步队列中），进而调用同步器的 acquireQueued()方法加入到获取同步状态的竞争中。
+> 
+> 成功获取同步状态（或者说锁）之后，被唤醒的线程将从先前调用的 await()方法返回，此时该线程已经成功地获取了锁。
+
+signalAll()没啥好说的，就是给队列里的每个线程执行一遍signal()。
 
 ---
 
