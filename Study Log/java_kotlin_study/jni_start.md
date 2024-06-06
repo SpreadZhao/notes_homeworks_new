@@ -148,9 +148,8 @@ g++ -c -I "%JAVA_HOME%\include" -I "%\JAVA_HOME%\include\win32" HelloClass.cpp -
 -c           Compile and assemble, but do not link.
 ```
 
-```ad-note
-编译、汇编、链接可以看[[Study Log/linux|linux]]
-```
+> [!note]
+> 编译、汇编、链接可以看[[Study Log/linux|linux]]
 
 然后-I表示从哪里搜索你写的`#include`，因为我们的`jni.h`在jdk中而不在c标准库里，所以要这样加上去。
 
