@@ -32,7 +32,7 @@ public static void main(String[] args) throws InterruptedException {
 ```
 
 > [!attention]
-> 以上代码只有在jdk1.7以前才会出问题：[java - 11张图让你彻底明白jdk1.7 hashmap的死循环是如何产生的 - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000024510131)。这里我特地自己搞了一下。确实使用java8以及以后的版本，就不会有死循环的问题了。
+> 以上代码只有在jdk1.7以前才会出问题：[[Study Log/java_kotlin_study/java_kotlin_study_diary/hash_map#JDK 1.7 中的 HashMap|hash_map]]。这里我特地自己搞了一下。确实使用java8以及以后的版本，就不会有死循环的问题了。
 > 
 > 这里给出编译和执行的过程：
 > 

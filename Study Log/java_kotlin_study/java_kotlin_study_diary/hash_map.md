@@ -188,6 +188,7 @@ while (current != null) {
     }  
     current = current.next  
 }  
+// current is null
 table[index] = Entry(k, v, table[index])  
 _size++  
 return null
@@ -369,4 +370,239 @@ class MyHashMap<K, V> {
 
 # JDK 1.7 中的 HashMap
 
+> [!attention]
+> 本文章使用的jdk版本：[openjdk/jdk at jdk7-b147](https://github.com/openjdk/jdk/tree/jdk7-b147)
+
 [java - 11张图让你彻底明白jdk1.7 hashmap的死循环是如何产生的 - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000024510131)
+
+jdk1.7以前的HashMap的实现方式和我们上面的代码基本上是差不多的，也是使用的头插法。我们首先回顾一下我们刚刚自己写的put方法：
+
+```kotlin
+fun put(k: K, v: V): V? {
+	val index = k.hashCode() % table.size
+	var current = table[index]
+	if (current != null) {
+		// 有Hash碰撞
+		while (current != null) {
+			if (current.k == k) {
+				// 存在key
+				val oldValue = current.v
+				current.v = v
+				return oldValue
+			}
+			current = current.next
+		}
+		// 不存在key
+		table[index] = Entry(k, v, table[index])
+		_size++
+		return null
+	}
+	// 没有Hash碰撞
+	table[index] = Entry(k, v, null)
+	_size++
+	return null
+}
+```
+
+可以看到，如果发生了Hash碰撞，但是链表中并不存在想要的key的话，会执行这句代码：
+
+```kotlin
+table[index] = Entry(k, v, table[index])
+```
+
+这句代码就是头插法的体现。将现在的`table[index]`作为新Entry的next，然后让新的Entry作为新的`table[index]`。这样新加入的entry就是新的链表头了。现在我们来看看jdk1.7中的put方法：
+
+```java
+/**
+ * Associates the specified value with the specified key in this map.
+ * If the map previously contained a mapping for the key, the old
+ * value is replaced.
+ *
+ * @param key key with which the specified value is to be associated
+ * @param value value to be associated with the specified key
+ * @return the previous value associated with <tt>key</tt>, or
+ *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
+ *         (A <tt>null</tt> return can also indicate that the map
+ *         previously associated <tt>null</tt> with <tt>key</tt>.)
+ */
+public V put(K key, V value) {
+	if (key == null)
+		return putForNullKey(value);
+	int hash = hash(key.hashCode());
+	int i = indexFor(hash, table.length);
+	for (Entry<K,V> e = table[i]; e != null; e = e.next) {
+		Object k;
+		if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+			V oldValue = e.value;
+			e.value = value;
+			e.recordAccess(this);
+			return oldValue;
+		}
+	}
+
+	modCount++;
+	addEntry(hash, key, value, i);
+	return null;
+}
+```
+
+先看其中的for循环：
+
+```java
+for (Entry<K,V> e = table[i]; e != null; e = e.next) {
+	Object k;
+	if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+		V oldValue = e.value;
+		e.value = value;
+		e.recordAccess(this);
+		return oldValue;
+	}
+}
+```
+
+可以发现，这和我们自己写的while循环是几乎一致的。都描述的是在Hash碰撞，且链表中存在key的情况。在这种情况下我们会去修改链表中相应元素，并返回老的元素。它唯一比我们多出来的就是`recordAccess()`操作，不过这个方法看名字就是类似于记录的功能，所以并不重要。
+
+当退出for循环时，代表链表中并不存在key对应的entry。或者这个链表本身就是空的（即没有Hash碰撞）。在我们的例子中，这两种情况是分开处理的，为了更好地解释HashMap的原理：
+
+```kotlin
+// 不存在key
+table[index] = Entry(k, v, table[index])
+_size++
+return null
+
+// 没有Hash碰撞
+table[index] = Entry(k, v, null)
+_size++
+return null
+```
+
+我们发现，这两种策略的操作几乎都是一样的。所以在jdk1.7中，他们被统一处理。方法就是addEntry：
+
+```java
+/**
+ * Adds a new entry with the specified key, value and hash code to
+ * the specified bucket.  It is the responsibility of this
+ * method to resize the table if appropriate.
+ *
+ * Subclass overrides this to alter the behavior of put method.
+ */
+void addEntry(int hash, K key, V value, int bucketIndex) {
+	Entry<K,V> e = table[bucketIndex];
+	table[bucketIndex] = new Entry<>(hash, key, value, e);
+	if (size++ >= threshold)
+		resize(2 * table.length);
+}
+```
+
+这里面的这句：
+
+```java
+table[bucketIndex] = new Entry<>(hash, key, value, e);
+```
+
+和我们自己写的是一模一样的，就是头插法的实现。而接下来的操作是我们没有的，就是将数组给扩容。随着不断插入元素，数组肯定会越来越满。这样的后果就是Hash碰撞的概率也会增加。为了减少我们操作链表的次数以提升性能，最简单直观的方式就是给数组扩容。可以看到，这里扩容的条件是，如果增加元素之后的size超过了阈值threshold，就会调用resize方法进行扩容。方法传入的参数是我们希望的新的容量。这里传入的是原来数组大小的2倍。
+
+扩容的逻辑，也就是resize方法的实现，看起来很简单：
+
+```java
+/**
+ * Rehashes the contents of this map into a new array with a
+ * larger capacity.  This method is called automatically when the
+ * number of keys in this map reaches its threshold.
+ *
+ * If current capacity is MAXIMUM_CAPACITY, this method does not
+ * resize the map, but sets threshold to Integer.MAX_VALUE.
+ * This has the effect of preventing future calls.
+ *
+ * @param newCapacity the new capacity, MUST be a power of two;
+ *        must be greater than current capacity unless current
+ *        capacity is MAXIMUM_CAPACITY (in which case value
+ *        is irrelevant).
+ */
+void resize(int newCapacity) {
+	Entry[] oldTable = table;
+	int oldCapacity = oldTable.length;
+	if (oldCapacity == MAXIMUM_CAPACITY) {
+		threshold = Integer.MAX_VALUE;
+		return;
+	}
+
+	Entry[] newTable = new Entry[newCapacity];
+	transfer(newTable);
+	table = newTable;
+	threshold = (int)(newCapacity * loadFactor);
+}
+```
+
+就是构造一个新的数组，然后调用transfer方法将数据移动到新的数组上。然而，transfer方法的实现想要弄明白还是需要一些基本功的。
+
+我希望你先看完[[Study Log/java_kotlin_study/java_kotlin_study_diary/reference#一个关于引用的迷惑性问题|一个关于引用的迷惑性问题]]，然后再继续进行下去。这个对我们阅读transfer方法的代码非常有帮助。
+
+transfer的代码如下：
+
+```java
+/**
+ * Transfers all entries from current table to newTable.
+ */
+void transfer(Entry[] newTable) {
+	Entry[] src = table;
+	int newCapacity = newTable.length;
+	for (int j = 0; j < src.length; j++) {
+		Entry<K,V> e = src[j];
+		if (e != null) {
+			src[j] = null;
+			do {
+				Entry<K,V> next = e.next;
+				int i = indexFor(e.hash, newCapacity);
+				e.next = newTable[i];
+				newTable[i] = e;
+				e = next;
+			} while (e != null);
+		}
+	}
+}
+```
+
+src是原来的数组，而newTable是新数组，里面目前还全都是null。transfer的核心是遍历整个src数组，将里面的东西移动到新的数组中。如果你仔细看了之前关于引用的问题，你就会知道，这两句代码：
+
+```java
+Entry<K,V> e = src[j];
+src[j] = null;
+```
+
+并不会改变e的值，只是`src[j]`的指向从原来的链表头节点变成了null。在for循环的第一轮执行到了`src[j] = null;`的时候，应该是下图的情况：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-12 14.55.26.excalidraw.svg]]
+
+我们发现，当do-while循环执行之前，我们就已经**将链表从原来的数组中抽离出来**，由临时引用e来接管了。
+
+> [!note]
+> 这里我们假设原来的数组大小是4，所以调用resize扩容时的新容量就是8；同时每个entry的key是一个数字，value是一个string。
+
+接下来我们开始走第一遍do-while循环。这里为了看的更清晰，调整一下图：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-13 01.09.23.excalidraw.svg]]
+
+假设这个链表在新的数组中的index是1，那么以e（`<121, a>`）开头的所有元素都应该被放到新的数组的1号标中。跟着这个走，我们看它到底是怎么放的。其实，这里我能想到的最简单的办法，让新的数组的1号指向e指向的东西不就行了？之所以没这么做，主要的原因是我们要给原来链表中的每一个节点都判断。虽然它们在老链表中的hash结果都是0，但是不代表新的结果都是1。这里都是1只是我的假设。所以真实情况要具体看。
+
+对于链表中的每个节点，都需要做下面的步骤：
+
+```java
+// 暂存当前节点的下一个节点，仅用作最后的移动。
+Entry<K,V> next = e.next;
+// 找到要存放的数组。在本例中i永远是1。
+int i = indexFor(e.hash, newCapacity);
+// 下两行为头插法的核心步骤。
+e.next = newTable[i];
+newTable[i] = e;
+// 移动节点到下一个。
+e = next;
+```
+
+这里最需要关注的就是，如果新数组还没有被放入过元素，那么它其实就是null。根据这个描述，我们画出第一次结束之后的样子：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-13 01.27.09.excalidraw.svg]]
+
+这就是头插法：新来的元素永远插在第一个的前一个。我们自己想：如果现在已经有来一个链表，头节点是head。如果我希望头插一个元素，应该怎么做？答案其实很容易想到：**让新节点的下一个是head，然后再让head是新节点**。而这里的操作完全就是这样的。唯一多出来的一点是：我们的新节点不是凭空构造出来的，而是原来存在于一个链表中的。也就是说，**我们在把链表的每一个节点都使用头插法插入到一个（或多个，但不是本例）新链表中**。
+
+那这里的问题也很容易发现：经过这样的操作，新的链表就变成原来的倒序了。
