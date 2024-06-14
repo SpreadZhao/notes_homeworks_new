@@ -373,7 +373,8 @@ class MyHashMap<K, V> {
 > [!attention]
 > 本文章使用的jdk版本：[openjdk/jdk at jdk7-b147](https://github.com/openjdk/jdk/tree/jdk7-b147)
 
-[java - 11张图让你彻底明白jdk1.7 hashmap的死循环是如何产生的 - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000024510131)
+- [java - 11张图让你彻底明白jdk1.7 hashmap的死循环是如何产生的 - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000024510131)
+- [【透彻】java关于HashMap多线程扩容导致死循环（JDK1.7）的详细过程_jdk1.7hashmap扩容死循环-CSDN博客](https://blog.csdn.net/HD243608836/article/details/126630059)
 
 jdk1.7以前的HashMap的实现方式和我们上面的代码基本上是差不多的，也是使用的头插法。我们首先回顾一下我们刚刚自己写的put方法：
 
@@ -563,7 +564,7 @@ void transfer(Entry[] newTable) {
 }
 ```
 
-src是原来的数组，而newTable是新数组，里面目前还全都是null。transfer的核心是遍历整个src数组，将里面的东西移动到新的数组中。如果你仔细看了之前关于引用的问题，你就会知道，这两句代码：
+src是原来的数组，而newTable是新数组，**里面目前还全都是null**。transfer的核心是遍历整个src数组，将里面的东西移动到新的数组中。如果你仔细看了之前关于引用的问题，你就会知道，这两句代码：
 
 ```java
 Entry<K,V> e = src[j];
@@ -606,3 +607,61 @@ e = next;
 这就是头插法：新来的元素永远插在第一个的前一个。我们自己想：如果现在已经有来一个链表，头节点是head。如果我希望头插一个元素，应该怎么做？答案其实很容易想到：**让新节点的下一个是head，然后再让head是新节点**。而这里的操作完全就是这样的。唯一多出来的一点是：我们的新节点不是凭空构造出来的，而是原来存在于一个链表中的。也就是说，**我们在把链表的每一个节点都使用头插法插入到一个（或多个，但不是本例）新链表中**。
 
 那这里的问题也很容易发现：经过这样的操作，新的链表就变成原来的倒序了。
+
+这样的头插实现也是jdk1.7中容易出现死循环的原因。当有多个线程访问HashMap的时候，就很可能会出现这种情况。接下来我们以两个线程来模拟一下这个情况。
+
+在模拟之前，需要说明几个问题：
+
+1. 链表从原来的数组移动到新数组的时候，会发生反转，因为头插法；
+2. 两个线程执行的过程中，<fieldset class="inline"><legend class="small">💬</legend>可能</fieldset>会读到同一个老的链表，而新的链表完全是两个线程私有的（具体过程看下图）；
+3. 当执行完resize中的`table = newTable`之后，才真正把自己的修改写入公共变量。
+
+> [!comment] 可能
+> 之所以是可能，主要是因为两个线程执行的顺序不可控。比如第一个线程都把整个addEntry执行完了，第二个线程才开始执行transfer。这个时候第二个线程读到的就是第一个线程完全修改过后的结果。这种情况就不会出现问题。而我们讨论的出现问题的情况是**两个线程同时执行transfer，读到了同一个老链表**的情况。当执行完transfer之后，返回到resize中，紧接着下一句话就是`table = newTable`。这句话就是将自己修改过后的新链表赋值给公共的变量table。这才代表真正把修改写入。
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Pasted image 20240613133227.png]]
+
+现在假设两个线程同时执行到transfer方法。然后线程1第一次执行**完**transfer的`Entry<K,V> next = e.next`时被挂起，然后线程2将整个resize都执行完了。此时线程2已经将修改写入了公共变量table。这样的话，线程1的src指向的也是table，所以这个时候src中的变量已经发生了变化：
+ 
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-13 14.06.13.excalidraw.svg]]
+
+- [ ] #TODO tasktodo1718262686036 上面这张图，table应该放在哪里？是两个线程都有，还是在主线程的栈中？换句话说，如果两个线程访问同一个公共变量，那么它们访问的这个引用到底是怎么存的？
+
+当线程2执行完全部代码时，情况如下：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-13 13.54.47.excalidraw.svg]]
+
+这和我们之前的内容是一样的。然而，当线程1恢复之后，情况就大不相同了：
+
+1. 因为线程2已经将修改结果写入，所以线程1的src已经指向一个修改好的数组；
+2. 此时线程1要修改的链表已经是被添加成功，并且是反转的。
+
+此时最好的策略其实是让线程1停止执行。但是实际上并没有这么做，可能有其他的问题吧。后果就是线程1会继续运行下去，再进行一次修改。线程1和线程2现在的情况是这样的：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Drawing 2024-06-13 15.27.43.excalidraw.svg]]
+
+线程1的src已经指向了线程2修改之后的结果，所以大小也翻倍了；另外线程1因为执行完了`Entry<K,V> next = e.next`，导致线程1的e和next还是指向的修改之前的entry。
+
+我们把线程1的情况画一个漂亮一点的图：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/1.drawio.svg]]
+
+接下来，我们按照这段代码一行行执行。看最终的结果是如何。我已经将这个过程做成了一个动图：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/hashmap-loop-error.gif]]
+
+> [!attention]
+> - 为了让图更加清晰直观，我把e和next放到了左边，但是它们都是线程1栈空间的变量。
+> - 图中蓝色的线代表链表的下一个，也就是`e.next`。
+> - 图中红色的代码表示**这行已经执行完毕了**。
+
+我们发现，线程1执行完毕后，最终的情况是这样的：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/16.drawio.svg]]
+
+- 链表中出现了环；
+- 链表的头本来应该是`<786, jdf>`，现在却变成了`<121, a>`。**这正好是环的出发点**。
+
+产生这个现象的主要原因就是，一开始线程1执行完了`Entry<K,V> next = e.next`，而那个时候链表还是正向的；之后线程2操作完之后，链表倒过来了。这就导致**线程1之前记住的e和next之间的关系已经是错的了**。所以在之后移动链表的过程中，**e的指向出现了先往下走再往上走的现象**（我十分建议你回头再看一眼动图，盯着e的指向即可）。
+
+而这样的后果，导致链表中间出现了一个环。所以，如果之后再有人访问这个链表（无论是调用get读取数据，还是调用put存放数据），恰好这个要被读的key或者要存的key的hash结果正好也是这个格子的话，由于现在就处在链表的环的开头，那么之后就很有可能一直环下去了。
