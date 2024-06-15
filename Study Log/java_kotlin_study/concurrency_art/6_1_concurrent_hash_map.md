@@ -7,7 +7,7 @@ order: "1"
 ## 6.1 ConcurrentHashMap的原理与使用
 
 > [!attention]
-> 本节使用jdk1.7版本。后续要更新接下来的jdk对于ConcurrentHashMap的升级。
+> 本节使用[jdk1.7](https://github.com/openjdk/jdk/tree/jdk7-b147)版本。后续要更新接下来的jdk对于ConcurrentHashMap的升级。
 > 
 > - [ ] #TODO tasktodo1718346387211 升级ConcurrentHashMap。 ➕ 2024-06-14 🔼 
 
@@ -73,7 +73,7 @@ public static void main(String[] args) throws InterruptedException {
 
 CHM高效就在它的数据不是一把锁干死的，是分段的。CHM里面的数据被分成若干段，每一段用一个锁给锁起来。这样多个线程大概率会访问到不同的段，也就能很大程度上提高并发效率。
 
-### 6.1.2 ConcurrentHashMap的结构
+### 6.1.2 ConcurrentHashMap的结构和初始化
 
 简单的结构如下：
 
@@ -118,9 +118,145 @@ public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyL
 
 可以看到，最终的segments的大小是ssize，而这个变量的计算就是依赖于concurrencyLevel。但是我们需要注意的是，ssize并不是每次+1的，而是`<<= 1`。所以，实际上相当于`ssize *= 2`。
 
-我们假设concurrencyLevel是15。那么while循环会走4次，退出循环后ssize为16，正好是**大于等于concurrencyLevel的2的整数次方**。这也就是注释中说的`power-of-two sizes best matching arguments`。如果有15个线程需要访问这个HashMap，那么segments的长度就应该是16。这样既能有足够大的并发量，同时由于正好是2的整数次方，所以也能满足按位与的hash散列算法来定位对应的Segment（关于这个算法，我们之后会详细介绍）。
+我们假设concurrencyLevel是15。那么while循环会走4次，退出循环后ssize为16，正好是**大于等于concurrencyLevel的2的整数次方**。这也就是注释中说的`power-of-two sizes best matching arguments`。如果有15个线程需要访问这个HashMap，那么segments的长度就应该是16。这样既能有足够大的并发量，同时由于正好是2的整数次方，所以也能满足按位与的hash散列算法来定位对应的Segment。
+
+#### 6.1.2.2 每个segment
+
+在书中介绍创建segment的时候，直接是把segments数组中的每个元素都初始化了，就像下面这样：
+
+```java
+for (int i = 0; i < this.segments.length; ++i) {
+	this.segments[i] = new Segment<K, V>(cap, loadFactor);
+}
+```
+
+但是[我看的版本](https://github.com/openjdk/jdk/tree/jdk7-b147)里面并没有这段代码，在CHM初始化的时候，仅仅是把`segments[0]`给创建了。也就是说，一开始segments里面只有一个链表数组。而其它的元素是在`ensureSegment`方法中构造出来的。也就是随用随构造。下面我们来分别介绍这两个位置。
+
+首先是`segments[0]`构造的位置，和segments数组是同时构造的：
+
+```java
+public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
+	... ...
+	if (initialCapacity > MAXIMUM_CAPACITY)
+		initialCapacity = MAXIMUM_CAPACITY;
+	int c = initialCapacity / ssize;
+	if (c * ssize < initialCapacity)
+		++c;
+	int cap = MIN_SEGMENT_TABLE_CAPACITY;
+	while (cap < c)
+		cap <<= 1;
+	// create segments and segments[0]
+	Segment<K,V> s0 =
+		new Segment<K,V>(loadFactor, (int)(cap * loadFactor),
+						 (HashEntry<K,V>[])new HashEntry[cap]);
+	Segment<K,V>[] ss = (Segment<K,V>[])new Segment[ssize];
+	UNSAFE.putOrderedObject(ss, SBASE, s0); // ordered write of segments[0]
+	this.segments = ss;
+}
+```
+
+刚才我们说过，ssize是segments数组的长度。而initialCapacity就是CHM中所有entry的个数。比如我们一开始想要存100个元素，同时还是有差不多15个线程要访问，那么我们按照上面的代码算一下：
+
+- 根据刚才分析，ssize应该是16；
+- $100 \div 16 = 6 \cdots 4$，所以c就是6；
+- 然后$6 \times 16 \lt 100$，所以会把c再+1变成7（其实这两步就相当于$\lceil \dfrac{initialCapacity}{ssize} \rceil$）；
+- 让cap是table最小的容量，也就是说链表数组最小的容量，这个值是2（和书上不一样，书上说的是1）；
+- 和之前ssize的计算一样，也是取大于等于它的2的整数次方。因此c如果是7的话，cap就应该是$2^3 = 8$；
+- 最后构造`segments[0]`的时候，还需要进一步限制，这个和HashMap一样，就是用`cap * loadFactor`计算出`threshold`。
+
+> [!question]- 凭什么链表数组的大小计算要用$\lceil \dfrac{initialCapacity}{ssize} \rceil$？
+> 首先我问个问题：对于HashMap，HashTable，当然也包括ConcurrentHashMap。它们的链表数组里面，链表是越长越好还是越短越好？答案是显而易见的：**肯定是越短越好**。因为链表越短，我们访问数据就越快。尤其是CHM这种高性能的组件，更加需要让链表变得短。那么问题来了：链表短，那总得有代价。如果是HashMap的话，链表想要缩短，那就是增加数组的长度，并且用一些hash散列的算法来规避这个问题。比如两个元素的hash值是一样的，本来因为碰撞要放到同一个链表里，但是有了hash散列之后就可以放到相邻或者其他的不同的链表中，这样就拆开了。
+> 
+> 回到CHM的构造这里，我们传入了initialCapacity，也就是**初始元素的个数**。那么既然我传了，我肯定就是想告诉你：这个CHM里一开始我就至少打算放100个元素。那么你既然想把他放进去，就要有这么多地方才行。~~为了少创建segment，CHM的策略是把初始元素都放到`segments[0]`中。所以一开始它才只创建了`segments[0]`。那么如果想要把100个元素都~~ 我们这么想：如果这100个元素全部都能放到空的链表里，那不就是最快的？和HashMap的思路其实是一样的。所以，经过我们这么一算，$7 \times 16 = 112$，因此光是空的链表一开始就有112个。在最好的情况下，就是能够容纳这100个初始元素，同时让访问速度达到最快。
+> 
+> 换句话说，我们当然可以让每个Segment中table的size是1，2，5，8或者任何随机的值。但是如果你选大了，那就浪费空间，如果选小了，链表就会变长，效率就会下降。所以这个公式就是为了选一个最合适的size。
+
+至于ensureSegment方法中创建其它segment的逻辑，没什么好说的。就是不存在的话，就用`segments[0]`的参数创建一个新的然后放到数组里就行了。这里把代码贴一下：
+
+```java
+/**
+ * Returns the segment for the given index, creating it and
+ * recording in segment table (via CAS) if not already present.
+ *
+ * @param k the index
+ * @return the segment
+ */
+@SuppressWarnings("unchecked")
+private Segment<K,V> ensureSegment(int k) {
+	final Segment<K,V>[] ss = this.segments;
+	long u = (k << SSHIFT) + SBASE; // raw offset
+	Segment<K,V> seg;
+	if ((seg = (Segment<K,V>)UNSAFE.getObjectVolatile(ss, u)) == null) {
+		Segment<K,V> proto = ss[0]; // use segment 0 as prototype
+		int cap = proto.table.length;
+		float lf = proto.loadFactor;
+		int threshold = (int)(cap * lf);
+		HashEntry<K,V>[] tab = (HashEntry<K,V>[])new HashEntry[cap];
+		if ((seg = (Segment<K,V>)UNSAFE.getObjectVolatile(ss, u))
+			== null) { // recheck
+			Segment<K,V> s = new Segment<K,V>(lf, threshold, tab);
+			while ((seg = (Segment<K,V>)UNSAFE.getObjectVolatile(ss, u))
+				   == null) {
+				if (UNSAFE.compareAndSwapObject(ss, u, null, seg = s))
+					break;
+			}
+		}
+	}
+	return seg;
+}
+```
+
+下面来个图的总结：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-06-15 18.47.42.excalidraw.svg]]
+
+### 6.1.3 定位Segment
+
+用hash散列算法给元素进行再次分散。这么做的主要目的就是为了让元素尽可能分散在不同的segment中。如果数据都集中在同一个segment中，存取速度会非常慢，而且本身的分段锁也失去了意义。
+
+hash散列算法本身是一种映射的算法，比如md5就是其中一种。最主要的意义是，生成的hash code是**固定长度**的。所以用位操作去操作它的话会非常方便。
+
+CHM使用的hash散列算法是`single-word Wang/Jenkins hash`的变种，代码如下：
+
+```java
+/**
+ * Applies a supplemental hash function to a given hashCode, which
+ * defends against poor quality hash functions.  This is critical
+ * because ConcurrentHashMap uses power-of-two length hash tables,
+ * that otherwise encounter collisions for hashCodes that do not
+ * differ in lower or upper bits.
+ */
+private static int hash(int h) {
+	// Spread bits to regularize both segment and index locations,
+	// using variant of single-word Wang/Jenkins hash.
+	h += (h <<  15) ^ 0xffffcd7d;
+	h ^= (h >>> 10);
+	h += (h <<   3);
+	h ^= (h >>>  6);
+	h += (h <<   2) + (h << 14);
+	return h ^ (h >>> 16);
+}
+```
+
+这东西一般是这么用的：
+
+```java
+int h = hash(key.hashCode())
+```
+
+就是已经有了hashcode，然后用这个算法进行再散列。因为hashcode本身就非常容易冲突，所以我们用这个算法能够让原本冲突的code再次分散。
+
+### 6.1.4 ConcurrentHashMap的操作
+
+#### 6.1.4.1 get
 
 
+
+#### 6.1.4.2 put
+
+#### 6.1.4.3 size
+
+### 6.1.5 新的ConcurrentHashMap
 
 ---
 
