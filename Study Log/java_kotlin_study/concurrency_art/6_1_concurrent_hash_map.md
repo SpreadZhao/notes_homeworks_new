@@ -250,7 +250,29 @@ int h = hash(key.hashCode())
 
 #### 6.1.4.1 get
 
+CHM的get操作非常高效，因为它不用加锁。代码如下：
 
+```java
+public V get(Object key) {
+	Segment<K,V> s; // manually integrate access methods to reduce overhead
+	HashEntry<K,V>[] tab;
+	int h = hash(key.hashCode());
+	long u = (((h >>> segmentShift) & segmentMask) << SSHIFT) + SBASE;
+	if ((s = (Segment<K,V>)UNSAFE.getObjectVolatile(segments, u)) != null &&
+		(tab = s.table) != null) {
+		for (HashEntry<K,V> e = (HashEntry<K,V>) UNSAFE.getObjectVolatile
+				 (tab, ((long)(((tab.length - 1) & h)) << TSHIFT) + TBASE);
+			 e != null; e = e.next) {
+			K k;
+			if ((k = e.key) == key || (e.hash == h && key.equals(k)))
+				return e.value;
+		}
+	}
+	return null;
+}
+```
+
+用散列算法定位到对应的segment，然后再用散列算法定位segment里面table里面的链表。最后才能在链表里找到对应的entry。这里涉及了两个散列算法
 
 #### 6.1.4.2 put
 
