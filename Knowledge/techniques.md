@@ -257,6 +257,7 @@ forceStopPackage()
 - [ ] [MIT 6.824: Distributed System - CS自学指南](https://csdiy.wiki/%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/MIT6.824/)
 - [ ] [绿导师原谅你了的个人空间-绿导师原谅你了个人主页-哔哩哔哩视频](https://space.bilibili.com/202224425/channel/collectiondetail?sid=2237004&spm_id_from=333.788.0.0) 南京大学 蒋炎岩 操作系统
 - [ ] [谭玉刚的个人空间-谭玉刚个人主页-哔哩哔哩视频 (bilibili.com)](https://space.bilibili.com/41036636) 主要讲UEFI，CS和OS的基础知识。
+- [ ] [android/architecture-samples: A collection of samples to discuss and showcase different architectural tools and patterns for Android apps.](https://github.com/android/architecture-samples) 官方的案例，比如讲Hilt之类的例子，应用到具体应用上。
 
 # Classified
 
