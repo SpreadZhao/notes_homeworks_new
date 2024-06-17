@@ -83,7 +83,7 @@ CHM高效就在它的数据不是一把锁干死的，是分段的。CHM里面�
 
 CHM构造的时候，无论你怎么调用，最后都会走到统一的构造方法。如果你有一些参数没传，那么就会用默认的。下面是这些参数的说明：
 
-- `initialCapacity`：初始容量，这个参数用来创建segments数组中的第一个Segment，也就是和`segment[0]`内部的链表数组的大小有关；
+- `initialCapacity`：初始容量，这个参数用来创建segments数组中的第一个Segment，也就是和`segment[0]`内部的链表数组的大小有关。实际上，这个成员也是segments中每个Segment的初始容量；
 - `loadFactor`：这个东西HashMap和HashTable都有，是用来控制扩容的。参考[[Study Log/java_kotlin_study/java_kotlin_study_diary/hash_map|hash_map]]，如果数组大到一定程度，hash碰撞的概率就会增加。所以需要进行扩容，才能进一步减少hash碰撞的概率；
 - `concurrencyLevel`：这个东西主要是为了应付并发。它有多大主要看会修改CHM的线程有多少个，也就是并发量。并发量越高，那么这个level也就越大。
 
@@ -159,8 +159,8 @@ public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyL
 
 - 根据刚才分析，ssize应该是16；
 - $100 \div 16 = 6 \cdots 4$，所以c就是6；
-- 然后$6 \times 16 \lt 100$，所以会把c再+1变成7（其实这两步就相当于$\lceil \dfrac{initialCapacity}{ssize} \rceil$）；
-- 让cap是table最小的容量，也就是说链表数组最小的容量，这个值是2（和书上不一样，书上说的是1）；
+- 然后$6 \times 16 \lt 100$，所以会把c再+1变成7（其实这两步就相当于$\lceil \dfrac{initialCapacity}{ssize} \rceil = \lceil \dfrac{100}{16} \rceil = 7$）；
+- 让cap的初值是table最小的容量，也就是说链表数组最小的容量，这个值是2（和书上不一样，书上说的是1）；
 - 和之前ssize的计算一样，也是取大于等于它的2的整数次方。因此c如果是7的话，cap就应该是$2^3 = 8$；
 - 最后构造`segments[0]`的时候，还需要进一步限制，这个和HashMap一样，就是用`cap * loadFactor`计算出`threshold`。
 
@@ -272,7 +272,17 @@ public V get(Object key) {
 }
 ```
 
-用散列算法定位到对应的segment，然后再用散列算法定位segment里面table里面的链表。最后才能在链表里找到对应的entry。这里涉及了两个散列算法
+用散列算法定位到对应的segment，然后再用散列算法定位segment里面table里面的链表。最后才能在链表里找到对应的entry。这里涉及了两个散列算法，定位segment的就是u的计算；定位HashEntry的就是for循环里面的`((long)(((tab.length - 1) & h)) << TSHIFT) + TBASE`。
+
+另外，这里没加锁，但是使用的是volatile读。也是为了和put中的volatile写打配合来保证可见性。
+
+> [!question] segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？
+> 看这里：[java - concurrentHashMap has a volatile table , why need unsafe.getObjectVolatile() when get() - Stack Overflow](https://stackoverflow.com/questions/59908363/concurrenthashmap-has-a-volatile-table-why-need-unsafe-getobjectvolatile-whe)按他的回答，主要有两点：
+> 
+> 1. 比如table，我们使用tab访问的。而tab这个方法内部的引用不是volatile的，所以访问的时候要用Unsafe；
+> 2. 实际上java就不支持volatile数组。所以只能用Unsafe提供的方法。
+> 
+> - [ ] #TODO tasktodo1718639680872 进一步补充问题：segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？ ➕ 2024-06-17 🔼 🆔 50m036
 
 #### 6.1.4.2 put
 
