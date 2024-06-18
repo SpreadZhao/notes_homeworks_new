@@ -274,7 +274,7 @@ public V get(Object key) {
 
 用散列算法定位到对应的segment，然后再用散列算法定位segment里面table里面的链表。最后才能在链表里找到对应的entry。这里涉及了两个散列算法，定位segment的就是u的计算；定位HashEntry的就是for循环里面的`((long)(((tab.length - 1) & h)) << TSHIFT) + TBASE`。
 
-另外，这里没加锁，但是使用的是volatile读。也是为了和put中的volatile写打配合来保证可见性。
+另外，这里没加锁，但是使用的是volatile读。~~也是为了和put中的volatile写打配合来保证可见性。~~
 
 > [!question] segments还有table已经是volatile的了，那为什么还要用getObjectVolatile？
 > 看这里：[java - concurrentHashMap has a volatile table , why need unsafe.getObjectVolatile() when get() - Stack Overflow](https://stackoverflow.com/questions/59908363/concurrenthashmap-has-a-volatile-table-why-need-unsafe-getobjectvolatile-whe)按他的回答，主要有两点：
@@ -286,7 +286,104 @@ public V get(Object key) {
 
 #### 6.1.4.2 put
 
+put操作的步骤：
+
+1. 定位Segment；
+2. 判断Segment是否需要扩容；
+3. 扩容后将元素插入到Segment中。
+
+可以看到，和HashMap的策略是相反的。拿出HashMap的扩容逻辑做对比：
+
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Pasted image 20240613133227.png]]
+
+HashMap是插入元素之后才进行扩容的。因此如果扩容之后没有元素再插入，这次扩容就白做了。而CHM是看空间不够先扩容，然后才插入元素。
+
+还有一点就是上锁。CHM的锁是什么？提到过，其实就是Segment本身。我们可以看到Segment本身是继承自ReentrantLock的。
+
+当定位到Segment之后，在里面操作table，扩容，插入的这些逻辑就需要上锁了。总体的put逻辑如下：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Pasted image 20240618144711.png]]
+
 #### 6.1.4.3 size
+
+我们自己想一下，CHM的总体大小应该怎么算：其实就是把每个Segment中所有的HashEntry的个数都加起来。所以应该是一个循环，遍历所有的Segment，累加它们HashEntry的个数就可以了。
+
+然而，这是在多线程的场景下，所以，当你加到第3个segment的时候，可能第二个segment就被人给改了。因此我们不一定能获得对的值。
+
+那我们这个时候可能会想到：算size之前，把所有的segment都锁上，然后我再算，这样不就可以了？是可以，但是太慢了。因为你算个size，其它所有线程都不能访问任何Segment，多少有点不讲理。
+
+那怎么办？CHM的做法是：**赌**。我就赌我在算size的时候，没有其它线程修改。只要我赌对了，我就赚了。下面代码就是不加锁，直接算：
+
+```java
+public int size() {
+	final Segment<K,V>[] segments = this.segments;
+	int size;
+	boolean overflow; // true if size overflows 32 bits
+	size = 0;
+	overflow = false;
+	for (int j = 0; j < segments.length; ++j) {
+		Segment<K,V> seg = segmentAt(segments, j);
+		if (seg != null) {
+			int c = seg.count;
+			if (c < 0 || (size += c) < 0)
+				overflow = true;
+		}
+	}
+	return overflow ? Integer.MAX_VALUE : size;
+}
+```
+
+这代码还是很好看懂的。就一个遍历和累加，再算一下是否超过int的限制。
+
+显然，这段代码肯定是错的，因为我们是多线程。但是又不是完全错的，因为我只要赌对了，这段代码的执行结果就是正确的。那么，**我必须要有一个策略，能够判断我赌没赌对**。
+
+这个策略就是modCount。它是每一个Segment的成员，标识着这个Segment被操作的次数。像put，remove，clear，replace等操作都会修改它，表明这个Segment被一个线程给修改过了。
+
+什么叫赌失败了？就是我遍历所有的Segment两次，算出这两次的总modCount。如果两次的结果是一样的，那就表明至少我第二次遍历和第一次遍历之间没有其他线程干扰。也就是说，第二次遍历的结果是正确的。因此可以直接返回第二次遍历的结果。
+
+而如果我没赌对，那就不行了。这个时候我有两种选择：再赌一次，或者老老实实加锁。对于CHM来说，这个是通过重试的次数决定的。当重试了两次（总共进行三次遍历）之后还是不行的话，就会老老实实加锁访问了。这里重试两次是通过常量`RETRIES_BEFORE_LOCK`控制。完整代码如下：
+
+```java
+public int size() {
+	// Try a few times to get accurate count. On failure due to
+	// continuous async changes in table, resort to locking.
+	final Segment<K,V>[] segments = this.segments;
+	int size;
+	boolean overflow; // true if size overflows 32 bits
+	long sum;         // sum of modCounts
+	long last = 0L;   // previous sum
+	int retries = -1; // first iteration isn't retry
+	try {
+		for (;;) {
+			if (retries++ == RETRIES_BEFORE_LOCK) {
+				for (int j = 0; j < segments.length; ++j)
+					ensureSegment(j).lock(); // force creation
+			}
+			sum = 0L;
+			size = 0;
+			overflow = false;
+			for (int j = 0; j < segments.length; ++j) {
+				Segment<K,V> seg = segmentAt(segments, j);
+				if (seg != null) {
+					sum += seg.modCount;
+					int c = seg.count;
+					if (c < 0 || (size += c) < 0)
+						overflow = true;
+				}
+			}
+			if (sum == last)
+				break;
+			last = sum;
+		}
+	} finally {
+		if (retries > RETRIES_BEFORE_LOCK) {
+			for (int j = 0; j < segments.length; ++j)
+				segmentAt(segments, j).unlock();
+		}
+	}
+	return overflow ? Integer.MAX_VALUE : size;
+}
+```
 
 ### 6.1.5 新的ConcurrentHashMap
 

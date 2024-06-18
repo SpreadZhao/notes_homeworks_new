@@ -229,20 +229,19 @@ java -cp . "-Djava.library.path=." .\HelloClass.java
 
 成功！这可是c++的函数而不是java的哟，这种体验还是很不一样的，~~有种NTR的美~~。
 
-```ad-note
-另外，这里说一下基本功，也就是java后面加上.java和加上.class有啥区别。
-
-一开始我不是执行了`javac -h`吗，那个时候会同步编译出一个class文件。这个时候，其实我们也可以这样操作：
-
-~~~shell
-java -cp . "-Djava.library.path=." .\HelloClass
-~~~
-
-这就代表会从HelloClass.class中搜素HelloClass这个类。而如果加的是.java文件，那么就会重新给你编译一遍。
-```
+> [!note]
+> 另外，这里说一下基本功，也就是java后面加上.java和加上.class有啥区别。
+> 
+> 一开始我不是执行了`javac -h`吗，那个时候会同步编译出一个class文件。这个时候，其实我们也可以这样操作：
+> 
+> ~~~shell
+> java -cp . "-Djava.library.path=." .\HelloClass
+> ~~~
+> 
+> 这就代表会从HelloClass.class中搜素HelloClass这个类。而如果加的是.java文件，那么就会重新给你编译一遍。
 
 # 参考文档
 
-我找到的唯一一个比较靠谱的文档，还是个国外的：[Guide to JNI (Java Native Interface) | Baeldung](https://www.baeldung.com/jni)
+我找到的唯一一个比较靠谱的文档，~~还~~是个国外的：[Guide to JNI (Java Native Interface) | Baeldung](https://www.baeldung.com/jni)
 
 然而这个文档也不是很靠谱，比如哪些引号的问题，我搜了好久，问了gpt，最后还是自己试出来的。
