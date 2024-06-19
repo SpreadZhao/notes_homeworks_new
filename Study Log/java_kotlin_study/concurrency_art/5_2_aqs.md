@@ -588,7 +588,10 @@ if (compareAndSetHead(new Node()))
 5. <font color="red">只有队列的老二能被队头节点唤醒去抢锁。其它的节点只要发现自己不是老二，就会park；</font>
 6. 队列遵循FIFO原则，即“只有队头元素能出队（释放锁），获取失败的锁都进入队尾”。
 
-- [ ] #TODO Wait vs Park 🔺 ➕ 2024-02-23
+- [x] #TODO Wait vs Park 🔺 ➕ 2024-02-23 ✅ 2024-06-18
+
+> [!todo] Wait vs Park
+> 看完[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary|5_5_lock_summary]]和[[Study Log/java_kotlin_study/concurrency_art/5_6_condition|5_6_condition]]就明白了。
 
 通过以上的原则，这个双向链表才起到了它的作用：**只让老二抢锁**。那问题来了：只有老二抢锁，和谁抢？答案显而易见：和还没入队的线程抢。谁失败了谁去队尾。
 
