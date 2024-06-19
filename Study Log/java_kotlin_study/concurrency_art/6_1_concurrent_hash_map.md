@@ -337,7 +337,7 @@ public int size() {
 
 显然，这段代码肯定是错的，因为我们是多线程。但是又不是完全错的，因为我只要赌对了，这段代码的执行结果就是正确的。那么，**我必须要有一个策略，能够判断我赌没赌对**。
 
-这个策略就是modCount。它是每一个Segment的成员，标识着这个Segment被操作的次数。像put，remove，clear，replace等操作都会修改它，表明这个Segment被一个线程给修改过了。
+这个策略就是[[Study Log/java_kotlin_study/java_kotlin_study_diary/2024-05-05-java-kotlin-study#Fail-fast And Fail-safe Iterators|modCount]]。它是每一个Segment的成员，标识着这个Segment被操作的次数。像put，remove，clear，replace等操作都会修改它，表明这个Segment被一个线程给修改过了。
 
 什么叫赌失败了？就是我遍历所有的Segment两次，算出这两次的总modCount。如果两次的结果是一样的，那就表明至少我第二次遍历和第一次遍历之间没有其他线程干扰。也就是说，第二次遍历的结果是正确的。因此可以直接返回第二次遍历的结果。
 
