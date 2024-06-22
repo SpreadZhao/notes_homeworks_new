@@ -591,11 +591,9 @@ if (compareAndSetHead(new Node()))
 - [x] #TODO Wait vs Park 🔺 ➕ 2024-02-23 ✅ 2024-06-18
 
 > [!todo] Wait vs Park
-> 看完[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_summary|5_5_lock_summary]]和[[Study Log/java_kotlin_study/concurrency_art/5_6_condition|5_6_condition]]就明白了。
+> 看完[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_support|5_5_lock_support]]和[[Study Log/java_kotlin_study/concurrency_art/5_6_condition|5_6_condition]]就明白了。
 
-通过以上的原则，这个双向链表才起到了它的作用：**只让老二抢锁**。那问题来了：只有老二抢锁，和谁抢？答案显而易见：和还没入队的线程抢。谁失败了谁去队尾。
-
-> [!question]
+通[](Study%20Log/java_kotlin_study/concurrency_art/5_5_lock_support.md)!question]
 > 说到这里，你可能发现了一个问题。反正我是发现了。之前在[[Study Log/java_kotlin_study/concurrency_art/3_5_lock_mm_semantics#3.5.2 锁内存语义的实现|3_5_lock_mm_semantics]]中我们就介绍过ReentrantLock中的公平锁和非公平锁。那你AQS既然维护的是『公平』，那么ReentrantLock中的公平和非公平又是啥？既然ReentrantLock依赖的AQS本身就是公平的FIFO队列，那么ReentrantLock的非公平从何而来？
 > 
 > 这个问题可以看一看这篇文章：[AQS的非公平锁与同步队列的FIFO冲突吗？_如果是非公平锁,是否还维持fifo队列-CSDN博客](https://blog.csdn.net/Mutou_ren/article/details/103883011)

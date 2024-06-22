@@ -76,7 +76,18 @@ private final boolean parkAndCheckInterrupt() {
 
 调用了unpark，会让传入的线程解除休眠，也就是让permit资源增加。不过最多也就是1而已。如果这个线程本身就没因为park而阻塞，那么你给它调用了unpark，下次它在park的时候就会立刻返回（注释里是这么说的，但是真实情况不是应该取决于permit的数量吗？比如[这个问题](https://stackoverflow.com/questions/72636299/when-locksupport-unpark-occur-before-locksupport-park-it-would-block-in-th) 。所以还是要分析一下代码才清楚）。
 
-最后，我想说的最关键的高亮部分：**对于LockSupport最合理的使用，就是用volatile或者atomic变量（本质是CAS操作）来确定什么时候park，什么时候unpark**。这两个正是我刚才说的，Java的并发新引入的volatile和CAS。
+最后，我想说的最关键的高亮部分：**对于LockSupport最合理的使用，就是用volatile或者atomic变量（本质是CAS操作）来确定**<fieldset class="inline"><legend class="small">💬</legend>什么时候park，什么时候unpark</fieldset>。这两个正是我刚才说的，Java的并发新引入的volatile和CAS。
+
+> [!comment]- 什么时候park，什么时候unpark
+> 具体来说，就是在调用park或者unpark之前，必须满足某种条件才行。比如：
+> 
+> ~~~kotlin
+> if (/* should park */) {
+> 	LockSupport.park(this)
+> }
+> ~~~
+> 
+> 接下来的例子也是这样。
 
 还是用上面AQS队列的park的例子。那个parkAndCheckInterrupt()方法调用的位置是这样的：
 
@@ -96,6 +107,10 @@ if (shouldParkAfterFailedAcquire(p, node) &&
 - [ ] #TODO blocker不是[[#^74ac31|这个]]作用，到底是什么？➕ 2024-03-14 ⏫ 
 
 总结一下，其实Java的并发就是分成两个派系：synchronized和concurrent包。前者就和Object里那几个方法相关，后者就是依赖于volatile和CAS操作。而LockSupport也是作为concurrent包里的一个基础组件，为AQS和Lock接口等上层组件服务。这些组件不断堆积，最终变成调用者可以安全使用的锁。
+
+### 5.5.1 park解析
+
+见[[Study Log/java_kotlin_study/concurrency_art/6_3_blocking_queue#^9c1599|6_3_blocking_queue]]。
 
 ---
 
