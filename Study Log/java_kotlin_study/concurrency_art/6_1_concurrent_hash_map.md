@@ -387,6 +387,15 @@ public int size() {
 
 ### 6.1.5 新的ConcurrentHashMap
 
+- [Java Concurrent HashMap Improvements over the years | by Vikas Taank | Medium](https://medium.com/@vikas.taank_40391/java-concurrent-hashmap-improvements-over-the-years-8d8b7be6ce37)
+- [java - 深入解析 ConcurrentHashMap 实现内幕，吊打面试官，没问题 - 个人文章 - SegmentFault 思否](https://segmentfault.com/a/1190000021237438#item-2)
+
+- [ ] #TODO tasktodo1719047249079 java8 ConcurrentHashMap ➕ 2024-06-22 ⏫ 🆔 51w1tb
+
+
+
+
+
 ---
 
 ```dataviewjs
