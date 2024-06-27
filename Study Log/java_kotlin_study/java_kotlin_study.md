@@ -1,6 +1,9 @@
 ```dataviewjs
 let res = []
 for (let page of dv.pages('"Study Log/java_kotlin_study/java_kotlin_study_diary"')) {
+	if (page.file.path.includes("resources")) {
+		continue
+	}
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
 	const title = page.title
