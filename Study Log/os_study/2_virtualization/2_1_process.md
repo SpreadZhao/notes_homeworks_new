@@ -360,7 +360,7 @@ Stats: IO Busy  15 (71.43%)
 
 > [!question]- 6\. One other important behavior is what to do when an I/O completes. With `-I IO_RUN_LATER`, when an I/O completes, the process that issued it is not necessarily run right away; rather, whatever was running at the time keeps running. What happens when you run this combination of processes? (Run `./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_LATER -c -p`) Are system resources being effectively utilized?
 > 
-> 这回终于可以说刚才第二个问题了：[[#^392518]]。这个例子我们详细说一说，一共有4个进程。进程0会先发起一个IO，所以我们起码能写出第一行：
+> 这回终于可以说刚才第二个提示了：[[#^392518]]。这个例子我们详细说一说，一共有4个进程。进程0会先发起一个IO，所以我们起码能写出第一行：
 > 
 > | Time | PID: 0                          | PID: 1 | PID: 2 | PID: 3 | CPU | IOs |
 > | ---- | ------------------------------- | ------ | ------ | ------ | --- | --- |
@@ -478,4 +478,81 @@ Stats: IO Busy  15 (71.43%)
 > 为什么运行完成IO的进程是好主意？当然是因为这样能够让利用率更高，它之后还会运行IO，所以可以把CPU交给其他人用。
 
 > [!question]- 8\. Now run with some randomly generated processes: `-s 1 -l 3:50,3:50` or `-s 2 -l 3:50,3:50` or `-s 3 -l 3:50,3:50`. See if you can predict how the trace will turn out. What happens when you use the flag `-I IO_RUN_IMMEDIATE` vs. `-I IO_RUN_LATER`? What happens when you use `-S SWITCH_ON_IO` vs. `-S SWITCH_ON_END`?
+> 最后这题没什么新东西。就是之前所有的综合情况。这里直接给结果了：
+> 
+> ~~~shell
+> ❯ ./process-run.py -s 1 -l 3:50,3:50 -cp
+> Time        PID: 0        PID: 1           CPU           IOs
+>   1        RUN:cpu         READY             1          
+>   2         RUN:io         READY             1          
+>   3        BLOCKED       RUN:cpu             1             1
+>   4        BLOCKED       RUN:cpu             1             1
+>   5        BLOCKED       RUN:cpu             1             1
+>   6        BLOCKED          DONE                           1
+>   7        BLOCKED          DONE                           1
+>   8*   RUN:io_done          DONE             1          
+>   9         RUN:io          DONE             1          
+>  10        BLOCKED          DONE                           1
+>  11        BLOCKED          DONE                           1
+>  12        BLOCKED          DONE                           1
+>  13        BLOCKED          DONE                           1
+>  14        BLOCKED          DONE                           1
+>  15*   RUN:io_done          DONE             1          
+> 
+> Stats: Total Time 15
+> Stats: CPU Busy 8 (53.33%)
+> Stats: IO Busy  10 (66.67%)
+> ~~~
+> 
+> ~~~shell
+> ❯ ./process-run.py -s 2 -l 3:50,3:50 -cp
+> Time        PID: 0        PID: 1           CPU           IOs
+>   1         RUN:io         READY             1          
+>   2        BLOCKED       RUN:cpu             1             1
+>   3        BLOCKED        RUN:io             1             1
+>   4        BLOCKED       BLOCKED                           2
+>   5        BLOCKED       BLOCKED                           2
+>   6        BLOCKED       BLOCKED                           2
+>   7*   RUN:io_done       BLOCKED             1             1
+>   8         RUN:io       BLOCKED             1             1
+>   9*       BLOCKED   RUN:io_done             1             1
+>  10        BLOCKED        RUN:io             1             1
+>  11        BLOCKED       BLOCKED                           2
+>  12        BLOCKED       BLOCKED                           2
+>  13        BLOCKED       BLOCKED                           2
+>  14*   RUN:io_done       BLOCKED             1             1
+>  15        RUN:cpu       BLOCKED             1             1
+>  16*          DONE   RUN:io_done             1          
+> 
+> Stats: Total Time 16
+> Stats: CPU Busy 10 (62.50%)
+> Stats: IO Busy  14 (87.50%)
+> ~~~
+> 
+> ~~~shell
+> ❯ ./process-run.py -s 3 -l 3:50,3:50 -cp
+> Time        PID: 0        PID: 1           CPU           IOs
+>   1        RUN:cpu         READY             1          
+>   2         RUN:io         READY             1          
+>   3        BLOCKED        RUN:io             1             1
+>   4        BLOCKED       BLOCKED                           2
+>   5        BLOCKED       BLOCKED                           2
+>   6        BLOCKED       BLOCKED                           2
+>   7        BLOCKED       BLOCKED                           2
+>   8*   RUN:io_done       BLOCKED             1             1
+>   9*       RUN:cpu         READY             1          
+>  10           DONE   RUN:io_done             1          
+>  11           DONE        RUN:io             1          
+>  12           DONE       BLOCKED                           1
+>  13           DONE       BLOCKED                           1
+>  14           DONE       BLOCKED                           1
+>  15           DONE       BLOCKED                           1
+>  16           DONE       BLOCKED                           1
+>  17*          DONE   RUN:io_done             1          
+>  18           DONE       RUN:cpu             1          
+> 
+> Stats: Total Time 18
+> Stats: CPU Busy 9 (50.00%)
+> Stats: IO Busy  11 (61.11%)
+> ~~~
 

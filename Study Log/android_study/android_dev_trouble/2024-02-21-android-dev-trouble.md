@@ -34,6 +34,6 @@ pthread_join(th, nullptr);
 
 ---
 
-以上是pthread和Java Thread对比的第一个小点。下面是第二个，这个就是我随手测一测的事情。在Java中，只有所有非守护线程都结束的时候，程序才结束。这个在我的并发艺术笔记里也有提到：[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#^5e1737|4_1_thread_basic]]。
+以上是pthread和Java Thread对比的第一个小点。下面是第二个，这个就是我随手测一测的事情。在Java中，只有所有非守护线程都结束的时候，程序才结束。这个在我的并发艺术笔记里也有提到：[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#^5e1737|4_1_thread_basic]]。 ^6d7bc5
 
 而在c中，只要main结束了，整个程序就会结束，不管其它线程是否执行完成。正因为如此我们才会习惯于在主线程最后等着给它生出来的线程收尸完才结束。这个我们pthread一开始就提到了：[[Study Log/c_study/pthread/1_create_thread|1_create_thread]]。
