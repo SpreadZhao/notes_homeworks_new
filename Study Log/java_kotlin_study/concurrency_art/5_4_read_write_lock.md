@@ -85,7 +85,10 @@ object TestReadWriteLock {
 
 我们让HashMap的访问加上读写锁，这样就能够实现ConcurrentHashMap的功能了。
 
-- [ ] #TODO ConcurrentHashMap内部是用synchronized保证并发安全的。那么用读写锁的方式和ConcurrentHashMap哪种更好？➕ 2024-03-04 ⏫ 
+- [/] #TODO #language/coding/java #question/coding/practice ~~ConcurrentHashMap内部是用synchronized保证并发安全的~~。那么用读写锁的方式和ConcurrentHashMap哪种更好？ ⏫ ➕ 2024-03-04 🛫 2024-06-30
+
+> [!todo] 用读写锁的方式和ConcurrentHashMap哪种更好？
+> 首先，『ConcurrentHashMap内部是用synchronized保证并发安全的』这句话就是错的。见[[Study Log/java_kotlin_study/concurrency_art/6_1_concurrent_hash_map|6_1_concurrent_hash_map]]，jdk1.7里面就已经在用lock实现了。
 
 ### 5.4.2 读写锁实现分析
 
@@ -233,7 +236,7 @@ final boolean writerShouldBlock() {
 
 > <small>写锁的释放与 ReentrantLock 的释放过程基本类似，每次释放均减少写状态，当写状态为 0 时表示写锁已被释放，从而等待的读写线程能够继续访问读写锁，同时前次写线程的修改对后续读写线程可见。</small>
 
-- [ ] #TODO [[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#^7548dc|5_2_aqs]] 其中一个原因。释放锁的时候不需要CAS，那么就要保证我释放后的结果对其它线程可见。而这个volatile就保证了这一点。 ➕ 2024-03-10 ⏫ 
+- [ ] #TODO tasktodo1719761316276 [[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#^7548dc|5_2_aqs]] 其中一个原因。释放锁的时候不需要CAS，那么就要保证我释放后的结果对其它线程可见。而这个volatile就保证了这一点。 ➕ 2024-03-10 ⏫ 🆔 vmouvf ⛔ hj4uww
 
 #### 5.4.2.2 读锁的获取
 

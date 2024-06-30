@@ -29,18 +29,54 @@ Lock的使用方式如下：
 
 ```kotlin
 val lock = ReentrantLock()
-lock.lock()    // 在try外部释放锁
+lock.lock()    // 在try外部获取锁
 try {
 	/* 临界区 */
 } finally {
-	lock.unlock()
+	lock.unlock() // 在 finally 块中释放锁，目的是保证在获取到锁之后，最终能够被释放。
 }
 ```
 
 > [!warning]
-> 不要将锁的获取写在try里面。如果获取时发生了异常，锁会被无故释放。
+> 不要将锁的获取写在try里面。如果获取时发生了异常，锁会被无故释放。看lock源码的注释：
+> 
+> ~~~java
+> /**
+>  * Acquires the lock.
+>  *
+>  * If the lock is not available then the current thread becomes
+>  * disabled for thread scheduling purposes and lies dormant until the
+>  * lock has been acquired.
+>  *
+>  * Implementation Considerations
+>  *
+>  * A {@code Lock} implementation may be able to detect erroneous use
+>  * of the lock, such as an invocation that would cause deadlock, and
+>  * may throw an (unchecked) exception in such circumstances.  The
+>  * circumstances and the exception type must be documented by that
+>  * {@code Lock} implementation.
+>  */
+> void lock();
+> ~~~
+> 
+> “你的实现可以检测lock的错误使用，比如会不会产生死锁。同时也可以在这种情况下抛出一个异常”。因此，lock是有可能抛出异常的。
+> 
+> 另外有一点，如果你在没有lock的情况下调用unlock，是会抛出`IllegalMonitorStateException`异常的。所以，如果我们把`lock()`放到了try里面，lock抛出了异常，但是没有lock成功，这样直接跑到finally，就直接调用unlock了。当然，我们要在catch里处理这个异常才会这样。
+> 
+> 这里是一个错误使用的例子：
+> 
+> - [https://github.com/apache/activemq/blob/d8ce1d9ff0fa2296f3c56b59602e5cddb6ffe4a9/activemq-runtime-config/src/main/java/org/apache/activemq/plugin/AbstractRuntimeConfigurationBroker.java#L81](https://github.com/apache/activemq/blob/d8ce1d9ff0fa2296f3c56b59602e5cddb6ffe4a9/activemq-runtime-config/src/main/java/org/apache/activemq/plugin/AbstractRuntimeConfigurationBroker.java#L81)
+> 
+> 源码在这里：
+> 
+> - [activemq/activemq-runtime-config/src/main/java/org/apache/activemq/plugin/AbstractRuntimeConfigurationBroker.java at d8ce1d9ff0fa2296f3c56b59602e5cddb6ffe4a9 · apache/activemq](https://github.com/apache/activemq/blob/d8ce1d9ff0fa2296f3c56b59602e5cddb6ffe4a9/activemq-runtime-config/src/main/java/org/apache/activemq/plugin/AbstractRuntimeConfigurationBroker.java#L81)
+> 
+> 其它参考：
+> 
+> - [multithreading - Java locking structure best pattern - Stack Overflow](https://stackoverflow.com/questions/31058681/java-locking-structure-best-pattern)
+> - [ReentrantLock (Java in General forum at Coderanch)](https://coderanch.com/t/772865/java/ReentrantLock)
 
-- [ ] #TODO 举个例子？ ⏫ ➕ 2024-02-18
+- [x] #TODO 举个例子？ ⏫ ➕ 2024-02-18 ✅ 2024-06-30
 
 Lock提供了synchronized不具备的特性。在注释中有所描述：
 
