@@ -127,7 +127,7 @@ struct proc {
 > [!todo] `task_struct`
 > [task_struct结构解析：了解进程管理的内幕](https://mp.weixin.qq.com/s/3JRQuCmLcsqOtlllke_v-Q)
 
-回到代码中，一开始的这个context，看注释：the registers xv6 will save and restore to stop and subsequently restart a process. 意思就是说，是为了恢复进程的。比如一个进程停止了，这些寄存器里的东西就会被保存到内存中。等要继续的时候，就再从内存里放回寄存器。这个东西其实就是之后要讨论的上下文切换。
+回到代码中，一开始的这个context，看注释：the registers xv6 will save and restore to stop and subsequently restart a process. 意思就是说，是为了恢复进程的。比如一个进程停止了，这些寄存器里的东西就会被保存到内存中。等要继续的时候，就再从内存里放回寄存器。这个东西其实就是之后要讨论的[[Study Log/os_study/2_virtualization/2_3_limited_directed_execution#2.3.3.3 Saving and Restoring Context|上下文切换]]。 ^ad384f
 
 除此之外，还可以看到进程的状态也不止提到的那三个。
 
