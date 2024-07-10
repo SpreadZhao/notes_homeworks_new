@@ -174,7 +174,9 @@ void os::PlatformEvent::park() {       // AKA "down()"
 
 - [ ] #TODO tasktodo1719075504506 等后面把OS重新搞一遍之后，贴上Condition Variable的链接。 ➕ 2024-06-23 🔽 🆔 n4sihv
 
+> `pthread_cond_wait` 是一个多线程的条件变量函数，cond 是 condition 的缩写，字面意思可以理解为线程在等待一个条件发生，这个条件是一个全局变量。这个方法接收两个参数：一个共享变量`_cond`，一个互斥量`_mutex`。而 `unpark` 方法在 Linux 下是使用 `pthread_cond_signal` 实现的。`park` 方法在 Windows 下则是使用 `WaitForSingleObject` 实现的。想知道 `pthread_cond_wait` 是如何实现的，可以参考 glibc-2.5 的 `nptl/sysdeps/pthread/pthread_cond_wait.c`。
 
+线程被阻塞队列阻塞时，会进入WAITING (parking) 状态。这一点可以通过`jstack dump`（[[Study Log/java_kotlin_study/concurrency_art/1_concurrency_challange#^97cb42|1_concurrency_challange]]）看出来。
 
 ---
 

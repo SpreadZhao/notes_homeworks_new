@@ -207,6 +207,8 @@ fun deadlock() {
 jstack 18532 > thread.txt
 ```
 
+^97cb42
+
 然后日志就会默认输出到用户的目录中了：
 
 ![[Study Log/java_kotlin_study/resources/Pasted image 20230919121051.png]]

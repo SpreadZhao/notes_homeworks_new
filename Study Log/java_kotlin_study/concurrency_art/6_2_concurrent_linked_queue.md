@@ -6,7 +6,7 @@ order: "2"
 
 ## 6.2 ConcurrentLinkedQueue
 
-- [ ] #TODO tasktodo1719048260547 ConcurrentLinkedQueue in java7 and java8. ➕ 2024-06-22 🔽 🆔 qxrg4g
+- [ ] #TODO tasktodo1719048260547 ConcurrentLinkedQueue in java7 and java8. 🆔 qxrg4g ⏫ ➕ 2024-06-22
 
 ---
 
