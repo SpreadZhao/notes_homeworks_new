@@ -1,3 +1,11 @@
+---
+num: "109"
+title: Convert Sorted List to Binary Search Tree
+link: https://leetcode.cn/problems/convert-sorted-list-to-binary-search-tree/description/
+tags:
+  - leetcode/difficulty/medium
+---
+
 这道题要求我们将一个排好序的链表转换为二叉搜索树，为了达成平均搜索次数最小的目的，二叉搜索树要求我们尽可能将每一层的结点填充得最为充实，即**它的任何两棵子树层数差都不超过1**，拥有$2^n-1$个结点的二叉搜索树搜索到目标结点最多只需要搜索n次
 
 参考Solution，运用**分治**的思想，我们需要五步来实现这个算法：

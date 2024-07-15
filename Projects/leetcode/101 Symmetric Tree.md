@@ -1,3 +1,11 @@
+---
+num: "101"
+title: Symmetric Tree
+link: https://leetcode.cn/problems/symmetric-tree/description/
+tags:
+  - leetcode/difficulty/easy
+---
+
 这道题要求我们判断一棵二叉树是否为镜像的（以根结点为对称轴，左右子树对称）
 
 这道题让我想起了之前写的一道InvertBinaryTree的题目，那道题要求我们把一个二叉树反转过去，如下图所示：

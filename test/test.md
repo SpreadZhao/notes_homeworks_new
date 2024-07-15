@@ -1,3 +1,7 @@
+---
+tags:
+  - leetcode/hard
+---
 sdfsdfds
 
 [[test/test1]]
