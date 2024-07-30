@@ -173,7 +173,7 @@ forceStopPackage()
 
 [让你明明白白的使用RecyclerView——SnapHelper详解 - 简书 (jianshu.com)](https://www.jianshu.com/p/e54db232df62)
 
-- [ ] 看下图，[[Study Log/java_kotlin_study/generics/generics_intro|kotlin泛型]]的一些东西还需要完善。还是不全捏。
+- [ ] 看下图，[[Study Log/java_kotlin_study/java_kotlin_study_diary/generics_intro|kotlin泛型]]的一些东西还需要完善。还是不全捏。
 
 ![[Knowledge/resources/Pasted image 20231024152138.png]]
 
@@ -210,8 +210,8 @@ forceStopPackage()
 - [ ] plt hook, inline hook
 	- [ ] [ARM64 汇编 (qq.com)](https://mp.weixin.qq.com/s/s_Z07b2RWujXhgfeSnDV5w)
 - [ ] [ICU Documentation | ICU is a mature, widely used set of C/C++ and Java libraries providing Unicode and Globalization support for software applications. The ICU User Guide provides documentation on how to use ICU. (unicode-org.github.io)](https://unicode-org.github.io/icu/)
-- [ ] :luc_camera: [[Knowledge/resources/20240131_193313.jpg|面试记录-校招-王重]]
-- [ ] :luc_camera: [[Knowledge/resources/20231226_105816.jpg|面试记录-小红书高级IOS]]
+- [ ] [[Knowledge/resources/20240131_193313.jpg|面试记录-校招-王重]]
+- [ ] [[Knowledge/resources/20231226_105816.jpg|面试记录-小红书高级IOS]]
 - [ ] mmkv ^mmkv
 	- [ ] [Tencent/MMKV: An efficient, small mobile key-value storage framework developed by WeChat. Works on Android, iOS, macOS, Windows, and POSIX. (github.com)](https://github.com/Tencent/MMKV)
 	- [ ] [【面试黑洞】Android 的键值对存储有没有最优解？哔哩哔哩bilibili](https://www.bilibili.com/video/BV1FU4y197dL/?spm_id_from=333.337.search-card.all.click) （这个视频12:38，说增量式更新是性能提升不重要的原因，和薛秋实说的正好是相反的 :confused:； 另外，最后说什么dataStore用协程完全不卡，我觉得完全在扯蛋。[[Knowledge/resources/Pasted image 20240217215509.png|有个评论也是这么说的]]）

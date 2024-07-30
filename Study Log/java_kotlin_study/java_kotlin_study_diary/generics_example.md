@@ -4,6 +4,9 @@ tags:
   - language/coding/java
   - language/coding/kotlin
   - question/coding/practice
+date: 2024-01-01
+mtrace:
+  - 2024-01-01
 ---
 定义一个IPowerfulAdder接口，用来相加两个东西，返回另一个东西。虽然没什么意思，但是我就是要练习泛型：
 

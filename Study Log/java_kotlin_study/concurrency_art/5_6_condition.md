@@ -340,7 +340,7 @@ while (i < 100) {
 ~~说实话，我对上面这张图从Condition指向同步器的箭头的正确性存疑。因为我翻遍了代码，也没看到Condition和AQS是用什么方式绑定起来的。诚然，ConditionObject确实是AQS的内部类，但是~~
 
 > [!note]
-> 草，刚写一半，就知道了。这个箭头确实是对的，因为ConditionObject是内部类，而不是静态内部类。他俩的区别见[[Study Log/java_kotlin_study/constructor/constructors_and_static_classes#静态内部类|constructors_and_static_classes]]。所以，必须构造出一个AQS的实例，才能继续构造ConditionObject。因此，他俩确实是一对多的关系。
+> 草，刚写一半，就知道了。这个箭头确实是对的，因为ConditionObject是内部类，而不是静态内部类。他俩的区别见[[Study Log/java_kotlin_study/java_kotlin_study_diary/constructors_and_static_classes#静态内部类|constructors_and_static_classes]]。所以，必须构造出一个AQS的实例，才能继续构造ConditionObject。因此，他俩确实是一对多的关系。
 
 接下来我们介绍的Condition的功能都是默认是ConditionObject的。
 

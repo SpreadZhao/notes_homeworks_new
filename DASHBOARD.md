@@ -7,7 +7,7 @@
 
 # NAVIs
 
-- Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]
+- ~~Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]~~
 - Android Dev Trouble: [[Study Log/android_study/android_dev_trouble|android_dev_trouble]]
 - C Study Diary: [[Study Log/c_study/c_study|c_study]]
 - Java/Kotlin Study Diary: [[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]

@@ -2,6 +2,12 @@
 mtrace:
   - 2023-09-01
   - 2023-11-28
+title: Java中的各种构造函数
+tags:
+  - language/coding/java
+  - constructor
+  - static-internal-class
+date: 2023-09-01
 ---
 # Java中的各种构造函数
 

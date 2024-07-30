@@ -1,6 +1,18 @@
+---
+title: 泛型
+date: 2023-07-20
+mtrace:
+  - 2023-07-20
+tags:
+  - language/coding/java
+  - language/coding/kotlin
+  - question/coding/practice
+  - question/coding/theory
+  - rating/high
+  - question/interview
+  - generics
+---
 # 泛型
-
-#language/coding/java #language/coding/kotlin #question/coding/practice #question/coding/theory #rating/high #question/interview 
 
 #TODO 
 
@@ -418,7 +430,7 @@ collection.contains(3);
 > 
 > 再看一个例子：
 > 
-> ![[Study Log/java_kotlin_study/generics/resources/Pasted image 20240303233124.png]]
+> ![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Pasted image 20240303233124.png]]
 > 
 > > 上图中，P1到P4是从父到子的几个类。P是泛型类，接受上界为P3的类型。
 > 

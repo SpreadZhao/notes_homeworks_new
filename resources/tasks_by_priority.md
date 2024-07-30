@@ -3,7 +3,7 @@
 ```tasks
 tags include TODO
 filter by function task.status.type === "TODO"
-sort by created
+sort by created reverse
 sort by filename
 priority is highest
 ```
@@ -14,7 +14,7 @@ priority is highest
 tags include TODO
 filter by function task.status.type === "TODO"
 priority is high
-sort by created
+sort by created reverse
 sort by filename
 ```
 

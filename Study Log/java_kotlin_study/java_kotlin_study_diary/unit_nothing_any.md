@@ -13,7 +13,7 @@ date: 2023-07-27
 
 ## Unit
 
-在介绍Unit之前，我们先来看这样一个问题，这也是[[Study Log/java_kotlin_study/generics/generics_intro#变形|协变和逆变]]中涉及到的：
+在介绍Unit之前，我们先来看这样一个问题，这也是[[Study Log/java_kotlin_study/java_kotlin_study_diary/generics_intro#变形|协变和逆变]]中涉及到的：
 
 ```java
 class Fruit {}  

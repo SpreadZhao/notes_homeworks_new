@@ -5,6 +5,9 @@ mtrace:
 tags:
   - question/coding/practice
   - language/coding/kotlin
+  - constructor
+title: Kotlin构造函数中加val/var和不加有什么区别
+date: 2023-07-02
 ---
 # Kotlin构造函数中加val/var和不加有什么区别
 

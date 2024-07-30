@@ -3,6 +3,10 @@ description: 你见过这种错误吗？
 title: 不能在构造方法里调用非final的方法！
 mtrace:
   - 2023-11-29
+date: 2023-11-29
+tags:
+  - language/coding/java
+  - constructor
 ---
 
 # Calling Non-final Function in Constructor
@@ -38,11 +42,11 @@ class PeopleConfig : Config() {
 
 就大概是这样的，两个类分别给出自己的配置就好了，这样这个realConfig就能在不同的实现中走到各自的子类里去了。思路是没问题的，但是报错了：
 
-![[Study Log/java_kotlin_study/constructor/resources/Pasted image 20231128234931.png]]
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Pasted image 20231128234931.png]]
 
 意思就是说，你要是在构造方法里调用一个不是final（能被重写）的方法，那么就会有这样的错误。我改一下，放到init代码块里，还是一样的错误：
 
-![[Study Log/java_kotlin_study/constructor/resources/Pasted image 20231128235119.png]]
+![[Study Log/java_kotlin_study/java_kotlin_study_diary/resources/Pasted image 20231128235119.png]]
 
 这个解决方法其实简单：**不在构造方法里调它就完了呗**！所以，改成这样：
 
@@ -58,7 +62,7 @@ abstract class Config {
 
 这样就不报错了，但是要注意得手动调一下initConfig()方法。
 
-问题解决了！但是，*为啥会这样*？说严重点，甚至会产生空指针异常！所以，这个问题是一定要避免的。首先，看一下之前我写的文章：[[Study Log/java_kotlin_study/constructor/constructors_and_static_classes|constructors_and_static_classes]]，主要看父类和子类的构造方法调用的顺序。
+问题解决了！但是，*为啥会这样*？说严重点，甚至会产生空指针异常！所以，这个问题是一定要避免的。首先，看一下之前我写的文章：[[Study Log/java_kotlin_study/java_kotlin_study_diary/constructors_and_static_classes|constructors_and_static_classes]]，主要看父类和子类的构造方法调用的顺序。
 
 然后，看一下这篇解释：[java - Kotlin calling non final function in constructor works - Stack Overflow](https://stackoverflow.com/questions/50222139/kotlin-calling-non-final-function-in-constructor-works)
 

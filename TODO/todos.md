@@ -6,3 +6,4 @@
 - [ ] #TODO tasktodo1721063089962 并查集 ➕ 2024-07-16 🔺 🆔 h55whd
 	- [ ] [并查集 - OI Wiki (oi-wiki.org)](https://oi-wiki.org/ds/dsu/)
 	- [ ] [721. 账户合并 - 力扣（LeetCode）](https://leetcode.cn/problems/accounts-merge/description/)
+- [ ] #TODO tasktodo1722358922257 所有有价值的文章建立一个新的导航 ➕ 2024-07-31 🔺 🆔 ypexwk
