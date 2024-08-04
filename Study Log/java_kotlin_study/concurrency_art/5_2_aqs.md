@@ -802,7 +802,7 @@ override fun tryAcquire(acquired: Int): Boolean {
 
 然而，上面的做法是**完全错误**的！并且，错的不是一点半点。下面我们来逐个问题去分析。
 
-首先，我们要知道为什么AQS要设计成模板的模式，并且严格区分开了acquire()和acquireShared()这两个方法。用:chicken::chicken:想都知道，这两个模式的内部实现肯定是不同的。无论是处理中断的时候，还是队列中的老大释放锁之后的通知行为，这两种模式的节点的处理方式肯定是不一样的。而在模板的设计模式中，**acquire()永远只会调用tryAcquire()；acquireShared()永远只会调用tryAcquireShared()**。因此，如果我们用tryAcquire()实现共享式的访问，那么就违背了AQS的根本意愿，并且我们这个线程在**获取失败之后会被AQS按照独占式的节点去对待**，后面的行为就全乱了。因此，我们就是要实现tryAcquireShared()，并且在lock()中调用acquireShared()。
+首先，我们要知道为什么AQS要设计成模板的模式，并且严格区分开了acquire()和acquireShared()这两个方法。用🐤🐤想都知道，这两个模式的内部实现肯定是不同的。无论是处理中断的时候，还是队列中的老大释放锁之后的通知行为，这两种模式的节点的处理方式肯定是不一样的。而在模板的设计模式中，**acquire()永远只会调用tryAcquire()；acquireShared()永远只会调用tryAcquireShared()**。因此，如果我们用tryAcquire()实现共享式的访问，那么就违背了AQS的根本意愿，并且我们这个线程在**获取失败之后会被AQS按照独占式的节点去对待**，后面的行为就全乱了。因此，我们就是要实现tryAcquireShared()，并且在lock()中调用acquireShared()。
 
 第二点，我们哪怕实现的就是tryAcquireShared()，这里面的实现就是对的吗？我试了试下面的版本：
 

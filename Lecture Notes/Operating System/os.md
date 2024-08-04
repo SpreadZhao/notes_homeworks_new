@@ -851,7 +851,7 @@ Result
 
   * Barriers
   
-    用于一组Process同步
+    用于一组Process同步 ^e7f345
   
 ![[Lecture Notes/Operating System/img/barrier.png]]
 

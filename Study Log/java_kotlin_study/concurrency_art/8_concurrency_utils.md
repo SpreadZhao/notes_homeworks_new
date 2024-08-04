@@ -24,7 +24,7 @@ fun main() {
 }
 ```
 
-这里的parser可以是解析任何东西，反正有若干个。我们要等所有线程都结束之后再继续程序。最号想到的就是用join去等待所有的线程结束。我们可以看看join的实现：
+这里的parser可以是解析任何东西，反正有若干个。我们要等所有线程都结束之后再继续程序。最好想到的就是用join去等待所有的线程结束。我们可以看看join的实现：
 
 ```java
 while (isAlive()) {
@@ -232,3 +232,167 @@ fun driver2(n: Int) {
 
 - [ ] #TODO tasktodo1722007420163 看看西瓜是怎么用CountDownLatch的。 ➕ 2024-07-26 🔺 🆔 uam4hu
 
+## 8.2 CyclicBarrier
+
+CountDownLatch是一个闩，我们前面已经描述地很形象了。那么这个Barrier是什么？在OS中我们学到过，[[Lecture Notes/Operating System/os#^e7f345|Barrier]]是为了让多个人到达同一种状态的。而CyclicBarrier的目的也是这样：多个线程会互相等，直到它们都到达了同一种状态。
+
+其实CountDownLatch也可以做到这样的效果，比如刚才我们就让一个分发任务的线程等所有干活儿线程都结束之后，进行一些收尾工作。而CyclicBarrier对比Latch的优势是，它是Cyclic的，也就是可以重复利用。
+
+> [!note] CountDownLatch和CyclicBarrier
+> 这里补充一下我自己认为的他俩的使用区别。当然不保证准确。CountDownLatch是“一等多”的关系，由一个线程调用await去等待多个任务，或者多个线程去调用countDown直到到0；而CyclicBarrier是“多等多”的关系。更多的是一种互相等，这个团体中的每一个人在到达barrier之后都会等，等所有人都到达这个barrier之后再进行。
+
+CyclibBarrier的构造可以传两个参数：
+
+```java
+/**
+ * Creates a new {@code CyclicBarrier} that will trip when the
+ * given number of parties (threads) are waiting upon it, and which
+ * will execute the given barrier action when the barrier is tripped,
+ * performed by the last thread entering the barrier.
+ *
+ * @param parties the number of threads that must invoke {@link #await}
+ *        before the barrier is tripped
+ * @param barrierAction the command to execute when the barrier is
+ *        tripped, or {@code null} if there is no action
+ * @throws IllegalArgumentException if {@code parties} is less than 1
+ */
+public CyclicBarrier(int parties, Runnable barrierAction) {
+	if (parties <= 0) throw new IllegalArgumentException();
+	this.parties = parties;
+	this.count = parties;
+	this.barrierCommand = barrierAction;
+}
+```
+
+第一个是个int，也就是：有多少线程都到达barrier时，才能继续进行；第二个参数是一个trigger。也就是等这些线程都到达barrier时，会由最后一个到达barrier的线程去完成这个barrierAction。显然，这个action是用来收集一些其它线程工作信息的。
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-04 21.02.02.excalidraw.svg]]
+
+在上图的情况下，4号就会执行这个action。
+
+下面我们用一个例子来说明这个过程：4个线程，每个线程的工作是产生一个随机数。但是我要在4个线程都结束之后，由其中一个线程去算一下这4个随机数之和。
+
+这个其实用CountDownLatch也能完成，并且也很合理。只不过通常是一个主线程和四个干活儿的线程。不过我现在的需求是：**主线程很忙的**，还要做其它的事情，所以**求和这种事情就还是让那4个线程做吧**！毕竟这本身就是你们的任务！
+
+那么现在思考一下。首先是为啥要使用barrier：因为4个线程去生产随机数，生产完之后都要等待。只有都生产完了我才能去求和。所以，我们要让四个线程在生产完之后都用一个barrier给拦住。等4个线程都到达barrier之后，才能去执行求和的任务。所以：
+
+```kotlin
+// 这里的this先不用关心，之后会说明
+private val c = CyclicBarrier(4, this)
+private val executor = Executors.newFixedThreadPool(4)
+```
+
+然后就是生产的逻辑了。很简单，生产一个数字，然后等就行了。这里我们用ConcurrentHashMap来存这个数字：
+
+```kotlin
+fun produce() {
+	repeat(4) {
+		executor.execute {
+			numbers[Thread.currentThread().name] = Random.nextInt(100)
+			println("${Thread.currentThread().name}: ${numbers[Thread.currentThread().name]}")
+			try {
+				c.await()
+			} catch (e: InterruptedException) {
+				e.printStackTrace()
+			}
+			println("${Thread.currentThread().name} after barrier")
+		}
+	}
+}
+```
+
+这样，如果我们只执行这个方法，4个线程在生产完数字之后都会await。当最后一个线程执行await时，由于等待线程已经是4个了，所以它们都会从await返回，继续执行下面的内容。结果如下：
+
+```
+pool-1-thread-3: 50
+pool-1-thread-4: 99
+pool-1-thread-1: 91
+pool-1-thread-2: 14
+pool-1-thread-3 after barrier
+pool-1-thread-2 after barrier
+pool-1-thread-1 after barrier
+pool-1-thread-4 after barrier
+```
+
+当然，执行顺序也会不一样。另外这里程序其实是没中止的。因为我们并没有给线程池调用shutdown。那么现在还差什么？差求和。这里我们让最后一个线程进行求和工作，一个Runnable：
+
+```kotlin
+override fun run() {
+	var result = 0
+	for ((_, value) in numbers) {
+		result += value
+	}
+	println("${Thread.currentThread().name}: final result: $result")
+	executor.shutdown()
+}
+```
+
+求和之后，顺手再把线程池给关掉。这样程序就完美中止了。当然，妥善的做法不应该在这里shutdown，而是在主线程中（线程池之外的线程）等待任务真正全部执行完再关闭。
+
+执行结果如下：
+
+```
+pool-1-thread-1: 85
+pool-1-thread-2: 75
+pool-1-thread-3: 87
+pool-1-thread-4: 52
+pool-1-thread-2: final result: 299
+pool-1-thread-2 after barrier
+pool-1-thread-1 after barrier
+pool-1-thread-4 after barrier
+pool-1-thread-3 after barrier
+```
+
+现在你可能会产生一个问题：这个action不是最后一个到达barrier的线程做的吗？为什么从输出里看，4是最后一个到达的，但是这个action是2完成的？
+
+没错，我也有这个疑问。但是我当时怀疑，是程序的输出欺骗了我们。因为从输出这个随机数，到在`await()`方法中真正因为barrier而等待，中间还有一些指令。我们不能保证OS在这个过程中不进行什么调度。所以**虽然4是最后一个输出随机数的，但不代表4是最后一个到达barrier的**。
+
+为了弄清楚这个问题，我们其实只需要在action里面执行一下jstack就好了。经过验证，除了线程2是RUNNABLE状态，其它线程都是WAITING(parking)状态。
+
+这里回忆一下之前我们说过的线程状态图：[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-06 00.11.15.excalidraw.png]]。这样看来，这个Barrier其实底层还是LockSupport。其实看看代码就能发现，其实里面用的还是ReentrantLock。
+
+- [ ] #TODO tasktodo1722779013787 CountDownLatch, CyclicBarrier的内部实现要补上。 ➕ 2024-08-04 🔼 🆔 xfsp7l
+
+## 8.3 Semaphore
+
+老熟人了。比如初始值是10，那么就允许10个线程并发。每个线程在获取信号量之后会down一下，down了10次之后，就变成了0，此时就不能再有线程去down了。
+
+还记得我们之前实现过的那个[[Study Log/java_kotlin_study/concurrency_art/5_2_aqs#5.2.3 实战 - TwinsLock|TwinsLock]]吗？其实这个就是一个初始值为2的信号量。它最多允许两个线程进行并发。
+
+为了验证，我们直接上代码对比。下面是我们自己写的TwinsLock的核心内容：
+
+```kotlin
+override fun tryAcquireShared(acquired: Int): Int {
+	while (true) {
+		val curr = state
+		val after = curr - acquired
+		if (after < 0 || compareAndSetState(curr, after)) {
+			return after
+		}
+	}
+}
+```
+
+还记得吗？因为可以多个线程一起来，所以是shared类型。然后因为after是不可能小于0的，所以这里`after < 0`必须放在前面。最后是一个CAS，如果CAS不成功那还得再来一遍。这样退出循环的时候，要么CAS成功了，要么因为after已经是负数，表示坑位已经满了。
+
+下面是Semaphore源码中的tryAcquireShared。不能说一摸一样，只能说没啥区别：
+
+```java
+final int nonfairTryAcquireShared(int acquires) {
+	for (;;) {
+		int available = getState();
+		int remaining = available - acquires;
+		if (remaining < 0 ||
+			compareAndSetState(available, remaining))
+			return remaining;
+	}
+}
+```
+
+所以Semaphore的东西就不多说了。
+
+## 8.4 Exchanger
+
+最后是Exchanger。看名字也知道是用来交换东西的。两个线程都到达一个交换点之后，可以互相传送数据。这个东西就不多说了。看看代码吧。
+
+- [ ] #TODO tasktodo1722781482971 这一章里的东西之后都补上实现。 ➕ 2024-08-04 🔼 🆔 0y8h2f
