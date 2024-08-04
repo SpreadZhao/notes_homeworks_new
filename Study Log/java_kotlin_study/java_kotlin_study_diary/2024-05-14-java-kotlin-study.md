@@ -1,8 +1,10 @@
 ---
 title: What is fucking CAS ?
 date: 2024-05-14
-tags: 
-mtrace: 
+tags:
+  - language/coding/java
+  - cas
+mtrace:
   - 2024-05-14
 ---
 
