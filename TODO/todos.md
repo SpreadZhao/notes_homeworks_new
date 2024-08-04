@@ -7,3 +7,5 @@
 	- [ ] [并查集 - OI Wiki (oi-wiki.org)](https://oi-wiki.org/ds/dsu/)
 	- [ ] [721. 账户合并 - 力扣（LeetCode）](https://leetcode.cn/problems/accounts-merge/description/)
 - [ ] #TODO tasktodo1722358922257 所有有价值的文章建立一个新的导航 ➕ 2024-07-31 🔺 🆔 ypexwk
+- [ ] #TODO tasktodo1722695142028 分析layoutinflater，setcontentview。 ➕ 2024-08-03 🔺 🆔 c125ui
+- [ ] #TODO tasktodo1722708594120 TTNet在每个阶段，比如DNS路由，做了什么优化。对于OkHttp做了什么优化。 ➕ 2024-08-04 ⏫ 🆔 56h1yq
