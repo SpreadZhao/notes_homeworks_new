@@ -11,7 +11,7 @@ tags:
 
 [01. 并查集知识 | 算法通关手册（LeetCode） (itcharge.cn)](https://algo.itcharge.cn/07.Tree/05.Union-Find/01.Union-Find/)
 
-并查集是一个树组成的森林。传统我们写一个树，比如用数组，都是用父节点的编号，获得儿子节点的编号：[[Homework/Algorithm/practice1#3.2 Priority Queue|practice1]]。但是并查集不一样，它是用**子节点指向父节点**。比如有一棵树是这样的：
+~~并查集是一个树组成的森林。~~传统我们写一个树，比如用数组，都是用父节点的编号，获得儿子节点的编号：[[Homework/Algorithm/practice1#3.2 Priority Queue|practice1]]。但是并查集不一样，它是用**子节点指向父节点**。比如有一棵树是这样的：
 
 ![[Projects/leetcode/resources/Drawing 2024-07-21 02.16.12.excalidraw.svg]]
 
@@ -160,6 +160,9 @@ for (auto& account : accounts) {
 ![[Projects/leetcode/resources/Drawing 2024-07-21 15.22.20.excalidraw.svg]]
 
 我们惊奇地发现：现在0，1，2已经跑到一棵树里了。也就是说那个John已经被我们捕捉到了。下面其实只需要按照题目要求把这棵树打印出来就行了。
+
+> [!hint]
+> 后面的内容不重要了。你用什么方法按照题目的要求输出都行。
 
 题解的思路是，先把每个森林的邮箱打印出来。具体的实现是，找到每棵树的根节点，然后这个根节点映射了一堆邮箱，就是这棵树里所有的邮箱。代码是这样的：
 
