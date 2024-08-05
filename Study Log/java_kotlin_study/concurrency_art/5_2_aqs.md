@@ -661,7 +661,7 @@ override fun tryRelease(release: Int): Boolean {
 > [!note]
 > 这里的unparkSuccessor()里面用到了我们[[Study Log/java_kotlin_study/concurrency_art/4_1_thread_basic#^6e38f5|提过一嘴]]的LockSupport，[[Study Log/java_kotlin_study/concurrency_art/5_5_lock_support|后面会介绍]]。
 
-- [x] #TODO :obs_up_arrow_with_tail:介绍了吗？ ⏫ ➕ 2024-02-25 ✅ 2024-06-30
+- [x] #TODO ↑介绍了吗？ ⏫ ➕ 2024-02-25 ✅ 2024-06-30
 
 在这个过程中，1.4里的『公平』原则内部包含了你可能听说的AQS的“自旋”流程。这个过程在代码中主要是acquireQueued()中的实现。主要的逻辑如下：
 
