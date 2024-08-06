@@ -375,6 +375,7 @@ forceStopPackage()
 - [ ] #TODO [从一次实际经历来说说IdleHandler的坑 - 掘金 (juejin.cn)](https://juejin.cn/post/6936440588635996173) ➕ 2024-04-24 ⏫ 
 - [ ] [[TODO/todos|todos]]
 - [ ] #TODO tasktodo1722531383729 如何不占用系统状态栏 & 调研SurfaceFlinger是怎么合成状态栏的。 ➕ 2024-08-02 🔼 🆔 z1trn5
+	- [ ] [SurfaceFlinger 图层合成过程分析上 (qq.com)](https://mp.weixin.qq.com/s/J6oyAIsz-kbSllsVd0TGxw)
 - [ ] #TODO tasktodo1722531423113 西瓜的OOM检测原理。native和java都看。 ➕ 2024-08-02 ⏫ 🆔 grvai7
 - [ ] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 ➕ 2024-08-02 🔺 🆔 0cqkq9
 - [ ] #TODO tasktodo1722531892427 RecyclerView onFling的时候，子View的属性如何？尤其是visibility？这个写到rv的学习目录里，就是毕设的那个。 ➕ 2024-08-02 🔺 🆔 cz51hx
