@@ -431,7 +431,7 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 1. 安装archlinux
 2. 执行安装yay
 3. 执行`yay-script-dwm-base.sh`
-4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu，slstatus，slock
+4. 安装dwm（现在是spreadwm）, st（现在是[[#Alacritty|alacritty]]）, dmenu，slstatus，slock（这三个已经都整合到spreaddwm里了）
 5. 设置.xinitrc, .Xresources保证启动和dpi缩放
 6. 执行`yay-script-dwm-font.sh`，安装字体
 7. 安装`microsoft-edge-stable-bin`
@@ -445,6 +445,10 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 15. 执行`yay-script-fcitx.sh`安装输入法并配置（参考[[#中文]]）
 16. [设置时区](https://wiki.archlinux.org/title/System_time#Time_zone)
 17. 安装[Dunst - ArchWiki (archlinux.org)](https://wiki.archlinux.org/title/Dunst)，接收通知，并加入`~/.xinitrc`中。
+
+## Xrandr
+
+arandr的设置如何保存：[3.2Configuration using arandr](https://wiki.archlinux.org/title/Xrandr#Configuration_using_arandr)
 
 ## Trouble Shooting
 
