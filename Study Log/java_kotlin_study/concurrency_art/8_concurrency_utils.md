@@ -349,7 +349,7 @@ pool-1-thread-3 after barrier
 
 为了弄清楚这个问题，我们其实只需要在action里面执行一下jstack就好了。经过验证，除了线程2是RUNNABLE状态，其它线程都是WAITING(parking)状态。
 
-这里回忆一下之前我们说过的线程状态图：[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-06 00.11.15.excalidraw.png]]。这样看来，这个Barrier其实底层还是LockSupport。其实看看代码就能发现，其实里面用的还是ReentrantLock。
+这里回忆一下之前我们说过的线程状态图：[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-06 00.11.15.excalidraw.png]]。这样看来，这个Barrier其实底层还是LockSupport（为什么这么说？因为parking）。其实看看代码就能发现，其实里面用的还是ReentrantLock。
 
 - [ ] #TODO tasktodo1722779013787 CountDownLatch, CyclicBarrier的内部实现要补上。 ➕ 2024-08-04 🔼 🆔 xfsp7l
 

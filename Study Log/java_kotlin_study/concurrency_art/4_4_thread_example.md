@@ -46,7 +46,7 @@ override fun run() {
 }
 ```
 
-只要jobs为空，那么就应该wait；反之就从jobs中取出一个job来运行。这里 :dev_kotlin_plain: `job.run()`的执行是写在一个线程里，所以就是这个线程在执行。
+只要jobs为空，那么就应该wait；反之就从jobs中取出一个job来运行。这里 kotlin `job.run()`的执行是写在一个线程里，所以就是这个线程在执行。
 
 下一个问题：*什么时候notify*？显然，需要等到有job的时候才能notify，得让线程被唤醒之后能拿到job。所以：
 
@@ -62,6 +62,9 @@ override fun execute(job: JOB) {
 每当向线程池提交一个任务时，先加到队列中，然后notify一下就好了。
 
 最后，给出全部代码：
+
+> [!attention]
+> 突然发现这个线程池好多地方没讲清楚 。在真正搞线程池的时候捋一遍：[[Study Log/java_kotlin_study/concurrency_art/9_threadpool#9.1 以前线程池的总结|9_threadpool]]。
 
 ```kotlin
 class DefaultThreadPool<JOB : Runnable> : ThreadPool<JOB> {
