@@ -131,7 +131,7 @@ rw zswap.enabled=0 rootfstype=ext4 loglevel=3 quiet amdgpu.sg_display=0
 - [pacman - ArchWiki](https://wiki.archlinux.org/title/Pacman)
 - [Jguer/yay: Yet another Yogurt - An AUR Helper written in Go](https://github.com/Jguer/yay)
 
-列出一个包里的文件（当然包括可执行程序）
+### 列出一个包里的文件（当然包括可执行程序）
 
 ```shell
 yay -Ql <package_name>
@@ -139,13 +139,19 @@ yay -Ql <package_name>
 
 > 这里可以用`| grep <xxx>`来过滤`bin`来过滤可执行文件
 
-查找一个命令属于哪个包：
+### 查找一个命令属于哪个包
 
 ```shell
 yay -Qo <command>
 ```
 
-列表备份和恢复：`pacman -Qqe > pkglist.txt`
+### 列表备份和恢复
+
+`pacman -Qqe > pkglist.txt`
+
+### 更新不到新包，并且aur会下载失败
+
+傻逼的我现在才想到，是mirror list的问题。在[这里](https://archlinux.org/mirrors/status/#successful)找到完全同步，并且Mirror Score最低的镜像。然后把他放到`/etc/pacman.d/mirrorlist`的最前面。这样就能同步到了。
 
 ## 稳定内核
 
@@ -449,6 +455,10 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 ## Xrandr
 
 arandr的设置如何保存：[3.2Configuration using arandr](https://wiki.archlinux.org/title/Xrandr#Configuration_using_arandr)
+
+# Awsome Software
+
+[[Knowledge/software_qa/2024-08-09-software-qa|2024-08-09-software-qa]]
 
 ## Trouble Shooting
 
