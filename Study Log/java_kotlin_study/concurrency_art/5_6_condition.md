@@ -149,7 +149,11 @@ override fun isHeldExclusively(): Boolean {
 
 ^d28715
 
-- [ ] #TODO 有没有什么情况，Lock接口的效率反而不如synchronized？ ➕ 2024-03-23 🔽 [](Study%20Log/java_kotlin_study/concurrency_art/5_5_lock_support.md#^8eeacb)12 23.18.16.excalidraw.png]]
+- [ ] #TODO 有没有什么情况，Lock接口的效率反而不如synchronized？ ➕ 2024-03-23 🔽 
+
+我们对比一下之前那张图：
+
+![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-02-12 23.18.16.excalidraw.svg|Drawing 2024-02-12 23.18.16.excalidraw]]
 
 可以看到，一个Object对应一个同步队列（Synchronized Queue）和一个等待队列（Wait Queue）。然而到了Condition这边，就是一个同步队列和多个等待队列了：
 
