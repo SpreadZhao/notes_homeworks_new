@@ -1,3 +1,9 @@
+---
+title: 1 Introduction to Operating Systems
+order: "1"
+---
+[[Study Log/os_study/0_ostep_index|Return to Index]]
+
 # 1 Introduction to Operating Systems
 
 当程序启动时，它都做什么？其实很简单：

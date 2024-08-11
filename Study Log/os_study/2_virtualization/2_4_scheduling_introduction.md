@@ -1,3 +1,9 @@
+---
+title: "2.4 Scheduling: Introduction"
+order: "5"
+---
+[[Study Log/os_study/0_ostep_index|Return to Index]]
+
 ## 2.4 Scheduling: Introduction
 
 回头看2.1中介绍的那张图：
@@ -98,7 +104,7 @@ $$
 
 ### 2.4.7 Round Robin
 
-RR又叫做time-slicing。其实就是一个任务运行一段时间。假设一个任务运行一个时间，ABC同时到达，都运行5的话，SJF和RR的结果如下：
+RR又叫做time-slicing。其实就是一个任务运行一段时间。假设一个任务运行**1单位时间**，ABC同时到达，都运行5的话，SJF和RR的结果如下：
 
 ![[Study Log/os_study/2_virtualization/resources/Pasted image 20240717002603.png]]
 
@@ -124,7 +130,7 @@ RR又叫做time-slicing。其实就是一个任务运行一段时间。假设一
 
 ![[Study Log/os_study/2_virtualization/resources/Pasted image 20240717004727.png]]
 
-这种技术叫**overlap**，等IO的时候还可以干别的。这样CPU就利用的很好了。
+这种技术叫**overlap**，等IO的时候还可以干别的。这样CPU就利用的很好了。 ^976a08
 
 还有最后一个假设我们没放宽，这也是最难的一个。因为时长不知道的情况下，我们发现以上所有的策略都没法安排了，因为之前的策略之所以好，就是因为我们知道每个任务的时长，然后排方块排出来的。因此，这个最难的我们留到下一节再说。
 
