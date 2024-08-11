@@ -8,6 +8,8 @@ mtrace:
 
 # Arch Linux Awsome Softwares
 
+## Filtered
+
 以前也写过几个：[[Knowledge/software_qa/2024-02-08-software-qa#Linux好物清单|2024-02-08-software-qa]]
 
 - `gdu`：一个命令行的，查看disk usage的软件。
@@ -33,4 +35,7 @@ mtrace:
 - `glance`：system monitor.
 - `tldr`：一个简化的man。
 - `nmtui`：NetworkManager的TUI工具。
-- 
+
+## Website
+
+- [Terminal Trove - The $HOME of all things in the terminal.](https://terminaltrove.com/)
