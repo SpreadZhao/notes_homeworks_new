@@ -35,6 +35,7 @@ mtrace:
 - `glance`：system monitor.
 - `tldr`：一个简化的man。
 - `nmtui`：NetworkManager的TUI工具。
+- `bottom`：各种top的合体版本。
 
 ## Website
 
