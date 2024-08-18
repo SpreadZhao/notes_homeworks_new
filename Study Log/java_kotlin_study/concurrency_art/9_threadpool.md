@@ -18,7 +18,7 @@ chapter_root: true
 > [!comment] 移除worker的时候，使用的依然是synchronized
 > 而且，这里用的锁依然是jobs。这里我一直不知道到底是为什么，问了gpt也在说车轱辘话：[DefaultThreadPool Implementation Explained](https://chatgpt.com/share/8049f345-aad2-4f8a-8386-f16ed12161c2) and [[Study Log/java_kotlin_study/concurrency_art/resources/gpt_threadpool_sb.pdf|gpt_threadpool_sb]]。
 > 
-> 目前我的推测是，从本质上看，就是为了让worker在+-的时候，不能有线程在取队列中的任务。设想：如果removeWorker我们不加jobs锁的话，如果一个线程调用了removeWorker，就直接把它给干掉了。如果这个时候这个worker刚刚执行jobs.removeFirst()，那就意味着这个任务还没执行呢worker就没了。因此，这里要让**移除worker的线程和被移除的worker进行竞争，竞争jobs**。
+> 目前我的推测是，从本质上看，就是为了让worker在+-的时候，不能有线程在取队列中的任务。设想：如果removeWorker我们不加jobs锁的话，如果一个线程调用了removeWorker，就直接把这个worker给干掉了。如果这个时候这个worker刚刚执行jobs.removeFirst()，那就意味着这个任务还没执行呢worker就没了。因此，这里要让**移除worker的线程和被移除的worker进行竞争，竞争jobs**。
 > 
 > 在源代码中，worker取出了任务之后调用jobs.run()。此时如果才进行removeWorker的话，先remove再shutdown。这样当worker执行完job之后，再次判断isRunning就是false了。然而，我依然不知道为什么addWorkers里面也要加上jobs的锁。你说和removeWorker竞争吧，但是这个竞争也不涉及任务的执行，并且workers已经是Synchronized List了，更没有必要再套一层；你说和execute竞争吧，他俩也完全没有能竞争的地方啊。。你说和worker竞争吧，你要加worker，和已经存在的worker有啥关系？所以我不知道为啥这里有个`synchronized(jobs)`。
 
@@ -161,6 +161,12 @@ else if (!addWorker(command, false))
 [Deepak Vadgama blog – Java ThreadPoolExecutor internals](https://deepakvadgama.com/blog/java-executor-internals/#using-ctl-lock)
 
 [JAVA-ThreadPoolExecutor why we need to judge the worker count in the execute function during the recheck procedure? - Stack Overflow](https://stackoverflow.com/questions/46901095/java-threadpoolexecutor-why-we-need-to-judge-the-worker-count-in-the-execute-fun)
+
+接下来，介绍worker是如何工作的。它会不断从队列中取出任务执行。
+
+- 线程池的几个状态，RUNNING, SHUTDOWN... 是怎么转换的，还有runStateAtLeast的意思；
+- getTask里是如何处理，worker在长时间获取不到任务，也就是idle的时候会干嘛。分为非核心线程和核心线程。这里分allowCoreThreadTimeOut去说；
+- 核心线程在获取不到任务时，会空转还是park？
 
 ---
 
