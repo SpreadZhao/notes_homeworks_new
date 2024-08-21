@@ -393,6 +393,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1723039760161 西瓜标题组件，世辉写的组件的文档里遇到的踩坑总结上。并且把这个组件抽出来变成AsyncSpannable。 ➕ 2024-08-07 🔺 🆔 7bq01j
 - [ ] #TODO tasktodo1723283820042 抖音客户端技术论坛里有很多干货，狠狠冲！ ➕ 2024-08-10 🔺 🆔 oxhbiv
 - [ ] #TODO tasktodo1723649618998 TTExecutor in Xigua ➕ 2024-08-14 ⏫ 🆔 4jifms
+- [ ] #TODO tasktodo1724250510907 pintos: [Pintos Projects: Table of Contents](https://web.stanford.edu/class/cs140/projects/pintos/pintos.html) ➕ 2024-08-21 🔽 🆔 eivkfq
 
 ## 其他方向
 
