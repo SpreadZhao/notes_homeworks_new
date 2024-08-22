@@ -362,7 +362,9 @@ forceStopPackage()
 - [ ] 所有仓库里注释里的todo
 - [ ] 日记：分析横屏请求请求数据降低，修改snap分发逻辑。
 - [ ] SpreadAndroidStudy之后全部归档
-- [ ] #TODO 到底为什么不能在子线程更新UI？ ➕ 2024-04-10 🔺 
+- [/] #TODO 到底为什么不能在子线程更新UI？ 🔺 ➕ 2024-04-10 🛫 2024-08-22 
+	- [ ] [Android在子线程更新View](https://mp.weixin.qq.com/s/PL_mFVQ7ax82YhmKkNQAYQ)
+	- [ ] 之后把这些东西更新到一个android diary里。
 - [ ] [wurensen/TaskScheduler: 基于Kotlin协程以及DAG（有向无环图）实现的Android任务调度框架，可以根据任务间的依赖关系进行调度。 (github.com)](https://github.com/wurensen/TaskScheduler)
 - [ ] [kpali/wolf-flow: wolf-flow是一个简单的、支持有向无环图（DAG）的轻量级作业调度引擎 (github.com)](https://github.com/kpali/wolf-flow)
 - [ ] 为什么 Interface 里的方法必须是 public 的？
@@ -377,7 +379,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1722531383729 如何不占用系统状态栏 & 调研SurfaceFlinger是怎么合成状态栏的。 ➕ 2024-08-02 🔼 🆔 z1trn5
 	- [ ] [SurfaceFlinger 图层合成过程分析上 (qq.com)](https://mp.weixin.qq.com/s/J6oyAIsz-kbSllsVd0TGxw)
 - [ ] #TODO tasktodo1722531423113 西瓜的OOM检测原理。native和java都看。 ➕ 2024-08-02 ⏫ 🆔 grvai7
-- [ ] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 ➕ 2024-08-02 🔺 🆔 0cqkq9
+- [/] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 ➕ 2024-08-02 🔺 🆔 0cqkq9 🛫 2024-08-23 
 - [ ] #TODO tasktodo1722531892427 RecyclerView onFling的时候，子View的属性如何？尤其是visibility？这个写到rv的学习目录里，就是毕设的那个。 ➕ 2024-08-02 🔺 🆔 cz51hx
 - [ ] #TODO tasktodo1722531948117 c++的两个踩坑视频： ➕ 2024-08-02 🔼 🆔 ghn6oy
 	- [ ] [C++：指针生而自由。Rust：麻了_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1uK421v7Ub/?spm_id_from=333.999.0.0)
@@ -390,7 +392,7 @@ forceStopPackage()
 	- [ ] 自定义View相关公众号：[Android 自定义 View 高仿飞书日历 (qq.com)](https://mp.weixin.qq.com/s/c_D_BzEYFFugvPHmmSDxDw)
 	- [ ] ViewPager：[5年了，ViewPager2 终于支持 overScrollMode，没错，我干的。 (qq.com)](https://mp.weixin.qq.com/s/evFfPZ02xCb8ViQ7sOGmDw)
 	- [ ] 给公众号分一个类吧哥。不能光攒不看啊！
-- [ ] #TODO tasktodo1723039760161 西瓜标题组件，世辉写的组件的文档里遇到的踩坑总结上。并且把这个组件抽出来变成AsyncSpannable。 ➕ 2024-08-07 🔺 🆔 7bq01j
+- [/] #TODO tasktodo1723039760161 西瓜标题组件，世辉写的组件的文档里遇到的踩坑总结上。并且把这个组件抽出来变成AsyncSpannable。 🆔 7bq01j 🔺 ➕ 2024-08-07 🛫 2024-08-11
 - [ ] #TODO tasktodo1723283820042 抖音客户端技术论坛里有很多干货，狠狠冲！ ➕ 2024-08-10 🔺 🆔 oxhbiv
 - [ ] #TODO tasktodo1723649618998 TTExecutor in Xigua ➕ 2024-08-14 ⏫ 🆔 4jifms
 - [ ] #TODO tasktodo1724250510907 pintos: [Pintos Projects: Table of Contents](https://web.stanford.edu/class/cs140/projects/pintos/pintos.html) ➕ 2024-08-21 🔽 🆔 eivkfq

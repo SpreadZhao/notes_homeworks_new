@@ -7,6 +7,7 @@ order: "2"
 ## 6.2 ConcurrentLinkedQueue
 
 - [ ] #TODO tasktodo1719048260547 ConcurrentLinkedQueue in java7 and java8. 🆔 qxrg4g ⏫ ➕ 2024-06-22
+- [ ] #TODO tasktodo1724342076872 CopyOnWriteArrayList in jdk17 ➕ 2024-08-22 ⏫ 🆔 3hbnbs
 
 ---
 
