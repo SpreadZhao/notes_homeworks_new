@@ -7,7 +7,7 @@ let res = []
 for (let page of dv.pages('"Work Diary/bytedance"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
-	const title = page.title.split("; ")
+	const title = page.title
 	const tags = page.tags
 	let realtag = ""
 	if (tags != undefined) {
