@@ -4,7 +4,7 @@ chapter: "9"
 order: "9"
 chapter_root: true
 ---
-
+****
 # 9 Java 中的线程池
 
 ## 9.1 以前线程池的总结
@@ -258,6 +258,263 @@ if (runStateAtLeast(c, SHUTDOWN)
 然后给一下线程池状态之间的流转。当然，只能单向流转。
 
 ![[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg]]
+
+接下来，介绍工作线程，也就是worker的添加。唯一添加worker的方法是调用`addWorker()`，而这个方法绝大多数情况是调用`execute()`提交任务的时候会进行。剩下的情况都是一些边界情况，比如修改核心线程数量等。我们很少会调整核心线程数，嗯。
+
+是否可以增加一个worker，主要取决于：
+
+1. 当前线程池的状态。这个我们刚刚讲过；
+2. 已存在的线程数量，这个与线程是否是核心线程有关。
+
+刚刚添加worker时，就会进行我们介绍过的判断：
+
+```java
+// Check if queue empty only if necessary.
+if (runStateAtLeast(c, SHUTDOWN)
+	&& (runStateAtLeast(c, STOP)
+		|| firstTask != null
+		|| workQueue.isEmpty()))
+	return false;
+```
+
+这个条件如果通过，那么就要开始创建。当然，创建的时候，需要进行存在线程数的判断：
+
+```java
+if (workerCountOf(c) >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
+	return false;
+```
+
+反正要么是核心线程数，要么是最大线程数。就取决于当前线程是不是核心线程。从这里我们能看到，一个线程是不是核心线程，其实不是由Worker来记忆的。**线程池对待核心线程，和对待非核心线程的行为是完全一致的**。之所以有核心和非核心一说，就是我们会用这个upper bound去控制数量。而在后面我们也能看到，之所以核心线程不会退出，也是因为线程在取任务的时候，如果没取到，还会判断一下当前存活的线程数量与核心线程数。换句话说，**我们不关心“哪几个”线程是核心线程，我们只关心需要“有几个”线程是核心线程**。而“有几个”，用核心线程数这个upper bound去判断足矣。
+
+接下来，会尝试增加worker的数量。还记得这个东西在哪儿存的吗？就是workerCount，那显然是在`ctl`里存的。所以我们要单独设置这个AtomicInteger，那显然就是会用CAS去设置。如果设置成功了，那当然继续就行了；如果失败了，就要重试。
+
+到了这里，其实还有一种情况没有覆盖到。就是如果你的CAS一直失败，会一直重试。但是如果不断重试的过程中，外面把线程池给关了。这个时候要走一开始判断SHUTDOWN, STOP的逻辑。TPE的实现思路如下。我们重试CAS的过程，被包在一个无限的for循环里：
+
+```java
+for (;;) {
+	/* 不断尝试CAS，如果成功了就要跳出循环 */
+}
+```
+
+然后一开始状态的判断，是在这个for循环的上面做的：
+
+```java
+// Check if queue empty only if necessary.
+if (runStateAtLeast(c, SHUTDOWN) ...
+for (;;) {
+	/* 不断尝试CAS，如果成功了就要跳出循环 */
+}
+```
+
+那现在的问题是，在for循环里面需要判断TPE的状态，然后还需要重新走一遍外面的逻辑。这里的做法就是，再用一层for循环包起来，并加上标签。这样我们continue的时候就可以continue到外层的循环了：
+
+```java
+retry:
+for (int c = ctl.get();;) {
+	// Check if queue empty only if necessary.
+	if (runStateAtLeast(c, SHUTDOWN) ...
+	for (;;) {
+		/* 不断尝试CAS，如果成功了就要跳出循环 */
+		c = ctl.get();  // Re-read ctl
+		if (runStateAtLeast(c, SHUTDOWN))
+			continue retry;  // 这里跳到了retry，也就是外层循环
+	}
+}
+
+```
+
+并且注意，外层循环的那个条件里，后面两个语句都是空的，也就意味着外层循环也只会拿一次`ctl`。所以这里我们才会在内层循环帮它拿一次`ctl`，这样到了外层循环重试，就会用我们刚刚在内层循环拿到的新的`ctl`去做状态判断，从而正确返回false。
+
+这部分完整的代码：
+
+```java
+private boolean addWorker(Runnable firstTask, boolean core) {
+	retry:
+	for (int c = ctl.get();;) {
+		// Check if queue empty only if necessary.
+		if (runStateAtLeast(c, SHUTDOWN)
+			&& (runStateAtLeast(c, STOP)
+				|| firstTask != null
+				|| workQueue.isEmpty()))
+			return false;
+
+		for (;;) {
+			if (workerCountOf(c) >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
+				return false;
+			if (compareAndIncrementWorkerCount(c))
+				break retry;
+			c = ctl.get();  // Re-read ctl
+			if (runStateAtLeast(c, SHUTDOWN))
+				continue retry;
+			// else CAS failed due to workerCount change; retry inner loop
+		}
+	}
+	
+	/* 成功设置CAS,开始添加worker */
+}
+```
+
+注意，这里我们并没有真正创建Worker实例，更没有创建新的线程。但是我们却设置了`ctl`，把workerCount给+1了。所以后面如果worker没有真正被创建出来（因为各种异常），还需要进行状态回滚。
+
+创建Worker的过程就先不说了，在创建之后，需要添加。添加之前，最重要的一件事就是获取这个全局锁：
+
+```java
+final ReentrantLock mainLock = this.mainLock;
+mainLock.lock();
+```
+
+在`addWorker()`中，获取这个锁的主要目的是避免多个线程同时调用这个方法，同时操作`workers`这个结构，它是很脆弱的：
+
+```java
+/**
+ * Set containing all worker threads in pool. Accessed only when
+ * holding mainLock.
+ */
+private final HashSet<Worker> workers = new HashSet<>();
+```
+
+> [!question]-
+> 这个时候你可能就会问了：*我用一些并发的集合，比如CopyOnWriteArrayList之类的，不是就能避免使用锁了吗*？确实。但是这里选择用锁的原因，也写在mainLock的注释里了。最主要的原因就是**避免"interrupt storm"**。在TPE里有个方法叫`interruptIdleWorkers()`，功能是中断正在等着任务的线程。大概看一眼实现就能明白，这里面做的其实就是尽可能，把`workers`里所有的线程都给中断。线程是否在执行任务是通过`w.tryLock()`的返回值决定的。这个我们后面会说。显然，如果有多个线程并发地调用这个方法，那还真就是一个"interrupt storm"。因为相当于同时有多个线程对`workers`进行遍历，并且对其中的worker进行中断。为了避免这种情况，我们只能将`interruptIdleWorkers()`的执行给原子化，也就是注释中说的"serializes"（序列化，就是指把多个`interruptIdleWorkers()`的调用排成一排，这样每一个调用就会被认为是原子的）。而如果不这么做的话，可以看看`processWorkerExit()`方法。它是worker执行结束的时候调用的。这里面最终就会调用到`interruptIdleWorkers()`。意味着，这些将要结束的线程，如果同时结束，很有可能会并发地调用到`interruptIdleWorkers()`，导致之前所说的"interrupt storm"。而**如果我们调用了`shutdown()`，这种情况会更加严重**。因为每个结束的线程都会来一遍这样的操作。
+> 
+> 除了给workers加锁，mainLock还有一个更重要的作用，就是**让[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg|线程池状态的转移]]也要原子化**。一旦获取了mainLock，我能保证之后获取的线程池状态，**在锁的作用域内一定是正确的**，绝对不会被别人改变。这个功能马上就会体现。
+
+- [ ] #TODO tasktodo1724436111909 结合妥善终结线程的方法，来说明TPE的shutdown是怎么实现的。 ➕ 2024-08-24 🔺 🆔 oqel59 
+
+获取了锁之后，真正要添加worker，还需要满足几个条件：
+
+- 线程池状态满足条件；
+- 线程正常启动。
+
+我们先看第一个。这里显然无非还是要查一下ctl，但是这里的代码依然很晦涩：
+
+```java
+// Recheck while holding lock.  
+// Back out on ThreadFactory failure or if  
+// shut down before lock acquired.  
+int c = ctl.get();  
+  
+if (isRunning(c) || (runStateLessThan(c, STOP) && firstTask == null)) {
+	... ...
+}
+```
+
+从注释的提示可以看出，如果在mainLock的获取之前，更准确来说，在上面那两个for循环跳出来之后，和mainLock获取之前，如果有人关掉了线程池，那么在这里会进行最后一次捕捉。捕捉的代码就是if里面的条件。
+
+`isRunning(c)`这个很好懂，就不说了，但是后面又是啥意思。`isRunning`表示当前是RUNNING状态，如果不满足，并且后面这个条件也满足了，那么当前的状态肯定是SHUTDOWN，因为我们已经获取mainLock了。此时，如果firstTask还是空的话，代表没有新任务提交，所以我们还可以让这个新的worker去处理队列中的线程。所以这里允许添加；而如果firstTask不是空，代表这个worker要处理新任务。但是SHUTDOWN状态不允许处理新任务，所以这里不让添加。
+
+好了，看第二个，线程是否正常启动。这个判断就很简单了：
+
+```java
+if (t.getState() != Thread.State.NEW)
+	throw new IllegalThreadStateException();
+```
+
+也没什么好说的。
+
+如果条件都满足，就可以添加worker了：
+
+```java
+workers.add(w);  
+workerAdded = true;  
+int s = workers.size();  
+if (s > largestPoolSize)  
+    largestPoolSize = s;
+```
+
+这里的`largestPoolSize`没有它用，是纯粹提供给业务方的。用来标识这个线程池里**曾经出现过的**最多的线程数。
+
+最后，无非两种结果，添加成功或者失败：
+
+- 成功，启动worker的线程；
+- 失败，回滚状态，也就是`addWorkerFailed()`方法。
+
+先看成功，直接放代码，不用说：
+
+```java
+if (workerAdded) {
+	t.start();
+	workerStarted = true;
+}
+```
+
+然后是失败。这里需要进行回滚。回滚的操作当然是从workers里移除添加的worker，然后把workerCount设置回来。因为也要操作workers，所以也要获取mainLock。
+
+我当时看到这段代码，最奇怪的就是，为什么会去remove。我们看看失败的出发点：
+
+```java
+if (!workerStarted)  
+    addWorkerFailed(w);
+```
+
+只有workerStarted是false才会触发。但是如果remove的时候worker真的在workers里面，证明刚才的`workers.add(w)`是成功的，则证明`workerAdded`一定是true，则证明`t.start(); workerStarted = true;`一定会被执行。那这种情况下，如果还存在，唯一的解释就是，`t.start()`抛出了异常。而这个异常会再用一个try catch捕获，导致在`addWorkerFailed`的时候，发现workers里居然还有我刚刚添加的worker。
+
+到这里，我就可以把整个addWorker方法贴出来了，每一句代码是干什么的，都应该很清楚了：
+
+```java
+private boolean addWorker(Runnable firstTask, boolean core) {
+	retry:
+	for (int c = ctl.get();;) {
+		// Check if queue empty only if necessary.
+		if (runStateAtLeast(c, SHUTDOWN)
+			&& (runStateAtLeast(c, STOP)
+				|| firstTask != null
+				|| workQueue.isEmpty()))
+			return false;
+
+		for (;;) {
+			if (workerCountOf(c) >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
+				return false;
+			if (compareAndIncrementWorkerCount(c))
+				break retry;
+			c = ctl.get();  // Re-read ctl
+			if (runStateAtLeast(c, SHUTDOWN))
+				continue retry;
+			// else CAS failed due to workerCount change; retry inner loop
+		}
+	}
+
+	/* CAS成功，开始添加worker */
+
+	boolean workerStarted = false;
+	boolean workerAdded = false;
+	Worker w = null;
+	try {  // 外层的try catch主要用于捕获t.start()的异常
+		w = new Worker(firstTask);
+		final Thread t = w.thread;
+		if (t != null) {
+			final ReentrantLock mainLock = this.mainLock;
+			mainLock.lock();
+			try {  // 内层的try catch主要用于捕获IllegalThreadStateException
+				// Recheck while holding lock.
+				// Back out on ThreadFactory failure or if
+				// shut down before lock acquired.
+				int c = ctl.get();
+
+				if (isRunning(c) ||
+					(runStateLessThan(c, STOP) && firstTask == null)) {
+					if (t.getState() != Thread.State.NEW)
+						throw new IllegalThreadStateException();
+					workers.add(w);
+					workerAdded = true;
+					int s = workers.size();
+					if (s > largestPoolSize)
+						largestPoolSize = s;
+				}
+			} finally {
+				mainLock.unlock();
+			}
+			if (workerAdded) {
+				t.start();
+				workerStarted = true;
+			}
+		}
+	} finally {
+		if (! workerStarted)
+			addWorkerFailed(w);
+	}
+	return workerStarted;
+}
+```
 
 
 
