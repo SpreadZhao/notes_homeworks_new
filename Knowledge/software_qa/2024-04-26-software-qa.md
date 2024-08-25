@@ -1,10 +1,12 @@
 ---
-title: Arch Linux
+title:
+  - Arch Linux
 date: 2024-04-26
 tags:
   - softwareqa/linux
 mtrace:
   - 2024-04-26
+  - 2024-08-25
 ---
 
 # Arch Linux
@@ -456,7 +458,7 @@ static char *font = "Terminus (TTF):size=12:antialias=true:autohint=true";
 
 arandr的设置如何保存：[3.2Configuration using arandr](https://wiki.archlinux.org/title/Xrandr#Configuration_using_arandr)
 
-# Awsome Software
+# Awesome Software
 
 [[Knowledge/software_qa/2024-08-09-software-qa|2024-08-09-software-qa]]
 

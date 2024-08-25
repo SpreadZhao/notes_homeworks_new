@@ -1,12 +1,13 @@
 ---
-title: Arch Linux Awsome Softwares
+title:
+  - Arch Linux Awesome Softwares
 date: 2024-08-09
 tags: 
 mtrace:
   - 2024-08-09
 ---
 
-# Arch Linux Awsome Softwares
+# Arch Linux Awesome Softwares
 
 ## Filtered
 
