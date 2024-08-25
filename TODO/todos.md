@@ -12,4 +12,4 @@
 	- [ ] [[DASHBOARD]]
 - [ ] #TODO tasktodo1722695142028 分析layoutinflater，setcontentview。 ➕ 2024-08-03 🔺 🆔 c125ui
 - [ ] #TODO tasktodo1722708594120 TTNet在每个阶段，比如DNS路由，做了什么优化。对于OkHttp做了什么优化。 ➕ 2024-08-04 ⏫ 🆔 56h1yq
-- [ ] #TODO tasktodo1724338400682 work diary 是不是要把公司的日记和这个进行同步。 ➕ 2024-08-22 🔺 🆔 qwdofi
+- [/] #TODO tasktodo1724338400682 work diary 是不是要把公司的日记和这个进行同步。 ➕ 2024-08-22 🔺 🆔 qwdofi 🛫 2024-08-23

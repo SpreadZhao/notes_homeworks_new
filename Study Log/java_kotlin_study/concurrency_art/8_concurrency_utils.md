@@ -230,7 +230,12 @@ fun driver2(n: Int) {
 
 如果我们要用join写这个例子，好像还真没法写。因为线程池里的线程是我们要手动关闭的，因此在这之前它根本不会notify，那join也就没作用了。
 
-- [ ] #TODO tasktodo1722007420163 看看西瓜是怎么用CountDownLatch的。 ➕ 2024-07-26 🔺 🆔 uam4hu
+- [x] #TODO tasktodo1722007420163 看看西瓜是怎么用CountDownLatch的。 🆔 uam4hu 🔺 ➕ 2024-07-26 ✅ 2024-08-25
+	- [ ] MultiProcessSharedProvider，一个多进程共享的sp，运行在主进程。
+	- [ ] 大部分使用都是用于插件加载。比如AppStrategyStateService。
+	- [ ] 可以写一个简单的，类似协程里suspend的功能。里面用一个ContDownLatch封装就行。
+
+- [ ] #TODO tasktodo1724597084609 上面西瓜的CountDownLatch，有时间处理一下。 ➕ 2024-08-25 🔼 
 
 ## 8.2 CyclicBarrier
 

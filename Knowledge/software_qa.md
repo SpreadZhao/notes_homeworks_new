@@ -5,7 +5,10 @@ let res = []
 for (let page of dv.pages('"Knowledge/software_qa"')) {
 	const date = new Date(page.date)
 	const link = "[[" + page.file.path + "|" + getDateString(date) + "]]"
-	const title = page.title.split("; ")
+	let title = page.title
+	if (typeof title === "string") {
+		title = title.split(";")
+	}
 	const tags = page.tags
 	let realtag = ""
 	if (tags != undefined) {

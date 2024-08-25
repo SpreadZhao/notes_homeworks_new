@@ -5,7 +5,7 @@ link: "https://leetcode.cn/problems/number-of-ways-to-form-a-target-string-given
 tags:
   - leetcode/difficulty/hard
 ---
-- [ ] #TODO tasktodo1723829928335 这个巨jb难的动态规划。 ➕ 2024-08-17 🔺 🆔 qwwy4p
+- [x] #TODO tasktodo1723829928335 这个巨jb难的动态规划。 🆔 qwwy4p 🔺 ➕ 2024-08-17 ✅ 2024-08-18
 
 为了用c++整这道题，真把我差点弄死。你妈的。
 
