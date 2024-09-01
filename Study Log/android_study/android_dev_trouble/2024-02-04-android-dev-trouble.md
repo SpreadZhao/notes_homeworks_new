@@ -99,3 +99,8 @@ SUBSYSTEM=="usb",ATTRS{idVendor}=="18d1",ATTRS{idProduct}=="4ee2",MODE="0666",GR
 ```
 
 然后多试几次就行了。但是很奇怪，根据我找到的[资料](https://stackoverflow.com/questions/28704636/insufficient-permissions-for-device-in-android-studio-workspace-running-in-opens#comment45742469_28724457)，需要把`plugdev`用户组添加到系统里才可以。但是我找了我的用户组，[[Study Log/android_study/android_dev_trouble/resources/Pasted image 20240831225443.png|完全没找到]]。所以不知道到底是为什么。如果后面发现了就确定一下吧。就不记todo了。
+
+补充一下，我的pixel需要如下条件：
+
+1. rules生效；
+2. usb连接模式必须调成文件传输（MTP）。
