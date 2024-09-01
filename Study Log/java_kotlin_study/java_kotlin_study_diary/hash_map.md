@@ -3,7 +3,9 @@ mtrace:
   - 2023-08-29
   - 2023-09-04
   - 2024-06-06
-title: 手动实现HashMap
+title:
+  - 手动实现HashMap
+  - JDK 1.7 中的 HashMap
 date: 2023-08-29
 tags:
   - "#question/interview"

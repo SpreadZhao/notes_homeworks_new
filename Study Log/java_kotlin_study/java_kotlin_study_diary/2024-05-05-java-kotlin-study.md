@@ -1,5 +1,7 @@
 ---
-title: ConcurrentModificationException on SubList of ArrayList
+title:
+  - ConcurrentModificationException on SubList of ArrayList
+  - Fail-fast And Fail-safe Iterators
 date: 2024-05-05
 tags:
   - language/coding/java

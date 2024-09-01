@@ -1,5 +1,7 @@
 ---
-title: Backing Field in Kotlin
+title:
+  - Backing Field in Kotlin
+  - Backing Properties
 date: 2024-01-28
 tags:
   - "#language/coding/kotlin"
