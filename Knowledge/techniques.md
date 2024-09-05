@@ -396,6 +396,9 @@ forceStopPackage()
 - [ ] #TODO tasktodo1723283820042 抖音客户端技术论坛里有很多干货，狠狠冲！ ➕ 2024-08-10 🔺 🆔 oxhbiv
 - [ ] #TODO tasktodo1723649618998 TTExecutor in Xigua ➕ 2024-08-14 ⏫ 🆔 4jifms
 - [ ] #TODO tasktodo1724250510907 pintos: [Pintos Projects: Table of Contents](https://web.stanford.edu/class/cs140/projects/pintos/pintos.html) ➕ 2024-08-21 🔽 🆔 eivkfq
+- [ ] #TODO tasktodo1725548165776 西瓜视频基础产品的周会，每个周会有个小讨论。里面的技术点可以学一学。比如之前就介绍过抖音的一个hook方案，排查一个npe的bug ➕ 2024-09-05 ⏫ 🆔 0w0gwj 
+- [ ] #TODO tasktodo1725548220142 wx公众号，动态线程池。这个可以合到[[Study Log/java_kotlin_study/concurrency_art/9_threadpool|9_threadpool]]里面。 [美团二面拷打：如何设计一个动态线程池？](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247545457&idx=1&sn=e943871bdcdb4e47e9bfafb3d1ddc546&chksm=cf663654bcf8f505dadfb7cf09c10cc9f237af9708f08359420cae84155732733c954bb16fdb#rd) ➕ 2024-09-05 ⏫ 🆔 dyb7pi 
+- [ ] #TODO tasktodo1725548355191 最近处理了一个创作相关的内存泄漏。确实，kotlin的let和apply还有一个之前没考虑过的区别。说一说。 ➕ 2024-09-05 🔺 🆔 ctwy5c 
 
 ## 其他方向
 
