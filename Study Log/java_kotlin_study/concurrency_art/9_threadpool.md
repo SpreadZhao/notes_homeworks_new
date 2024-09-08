@@ -131,9 +131,13 @@ if (isRunning(c) && workQueue.offer(command)) {    // 检查一下线程池是�
 ```
 
 > [!comment] 此时没有线程还能运行了
-> 你可能会感觉这种情况不会发生，毕竟刚刚我们还判断了核心线程数。想象这样的情况：核心线程是4个，我提交了4个任务，此时都在执行。当我提交第五个任务时，判断核心线程肯定是false。那接下来我要尝试入队了是把。但是，如果这个时候我还没入队呢，前面那四个线程正好把任务都做完了。接下来他们一看队列里没任务了，就都做收尾工作然后退出了（这里确实是会退出的。可以看keepAliveTime这个参数，如果一直没等到队列里有新任务，就退出了。而大部分线程池的这个值都是0，意味着没任务不等，直接线程终结了。这个和我们自己实现的一直等的线程池很不一样。可以搜一搜为啥它不这么做）。
+> 你可能会感觉这种情况不会发生，毕竟刚刚我们还判断了核心线程数。想象这样的情况：核心线程是4个，我提交了4个任务，此时都在执行。当我提交第五个任务时，判断核心线程肯定是false。那接下来我要尝试入队了是把。但是，如果这个时候我还没入队呢，前面那四个线程正好把任务都做完了。<u>接下来他们一看队列里没任务了，就都做收尾工作然后退出了（这里确实是会退出的。可以看keepAliveTime这个参数，如果一直没等到队列里有新任务，就退出了。而大部分线程池的这个值都是0，意味着没任务不等，直接线程终结了。这个和我们自己实现的一直等的线程池很不一样。可以搜一搜为啥它不这么做）</u>。
 > 
 > 4个线程都退出了，那等任务入队了，查一下线程池状态，还是运行中，因为我没调shutdown，虽然已经没线程了，但是池子还是待命状态。那我如果不检查还有没有线程的话，那就真没人干活儿了。所以，这里要检查一下是否真的没有能干活儿的线程了。[[#^512df9|如果真没有了，那我总得加一个吧]]！
+> 
+> 注意一下上面划线的句子。接着看下去你会发现，核心线程要是想在没有任务的时候结束自己，需要一定的条件。这个条件我们之后会说明。
+> 
+> - [ ] #TODO tasktodo1725772639884 说明了吗？ ➕ 2024-09-08 ⏫ 🆔 qunse9 
 
 从worker自己生命周期，整个线程池生命周期的角度分别看线程池。
 
@@ -148,9 +152,9 @@ else if (!addWorker(command, false))
 	- [ ] 如果第五个任务来的时候，有空闲的核心线程。此时任务会入队还是直接被其中一个线程执行？ ^d09730
 	- [ ] 为什么需要获取全局锁？ ^ca5c6d
 	- [ ] 这里的条件要从代码上给出准确的时机，因为后面很多代码的解释要参考这里 ^15fc63
-	- [ ] 代码在哪里？ ^8bbd3d
+	- [ ] [[#^283ad8|代码在哪里？]] ^8bbd3d
 	- [ ] 为什么会失败？ ^0e1eb2
-	- [ ] 代码在哪里？ ^28fb49
+	- [ ] [[#^ffb99a|代码在哪里]]？ ^28fb49
 	- [ ] 什么时候会结束？ ^c6627b
 	- [ ] 真的吗？代码证明？ ^e8989f
 	- [ ] 为啥一开始不检查？ ^52b263
@@ -163,6 +167,9 @@ else if (!addWorker(command, false))
 [JAVA-ThreadPoolExecutor why we need to judge the worker count in the execute function during the recheck procedure? - Stack Overflow](https://stackoverflow.com/questions/46901095/java-threadpoolexecutor-why-we-need-to-judge-the-worker-count-in-the-execute-fun)
 
 接下来，介绍worker是如何工作的。它会不断从队列中取出任务执行。
+
+> [!Attention] With Code!
+> 读接下来的内容的时候，一定对着源码读。不然你很可能不知道我在说什么。
 
 - ~~线程池的几个状态，RUNNING, SHUTDOWN... 是怎么转换的，还有runStateAtLeast的意思；~~
 - getTask里是如何处理，worker在长时间获取不到任务，也就是idle的时候会干嘛。分为非核心线程和核心线程。这里分allowCoreThreadTimeOut去说；
@@ -232,7 +239,7 @@ private static boolean isRunning(int c) {
 }
 ```
 
-以`runStateAtLeast()`为例，在增加线程的方法`addWorker()`的时候就会调用到这里。现在就是简单看一看：
+以`runStateAtLeast()`为例，在增加线程的方法`addWorker()`的时候就会调用到这里。现在就是简单看一看： ^29b849
 
 ```java
 // Check if queue empty only if necessary.
@@ -286,7 +293,7 @@ if (workerCountOf(c) >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
 
 反正要么是核心线程数，要么是最大线程数。就取决于当前线程是不是核心线程。从这里我们能看到，一个线程是不是核心线程，其实不是由Worker来记忆的。**线程池对待核心线程，和对待非核心线程的行为是完全一致的**。之所以有核心和非核心一说，就是我们会用这个upper bound去控制数量。而在后面我们也能看到，之所以核心线程不会退出，也是因为线程在取任务的时候，如果没取到，还会判断一下当前存活的线程数量与核心线程数。换句话说，**我们不关心“哪几个”线程是核心线程，我们只关心需要“有几个”线程是核心线程**。而“有几个”，用核心线程数这个upper bound去判断足矣。
 
-接下来，会尝试增加worker的数量。还记得这个东西在哪儿存的吗？就是workerCount，那显然是在`ctl`里存的。所以我们要单独设置这个AtomicInteger，那显然就是会用CAS去设置。如果设置成功了，那当然继续就行了；如果失败了，就要重试。
+接下来，会尝试增加worker的数量。还记得这个东西在哪儿存的吗？就是workerCount，那显然是在`ctl`里存的。所以我们要单独设置这个AtomicInteger，那显然就是会用CAS去设置。如果设置成功了，那当然继续就行了；如果失败了，就要重试。 ^283ad8
 
 到了这里，其实还有一种情况没有覆盖到。就是如果你的CAS一直失败，会一直重试。但是如果不断重试的过程中，外面把线程池给关了。这个时候要走一开始判断SHUTDOWN, STOP的逻辑。TPE的实现思路如下。我们重试CAS的过程，被包在一个无限的for循环里：
 
@@ -374,7 +381,7 @@ private final HashSet<Worker> workers = new HashSet<>();
 ```
 
 > [!question]-
-> 这个时候你可能就会问了：*我用一些并发的集合，比如CopyOnWriteArrayList之类的，不是就能避免使用锁了吗*？确实。但是这里选择用锁的原因，也写在mainLock的注释里了。最主要的原因就是**避免"interrupt storm"**。在TPE里有个方法叫`interruptIdleWorkers()`，功能是中断正在等着任务的线程。大概看一眼实现就能明白，这里面做的其实就是尽可能，把`workers`里所有的线程都给中断。线程是否在执行任务是通过`w.tryLock()`的返回值决定的。这个我们后面会说。显然，如果有多个线程并发地调用这个方法，那还真就是一个"interrupt storm"。因为相当于同时有多个线程对`workers`进行遍历，并且对其中的worker进行中断。为了避免这种情况，我们只能将`interruptIdleWorkers()`的执行给原子化，也就是注释中说的"serializes"（序列化，就是指把多个`interruptIdleWorkers()`的调用排成一排，这样每一个调用就会被认为是原子的）。而如果不这么做的话，可以看看`processWorkerExit()`方法。它是worker执行结束的时候调用的。这里面最终就会调用到`interruptIdleWorkers()`。意味着，这些将要结束的线程，如果同时结束，很有可能会并发地调用到`interruptIdleWorkers()`，导致之前所说的"interrupt storm"。而**如果我们调用了`shutdown()`，这种情况会更加严重**。因为每个结束的线程都会来一遍这样的操作。
+> 这个时候你可能就会问了：*我用一些并发的集合，比如CopyOnWriteArrayList之类的，不是就能避免使用锁了吗*？确实。但是这里选择用锁的原因，也写在mainLock的注释里了。最主要的原因就是**避免"interrupt storm"**。在TPE里有个方法叫`interruptIdleWorkers()`，功能是中断正在等着任务的线程。大概看一眼实现就能明白，这里面做的其实就是尽可能，把`workers`里所有的线程都给中断。线程是否在执行任务是通过`w.tryLock()`的返回值决定的。这个我们后面会说。显然，如果有多个线程并发地调用这个方法，那还真就是一个"interrupt storm"。因为相当于同时有多个线程对`workers`进行遍历，并且对其中的worker进行中断（正在退出的线程并发地中断那些还没被中断的线程）。为了避免这种情况，我们只能将`interruptIdleWorkers()`的执行给原子化，也就是注释中说的"serializes"（序列化，就是指把多个`interruptIdleWorkers()`的调用排成一排，这样每一个调用就会被认为是原子的）。而如果不这么做的话，可以看看`processWorkerExit()`方法。它是worker执行结束的时候调用的。这里面最终就会调用到`interruptIdleWorkers()`。意味着，这些将要结束的线程，如果同时结束，很有可能会并发地调用到`interruptIdleWorkers()`，导致之前所说的"interrupt storm"。而**如果我们调用了`shutdown()`，这种情况会更加严重**。因为每个结束的线程都会来一遍这样的操作。
 > 
 > 除了给workers加锁，mainLock还有一个更重要的作用，就是**让[[Study Log/java_kotlin_study/concurrency_art/resources/Drawing 2024-08-21 23.57.38.excalidraw.svg|线程池状态的转移]]也要原子化**。一旦获取了mainLock，我能保证之后获取的线程池状态，**在锁的作用域内一定是正确的**，绝对不会被别人改变。这个功能马上就会体现。
 
@@ -400,7 +407,15 @@ if (isRunning(c) || (runStateLessThan(c, STOP) && firstTask == null)) {
 
 从注释的提示可以看出，如果在mainLock的获取之前，更准确来说，在上面那两个for循环跳出来之后，和mainLock获取之前，如果有人关掉了线程池，那么在这里会进行最后一次捕捉。捕捉的代码就是if里面的条件。
 
-`isRunning(c)`这个很好懂，就不说了，但是后面又是啥意思。`isRunning`表示当前是RUNNING状态，如果不满足，并且后面这个条件也满足了，那么当前的状态肯定是SHUTDOWN，因为我们已经获取mainLock了。此时，如果firstTask还是空的话，代表没有新任务提交，所以我们还可以让这个新的worker去处理队列中的线程。所以这里允许添加；而如果firstTask不是空，代表这个worker要处理新任务。但是SHUTDOWN状态不允许处理新任务，所以这里不让添加。
+`isRunning(c)`这个很好懂，就不说了，但是后面又是啥意思。`isRunning`表示当前是RUNNING状态，如果不满足，并且后面这个条件也满足了，less than STOP，那么当前的状态肯定是SHUTDOWN，因为我们已经获取mainLock了。此时，如果firstTask还是空的话，代表没有新任务提交，所以我们还可以让这个新的worker去处理队列中的任务。所以这里允许添加；而如果firstTask不是空，代表这个worker要处理新任务。但是SHUTDOWN状态不允许处理新任务，所以这里不让添加。
+
+> [!summary]
+> 总结一下上面“允许添加worker”的情况。就是两种：
+> 
+> - RUNNING状态；
+> - SHUTDOWN状态，并且这个添加的worker是要去处理队列中的任务的，而不是firstTask。
+> 
+> 如果你是STOP及以上的状态，啥线程也不让你加了，这里就直接不会执行。
 
 好了，看第二个，线程是否正常启动。这个判断就很简单了：
 
@@ -428,6 +443,9 @@ if (s > largestPoolSize)
 - 成功，启动worker的线程；
 - 失败，回滚状态，也就是`addWorkerFailed()`方法。
 
+> [!note]
+> 在走成功或者失败的逻辑之前，会先释放一下mainLock。
+
 先看成功，直接放代码，不用说：
 
 ```java
@@ -437,7 +455,7 @@ if (workerAdded) {
 }
 ```
 
-然后是失败。这里需要进行回滚。回滚的操作当然是从workers里移除添加的worker，然后把workerCount设置回来。因为也要操作workers，所以也要获取mainLock。
+然后是失败。这里需要进行回滚。回滚的操作当然是从workers里移除添加的worker，然后把workerCount设置回来。因为也要操作workers，所以也要获取mainLock。 ^ffb99a
 
 我当时看到这段代码，最奇怪的就是，为什么会去remove。我们看看失败的出发点：
 
@@ -447,6 +465,9 @@ if (!workerStarted)
 ```
 
 只有workerStarted是false才会触发。但是如果remove的时候worker真的在workers里面，证明刚才的`workers.add(w)`是成功的，则证明`workerAdded`一定是true，则证明`t.start(); workerStarted = true;`一定会被执行。那这种情况下，如果还存在，唯一的解释就是，`t.start()`抛出了异常。而这个异常会再用一个try catch捕获，导致在`addWorkerFailed`的时候，发现workers里居然还有我刚刚添加的worker。
+
+> [!attention]
+> 上面这段对着代码理解。
 
 到这里，我就可以把整个addWorker方法贴出来了，每一句代码是干什么的，都应该很清楚了：
 
@@ -515,6 +536,243 @@ private boolean addWorker(Runnable firstTask, boolean core) {
 	return workerStarted;
 }
 ```
+
+接下来我们从每一个worker的生命周期出发，来看线程是怎么接收任务，处理任务，最后又是怎么结束自己的。
+
+Worker这个类是继承自AQS。那自然它其实也是一个锁。这个锁和mainLock有啥区别呢？mainLock的功能我们也提到过了：
+
+1. 避免有多个工作线程同时结束，并发地调用interruptIdleWorkers()，导致线程疯狂（并发地）被interrupt，引发interrupt storm；
+2. 保证状态的改变是原子的。这样只要我获取了mainLock，在我释放它之前，线程池的状态就一定会保持不变。因为任何人想要改变线程池的状态都要先获取mainLock。
+
+可以看到，mainLock的限制都是加在整个线程池上的，更准确的来说，是**workers set**。就像注释里说的那样；而每一个worker如果也是个锁的话，自然就是为了给没一个worker执行任务的时候加上一点限制。从注释里也能看到，这个实现是opportunistically，投机取巧地。所以其实可以用其它的实现，比如给每一个worker单独安排一个锁之类的。而这里因为需要的并发控制比较简单，所以没有像mainLock一样用ReentrantLock，而是自己实现了一个**简单的不可重入的互斥锁**。至于更具体的原因，我们接下来进行探究。
+
+明确一点，Worker这个锁有两个状态：
+
+```java
+// The value 0 represents the unlocked state.  
+// The value 1 represents the locked state.
+```
+
+worker里除了AQS相关的实现，就是一个run方法。当然也就是执行任务的方法。接下俩我们就来看看运行的时候发生了什么。这个run方法将任务运行委托给了线程池：
+
+```java
+/** Delegates main run loop to outer runWorker. */
+public void run() {
+	runWorker(this);
+}
+```
+
+所以实际还是要看runWorker的实现。
+
+既然要运行任务。首先最重要的目的就是要知道任务是啥。任务主要来源于两方面：
+
+1. worker创建时分配的firstTask；
+2. worker主动获取的task，通过getTask()方法。
+
+> [!note] getTask()
+> `getTask()`方法返回值有两种。要么是一个任务，代表成功获取到了任务；要么是null，代表没获取到，意味着获取这个任务的线程要退出了。
+
+第一个就不多说了，我们主要看第二个。当线程执行完一个任务后，紧接着就是要继续获取任务来执行，自然也只能通过任务队列。我们在分析execute的时候也说过，任务队列就是这个workQueue。只有execute这一个方法里会将任务入队；同样也只有getTask这一个方法会将任务出队。
+
+获取任务，当然也要是合适的时机才行。如果我们把线程池关了，那么再获取任务执行也没意义了。所以我们也能在getTask里看到和addWorker中[[#^29b849|类似]]的场景：
+
+```java
+// Check if queue empty only if necessary.
+if (runStateAtLeast(c, SHUTDOWN)
+	&& (runStateAtLeast(c, STOP) || workQueue.isEmpty())) {
+	decrementWorkerCount();
+	return null;
+}
+```
+
+同样是：
+
+1. 线程池已经处于STOP状态；
+2. 线程池处于SHUTDOWN状态，并且队列是空的。
+
+这两种情况下，我们会直接返回null，因为已经不需要再获取任务了。但是在返回任务之前，需要减少一下线程数。但是我们需要注意一下，这里的减少线程数不是用CAS，是直接减少。毕竟是关闭线程池，所以直接减少也没啥。这里我们需要补充一点，虽然是直接减少，但是由于是AtomicInteger，所以还是具有原子性的：
+
+```java
+/**
+ * Decrements the workerCount field of ctl. This is called only on
+ * abrupt termination of a thread (see processWorkerExit). Other
+ * decrements are performed within getTask.
+ */
+private void decrementWorkerCount() {
+	ctl.addAndGet(-1);
+}
+```
+
+这里的“直接减少”强调的其实是：**我们不关心减去当前线程之后，还剩下多少个线程**。马上我们就会看到，我们有时候也关心减掉之后到底还剩几个线程。而如何实现“关心”呢？当然就是CAS啦。
+
+还有一个时刻，线程不会继续取任务，会退出。那就是要看看线程池中当前线程池的个数，是否已经过了。
+
+我们之前提到过，添加worker时，这个worker是核心还是非核心，其实就是设置一个upper bound。如果是核心线程，那么upper bound就是corePoolSize；如果是非核心线程，那就是maximumPoolSize。
+
+而在getTask()中也有类似的情况。当一个线程因为长时间获取不到任务（这个之后会讲），从而超时，这个线程就应该结束了。那么当前线程是否要结束，有如下判断：
+
+- 看线程池的配置中，是否允许核心线程超时（allowCoreThreadTimeOut）；
+- 看当前的线程数是否已经超过了核心线程数。
+
+这两个情况中任意一个满足，当前线程就会退出。你可能感觉比较绕，我来解释一下。之前我们说过，我们不关心哪几个线程是核心线程，只关心有几个线程是核心线程。线程池对待任意一个线程，都是一视同仁。所以，对于执行到这里的线程，它是否应该退出，不是看它是不是核心线程（当然也看不到，根本没这标记位），而是看当前线程池的线程个数是否超过了核心线程。如果已经超过了，那毫无疑问我就应该退出了；而如果没超过，那就代表**当前线程池里还剩下的线程其实都是核心线程**。这个时候我应该退出吗？那当然就是看线程池的配置里是不是允许核心线程超时了。
+
+> [!note]- 核心线程是否允许超时
+> 存储在标记位`allowCoreThreadTimeOut`中：
+> 
+> 
+> ~~~java
+> /**
+>  * If false (default), core threads stay alive even when idle.
+>  * If true, core threads use keepAliveTime to time out waiting
+>  * for work.
+>  */
+> private volatile boolean allowCoreThreadTimeOut;
+> ~~~
+> 
+> 这个标记位通过allowCoreThreadTimeout()方法设置。如果设置为了true，那么就会立刻调用interruptIdleWorkers()，来中断所有已经休眠的线程。因为如果这些休眠的是核心线程，那你们也该死啦。
+
+以上逻辑的代码：
+
+```java
+int wc = workerCountOf(c);
+// Are workers subject to culling?
+boolean timed = allowCoreThreadTimeOut || wc > corePoolSize;
+```
+
+如果timed为true就表示：当前线程执行getTask()时，执行到这里，通过看核心线程超时的配置，和当前线程的数量之后，评估出了一个结论：我该死啦！
+
+当然，这两种情况，只是当前线程认为它该死了。其实还有一种情况我们没有考虑到，就是当前线程的个数已经超过了最大线程数。那这个就不是你自己的问题了，是线程池都出了问题。所以自然要算在里面。
+
+那么，为什么在代码里，没有将`wc > maximumPoolSize`这种情况并入到`timed`里面呢？答案是因为，即使`timed == true`，这个线程也不是完全需要退出，而`wc > maximunPoolSize`的情况下，当前线程必须要退出，因为这已经属于错误了。
+
+那么，`timed == true`的情况下，还需要满足什么条件才能退出呢？看代码就知道了，就是`timedOut`变量。这个变量我们还没接触到，不过可以先说一下，它代表着**当前线程曾经试图从workQueue中取任务，一直没取到，然后就在那儿等，等超时了都**。因此，如果是正常的在线程池中“生活工作”的一个线程，它结束自己的前提条件要是“没活儿干”。后面的条件才是是否核心线程。
+
+满足以上的所有条件，线程就能退出了吗？好像不是。因为我们只讨论了线程本身，还没有讨论任务。只有能让线程池在移除当前线程后还能合理地完成任务，才会允许当前线程退出。
+
+首先，就是线程池的个数大于1。如果不满足的话，其实只有这一种情况：线程池内，就只剩我这一个活着的线程了。那1-0=0，没了我，线程池就空了。那这活儿谁干？所以，允许当前线程退出的，和任务相关的条件是：
+
+要么线程个数大于1（还有人能干活儿），要么任务队列已经空了（真没活儿干了）。
+
+最后总结一下总体的条件：
+
+1. 线程认为自己应该退出了，或者线程池发现线程数量出现了错误，超过了最大限制；
+2. 保证线程退出后，线程池还能正常工作。
+
+两个条件要都满足，才能最终让这个线程退出：
+
+```java
+if (
+	(wc > maximumPoolSize || (timed && timedOut)) 
+	&& (wc > 1 || workQueue.isEmpty())
+) {
+	if (compareAndDecrementWorkerCount(c))
+		return null;
+	continue;
+}
+```
+
+看到这里，我倒吸了一口冷气：为啥是CAS？难道还有猫腻？好在刚刚我们已经打过预防针了。这里用CAS的根本原因就是，我们关心移除当前线程之后的结果。
+
+我们从业务方的视角思考：在我没设置allowCoreThreadTimeout的情况下，我认为线程池中的核心线程应该是永远不会退出的。换句话说，如果核心线程数是4，只要我添加了超过4个线程，之后线程数就永远也不会小于4了。
+
+我把这部分代码贴出来，模拟一下一个例子：
+
+```java
+int wc = workerCountOf(c);                                     // 1
+
+// Are workers subject to culling?
+boolean timed = allowCoreThreadTimeOut || wc > corePoolSize;   // 2
+
+if ((wc > maximumPoolSize || (timed && timedOut))              // 3
+	&& (wc > 1 || workQueue.isEmpty())) {
+	if (compareAndDecrementWorkerCount(c))                     // 4
+		return null;                                           // 5
+	continue;                                                  // 6
+}
+```
+
+还是核心线程数是4。假设现在实际上有5个线程，然后有两个线程并发地执行到了getTask()，然后都没取到任务超时了（timedOut为true），然后又同时执行到了1。
+
+那么两个线程得到的`wc`就都是5。
+
+假设allowCoreThreadTimeout是false，那么两个线程都会判断`wc > corePoolsize`是true（5 > 4）。所以两个线程都认为自己是那个多余的线程，应该退出了。
+
+然后，两个线程在3的判断中，`timed && timedOut`的结果都是true，并且此时的`wc > 1`是恒成立的。
+
+然后两个线程就会并发地执行到4。而如果4这个位置不是CAS，而是普通的AtomicInteger的减少，结果是什么？那当然就是线程数会从5变成3。然后两个线程就都成功退出了。
+
+但是，我们之前那么费劲巴拉到底是为啥？那个allowCoreThreadTimeout，还比什么核心线程数为了啥？不就是为了：保住核心线程，不要让他退出吗？
+
+所以，这里的一个并发的小bug，就会导致两个线程同时认为自己是该死的那个，我死了，剩下的就都是核心线程了。然而殊不知，你俩要真都死了，核心线程反而少了一个。
+
+这就是用CAS的原因：我关心当前线程退出后，还剩下多少个线程。还记得我们之前提到过的CAS的特点吗？[[Study Log/java_kotlin_study/concurrency_art/5_4_read_write_lock#^fba60d|有人失败，就一定有人成功]]。因此，这里用了单独的一次CAS，保证的是：有多个线程并发地想要退出时，保证有且只有一个线程最终能够成功退出。因为退出之后修改了线程数，其他想要退出的线程的CAS就会失败，失败之后就要用新的状态重新来一遍。
+
+好了，终于开始取任务了！workQueue是一个BlockingQueue，我们取任务主要用的是两种方法：
+
+```java
+E poll(long timeout, TimeUnit unit) // 如果超时了，就会返回
+E take()                            // 不取到，我就一直等
+```
+
+什么时候用一直等的方法？显然，必须要是核心线程，并且allowCoreThreadTimeout要是false。其它的时候都用超时的这种。那么怎么区分两种情况呢？好像`timed`变量就是呀！如果`timed == false`，那么allowCoreThreadTimeout要是false，同时`wc <= corePoolSize`，也就是当前线程是核心线程。一切都是那么巧合。。。
+
+```java
+Runnable r = timed ?
+		workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) :
+		workQueue.take();
+```
+
+如果这个线程还能往下走，只有两种情况：
+
+1. 成功取出了一个任务；
+2. 超时了。
+
+所以，剩下的就好说了。我就直接贴全部的代码了。现在getTask()的每一行代码你都应该知道是怎么回事了（除了最后异常的处理）：
+
+```java
+private Runnable getTask() {
+	boolean timedOut = false; // Did the last poll() time out?
+
+	for (;;) {
+		int c = ctl.get();
+
+		// Check if queue empty only if necessary.
+		if (runStateAtLeast(c, SHUTDOWN)
+			&& (runStateAtLeast(c, STOP) || workQueue.isEmpty())) {
+			decrementWorkerCount();
+			return null;
+		}
+
+		int wc = workerCountOf(c);
+
+		// Are workers subject to culling?
+		boolean timed = allowCoreThreadTimeOut || wc > corePoolSize;
+
+		if ((wc > maximumPoolSize || (timed && timedOut))
+			&& (wc > 1 || workQueue.isEmpty())) {
+			if (compareAndDecrementWorkerCount(c))
+				return null;
+			continue;
+		}
+
+		try {
+			Runnable r = timed ?
+				workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) :
+				workQueue.take();
+			if (r != null)
+				return r;
+			timedOut = true;
+		} catch (InterruptedException retry) {
+			timedOut = false;
+		}
+	}
+}
+```
+
+- [ ] #TODO tasktodo1725805658470 最后的异常处理是为了应对线程在等待任务的时候被中断。可以看到getTask()的调用者——runWorker()方法在一开始就执行了w.unlock()，旁边一句注释allow interrupts。那么这里为啥要允许别人中断它呢？ ➕ 2024-09-08 ⏫ 🆔 lbku3q 
+- [ ] #TODO tasktodo1725805757050 这里只有for循环一开始进行了线程池状判断。那如果刚检查完状态，甚至是已经获取到了任务的时候，有人把线程池关了，会发生什么？ ➕ 2024-09-08 ⏫ 🆔 7lpbsb 
+
+
 
 
 
