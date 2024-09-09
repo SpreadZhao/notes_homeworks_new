@@ -150,8 +150,24 @@ int Solution::lengthOfLongestSubstring2(string s) {
 }
 ```
 
-不过，这个代码还是错的。而且，这个代码也是我踩了坑之后才写粗来的。见：
+不过，这个代码还是错的。而且，这个代码也是我踩了坑之后才写粗来的。见：[[#你确定让窗口左边往右滑？]]和[[#为啥每次都要更新res？]]。最后正确的代码：
 
+```cpp
+int Solution::lengthOfLongestSubstring2(string s) {
+    map<char, int>showAt;
+    int i = 0, j = 0, res = 0;
+    while (j < s.size()) {
+        char ch = s[j];
+        if (showAt.count(ch)) {
+            i = max(i, showAt[ch] + 1);
+        }
+        showAt[ch] = j;
+        res = max(res, j - i + 1);
+        j++;
+    }
+    return res;
+}
+```
 
 # 遗漏的case
 
