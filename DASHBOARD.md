@@ -28,3 +28,4 @@
 
 - ~~Android Study Log(Legacy): [[Study Log/android_study/aa_android_study|aa_android_study]]~~
 - Techniques: [[Knowledge/techniques|techniques]]
+- My pros: [[Study Log/how_good_am_i|how_good_am_i]]
