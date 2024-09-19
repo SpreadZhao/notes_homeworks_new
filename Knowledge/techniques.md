@@ -405,6 +405,7 @@ forceStopPackage()
 - [ ] #TODO tasktodo1726589923185 App退出的工具类。这个已经在SpreadLib里面做了。 ➕ 2024-09-18 🔼 🆔 tty50u 
 - [ ] #TODO tasktodo1726589969504 rn和安卓在渲染上的区别。安卓的doFrame会一直卡着下一个doFrame，而rn测量布局全部都是在子线程做的，一共就8ms。如果你做了太多事情，执行就会断掉。所以rn上会出现一些撕裂。具体的区别，找时间研究一下。不过这个要等体系化学rn之后了。 ➕ 2024-09-18 🔽 🆔 dedmb1 
 - [ ] #TODO tasktodo1726590071867 为什么java在lambda中访问一个外界的局部变量，需要是final的？ ➕ 2024-09-18 🔺 🆔 cputx8 
+- [ ] #TODO tasktodo1726751853794 在RecyclerView bind的时候，如果对RV做修改，会怎样？ ➕ 2024-09-19 ⏫ 🆔 2qpu3x 
 
 ## 其他方向
 

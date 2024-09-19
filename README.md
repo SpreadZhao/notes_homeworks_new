@@ -13,7 +13,7 @@
 
 ## Plugins
 
-You will find some file content seems like broken. Don't worry, install below plugins in Obsidian:
+You will find some file content seems like broken. Don't worry, install those plugins in Obsidian:
 
 * DataView: https://github.com/blacksmithgu/obsidian-dataview
 * Tasks: https://github.com/obsidian-tasks-group/obsidian-tasks
