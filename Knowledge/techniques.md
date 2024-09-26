@@ -382,31 +382,36 @@ forceStopPackage()
 	- [ ] [SurfaceFlinger 图层合成过程分析上 (qq.com)](https://mp.weixin.qq.com/s/J6oyAIsz-kbSllsVd0TGxw)
 - [ ] #TODO tasktodo1722531423113 西瓜的OOM检测原理。native和java都看。 ➕ 2024-08-02 ⏫ 🆔 grvai7
 - [/] #TODO tasktodo1722531454096 开发debug工具在spreadlib，摇一摇打印日志。 ➕ 2024-08-02 🔺 🆔 0cqkq9 🛫 2024-08-23 
-- [ ] #TODO tasktodo1722531892427 RecyclerView onFling的时候，子View的属性如何？尤其是visibility？这个写到rv的学习目录里，就是毕设的那个。 ➕ 2024-08-02 🔺 🆔 cz51hx
+- [ ] #TODO tasktodo1722531892427 RecyclerView onFling的时候，子View的属性如何？尤其是visibility？这个写到rv的学习目录里，就是毕设的那个。 🆔 cz51hx 🔼 ➕ 2024-08-02
 - [ ] #TODO tasktodo1722531948117 c++的两个踩坑视频： ➕ 2024-08-02 🔼 🆔 ghn6oy
 	- [ ] [C++：指针生而自由。Rust：麻了_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1uK421v7Ub/?spm_id_from=333.999.0.0)
 	- [ ] [C++：引用不能瞎用！Rust：我笑死_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1bu4m1M74A/?spm_id_from=333.999.0.0)
 	- [ ] 学C++一定要多犯错误，不要不敢写，写的再狗屎，也是给之后打基础。
 - [ ] #TODO tasktodo1722610175504 西瓜的DBData是怎么实现的。 ➕ 2024-08-02 ⏫ 🆔 540bvg
 - [ ] #TODO tasktodo1722878403244 西瓜启动框架分析。飞鼠文档里有。我记得是Task和一个Taskxxx来着。 ➕ 2024-08-06 ⏫ 🆔 ckzlk5
-- [ ] #TODO tasktodo1722878444046 单例模式大全。所有单例模式都是怎么写的。【Java 进阶一定要读的书是哪本？】 【精准空降到 02:47】 https://www.bilibili.com/video/BV1VM4m1S7Jv/?share_source=copy_web&vd_source=e9e5bdd775043518f43e2e425553d7e9&t=167 ➕ 2024-08-06 🔺 🆔 kasqlf
-- [ ] #TODO tasktodo1722878583685 整理公众号相关的东西。这是公众号相关的一个小任务。 ➕ 2024-08-06 🔺 🆔 u3brzu
+- [ ] #TODO tasktodo1722878444046 单例模式大全。所有单例模式都是怎么写的。【Java 进阶一定要读的书是哪本？】 【精准空降到 02:47】 https://www.bilibili.com/video/BV1VM4m1S7Jv/?share_source=copy_web&vd_source=e9e5bdd775043518f43e2e425553d7e9&t=167 🆔 kasqlf ⏫ ➕ 2024-08-06
+- [ ] #TODO tasktodo1722878583685 整理公众号相关的东西。这是公众号相关的一个小任务。 🆔 u3brzu 🔽 ➕ 2024-08-06
 	- [ ] 自定义View相关公众号：[Android 自定义 View 高仿飞书日历 (qq.com)](https://mp.weixin.qq.com/s/c_D_BzEYFFugvPHmmSDxDw)
 	- [ ] ViewPager：[5年了，ViewPager2 终于支持 overScrollMode，没错，我干的。 (qq.com)](https://mp.weixin.qq.com/s/evFfPZ02xCb8ViQ7sOGmDw)
 	- [ ] 给公众号分一个类吧哥。不能光攒不看啊！
 - [/] #TODO tasktodo1723039760161 西瓜标题组件，世辉写的组件的文档里遇到的踩坑总结上。并且把这个组件抽出来变成AsyncSpannable。 🆔 7bq01j 🔺 ➕ 2024-08-07 🛫 2024-08-11
-- [ ] #TODO tasktodo1723283820042 抖音客户端技术论坛里有很多干货，狠狠冲！ ➕ 2024-08-10 🔺 🆔 oxhbiv
+- [ ] #TODO tasktodo1723283820042 抖音客户端技术论坛里有很多干货，狠狠冲！ 🆔 oxhbiv ⏫ ➕ 2024-08-10
 - [ ] #TODO tasktodo1723649618998 TTExecutor in Xigua ➕ 2024-08-14 ⏫ 🆔 4jifms
 - [ ] #TODO tasktodo1724250510907 pintos: [Pintos Projects: Table of Contents](https://web.stanford.edu/class/cs140/projects/pintos/pintos.html) ➕ 2024-08-21 🔽 🆔 eivkfq
 - [ ] #TODO tasktodo1725548165776 西瓜视频基础产品的周会，每个周会有个小讨论。里面的技术点可以学一学。比如之前就介绍过抖音的一个hook方案，排查一个npe的bug ➕ 2024-09-05 ⏫ 🆔 0w0gwj 
 - [ ] #TODO tasktodo1725548220142 wx公众号，动态线程池。这个可以合到[[Study Log/java_kotlin_study/concurrency_art/9_threadpool|9_threadpool]]里面。 [美团二面拷打：如何设计一个动态线程池？](https://mp.weixin.qq.com/s?__biz=Mzg2OTA0Njk0OA==&mid=2247545457&idx=1&sn=e943871bdcdb4e47e9bfafb3d1ddc546&chksm=cf663654bcf8f505dadfb7cf09c10cc9f237af9708f08359420cae84155732733c954bb16fdb#rd) ➕ 2024-09-05 ⏫ 🆔 dyb7pi 
 - [ ] #TODO tasktodo1725548355191 最近处理了一个创作相关的内存泄漏。确实，kotlin的let和apply还有一个之前没考虑过的区别。说一说。 ➕ 2024-09-05 🔺 🆔 ctwy5c 
-- [ ] #TODO tasktodo1726569023585 为什么java不需要像c++那样考虑拷贝构造函数？[Copy Constructor in C++ - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-cpp/) [Copy Constructor in Java - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-java/) ➕ 2024-09-17 🔺 🆔 sxb1ew 
+- [ ] #TODO tasktodo1726569023585 为什么java不需要像c++那样考虑拷贝构造函数？[Copy Constructor in C++ - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-cpp/) [Copy Constructor in Java - GeeksforGeeks](https://www.geeksforgeeks.org/copy-constructor-in-java/) 🆔 sxb1ew ⏫ ➕ 2024-09-17
 - [ ] #TODO tasktodo1726589872006 LinkedHashMap的实现，为什么是有序的。这个写到[[Study Log/java_kotlin_study/java_kotlin_study|java_kotlin_study]]里面吧。 ➕ 2024-09-18 ⏫ 🆔 r6hvcq 
 - [ ] #TODO tasktodo1726589923185 App退出的工具类。这个已经在SpreadLib里面做了。 ➕ 2024-09-18 🔼 🆔 tty50u 
 - [ ] #TODO tasktodo1726589969504 rn和安卓在渲染上的区别。安卓的doFrame会一直卡着下一个doFrame，而rn测量布局全部都是在子线程做的，一共就8ms。如果你做了太多事情，执行就会断掉。所以rn上会出现一些撕裂。具体的区别，找时间研究一下。不过这个要等体系化学rn之后了。 ➕ 2024-09-18 🔽 🆔 dedmb1 
-- [ ] #TODO tasktodo1726590071867 为什么java在lambda中访问一个外界的局部变量，需要是final的？ ➕ 2024-09-18 🔺 🆔 cputx8 
+- [ ] #TODO tasktodo1726590071867 为什么java在lambda中访问一个外界的局部变量，需要是final的？ 🆔 cputx8 ⏫ ➕ 2024-09-18
 - [ ] #TODO tasktodo1726751853794 在RecyclerView bind的时候，如果对RV做修改，会怎样？ ➕ 2024-09-19 ⏫ 🆔 2qpu3x 
+- [ ] #TODO tasktodo1727192446778 AppLog就有监听应用退出，启动的功能，还抽象成了session。 ➕ 2024-09-24 ⏫ 🆔 f6f2g4 
+- [ ] #TODO tasktodo1727192477294 XiguaCrashHandler, to SpreadLib ➕ 2024-09-24 ⏫ 🆔 719tb0 
+- [ ] #TODO tasktodo1727192519624 Smart Router of bytedance ➕ 2024-09-24 ⏫ 🆔 vmeol5 
+- [ ] #TODO tasktodo1727192546020 java真的没有栈内存中的对象吗？ ➕ 2024-09-24 ⏫ 🆔 epnzrv 
+- [ ] #TODO tasktodo1727368850339 最近的Loading Auto Fill实验全量了。把这个过程总结到的经验写一个日记 ➕ 2024-09-27 🔺 🆔 x6ke36 
 
 ## 其他方向
 
