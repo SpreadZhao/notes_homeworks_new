@@ -1,6 +1,6 @@
 # (Almost) All Things About SpreadZhao
 
-* Introduction: [INTRODUCTION](INTRODUCTION.md)
+* Deprecated: ~~Introduction: [INTRODUCTION](INTRODUCTION.md)~~
 * DashBoard: [DASHBOARD](DASHBOARD.md)
 
 ## How to Use ?
