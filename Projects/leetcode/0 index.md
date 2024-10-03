@@ -17,3 +17,11 @@ dv.table(
 	res.map(x => [x.num, x.title, x.link, x.difficulty])
 );
 ```
+
+## TODO
+
+```tasks
+path regex matches /Projects/leetcode/
+tags include TODO
+sort by priority
+```
