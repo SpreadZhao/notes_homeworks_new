@@ -1,6 +1,6 @@
 # (Almost) All Things About SpreadZhao
 
-* Deprecated: ~~Introduction: [INTRODUCTION](INTRODUCTION.md)~~
+* ~~Introduction: [INTRODUCTION](INTRODUCTION.md)~~ (Deprecated)
 * DashBoard: [DASHBOARD](DASHBOARD.md)
 
 ## How to Use ?
@@ -13,15 +13,15 @@
 
 ## Plugins
 
-You will find some file content seems like broken. Don't worry, install those plugins in Obsidian:
+You will find some file content seems like broken. Don't worry, install these plugins in Obsidian:
 
 * DataView: https://github.com/blacksmithgu/obsidian-dataview
 * Tasks: https://github.com/obsidian-tasks-group/obsidian-tasks
-* Icon Shortcodes: https://github.com/aidenlx/obsidian-icon-shortcodes
+* ~~Icon Shortcodes: https://github.com/aidenlx/obsidian-icon-shortcodes~~
 
 ## CSS Snippets
 
-CSS snippets are important in the styling of this repository. Follow the [guide](https://help.obsidian.md/Extending+Obsidian/CSS+snippets) and add the snippets below:
+CSS snippets are important in the styling of this repository. Follow the [guide](https://help.obsidian.md/Extending+Obsidian/CSS+snippets) and add these snippets:
 
 * [Border Styling](resources/spread-border.css)
 * [Callouts Styling](resources/spread-callouts.css)
