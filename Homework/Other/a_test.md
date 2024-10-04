@@ -42,14 +42,12 @@ void loop() {
 
 ### 2.1 准备工作
 
-```ad-info
-首先的首先，当然要把所有的软件都安装好啦\~，它们都包括：
-
-* Proteus 8 pro - 仿真电路
-* Arduino - 程序编写
-* VSPD - 虚拟端口工具
-* Serial Port Utility - 端口之间发送消息的工具
-```
+> [!info] 首先的首先，当然要把所有的软件都安装好啦\~，它们都包括：
+> 
+> * Proteus 8 pro - 仿真电路
+> * Arduino - 程序编写
+> * VSPD - 虚拟端口工具
+> * Serial Port Utility - 端口之间发送消息的工具
 
 由于我们需要DHT库，所以先在Arduino中安装一下：
 
